@@ -123,11 +123,11 @@ type ModeOptions = {
 
 | Export | What it is |
 |---|---|
-| `RULES: readonly Rule[]` | The rules in the order they run. `Rule` is `{ id: string; about: string; defaultOn?: boolean; apply(text, context): string }`; `defaultOn: false` means the rule runs only when named in `enable`. |
+| `RULES: readonly Rule[]` | The rules in the order they run. `Rule` is `{ id: string; about: string; defaultOn?: boolean; when?(text, context): boolean; apply(text, context): string }`; `defaultOn: false` means the rule runs only when named in `enable`. `when` is an optional cheap test: when it returns false `apply` is skipped, so it must be false only if `apply` would return the text unchanged. A rule without `when` always runs. A custom rule made by spreading a built-in (`{ ...RULES[i], apply }`) copies its `when`: set `when: undefined`. |
 | `selectRules({ rules?, disable?, enable? })` | The rules that run, in order. Names are checked against `rules` (the built-in list unless given); an unknown name, or a rule named in both `disable` and `enable`, throws. `without(disable)` is `selectRules({ disable })`. |
 | `addRule(list, rule, position)` | A new list with `rule` at `{ before: id }`, `{ after: id }`, `{ first: true }` or `{ last: true }`. Does not change `list` or `RULES`; an unknown anchor or a duplicate id throws. |
 | `RULE_IDS: readonly string[]` | `RULES.map(r => r.id)`. |
-| `LANGS: readonly Lang[]` | Every language that has a pack: `en`, `uk`, `de`, `pl`, `fr`, `ch`. |
+| `LANGS: readonly Lang[]` | Every language that has a pack (26): the 24 EU languages, `uk` and `ch`. |
 | `PACKS`, `PACK`, `LangPack` | The language packs (`src/core/lang/`), as a list and by code, and their type. See [contributing.md](contributing.md#adding-a-language). |
 | `REGISTERS: readonly Register[]` | `display`, `literary`. |
 | `NBSP` | The no-break space character, U+00A0. |

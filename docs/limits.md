@@ -27,7 +27,7 @@ What the engine deliberately leaves alone, what it knowingly does not do, and wh
 
 ## Opt-in rules
 
-Eight rules are off until named in `enable` ([rules.md](rules.md)). Their known limits:
+Nine rules are off until named in `enable` (`number.group` is described in the rules page) ([rules.md](rules.md)). Their known limits:
 
 - **`space.before-punctuation`** removes a space before `, . ; : ! ? )` only when the mark is not followed by a letter or digit, so a decimal (` .5`), a file extension (` .gitignore`), `!=` and `??` stay. A colon between digits (`10 : 30`) and an emoticon (` :)`, ` ;-)`) are left. A dot is not pulled against another dot, so `. . .` never becomes `...`. French keeps its space before `: ; ! ?` (it needs one) but loses it before `, . )`. It is not aware of prose that is really code: `a ?. b` outside a code span is left only because of its guards.
 - **`space.after-comma`** adds a space only when a letter follows the comma. `1,5`, `1,000` and `3,14` are untouched, and so is `a,b` inside a web address, email or code span. It cannot tell `a,b` in a CSV or a list of variables from a missed space, so use it on prose.
@@ -65,27 +65,36 @@ Eight rules are off until named in `enable` ([rules.md](rules.md)). Their known 
 
 ## Speed
 
-About 5 times slower than typograf on large text, and about 14 times slower than tipograph and smartypants, which do much less (smartypants only quotes, dashes and ellipses; neither has abbreviations or ranges). The benchmark (`bench/RESULTS.md`, generated 2026-10-20 on the author's machine) reports, for English text in one piece, text mode, best of three (one run at 1 MB):
+Since 0.2.0 the package is faster than typograf on English text in one piece, and about 3 times slower than tipograph and smartypants, which do much less (smartypants only quotes, dashes and ellipses; neither has abbreviations or ranges). The benchmark (`bench/RESULTS.md`, generated on the author's machine) reports, for English text in one piece, text mode, best of three (one run at 1 MB):
 
 | Tool | 10 KB | 100 KB | 1000 KB |
 |---|---|---|---|
-| this package | 3 ms | 33 ms | 324 ms |
-| typograf | 1 ms | 6 ms | 60 ms |
-| typopo | 20 ms | 1047 ms | 114894 ms |
-| richtypo | 4945 ms | not run (the file estimates about 492 s, extrapolating a quadratic) | not run |
-| tipograph | 0 ms | 2 ms | 24 ms |
-| smartypants | 0 ms | 2 ms | 22 ms |
-| retext-smartypants | 5 ms | 47 ms | 1019 ms |
+| this package | 0 ms | 3 ms | 33 ms |
+| typograf | 1 ms | 6 ms | 59 ms |
+| typopo | 21 ms | 1086 ms | 100010 ms |
+| richtypo | 2502 ms | not run (the file estimates about 249 s, extrapolating a quadratic) | not run |
+| tipograph | 0 ms | 1 ms | 12 ms |
+| smartypants | 0 ms | 1 ms | 10 ms |
+| retext-smartypants | 3 ms | 32 ms | 543 ms |
 
-That is 0.32 s against 0.06 s for typograf at 1 MB. Fast enough for a page; a build over very large content would want the per-rule regular expressions combined. Not done: nothing here is near the limit. Speed numbers depend on the machine; re-run the benchmark (see [contributing.md](contributing.md#the-benchmark)) to see your own.
+That is 0.03 s against 0.06 s for typograf at 1 MB; 0.2.0 took it from 0.32 s (the output is identical: a differential run against the engine as it was before the speed work, over 2.5 million combinations, finds no difference). The cost is linear in the text. What made the old engine slow was a regular expression that opens with a lookbehind, which the engine tries at every position; the rules now find a literal first and read the character before it (`src/core/scan.ts`), and a rule is skipped when a cheap test (`Rule.when`) shows its trigger is absent. The quote rule is 5 ms per MB of ordinary prose, 60 to 100 ms on text full of unpaired marks.
+
+Known slow spots, all unchanged by 0.2.0:
+
+- A run of one opening mark (`“` repeated thousands of times) is quadratic in the quote rule.
+- Long runs of digits, `x`, `-`, `.` or `+-` cost 300 to 500 ms at 20,000 characters.
+- The opt-in `space.before-punctuation`, `punctuation.double` and `symbol.degree` still open with a lookbehind: about 16 to 20 ms per MB each when switched on.
+- Several rules are quadratic on tens of thousands of spaces in a row (`dash.sentence`, `space.association`, `space.arrow`, `space.trailing`), and `number.group` on a very long digit run.
+
+On a JavaScriptCore engine (Bun) a lookbehind with `\p{L}` or `\p{N}` does not see letters outside the Basic Multilingual Plane. The scan helpers reproduce whatever the running engine does, so the output equals the old engine's on the same runtime. One residual difference exists, only for ill-formed UTF-16 (a lone high surrogate directly after a fraction, followed by a character at U+E000 or above) and only with `symbol.fraction` on: the `½` is skipped. Well-formed text cannot reach it. Speed numbers depend on the machine; re-run the benchmark (see [contributing.md](contributing.md#the-benchmark)) to see your own. `src/speed.test.ts` is a loose budget (linear scaling, a 1 MB ceiling), not a measurement.
 
 ## Benchmark caveats
 
 These are repeated at the top of `bench/RESULTS.md`.
 
-- The style-neutral cases (69 are scored for this package, plus 2 register cases) were written by the author of this package. They check what is right (a German quotation is `„…“` or `»…«`; an ISO date is not a range), not one tool's house style, but a tool's default that differs from them is reported as a failure, including this package's own `«…»` for English. Read the cases in `bench/RESULTS.md` and contest them.
+- The style-neutral cases (250 are scored for this package, plus 2 register cases) were written by the author of this package. They check what is right (a German quotation is `„…“` or `»…«`; an ISO date is not a range), not one tool's house style, but a tool's default that differs from them is reported as a failure, including this package's own `«…»` for English. Read the cases in `bench/RESULTS.md` and contest them.
 - They cover what typography tools claim to do, not everything a typographer cares about.
-- Most cases are English: of the 66 cases in the benchmark (the 5 stability checks are separate), 34 are English, 9 German, 10 Ukrainian, 7 Polish and 6 French. None is Swiss (`ch`).
+- Most cases are English: 96 of the 253 cases are English, 11 Ukrainian, 10 German, 8 Polish, 7 French and 6 each for the other twenty languages (a quote, a nested quote, a dash, a range, a sample and a stability check). None is Swiss (`ch`). The 6 cases per new language come from the same style guides as its pack, so they do not test it independently.
 - typograf was run with its default rules and the locales it ships that this package also covers. The only typographic rule it has off by default for these languages (`common/nbsp/afterNumber`) is also run, as a separate column. The other default-off rules insert a final newline, strip or escape HTML, wrap paragraphs, or are for a language this package does not cover.
 - typopo only supports English and German here, and a language a tool does not support is not scored, so the totals compare different numbers of cases: read each tool's row against its own denominator.
 - richtypo was run with its recommended rules for English and French (it has none for the other languages). tipograph was run with its default presets for English, German, Polish and French (no Ukrainian). smartypants and retext-smartypants were run for English only: they have no locale, so another language would be judged on English quotes. smartypants was given quotes, dashes and ellipses (`qde`); retext-smartypants has default options. The last three are text only here, except richtypo and tipograph, which read HTML.

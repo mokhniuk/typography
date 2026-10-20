@@ -2,10 +2,38 @@
 
 Versions follow semver while the package is below 1.0.0: a **minor** release may change the output of the engine or the API (every entry says whether it can change output you already have), a **patch** release fixes a bug without changing output you rely on. If you depend on exact output, pin a tag and read this file before you move it.
 
-## Unreleased
+## 0.2.0 (2026-10-20)
+
+Fixes that change output come first; everything new is opt-in or an option, so output you already have changes only where an entry says so.
+
+### Fixes
 
 - A seven-digit local phone number written with a hyphen (`555-1234`: three digits, a hyphen, four digits, no spaces) is left alone; it was set as a range (`555–1234`). A spaced pair (`555 - 1234`) is still a range. A real range of three and four digits written without spaces (`100-1200`) is now also left alone. Can change existing output: yes, for text with such a pair.
 - An apostrophe for dropped letters is no longer taken for a quotation mark: `rock 'n' roll` stays `rock ’n’ roll` (it was `rock «n» roll`), and a leading apostrophe on `'til`, `'em`, `'cause`, `'bout`, `'round`, `'tis`, `'twas` and `'cos` becomes `’`. A quoted word that only starts like one (`the 'emergency' exit`, `the 'til' button`) is still a quotation. Can change existing output: yes, for English text with these words in single quotes.
+- A run of three hyphens (`a --- b`) is no longer taken for a double hyphen with one more. Can change existing output: yes, for text with a run of exactly three hyphens.
+
+### New: 20 languages
+
+`bg cs da el es et fi ga hr hu it lt lv mt nl pt ro sk sl sv` join `en uk de pl fr ch`: all 24 official languages of the EU, Ukrainian and Swiss usage. Each is one pack, `src/core/lang/<code>.ts`, with quote marks and nesting, sentence dash, orphans, abbreviations, `%` spacing, number format and cited sources; a generated page per language is in `docs/languages/`. **None has been read by a native speaker** (`reviewed: false`); read the page before relying on one. `Lang` and `LANGS` are now derived from the packs, so a pack is the only place a language is named. Can change existing output: yes, for pages that set `lang="es"` (or any new code) on `rehype` or HTML text: that code used to fall back to English and now selects a real profile.
+
+### New: options
+
+- `quoteStyle: 'language' | 'us'` (default `'language'`) on every mode, the React components, the CLI (`--quotes us`) and the playground. `'us'` sets `“…”` with `‘…’` inside in any language and wins over the `literary` register. Existing output: unchanged by default.
+- `enable: string[]`: switches on rules that are off by default, by id or group. A rule named in both `enable` and `disable` is an error.
+- `rules: Rule[]` and `addRule(list, rule, { before | after | first | last })`: a custom rule list; names in `enable` and `disable` are checked against the list in use. `Rule` gains `defaultOn?` and `when?`. Can change existing output: yes, for a custom rule built by spreading a built-in (`{ ...RULES[i], apply }`): it copies the built-in's `when`, so it may be skipped; set `when: undefined`.
+- CLI: `--enable`, `--quotes`; `--rules` marks the rules that are off by default.
+
+### New: nine rules, off by default
+
+Switch on with `enable` (or `--enable`): `space.before-punctuation`, `space.after-comma`, `punctuation.double`, `space.trailing`, `symbol.plusminus`, `symbol.fraction`, `symbol.degree`, `symbol.implies`, `number.group` (locale thousands separators from the pack: `1,000,000` en, no-break space uk/fr, `.` de). Their limits are in `docs/limits.md`. Existing output: unchanged unless you enable them. Ordinals are not done.
+
+### Speed
+
+1 MB of English prose in text mode: 324 ms to 33 ms (typograf: 59 ms). Cause: regular expressions that open with a lookbehind are tried at every position; rules now find a literal first and read the character before it (`src/core/scan.ts`), skip when a cheap trigger (`Rule.when`) is absent, and the quote rule returns early and rebuilds in one pass. A differential run against the previous engine (26 languages, both registers, both quote styles, opt-in rules on and off, text, HTML, Markdown and hast, output and `explain` records) found no difference, and `src/snapshot.test.ts` keeps a digest per language. One residual difference, on Bun only: with `symbol.fraction` on, ill-formed UTF-16 (a lone high surrogate right after a fraction, then a character at U+E000 or above) no longer gets its `½`. Can change existing output: no, for well-formed text.
+
+### Tooling
+
+`bun run compare` (differential run against a git ref), `bun run snapshot` and `docs:languages`; a loose speed budget in `src/speed.test.ts`; the benchmark has 250 scored cases for 26 languages and more competitors (still a separate project in `bench/`).
 
 ## 0.1.1 (2026-10-20)
 
