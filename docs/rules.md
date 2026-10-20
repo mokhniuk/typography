@@ -426,7 +426,7 @@ after   On 21~September, 15~people paid 5~%.
 
 ## `space.percent`
 
-German, French, Czech, Spanish, Italian, Portuguese and Danish: a no-break space between a number and % or € (5 %, 49 €)
+German, French, Czech, Spanish, Italian, Portuguese, Danish and Finnish: a no-break space between a number and % or € (5 %, 49 €)
 
 ```text
 (de)
