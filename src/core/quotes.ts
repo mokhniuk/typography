@@ -41,6 +41,8 @@ const trimInner = (s: string) => s.replace(/^[\s\u00A0]+|[\s\u00A0]+$/g, '');
 // An apostrophe inside a word (don't, don’t, Maria’s) must not be taken for a quote mark, or
 // the quotation around it would not pair. It is set aside as a placeholder and put back.
 const APOSTROPHE = '\uE002';
+// The only characters the `apostrophe` regex of a language can match.
+const APOSTROPHE_MARK = /['’]/g;
 // Words that start with an apostrophe for dropped letters ('til, 'em, 'cause), and 'n' as in rock 'n' roll,
 // listed in `elisions` on the language pack. Each alternative holds the apostrophe in a group so the
 // replacer can tell it from the others. A word that goes on (the 'emergency' exit) or is closed by
@@ -73,7 +75,11 @@ type Setup = {
   single: RegExp;
   /** An opening mark may follow another (»„ at the start of a nested quotation), so it is read until none is left. French sets a no-break space inside « », which belongs to the mark. */
   loneOpening: RegExp;
-  /** A mark that stands for an apostrophe: inside a word, on a year, or an elision. */
+  /**
+   * A mark that stands for an apostrophe: inside a word, on a year, or an elision. Sticky: every
+   * alternative matches the one character ' or ’ and nothing after it, so it is tried only where
+   * `APOSTROPHE_MARK` finds one, and the `\p{L}` lookbehinds are not run at every character of the text.
+   */
   apostrophe: RegExp;
   elisionGroups: number;
   /**
@@ -119,7 +125,7 @@ function setupOf(pack: LangPack): Setup {
     // here, since the `apostrophe` rule only turns a straight ' after a letter or before a digit.
     apostrophe: new RegExp(
       `(?<=\\p{L})['’](?=\\p{L})|(?<=^|[\\s([])’(?=\\d{2}s?(?![\\d\\p{L}]))|(?<=^|[\\s([])'(?=\\d{2}s?(?![\\d'’\\p{L}]))${elision.source ? `|${elision.source}` : ''}`,
-      'gu',
+      'yu',
     ),
     elisionGroups: elision.groups,
     relevant: charClass(`${RAW}${LONE}${SPACED}${SPACED_CLOSING}'${turnedMarks.join('')}${OPEN}${CLOSE}${APOSTROPHE}`),
@@ -145,8 +151,11 @@ export function quotesFor(
     if (!relevant.test(text)) return text;
     // The apostrophes are put back as they were; the `apostrophe` rule sets them.
     const kept: string[] = [];
-    let out = text.replace(apostrophe, (mark: string, ...groups: (string | undefined)[]) => {
-      kept.push(groups.slice(0, elisionGroups).some(Boolean) ? '’' : mark);
+    let out = text.replace(APOSTROPHE_MARK, (mark: string, at: number) => {
+      apostrophe.lastIndex = at;
+      const found = apostrophe.exec(text);
+      if (!found) return mark;
+      kept.push(found.slice(1, 1 + elisionGroups).some(Boolean) ? '’' : mark);
       return APOSTROPHE;
     });
     // Innermost pairs first, so a quotation inside a quotation resolves before its outer one.
