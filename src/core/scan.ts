@@ -49,3 +49,32 @@ export function isLetterOrNumber(codePoint: string): boolean {
   if (codePoint.length > 1 && !LOOKBEHIND_SEES_ASTRAL) return false;
   return LETTER_OR_NUMBER.test(codePoint);
 }
+
+/**
+ * Replaces each match of the global forward regex `re` whose lookbehind condition `behind(text, index)`
+ * holds, by `replace(match)`; the rest stay. This is `text.replace(/(?<=…)re/g, …)` for a lookbehind
+ * written as code. A match that fails the condition is skipped by one character and the search goes
+ * on from there, which is what the engine does after a failed lookbehind (so a later match that
+ * starts inside the rejected one is still found). `re` must not match the empty string.
+ */
+export function replaceBehind(
+  text: string,
+  re: RegExp,
+  behind: (text: string, index: number) => boolean,
+  replace: (match: RegExpExecArray) => string,
+): string {
+  re.lastIndex = 0;
+  let out = '';
+  let from = 0;
+  for (let m = re.exec(text); m; m = re.exec(text)) {
+    if (behind(text, m.index)) {
+      out += text.slice(from, m.index) + replace(m);
+      from = m.index + m[0].length;
+    } else {
+      // One code point on in a `u` regex (an index inside a pair would be read from the pair's start), one unit otherwise.
+      re.lastIndex = m.index + (re.unicode && (m[0].codePointAt(0) ?? 0) > 0xffff ? 2 : 1);
+    }
+  }
+  re.lastIndex = 0;
+  return from === 0 ? text : out + text.slice(from);
+}
