@@ -43,9 +43,9 @@ p{margin:6px 0}
 <h1>Typography sources</h1>
 <p class="lead">Why each of the 20 rules exists, which source backs it, and what is not checked yet. Generated from <code>scripts/sources.ts</code> by <code>bun run docs:sources</code>; do not edit by hand. All sources in one table, with authors: <a href="bibliography.html">bibliography</a>.</p>
 <div class="summary-row">
-<span class="pill verified">6 verified</span>
+<span class="pill verified">11 verified</span>
 <span class="pill disputed">1 disputed</span>
-<span class="pill general-knowledge">13 unchecked</span>
+<span class="pill general-knowledge">8 unchecked</span>
 </div>
 <p>To check a rule, open its sources and confirm the “Relied on” line is in the text. “Verified” means a source read says what the rule does for the cases named; read the gaps in each entry. Sources marked in red were read as summaries and need a look by hand.</p>
 <h2>Rules</h2>
@@ -58,23 +58,23 @@ p{margin:6px 0}
 <article class="rule" id="rule-quote" data-c="disputed">
 <div class="head"><h3>quote</h3><span class="pill disputed">Disputed</span></div>
 <p class="about">Quotation marks by language, register and nesting level, from any source style</p>
-<p><b>Why:</b> Each language has its own quotation marks, and nesting alternates a second pair. uk (« » „ “) and pl („ ” « ») match CLDR; fr level one and ch (« » ‹ ›, as fr-CH) match too.</p>
+<p><b>Why:</b> Each language has its own quotation marks, and nesting alternates a second pair. uk (« » „ “) and pl („ ” « ») match CLDR; fr level one and ch (« » ‹ ›, as fr-CH) match too. Butterick agrees that quotes are curly and that styles vary by language, and gives no per-language sets. OQLF puts a no-break space inside French guillemets, as the engine does.</p>
 <p><b>Others, gaps, unread:</b> CLDR gives English “ ” ‘ ’ (the engine default is « » „ “, a gap already in the backlog as P0), German „ “ ‚ ‘ (the engine sets » « › ‹ on display), French « » with « » inside (the engine uses “ ” inside), and de-CH „ “ ‚ ‘ (the engine ch profile is the fr-CH one). The backlog records that every other tool in the benchmark produces “ ” for English by default (bench/RESULTS.md). Not read: the Swiss Federal Chancellery Schreibweisungen (a PDF this work could not extract text from), Pravopys 2019 (server refused the fetch), Imprimerie nationale Lexique.</p>
-<p class="meta">Sources: <a class="chip" href="#src-cldr-delimiters">cldr-delimiters</a><br>By language: <span class="lang"><b>en</b> <a class="chip" href="#src-cldr-delimiters">cldr-delimiters</a></span> <span class="lang"><b>uk</b> <a class="chip" href="#src-cldr-delimiters">cldr-delimiters</a></span> <span class="lang"><b>de</b> <a class="chip" href="#src-cldr-delimiters">cldr-delimiters</a></span> <span class="lang"><b>pl</b> <a class="chip" href="#src-cldr-delimiters">cldr-delimiters</a></span> <span class="lang"><b>fr</b> <a class="chip" href="#src-cldr-delimiters">cldr-delimiters</a></span> <span class="lang"><b>ch</b> <a class="chip" href="#src-cldr-delimiters">cldr-delimiters</a></span></p>
+<p class="meta">Sources: <a class="chip" href="#src-cldr-delimiters">cldr-delimiters</a> <a class="chip" href="#src-butterick-quotes">butterick-quotes</a> <a class="chip" href="#src-oqlf-espacement">oqlf-espacement</a><br>By language: <span class="lang"><b>en</b> <a class="chip" href="#src-cldr-delimiters">cldr-delimiters</a> <a class="chip" href="#src-butterick-quotes">butterick-quotes</a></span> <span class="lang"><b>uk</b> <a class="chip" href="#src-cldr-delimiters">cldr-delimiters</a></span> <span class="lang"><b>de</b> <a class="chip" href="#src-cldr-delimiters">cldr-delimiters</a></span> <span class="lang"><b>pl</b> <a class="chip" href="#src-cldr-delimiters">cldr-delimiters</a></span> <span class="lang"><b>fr</b> <a class="chip" href="#src-cldr-delimiters">cldr-delimiters</a> <a class="chip" href="#src-oqlf-espacement">oqlf-espacement</a></span> <span class="lang"><b>ch</b> <a class="chip" href="#src-cldr-delimiters">cldr-delimiters</a></span></p>
 </article>
-<article class="rule" id="rule-apostrophe" data-c="general-knowledge">
-<div class="head"><h3>apostrophe</h3><span class="pill general-knowledge">Unchecked</span></div>
+<article class="rule" id="rule-apostrophe" data-c="verified">
+<div class="head"><h3>apostrophe</h3><span class="pill verified">Verified</span></div>
 <p class="about">A straight ' in a word or before a year becomes ’</p>
-<p><b>Why:</b> A typographic apostrophe is ’, not the straight typewriter mark.</p>
-<p><b>Others, gaps, unread:</b> Not yet researched.</p>
-<p class="meta">Sources: <span class="none">none read</span></p>
+<p><b>Why:</b> A typographic apostrophe is ’, not the straight typewriter mark, and the same ’ opens an elided word (’90s, rock ’n’ roll) instead of an opening quote.</p>
+<p><b>Others, gaps, unread:</b> Matches the engine, including the leading-apostrophe cases fixed in the CHANGELOG. Butterick makes an exception for the Hawaiian okina (‘Oʻahu’), which the engine does not know. English only; no source for other languages was read.</p>
+<p class="meta">Sources: <a class="chip" href="#src-butterick-apostrophes">butterick-apostrophes</a> <a class="chip" href="#src-butterick-quotes">butterick-quotes</a><br>By language: <span class="lang"><b>en</b> <a class="chip" href="#src-butterick-apostrophes">butterick-apostrophes</a></span></p>
 </article>
-<article class="rule" id="rule-ellipsis" data-c="general-knowledge">
-<div class="head"><h3>ellipsis</h3><span class="pill general-knowledge">Unchecked</span></div>
+<article class="rule" id="rule-ellipsis" data-c="verified">
+<div class="head"><h3>ellipsis</h3><span class="pill verified">Verified</span></div>
 <p class="about">... becomes …</p>
 <p><b>Why:</b> Three dots are one character, …, so they cannot break across lines.</p>
-<p><b>Others, gaps, unread:</b> Not yet researched.</p>
-<p class="meta">Sources: <span class="none">none read</span></p>
+<p><b>Others, gaps, unread:</b> Butterick agrees and also asks for a no-break space on a side with no text so the ellipsis stays with its text; the engine does not do that (`... and so` keeps an ordinary space, a gap in the backlog). UAX #14 gives … class IN, so it is never split from another ellipsis. Interrupted speech: Butterick prefers an em dash outside fiction; the engine leaves it.</p>
+<p class="meta">Sources: <a class="chip" href="#src-butterick-ellipsis">butterick-ellipsis</a> <a class="chip" href="#src-uax14">uax14</a><br>By language: <span class="lang"><b>en</b> <a class="chip" href="#src-butterick-ellipsis">butterick-ellipsis</a></span></p>
 </article>
 <article class="rule" id="rule-arrow" data-c="general-knowledge">
 <div class="head"><h3>arrow</h3><span class="pill general-knowledge">Unchecked</span></div>
@@ -83,12 +83,12 @@ p{margin:6px 0}
 <p><b>Others, gaps, unread:</b> Not yet researched.</p>
 <p class="meta">Sources: <span class="none">none read</span></p>
 </article>
-<article class="rule" id="rule-symbol-legal" data-c="general-knowledge">
-<div class="head"><h3>symbol.legal</h3><span class="pill general-knowledge">Unchecked</span></div>
+<article class="rule" id="rule-symbol-legal" data-c="verified">
+<div class="head"><h3>symbol.legal</h3><span class="pill verified">Verified</span></div>
 <p class="about">(c) before a year, (C), (R) and (TM) become © ® ™</p>
 <p><b>Why:</b> (c), (R) and (TM) have proper characters.</p>
-<p><b>Others, gaps, unread:</b> Not yet researched.</p>
-<p class="meta">Sources: <span class="none">none read</span></p>
+<p><b>Others, gaps, unread:</b> Matches the engine: (c) is changed only before a year, so &quot;Section 12(c)&quot; is left alone, which is the warning in the source. The source puts no space before ™ and ®; the engine does not add one. English only.</p>
+<p class="meta">Sources: <a class="chip" href="#src-butterick-legal">butterick-legal</a><br>By language: <span class="lang"><b>en</b> <a class="chip" href="#src-butterick-legal">butterick-legal</a></span></p>
 </article>
 <article class="rule" id="rule-dash-dialogue" data-c="general-knowledge">
 <div class="head"><h3>dash.dialogue</h3><span class="pill general-knowledge">Unchecked</span></div>
@@ -108,36 +108,36 @@ p{margin:6px 0}
 <div class="head"><h3>dash.sentence</h3><span class="pill verified">Verified</span></div>
 <p class="about">A spaced hyphen, dash or double hyphen becomes a spaced dash (em; en in German and literary British English), no-break before it</p>
 <p><b>Why:</b> A break in a sentence takes a dash, and its form depends on the language. For English the em dash is backed by the source; it is the engine default.</p>
-<p><b>Others, gaps, unread:</b> The source sets the em dash flush against the words and calls spaces acceptable; the engine sets it spaced, with a no-break space before it. The spaced en dash for German and for British literary English is not backed by any source read yet.</p>
-<p class="meta">Sources: <a class="chip" href="#src-butterick-dashes">butterick-dashes</a><br>By language: <span class="lang"><b>en</b> <a class="chip" href="#src-butterick-dashes">butterick-dashes</a></span></p>
+<p><b>Others, gaps, unread:</b> The source sets the em dash flush against the words and calls spaces acceptable; the engine sets it spaced, with a no-break space before it, which matches neither. A search result quoting Bringhurst (The Elements of Typographic Style, 2nd ed., section 5.2.1, not read here) says he prefers a spaced en dash in English, so the primary guides disagree among themselves. UAX #14 gives the em dash class B2, which allows a break on both sides, hence the no-break space before it. The spaced en dash for German and for British literary English is not backed by any source read yet.</p>
+<p class="meta">Sources: <a class="chip" href="#src-butterick-dashes">butterick-dashes</a> <a class="chip" href="#src-uax14">uax14</a><br>By language: <span class="lang"><b>en</b> <a class="chip" href="#src-butterick-dashes">butterick-dashes</a></span></p>
 </article>
 <article class="rule" id="rule-symbol-minus" data-c="general-knowledge">
 <div class="head"><h3>symbol.minus</h3><span class="pill general-knowledge">Unchecked</span></div>
 <p class="about">A hyphen before a digit (-5) becomes a minus sign (−5)</p>
 <p><b>Why:</b> A minus sign is −, not a hyphen.</p>
-<p><b>Others, gaps, unread:</b> Unicode only shows that the character exists; it does not say when to use it. Butterick calls an en dash an acceptable minus sign in spreadsheets and math, so a style guide that prefers − over – was not found. Still unchecked.</p>
-<p class="meta">Sources: <a class="chip" href="#src-unicode-names">unicode-names</a> <a class="chip" href="#src-butterick-dashes">butterick-dashes</a></p>
+<p><b>Others, gaps, unread:</b> Unicode only shows that the character exists; it does not say when to use it. Butterick says to use an en dash for the minus sign (the &quot;Math symbols&quot; page also lists the &amp;minus; entity) and calls an en dash acceptable in spreadsheets, so a style guide that prefers − over – was not found. Still unchecked.</p>
+<p class="meta">Sources: <a class="chip" href="#src-unicode-names">unicode-names</a> <a class="chip" href="#src-butterick-dashes">butterick-dashes</a> <a class="chip" href="#src-butterick-math">butterick-math</a></p>
 </article>
-<article class="rule" id="rule-symbol-multiply" data-c="general-knowledge">
-<div class="head"><h3>symbol.multiply</h3><span class="pill general-knowledge">Unchecked</span></div>
+<article class="rule" id="rule-symbol-multiply" data-c="verified">
+<div class="head"><h3>symbol.multiply</h3><span class="pill verified">Verified</span></div>
 <p class="about">The letter x between numbers (1920x1080, 3 x 4) becomes ×</p>
 <p><b>Why:</b> A dimension takes ×, not the letter x.</p>
-<p><b>Others, gaps, unread:</b> Unicode only shows that the character exists. The NIST SI checklist, as summarised by the fetch tool, does not address the × character, so it is no help here. Still unchecked.</p>
-<p class="meta">Sources: <a class="chip" href="#src-unicode-names">unicode-names</a></p>
+<p><b>Others, gaps, unread:</b> Butterick says to use × instead of the letter x, dimensions included. Unicode shows the two are different characters. The NIST SI checklist, as summarised by the fetch tool, does not address ×. English only; no source for other languages was read.</p>
+<p class="meta">Sources: <a class="chip" href="#src-butterick-math">butterick-math</a> <a class="chip" href="#src-unicode-names">unicode-names</a><br>By language: <span class="lang"><b>en</b> <a class="chip" href="#src-butterick-math">butterick-math</a></span></p>
 </article>
-<article class="rule" id="rule-space-collapse" data-c="general-knowledge">
-<div class="head"><h3>space.collapse</h3><span class="pill general-knowledge">Unchecked</span></div>
+<article class="rule" id="rule-space-collapse" data-c="verified">
+<div class="head"><h3>space.collapse</h3><span class="pill verified">Verified</span></div>
 <p class="about">A run of spaces becomes one</p>
 <p><b>Why:</b> A run of spaces is a typing accident, not a setting.</p>
-<p><b>Others, gaps, unread:</b> Not yet researched.</p>
-<p class="meta">Sources: <span class="none">none read</span></p>
+<p><b>Others, gaps, unread:</b> Butterick asks for exactly one space between words and one after a full stop; the engine collapses a run to one. He offers a thin space after initials (W. A. Dwiggins); the engine uses a no-break space there (space.initial).</p>
+<p class="meta">Sources: <a class="chip" href="#src-butterick-word-spaces">butterick-word-spaces</a></p>
 </article>
 <article class="rule" id="rule-space-title" data-c="verified">
 <div class="head"><h3>space.title</h3><span class="pill verified">Verified</span></div>
 <p class="about">No-break space after Prof., Dr., Mr. …</p>
 <p><b>Why:</b> A title stays on the line of the name it belongs to.</p>
 <p><b>Others, gaps, unread:</b> Not compared with other tools or with guides for the other languages.</p>
-<p class="meta">Sources: <a class="chip" href="#src-butterick-nbsp">butterick-nbsp</a><br>By language: <span class="lang"><b>en</b> <a class="chip" href="#src-butterick-nbsp">butterick-nbsp</a></span></p>
+<p class="meta">Sources: <a class="chip" href="#src-butterick-nbsp">butterick-nbsp</a> <a class="chip" href="#src-uax14">uax14</a><br>By language: <span class="lang"><b>en</b> <a class="chip" href="#src-butterick-nbsp">butterick-nbsp</a></span></p>
 </article>
 <article class="rule" id="rule-space-initial" data-c="general-knowledge">
 <div class="head"><h3>space.initial</h3><span class="pill general-knowledge">Unchecked</span></div>
@@ -151,21 +151,21 @@ p{margin:6px 0}
 <p class="about">Parts of an abbreviation stay together (z. B.), and Nr., ul., S. stay with what follows</p>
 <p><b>Why:</b> An abbreviation stays on the line of what it qualifies.</p>
 <p><b>Others, gaps, unread:</b> Only the English case (&quot;Fig.&quot; before a number) is backed by a source read. The German, Ukrainian and Polish lists (profiles.ts) are still from general knowledge and have not been read by a native speaker; they stay unchecked even though the decision as a whole reads verified.</p>
-<p class="meta">Sources: <a class="chip" href="#src-butterick-nbsp">butterick-nbsp</a><br>By language: <span class="lang"><b>en</b> <a class="chip" href="#src-butterick-nbsp">butterick-nbsp</a></span></p>
+<p class="meta">Sources: <a class="chip" href="#src-butterick-nbsp">butterick-nbsp</a> <a class="chip" href="#src-uax14">uax14</a><br>By language: <span class="lang"><b>en</b> <a class="chip" href="#src-butterick-nbsp">butterick-nbsp</a></span></p>
 </article>
 <article class="rule" id="rule-space-number" data-c="verified">
 <div class="head"><h3>space.number</h3><span class="pill verified">Verified</span></div>
 <p class="about">No-break space between a number and a short word or unit after it, up to nine letters (21 September, 5 %)</p>
 <p><b>Why:</b> A number stays on the line of its unit or month. The source backs a space between a value and a unit, percent included.</p>
 <p><b>Others, gaps, unread:</b> The source does not say the space is nonbreaking, and says nothing about dates (&quot;21 September&quot;); both are our choice. It spaces % in English, while CLDR sets no space there (see space.percent) and the engine follows CLDR.</p>
-<p class="meta">Sources: <a class="chip" href="#src-nist-si-checklist">nist-si-checklist</a></p>
+<p class="meta">Sources: <a class="chip" href="#src-nist-si-checklist">nist-si-checklist</a> <a class="chip" href="#src-uax14">uax14</a></p>
 </article>
 <article class="rule" id="rule-space-percent" data-c="verified">
 <div class="head"><h3>space.percent</h3><span class="pill verified">Verified</span></div>
 <p class="about">German and French: a no-break space between a number and % or € (5 %, 49 €)</p>
-<p><b>Why:</b> German and French set a no-break space before % and a currency sign. CLDR agrees for % in de and fr, and for the currency sign in de and fr; it sets no space before % in en, uk, pl, de-CH and fr-CH, which is what the engine does.</p>
-<p><b>Others, gaps, unread:</b> CLDR also puts a no-break space before the currency sign in uk, pl and fr-CH; the engine leaves 49€ alone there (a gap, in the backlog). The pattern is how software formats a number, not a printed style guide; no printed guide (Duden, Imprimerie nationale Lexique) was read.</p>
-<p class="meta">Sources: <a class="chip" href="#src-cldr-numbers">cldr-numbers</a><br>By language: <span class="lang"><b>de</b> <a class="chip" href="#src-cldr-numbers">cldr-numbers</a></span> <span class="lang"><b>fr</b> <a class="chip" href="#src-cldr-numbers">cldr-numbers</a></span></p>
+<p><b>Why:</b> German and French set a no-break space before % and a currency sign. CLDR agrees for % in de and fr, and for the currency sign in de and fr; it sets no space before % in en, uk, pl, de-CH and fr-CH, which is what the engine does. OQLF, a printed-style authority, agrees for French: a no-break space before %, $ and €.</p>
+<p><b>Others, gaps, unread:</b> CLDR also puts a no-break space before the currency sign in uk, pl and fr-CH; the engine leaves 49€ alone there (a gap, in the backlog). OQLF also asks for a no-break space before a French colon, and none or a fine space before ; ! and ?, which the engine does not set (a gap, in the backlog). OQLF is a Quebec source; a France or Swiss guide may differ (a fine space). The German side rests on CLDR only; no Duden page was read.</p>
+<p class="meta">Sources: <a class="chip" href="#src-cldr-numbers">cldr-numbers</a> <a class="chip" href="#src-oqlf-espacement">oqlf-espacement</a> <a class="chip" href="#src-uax14">uax14</a><br>By language: <span class="lang"><b>de</b> <a class="chip" href="#src-cldr-numbers">cldr-numbers</a></span> <span class="lang"><b>fr</b> <a class="chip" href="#src-cldr-numbers">cldr-numbers</a> <a class="chip" href="#src-oqlf-espacement">oqlf-espacement</a></span></p>
 </article>
 <article class="rule" id="rule-space-association" data-c="general-knowledge">
 <div class="head"><h3>space.association</h3><span class="pill general-knowledge">Unchecked</span></div>
@@ -177,9 +177,9 @@ p{margin:6px 0}
 <article class="rule" id="rule-space-copyright" data-c="verified">
 <div class="head"><h3>space.copyright</h3><span class="pill verified">Verified</span></div>
 <p class="about">No-break space after ©</p>
-<p><b>Why:</b> © stays on the line of the year or name after it.</p>
+<p><b>Why:</b> © stays on the line of the year or name after it. Butterick: a no-break space between © and the year.</p>
 <p><b>Others, gaps, unread:</b> Not compared with other tools or with guides for the other languages.</p>
-<p class="meta">Sources: <a class="chip" href="#src-butterick-nbsp">butterick-nbsp</a></p>
+<p class="meta">Sources: <a class="chip" href="#src-butterick-nbsp">butterick-nbsp</a> <a class="chip" href="#src-butterick-legal">butterick-legal</a> <a class="chip" href="#src-uax14">uax14</a></p>
 </article>
 <article class="rule" id="rule-space-orphan" data-c="general-knowledge">
 <div class="head"><h3>space.orphan</h3><span class="pill general-knowledge">Unchecked</span></div>
@@ -237,6 +237,62 @@ p{margin:6px 0}
 <p><b>Relied on:</b> The percent pattern is &quot;#,##0 %&quot; with U+00A0 before the sign in de and fr, and &quot;#,##0%&quot; in en, uk, pl, de-CH and fr-CH; the currency pattern puts U+00A0 between the amount and the currency sign in de, fr, uk, pl and fr-CH.</p>
 <p class="via raw">Read as raw data.</p>
 <p class="meta">Read 2026-10-20 · <a href="https://cdn.jsdelivr.net/npm/cldr-numbers-full@46.0.0/main/de/numbers.json" target="_blank" rel="noopener">open source ↗</a><br>Used by: <a class="chip" href="#rule-space-percent">space.percent</a></p>
+</article>
+<article class="src" id="src-uax14">
+<div class="head"><h3>uax14</h3><span class="kind">standard</span></div>
+<p>Unicode Standard Annex #14, Unicode Line Breaking Algorithm, revision 57, Unicode 18.0.0, 2026-09-01 (first 100,000 of 141,504 characters read; line-break class tables and rules LB12, LB12a not read in full).</p>
+<p><b>Relied on:</b> U+00A0 NO-BREAK SPACE is class GL and prohibits a break on either side, and is the preferred way to keep two words on a line (a title and a name); U+202F is the same but narrow; the horizontal ellipsis is class IN, so breaks between consecutive ellipses are never allowed.</p>
+<p class="via summary">Read as a summary by a fetch tool. Check it by hand.</p>
+<p class="meta">Read 2026-10-20 · <a href="https://www.unicode.org/reports/tr14/" target="_blank" rel="noopener">open source ↗</a><br>Used by: <a class="chip" href="#rule-ellipsis">ellipsis</a> <a class="chip" href="#rule-dash-sentence">dash.sentence</a> <a class="chip" href="#rule-space-title">space.title</a> <a class="chip" href="#rule-space-abbreviation">space.abbreviation</a> <a class="chip" href="#rule-space-number">space.number</a> <a class="chip" href="#rule-space-percent">space.percent</a> <a class="chip" href="#rule-space-copyright">space.copyright</a></p>
+</article>
+<article class="src" id="src-oqlf-espacement">
+<div class="head"><h3>oqlf-espacement</h3><span class="kind">style-guide</span></div>
+<p>OQLF, Banque de dépannage linguistique, &quot;Espacement avant et après les signes de ponctuation et les symboles&quot; (web page, updated 2024).</p>
+<p><b>Relied on:</b> In French a no-break space goes inside the guillemets (after « and before »), before %, before $ and €, and before a colon; before ; ! and ? there is no space or a fine space; no space goes before an ellipsis or a comma.</p>
+<p class="via summary">Read as a summary by a fetch tool. Check it by hand.</p>
+<p class="meta">Read 2026-10-20 · <a href="https://vitrinelinguistique.oqlf.gouv.qc.ca/22039/la-typographie/espacement/espacement-avant-et-apres-les-signes-de-ponctuation-et-les-symboles" target="_blank" rel="noopener">open source ↗</a><br>Used by: <a class="chip" href="#rule-quote">quote</a> <a class="chip" href="#rule-space-percent">space.percent</a></p>
+</article>
+<article class="src" id="src-butterick-quotes">
+<div class="head"><h3>butterick-quotes</h3><span class="kind">style-guide</span></div>
+<p>Matthew Butterick, Practical Typography, &quot;Straight and curly quotes&quot; (web page; no edition or year on the page).</p>
+<p><b>Relied on:</b> Use curly quotes, never straight ones; foot and inch marks are the exception; fix quotes before apostrophes (a word-initial apostrophe is a closing single curly quote); quote styles vary by language; do not convert quotes in code.</p>
+<p class="via summary">Read as a summary by a fetch tool. Check it by hand.</p>
+<p class="meta">Read 2026-10-20 · <a href="https://practicaltypography.com/straight-and-curly-quotes.html" target="_blank" rel="noopener">open source ↗</a><br>Used by: <a class="chip" href="#rule-quote">quote</a> <a class="chip" href="#rule-apostrophe">apostrophe</a></p>
+</article>
+<article class="src" id="src-butterick-apostrophes">
+<div class="head"><h3>butterick-apostrophes</h3><span class="kind">style-guide</span></div>
+<p>Matthew Butterick, Practical Typography, &quot;Apostrophes&quot; (web page; no edition or year on the page).</p>
+<p><b>Relied on:</b> An apostrophe for possession, contraction or an elided start (’70s, ’n’ in rock ’n’ roll) is a curly apostrophe, not an opening single quote; Hawaiian okina is the exception and takes an opening single quote.</p>
+<p class="via summary">Read as a summary by a fetch tool. Check it by hand.</p>
+<p class="meta">Read 2026-10-20 · <a href="https://practicaltypography.com/apostrophes.html" target="_blank" rel="noopener">open source ↗</a><br>Used by: <a class="chip" href="#rule-apostrophe">apostrophe</a></p>
+</article>
+<article class="src" id="src-butterick-ellipsis">
+<div class="head"><h3>butterick-ellipsis</h3><span class="kind">style-guide</span></div>
+<p>Matthew Butterick, Practical Typography, &quot;Ellipses&quot; (web page; no edition or year on the page).</p>
+<p><b>Relied on:</b> Use the ellipsis character, not three periods with or without spaces; put a no-break space on a side that has no text so the ellipsis stays with its text; do not let the dots split across lines.</p>
+<p class="via summary">Read as a summary by a fetch tool. Check it by hand.</p>
+<p class="meta">Read 2026-10-20 · <a href="https://practicaltypography.com/ellipses.html" target="_blank" rel="noopener">open source ↗</a><br>Used by: <a class="chip" href="#rule-ellipsis">ellipsis</a></p>
+</article>
+<article class="src" id="src-butterick-legal">
+<div class="head"><h3>butterick-legal</h3><span class="kind">style-guide</span></div>
+<p>Matthew Butterick, Practical Typography, &quot;Trademark &amp; copyright symbols&quot; (web page; no edition or year on the page).</p>
+<p><b>Relied on:</b> Replace (c), (R) and (TM) with ©, ® and ™; no space before ™ or ®; a no-break space between © and the year; do not autocorrect (c) inside citations such as &quot;Section 12(c)&quot;.</p>
+<p class="via summary">Read as a summary by a fetch tool. Check it by hand.</p>
+<p class="meta">Read 2026-10-20 · <a href="https://practicaltypography.com/trademark-and-copyright-symbols.html" target="_blank" rel="noopener">open source ↗</a><br>Used by: <a class="chip" href="#rule-symbol-legal">symbol.legal</a> <a class="chip" href="#rule-space-copyright">space.copyright</a></p>
+</article>
+<article class="src" id="src-butterick-math">
+<div class="head"><h3>butterick-math</h3><span class="kind">style-guide</span></div>
+<p>Matthew Butterick, Practical Typography, &quot;Math symbols&quot; (web page; no edition or year on the page).</p>
+<p><b>Relied on:</b> Use × instead of the letter x for multiplication, dimensions such as 8.5″ × 14″ included; for a minus sign use an en dash (and the HTML entity &amp;minus; is listed).</p>
+<p class="via summary">Read as a summary by a fetch tool. Check it by hand.</p>
+<p class="meta">Read 2026-10-20 · <a href="https://practicaltypography.com/math-symbols.html" target="_blank" rel="noopener">open source ↗</a><br>Used by: <a class="chip" href="#rule-symbol-minus">symbol.minus</a> <a class="chip" href="#rule-symbol-multiply">symbol.multiply</a></p>
+</article>
+<article class="src" id="src-butterick-word-spaces">
+<div class="head"><h3>butterick-word-spaces</h3><span class="kind">style-guide</span></div>
+<p>Matthew Butterick, Practical Typography, &quot;Word spaces&quot; (web page; no edition or year on the page); the companion page &quot;One space between sentences&quot; says the same.</p>
+<p><b>Relied on:</b> Use exactly one word space between words and one after a sentence-ending period; a thin space is suitable after the periods in initials such as W. A. Dwiggins.</p>
+<p class="via summary">Read as a summary by a fetch tool. Check it by hand.</p>
+<p class="meta">Read 2026-10-20 · <a href="https://practicaltypography.com/word-spaces.html" target="_blank" rel="noopener">open source ↗</a><br>Used by: <a class="chip" href="#rule-space-collapse">space.collapse</a></p>
 </article>
 </main>
 <script>

@@ -6,7 +6,7 @@ What the engine deliberately leaves alone, what it knowingly does not do, and wh
 
 - Web addresses, emails and `` `code spans` `` come back exactly as written, so `12-15` in a path and `->` in a command survive. (Only that backtick form is a code span in plain text; HTML and Markdown have their own, see below.)
 - A leading apostrophe on a year (`'90s`) does not stop a quotation from pairing.
-- A straight `"` after a digit is an inch mark (`5'10"`), not a closing quote. A quote after any other digit is read as closing.
+- A straight `"` after a digit is an inch mark (`5'10"`), not a closing quote, when it is the only such mark in the text. Two of them in one text (`a 2" pipe and a 4" pipe`) pair up as a quotation: a known bug, see [backlog.md](backlog.md). A quote after any other digit is read as closing.
 - Hyphens that are not ranges: identifiers, partial dates (`2026-10`) and phone numbers keep their hyphen. Only ascending numbers are ranges. An unspaced three-digit and four-digit pair (`555-1234`) is read as a local phone number, so a real range like `100-1200` written without spaces keeps its hyphen; spaced (`100 - 1200`) it is a range.
 - A single quoted letter `n` (`he said 'n'`) is read as the `’n’` of rock 'n' roll, not as a quotation, and so are the words `'til`, `'em`, `'cause`, `'bout`, `'round`, `'tis`, `'twas` and `'cos` when a single quote opens them.
 - A hyphen between equals is never changed into an en dash: a program cannot tell East-West (en dash) from one-week (hyphen), so those pairs are fixed in the text itself.

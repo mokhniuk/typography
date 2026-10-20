@@ -14,34 +14,42 @@ Every source was read before it was entered, on the date given. The `confidence`
 
 Confidence: `disputed`.
 
-Why: Each language has its own quotation marks, and nesting alternates a second pair. uk (« » „ “) and pl („ ” « ») match CLDR; fr level one and ch (« » ‹ ›, as fr-CH) match too.
+Why: Each language has its own quotation marks, and nesting alternates a second pair. uk (« » „ “) and pl („ ” « ») match CLDR; fr level one and ch (« » ‹ ›, as fr-CH) match too. Butterick agrees that quotes are curly and that styles vary by language, and gives no per-language sets. OQLF puts a no-break space inside French guillemets, as the engine does.
 
 Alternative: CLDR gives English “ ” ‘ ’ (the engine default is « » „ “, a gap already in the backlog as P0), German „ “ ‚ ‘ (the engine sets » « › ‹ on display), French « » with « » inside (the engine uses “ ” inside), and de-CH „ “ ‚ ‘ (the engine ch profile is the fr-CH one). The backlog records that every other tool in the benchmark produces “ ” for English by default (bench/RESULTS.md). Not read: the Swiss Federal Chancellery Schreibweisungen (a PDF this work could not extract text from), Pravopys 2019 (server refused the fetch), Imprimerie nationale Lexique.
 
-Sources: [cldr-delimiters](#src-cldr-delimiters)
+Sources: [cldr-delimiters](#src-cldr-delimiters), [butterick-quotes](#src-butterick-quotes), [oqlf-espacement](#src-oqlf-espacement)
 
-- `en`: [cldr-delimiters](#src-cldr-delimiters)
+- `en`: [cldr-delimiters](#src-cldr-delimiters), [butterick-quotes](#src-butterick-quotes)
 - `uk`: [cldr-delimiters](#src-cldr-delimiters)
 - `de`: [cldr-delimiters](#src-cldr-delimiters)
 - `pl`: [cldr-delimiters](#src-cldr-delimiters)
-- `fr`: [cldr-delimiters](#src-cldr-delimiters)
+- `fr`: [cldr-delimiters](#src-cldr-delimiters), [oqlf-espacement](#src-oqlf-espacement)
 - `ch`: [cldr-delimiters](#src-cldr-delimiters)
 
 ### `apostrophe`
 
-Confidence: `general-knowledge`.
+Confidence: `verified`.
 
-Why: A typographic apostrophe is ’, not the straight typewriter mark.
+Why: A typographic apostrophe is ’, not the straight typewriter mark, and the same ’ opens an elided word (’90s, rock ’n’ roll) instead of an opening quote.
 
-Alternative: Not yet researched.
+Alternative: Matches the engine, including the leading-apostrophe cases fixed in the CHANGELOG. Butterick makes an exception for the Hawaiian okina (‘Oʻahu’), which the engine does not know. English only; no source for other languages was read.
+
+Sources: [butterick-apostrophes](#src-butterick-apostrophes), [butterick-quotes](#src-butterick-quotes)
+
+- `en`: [butterick-apostrophes](#src-butterick-apostrophes)
 
 ### `ellipsis`
 
-Confidence: `general-knowledge`.
+Confidence: `verified`.
 
 Why: Three dots are one character, …, so they cannot break across lines.
 
-Alternative: Not yet researched.
+Alternative: Butterick agrees and also asks for a no-break space on a side with no text so the ellipsis stays with its text; the engine does not do that (`... and so` keeps an ordinary space, a gap in the backlog). UAX #14 gives … class IN, so it is never split from another ellipsis. Interrupted speech: Butterick prefers an em dash outside fiction; the engine leaves it.
+
+Sources: [butterick-ellipsis](#src-butterick-ellipsis), [uax14](#src-uax14)
+
+- `en`: [butterick-ellipsis](#src-butterick-ellipsis)
 
 ### `arrow`
 
@@ -53,11 +61,15 @@ Alternative: Not yet researched.
 
 ### `symbol.legal`
 
-Confidence: `general-knowledge`.
+Confidence: `verified`.
 
 Why: (c), (R) and (TM) have proper characters.
 
-Alternative: Not yet researched.
+Alternative: Matches the engine: (c) is changed only before a year, so "Section 12(c)" is left alone, which is the warning in the source. The source puts no space before ™ and ®; the engine does not add one. English only.
+
+Sources: [butterick-legal](#src-butterick-legal)
+
+- `en`: [butterick-legal](#src-butterick-legal)
 
 ### `dash.dialogue`
 
@@ -81,9 +93,9 @@ Confidence: `verified`.
 
 Why: A break in a sentence takes a dash, and its form depends on the language. For English the em dash is backed by the source; it is the engine default.
 
-Alternative: The source sets the em dash flush against the words and calls spaces acceptable; the engine sets it spaced, with a no-break space before it. The spaced en dash for German and for British literary English is not backed by any source read yet.
+Alternative: The source sets the em dash flush against the words and calls spaces acceptable; the engine sets it spaced, with a no-break space before it, which matches neither. A search result quoting Bringhurst (The Elements of Typographic Style, 2nd ed., section 5.2.1, not read here) says he prefers a spaced en dash in English, so the primary guides disagree among themselves. UAX #14 gives the em dash class B2, which allows a break on both sides, hence the no-break space before it. The spaced en dash for German and for British literary English is not backed by any source read yet.
 
-Sources: [butterick-dashes](#src-butterick-dashes)
+Sources: [butterick-dashes](#src-butterick-dashes), [uax14](#src-uax14)
 
 - `en`: [butterick-dashes](#src-butterick-dashes)
 
@@ -93,27 +105,31 @@ Confidence: `general-knowledge`.
 
 Why: A minus sign is −, not a hyphen.
 
-Alternative: Unicode only shows that the character exists; it does not say when to use it. Butterick calls an en dash an acceptable minus sign in spreadsheets and math, so a style guide that prefers − over – was not found. Still unchecked.
+Alternative: Unicode only shows that the character exists; it does not say when to use it. Butterick says to use an en dash for the minus sign (the "Math symbols" page also lists the &minus; entity) and calls an en dash acceptable in spreadsheets, so a style guide that prefers − over – was not found. Still unchecked.
 
-Sources: [unicode-names](#src-unicode-names), [butterick-dashes](#src-butterick-dashes)
+Sources: [unicode-names](#src-unicode-names), [butterick-dashes](#src-butterick-dashes), [butterick-math](#src-butterick-math)
 
 ### `symbol.multiply`
 
-Confidence: `general-knowledge`.
+Confidence: `verified`.
 
 Why: A dimension takes ×, not the letter x.
 
-Alternative: Unicode only shows that the character exists. The NIST SI checklist, as summarised by the fetch tool, does not address the × character, so it is no help here. Still unchecked.
+Alternative: Butterick says to use × instead of the letter x, dimensions included. Unicode shows the two are different characters. The NIST SI checklist, as summarised by the fetch tool, does not address ×. English only; no source for other languages was read.
 
-Sources: [unicode-names](#src-unicode-names)
+Sources: [butterick-math](#src-butterick-math), [unicode-names](#src-unicode-names)
+
+- `en`: [butterick-math](#src-butterick-math)
 
 ### `space.collapse`
 
-Confidence: `general-knowledge`.
+Confidence: `verified`.
 
 Why: A run of spaces is a typing accident, not a setting.
 
-Alternative: Not yet researched.
+Alternative: Butterick asks for exactly one space between words and one after a full stop; the engine collapses a run to one. He offers a thin space after initials (W. A. Dwiggins); the engine uses a no-break space there (space.initial).
+
+Sources: [butterick-word-spaces](#src-butterick-word-spaces)
 
 ### `space.title`
 
@@ -123,7 +139,7 @@ Why: A title stays on the line of the name it belongs to.
 
 Alternative: Not compared with other tools or with guides for the other languages.
 
-Sources: [butterick-nbsp](#src-butterick-nbsp)
+Sources: [butterick-nbsp](#src-butterick-nbsp), [uax14](#src-uax14)
 
 - `en`: [butterick-nbsp](#src-butterick-nbsp)
 
@@ -143,7 +159,7 @@ Why: An abbreviation stays on the line of what it qualifies.
 
 Alternative: Only the English case ("Fig." before a number) is backed by a source read. The German, Ukrainian and Polish lists (profiles.ts) are still from general knowledge and have not been read by a native speaker; they stay unchecked even though the decision as a whole reads verified.
 
-Sources: [butterick-nbsp](#src-butterick-nbsp)
+Sources: [butterick-nbsp](#src-butterick-nbsp), [uax14](#src-uax14)
 
 - `en`: [butterick-nbsp](#src-butterick-nbsp)
 
@@ -155,20 +171,20 @@ Why: A number stays on the line of its unit or month. The source backs a space b
 
 Alternative: The source does not say the space is nonbreaking, and says nothing about dates ("21 September"); both are our choice. It spaces % in English, while CLDR sets no space there (see space.percent) and the engine follows CLDR.
 
-Sources: [nist-si-checklist](#src-nist-si-checklist)
+Sources: [nist-si-checklist](#src-nist-si-checklist), [uax14](#src-uax14)
 
 ### `space.percent`
 
 Confidence: `verified`.
 
-Why: German and French set a no-break space before % and a currency sign. CLDR agrees for % in de and fr, and for the currency sign in de and fr; it sets no space before % in en, uk, pl, de-CH and fr-CH, which is what the engine does.
+Why: German and French set a no-break space before % and a currency sign. CLDR agrees for % in de and fr, and for the currency sign in de and fr; it sets no space before % in en, uk, pl, de-CH and fr-CH, which is what the engine does. OQLF, a printed-style authority, agrees for French: a no-break space before %, $ and €.
 
-Alternative: CLDR also puts a no-break space before the currency sign in uk, pl and fr-CH; the engine leaves 49€ alone there (a gap, in the backlog). The pattern is how software formats a number, not a printed style guide; no printed guide (Duden, Imprimerie nationale Lexique) was read.
+Alternative: CLDR also puts a no-break space before the currency sign in uk, pl and fr-CH; the engine leaves 49€ alone there (a gap, in the backlog). OQLF also asks for a no-break space before a French colon, and none or a fine space before ; ! and ?, which the engine does not set (a gap, in the backlog). OQLF is a Quebec source; a France or Swiss guide may differ (a fine space). The German side rests on CLDR only; no Duden page was read.
 
-Sources: [cldr-numbers](#src-cldr-numbers)
+Sources: [cldr-numbers](#src-cldr-numbers), [oqlf-espacement](#src-oqlf-espacement), [uax14](#src-uax14)
 
 - `de`: [cldr-numbers](#src-cldr-numbers)
-- `fr`: [cldr-numbers](#src-cldr-numbers)
+- `fr`: [cldr-numbers](#src-cldr-numbers), [oqlf-espacement](#src-oqlf-espacement)
 
 ### `space.association`
 
@@ -182,11 +198,11 @@ Alternative: Not yet researched.
 
 Confidence: `verified`.
 
-Why: © stays on the line of the year or name after it.
+Why: © stays on the line of the year or name after it. Butterick: a no-break space between © and the year.
 
 Alternative: Not compared with other tools or with guides for the other languages.
 
-Sources: [butterick-nbsp](#src-butterick-nbsp)
+Sources: [butterick-nbsp](#src-butterick-nbsp), [butterick-legal](#src-butterick-legal), [uax14](#src-uax14)
 
 ### `space.orphan`
 
@@ -236,6 +252,13 @@ Relied on: U+2212 MINUS SIGN and U+00D7 MULTIPLICATION SIGN are characters of th
 
 Relied on: The percent pattern is "#,##0 %" with U+00A0 before the sign in de and fr, and "#,##0%" in en, uk, pl, de-CH and fr-CH; the currency pattern puts U+00A0 between the amount and the currency sign in de, fr, uk, pl and fr-CH.
 
+<a id="src-uax14"></a>
+**uax14**. Unicode Standard Annex #14, Unicode Line Breaking Algorithm, revision 57, Unicode 18.0.0, 2026-09-01 (first 100,000 of 141,504 characters read; line-break class tables and rules LB12, LB12a not read in full).
+
+<https://www.unicode.org/reports/tr14/>, read as a summary by a fetch tool, check it by hand on 2026-10-20.
+
+Relied on: U+00A0 NO-BREAK SPACE is class GL and prohibits a break on either side, and is the preferred way to keep two words on a line (a title and a name); U+202F is the same but narrow; the horizontal ellipsis is class IN, so breaks between consecutive ellipses are never allowed.
+
 ### Style guides
 
 <a id="src-butterick-dashes"></a>
@@ -251,3 +274,52 @@ Relied on: The em dash marks a break within a sentence; em and en dashes are nor
 <https://practicaltypography.com/nonbreaking-spaces.html>, read as a summary by a fetch tool, check it by hand on 2026-10-20.
 
 Relied on: Use a nonbreaking space after § and ¶, after abbreviations such as "Ex." and "Fig." before a letter or number, between a title and a name ("Ms."), and with the trademark and copyright symbols.
+
+<a id="src-oqlf-espacement"></a>
+**oqlf-espacement**. OQLF, Banque de dépannage linguistique, "Espacement avant et après les signes de ponctuation et les symboles" (web page, updated 2024).
+
+<https://vitrinelinguistique.oqlf.gouv.qc.ca/22039/la-typographie/espacement/espacement-avant-et-apres-les-signes-de-ponctuation-et-les-symboles>, read as a summary by a fetch tool, check it by hand on 2026-10-20.
+
+Relied on: In French a no-break space goes inside the guillemets (after « and before »), before %, before $ and €, and before a colon; before ; ! and ? there is no space or a fine space; no space goes before an ellipsis or a comma.
+
+<a id="src-butterick-quotes"></a>
+**butterick-quotes**. Matthew Butterick, Practical Typography, "Straight and curly quotes" (web page; no edition or year on the page).
+
+<https://practicaltypography.com/straight-and-curly-quotes.html>, read as a summary by a fetch tool, check it by hand on 2026-10-20.
+
+Relied on: Use curly quotes, never straight ones; foot and inch marks are the exception; fix quotes before apostrophes (a word-initial apostrophe is a closing single curly quote); quote styles vary by language; do not convert quotes in code.
+
+<a id="src-butterick-apostrophes"></a>
+**butterick-apostrophes**. Matthew Butterick, Practical Typography, "Apostrophes" (web page; no edition or year on the page).
+
+<https://practicaltypography.com/apostrophes.html>, read as a summary by a fetch tool, check it by hand on 2026-10-20.
+
+Relied on: An apostrophe for possession, contraction or an elided start (’70s, ’n’ in rock ’n’ roll) is a curly apostrophe, not an opening single quote; Hawaiian okina is the exception and takes an opening single quote.
+
+<a id="src-butterick-ellipsis"></a>
+**butterick-ellipsis**. Matthew Butterick, Practical Typography, "Ellipses" (web page; no edition or year on the page).
+
+<https://practicaltypography.com/ellipses.html>, read as a summary by a fetch tool, check it by hand on 2026-10-20.
+
+Relied on: Use the ellipsis character, not three periods with or without spaces; put a no-break space on a side that has no text so the ellipsis stays with its text; do not let the dots split across lines.
+
+<a id="src-butterick-legal"></a>
+**butterick-legal**. Matthew Butterick, Practical Typography, "Trademark & copyright symbols" (web page; no edition or year on the page).
+
+<https://practicaltypography.com/trademark-and-copyright-symbols.html>, read as a summary by a fetch tool, check it by hand on 2026-10-20.
+
+Relied on: Replace (c), (R) and (TM) with ©, ® and ™; no space before ™ or ®; a no-break space between © and the year; do not autocorrect (c) inside citations such as "Section 12(c)".
+
+<a id="src-butterick-math"></a>
+**butterick-math**. Matthew Butterick, Practical Typography, "Math symbols" (web page; no edition or year on the page).
+
+<https://practicaltypography.com/math-symbols.html>, read as a summary by a fetch tool, check it by hand on 2026-10-20.
+
+Relied on: Use × instead of the letter x for multiplication, dimensions such as 8.5″ × 14″ included; for a minus sign use an en dash (and the HTML entity &minus; is listed).
+
+<a id="src-butterick-word-spaces"></a>
+**butterick-word-spaces**. Matthew Butterick, Practical Typography, "Word spaces" (web page; no edition or year on the page); the companion page "One space between sentences" says the same.
+
+<https://practicaltypography.com/word-spaces.html>, read as a summary by a fetch tool, check it by hand on 2026-10-20.
+
+Relied on: Use exactly one word space between words and one after a sentence-ending period; a thin space is suitable after the periods in initials such as W. A. Dwiggins.

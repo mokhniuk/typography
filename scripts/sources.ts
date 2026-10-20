@@ -130,6 +130,118 @@ export const SOURCES: readonly Source[] = [
     claim:
       'The percent pattern is "#,##0 %" with U+00A0 before the sign in de and fr, and "#,##0%" in en, uk, pl, de-CH and fr-CH; the currency pattern puts U+00A0 between the amount and the currency sign in de, fr, uk, pl and fr-CH.',
   },
+  {
+    id: 'uax14',
+    kind: 'standard',
+    author: 'Unicode Consortium (editor Robin Leroy)',
+    title: 'UAX #14: Unicode Line Breaking Algorithm, revision 57 (Unicode 18.0.0, 2026-09-01)',
+    about:
+      'The standard that decides where a line may break. It is the mechanism behind every no-break rule here: it says what a no-break space does, not which words to bind.',
+    cite: 'Unicode Standard Annex #14, Unicode Line Breaking Algorithm, revision 57, Unicode 18.0.0, 2026-09-01 (first 100,000 of 141,504 characters read; line-break class tables and rules LB12, LB12a not read in full).',
+    url: 'https://www.unicode.org/reports/tr14/',
+    accessed: '2026-10-20',
+    readVia: 'summary',
+    claim:
+      'U+00A0 NO-BREAK SPACE is class GL and prohibits a break on either side, and is the preferred way to keep two words on a line (a title and a name); U+202F is the same but narrow; the horizontal ellipsis is class IN, so breaks between consecutive ellipses are never allowed.',
+  },
+  {
+    id: 'oqlf-espacement',
+    kind: 'style-guide',
+    author: 'Office québécois de la langue française (Banque de dépannage linguistique)',
+    title: 'Espacement avant et après les signes de ponctuation et les symboles',
+    about:
+      'The Quebec language office’s table of the spaces around punctuation and symbols in French, last updated 2024. A Quebec authority, so where France or Switzerland differ (a fine space instead of a full no-break space) it does not say so.',
+    cite: 'OQLF, Banque de dépannage linguistique, "Espacement avant et après les signes de ponctuation et les symboles" (web page, updated 2024).',
+    url: 'https://vitrinelinguistique.oqlf.gouv.qc.ca/22039/la-typographie/espacement/espacement-avant-et-apres-les-signes-de-ponctuation-et-les-symboles',
+    accessed: '2026-10-20',
+    readVia: 'summary',
+    claim:
+      'In French a no-break space goes inside the guillemets (after « and before »), before %, before $ and €, and before a colon; before ; ! and ? there is no space or a fine space; no space goes before an ellipsis or a comma.',
+  },
+  {
+    id: 'butterick-quotes',
+    kind: 'style-guide',
+    author: 'Matthew Butterick (the page itself names no author)',
+    title: 'Practical Typography: Straight and curly quotes',
+    about:
+      'The handbook on quotation marks: use curly quotes, keep straight ones only for foot and inch marks and for code. English-centred; it gives no per-language mark sets.',
+    cite: 'Matthew Butterick, Practical Typography, "Straight and curly quotes" (web page; no edition or year on the page).',
+    url: 'https://practicaltypography.com/straight-and-curly-quotes.html',
+    accessed: '2026-10-20',
+    readVia: 'summary',
+    claim:
+      'Use curly quotes, never straight ones; foot and inch marks are the exception; fix quotes before apostrophes (a word-initial apostrophe is a closing single curly quote); quote styles vary by language; do not convert quotes in code.',
+  },
+  {
+    id: 'butterick-apostrophes',
+    kind: 'style-guide',
+    author: 'Matthew Butterick (the page itself names no author)',
+    title: 'Practical Typography: Apostrophes',
+    about:
+      'The handbook on the apostrophe: always the curly closing mark, including at the start of an elided word.',
+    cite: 'Matthew Butterick, Practical Typography, "Apostrophes" (web page; no edition or year on the page).',
+    url: 'https://practicaltypography.com/apostrophes.html',
+    accessed: '2026-10-20',
+    readVia: 'summary',
+    claim:
+      'An apostrophe for possession, contraction or an elided start (’70s, ’n’ in rock ’n’ roll) is a curly apostrophe, not an opening single quote; Hawaiian okina is the exception and takes an opening single quote.',
+  },
+  {
+    id: 'butterick-ellipsis',
+    kind: 'style-guide',
+    author: 'Matthew Butterick (the page itself names no author)',
+    title: 'Practical Typography: Ellipses',
+    about:
+      'The handbook on the ellipsis: the single character, spaced as the writer prefers, with a no-break space where text is on one side only.',
+    cite: 'Matthew Butterick, Practical Typography, "Ellipses" (web page; no edition or year on the page).',
+    url: 'https://practicaltypography.com/ellipses.html',
+    accessed: '2026-10-20',
+    readVia: 'summary',
+    claim:
+      'Use the ellipsis character, not three periods with or without spaces; put a no-break space on a side that has no text so the ellipsis stays with its text; do not let the dots split across lines.',
+  },
+  {
+    id: 'butterick-legal',
+    kind: 'style-guide',
+    author: 'Matthew Butterick (the page itself names no author)',
+    title: 'Practical Typography: Trademark and copyright symbols',
+    about:
+      'The handbook on ©, ® and ™: the real characters, where they sit, and a warning that autocorrecting (c) damages text such as "Section 12(c)".',
+    cite: 'Matthew Butterick, Practical Typography, "Trademark & copyright symbols" (web page; no edition or year on the page).',
+    url: 'https://practicaltypography.com/trademark-and-copyright-symbols.html',
+    accessed: '2026-10-20',
+    readVia: 'summary',
+    claim:
+      'Replace (c), (R) and (TM) with ©, ® and ™; no space before ™ or ®; a no-break space between © and the year; do not autocorrect (c) inside citations such as "Section 12(c)".',
+  },
+  {
+    id: 'butterick-math',
+    kind: 'style-guide',
+    author: 'Matthew Butterick (the page itself names no author)',
+    title: 'Practical Typography: Math symbols',
+    about:
+      'The handbook on mathematical signs: use real symbols, × for multiplication including dimensions. Its minus guidance names the en dash and the HTML entity for the minus sign in the same breath, so it does not settle which character to use.',
+    cite: 'Matthew Butterick, Practical Typography, "Math symbols" (web page; no edition or year on the page).',
+    url: 'https://practicaltypography.com/math-symbols.html',
+    accessed: '2026-10-20',
+    readVia: 'summary',
+    claim:
+      'Use × instead of the letter x for multiplication, dimensions such as 8.5″ × 14″ included; for a minus sign use an en dash (and the HTML entity &minus; is listed).',
+  },
+  {
+    id: 'butterick-word-spaces',
+    kind: 'style-guide',
+    author: 'Matthew Butterick (the page itself names no author)',
+    title: 'Practical Typography: Word spaces',
+    about:
+      'The handbook on spaces between words: one space, also after a full stop. A thin space is offered for initials.',
+    cite: 'Matthew Butterick, Practical Typography, "Word spaces" (web page; no edition or year on the page); the companion page "One space between sentences" says the same.',
+    url: 'https://practicaltypography.com/word-spaces.html',
+    accessed: '2026-10-20',
+    readVia: 'summary',
+    claim:
+      'Use exactly one word space between words and one after a sentence-ending period; a thin space is suitable after the periods in initials such as W. A. Dwiggins.',
+  },
 ];
 
 const NOT_YET = 'Not yet researched.';
@@ -145,17 +257,38 @@ const general = (why: string): Decision => ({
 /** One entry for every id in `RULES`; src/sources.test.ts checks that none is missing or extra. */
 export const RULE_SOURCES: Record<string, Decision> = {
   quote: {
-    sources: ['cldr-delimiters'],
-    why: 'Each language has its own quotation marks, and nesting alternates a second pair. uk (« » „ “) and pl („ ” « ») match CLDR; fr level one and ch (« » ‹ ›, as fr-CH) match too.',
+    sources: ['cldr-delimiters', 'butterick-quotes', 'oqlf-espacement'],
+    why: 'Each language has its own quotation marks, and nesting alternates a second pair. uk (« » „ “) and pl („ ” « ») match CLDR; fr level one and ch (« » ‹ ›, as fr-CH) match too. Butterick agrees that quotes are curly and that styles vary by language, and gives no per-language sets. OQLF puts a no-break space inside French guillemets, as the engine does.',
     alternative:
       'CLDR gives English “ ” ‘ ’ (the engine default is « » „ “, a gap already in the backlog as P0), German „ “ ‚ ‘ (the engine sets » « › ‹ on display), French « » with « » inside (the engine uses “ ” inside), and de-CH „ “ ‚ ‘ (the engine ch profile is the fr-CH one). The backlog records that every other tool in the benchmark produces “ ” for English by default (bench/RESULTS.md). Not read: the Swiss Federal Chancellery Schreibweisungen (a PDF this work could not extract text from), Pravopys 2019 (server refused the fetch), Imprimerie nationale Lexique.',
     confidence: 'disputed',
-    langs: { en: ['cldr-delimiters'], uk: ['cldr-delimiters'], de: ['cldr-delimiters'], pl: ['cldr-delimiters'], fr: ['cldr-delimiters'], ch: ['cldr-delimiters'] },
+    langs: { en: ['cldr-delimiters', 'butterick-quotes'], uk: ['cldr-delimiters'], de: ['cldr-delimiters'], pl: ['cldr-delimiters'], fr: ['cldr-delimiters', 'oqlf-espacement'], ch: ['cldr-delimiters'] },
   },
-  apostrophe: general('A typographic apostrophe is ’, not the straight typewriter mark.'),
-  ellipsis: general('Three dots are one character, …, so they cannot break across lines.'),
+  apostrophe: {
+    sources: ['butterick-apostrophes', 'butterick-quotes'],
+    why: 'A typographic apostrophe is ’, not the straight typewriter mark, and the same ’ opens an elided word (’90s, rock ’n’ roll) instead of an opening quote.',
+    alternative:
+      'Matches the engine, including the leading-apostrophe cases fixed in the CHANGELOG. Butterick makes an exception for the Hawaiian okina (‘Oʻahu’), which the engine does not know. English only; no source for other languages was read.',
+    confidence: 'verified',
+    langs: { en: ['butterick-apostrophes'] },
+  },
+  ellipsis: {
+    sources: ['butterick-ellipsis', 'uax14'],
+    why: 'Three dots are one character, …, so they cannot break across lines.',
+    alternative:
+      'Butterick agrees and also asks for a no-break space on a side with no text so the ellipsis stays with its text; the engine does not do that (`... and so` keeps an ordinary space, a gap in the backlog). UAX #14 gives … class IN, so it is never split from another ellipsis. Interrupted speech: Butterick prefers an em dash outside fiction; the engine leaves it.',
+    confidence: 'verified',
+    langs: { en: ['butterick-ellipsis'] },
+  },
   arrow: general('Typed ASCII arrows have a proper character.'),
-  'symbol.legal': general('(c), (R) and (TM) have proper characters.'),
+  'symbol.legal': {
+    sources: ['butterick-legal'],
+    why: '(c), (R) and (TM) have proper characters.',
+    alternative:
+      'Matches the engine: (c) is changed only before a year, so "Section 12(c)" is left alone, which is the warning in the source. The source puts no space before ™ and ®; the engine does not add one. English only.',
+    confidence: 'verified',
+    langs: { en: ['butterick-legal'] },
+  },
   'dash.dialogue': {
     ...general('Ukrainian dialogue opens a paragraph with a dash.'),
     alternative:
@@ -163,30 +296,37 @@ export const RULE_SOURCES: Record<string, Decision> = {
   },
   'dash.range': general('A range of numbers takes an en dash, not a hyphen.'),
   'dash.sentence': {
-    sources: ['butterick-dashes'],
+    sources: ['butterick-dashes', 'uax14'],
     why: 'A break in a sentence takes a dash, and its form depends on the language. For English the em dash is backed by the source; it is the engine default.',
     alternative:
-      'The source sets the em dash flush against the words and calls spaces acceptable; the engine sets it spaced, with a no-break space before it. The spaced en dash for German and for British literary English is not backed by any source read yet.',
+      'The source sets the em dash flush against the words and calls spaces acceptable; the engine sets it spaced, with a no-break space before it, which matches neither. A search result quoting Bringhurst (The Elements of Typographic Style, 2nd ed., section 5.2.1, not read here) says he prefers a spaced en dash in English, so the primary guides disagree among themselves. UAX #14 gives the em dash class B2, which allows a break on both sides, hence the no-break space before it. The spaced en dash for German and for British literary English is not backed by any source read yet.',
     confidence: 'verified',
     langs: { en: ['butterick-dashes'] },
   },
   'symbol.minus': {
-    sources: ['unicode-names', 'butterick-dashes'],
+    sources: ['unicode-names', 'butterick-dashes', 'butterick-math'],
     why: 'A minus sign is −, not a hyphen.',
     alternative:
-      'Unicode only shows that the character exists; it does not say when to use it. Butterick calls an en dash an acceptable minus sign in spreadsheets and math, so a style guide that prefers − over – was not found. Still unchecked.',
+      'Unicode only shows that the character exists; it does not say when to use it. Butterick says to use an en dash for the minus sign (the "Math symbols" page also lists the &minus; entity) and calls an en dash acceptable in spreadsheets, so a style guide that prefers − over – was not found. Still unchecked.',
     confidence: 'general-knowledge',
   },
   'symbol.multiply': {
-    sources: ['unicode-names'],
+    sources: ['butterick-math', 'unicode-names'],
     why: 'A dimension takes ×, not the letter x.',
     alternative:
-      'Unicode only shows that the character exists. The NIST SI checklist, as summarised by the fetch tool, does not address the × character, so it is no help here. Still unchecked.',
-    confidence: 'general-knowledge',
+      'Butterick says to use × instead of the letter x, dimensions included. Unicode shows the two are different characters. The NIST SI checklist, as summarised by the fetch tool, does not address ×. English only; no source for other languages was read.',
+    confidence: 'verified',
+    langs: { en: ['butterick-math'] },
   },
-  'space.collapse': general('A run of spaces is a typing accident, not a setting.'),
+  'space.collapse': {
+    sources: ['butterick-word-spaces'],
+    why: 'A run of spaces is a typing accident, not a setting.',
+    alternative:
+      'Butterick asks for exactly one space between words and one after a full stop; the engine collapses a run to one. He offers a thin space after initials (W. A. Dwiggins); the engine uses a no-break space there (space.initial).',
+    confidence: 'verified',
+  },
   'space.title': {
-    sources: ['butterick-nbsp'],
+    sources: ['butterick-nbsp', 'uax14'],
     why: 'A title stays on the line of the name it belongs to.',
     alternative: 'Not compared with other tools or with guides for the other languages.',
     confidence: 'verified',
@@ -194,7 +334,7 @@ export const RULE_SOURCES: Record<string, Decision> = {
   },
   'space.initial': general('An initial stays on the line of the surname it belongs to.'),
   'space.abbreviation': {
-    sources: ['butterick-nbsp'],
+    sources: ['butterick-nbsp', 'uax14'],
     why: 'An abbreviation stays on the line of what it qualifies.',
     alternative:
       'Only the English case ("Fig." before a number) is backed by a source read. The German, Ukrainian and Polish lists (profiles.ts) are still from general knowledge and have not been read by a native speaker; they stay unchecked even though the decision as a whole reads verified.',
@@ -202,24 +342,24 @@ export const RULE_SOURCES: Record<string, Decision> = {
     langs: { en: ['butterick-nbsp'] },
   },
   'space.number': {
-    sources: ['nist-si-checklist'],
+    sources: ['nist-si-checklist', 'uax14'],
     why: 'A number stays on the line of its unit or month. The source backs a space between a value and a unit, percent included.',
     alternative:
       'The source does not say the space is nonbreaking, and says nothing about dates ("21 September"); both are our choice. It spaces % in English, while CLDR sets no space there (see space.percent) and the engine follows CLDR.',
     confidence: 'verified',
   },
   'space.percent': {
-    sources: ['cldr-numbers'],
-    why: 'German and French set a no-break space before % and a currency sign. CLDR agrees for % in de and fr, and for the currency sign in de and fr; it sets no space before % in en, uk, pl, de-CH and fr-CH, which is what the engine does.',
+    sources: ['cldr-numbers', 'oqlf-espacement', 'uax14'],
+    why: 'German and French set a no-break space before % and a currency sign. CLDR agrees for % in de and fr, and for the currency sign in de and fr; it sets no space before % in en, uk, pl, de-CH and fr-CH, which is what the engine does. OQLF, a printed-style authority, agrees for French: a no-break space before %, $ and €.',
     alternative:
-      'CLDR also puts a no-break space before the currency sign in uk, pl and fr-CH; the engine leaves 49€ alone there (a gap, in the backlog). The pattern is how software formats a number, not a printed style guide; no printed guide (Duden, Imprimerie nationale Lexique) was read.',
+      'CLDR also puts a no-break space before the currency sign in uk, pl and fr-CH; the engine leaves 49€ alone there (a gap, in the backlog). OQLF also asks for a no-break space before a French colon, and none or a fine space before ; ! and ?, which the engine does not set (a gap, in the backlog). OQLF is a Quebec source; a France or Swiss guide may differ (a fine space). The German side rests on CLDR only; no Duden page was read.',
     confidence: 'verified',
-    langs: { de: ['cldr-numbers'], fr: ['cldr-numbers'] },
+    langs: { de: ['cldr-numbers'], fr: ['cldr-numbers', 'oqlf-espacement'] },
   },
   'space.association': general('e.V. stays on the line of the name it follows.'),
   'space.copyright': {
-    sources: ['butterick-nbsp'],
-    why: '© stays on the line of the year or name after it.',
+    sources: ['butterick-nbsp', 'butterick-legal', 'uax14'],
+    why: '© stays on the line of the year or name after it. Butterick: a no-break space between © and the year.',
     alternative: 'Not compared with other tools or with guides for the other languages.',
     confidence: 'verified',
   },

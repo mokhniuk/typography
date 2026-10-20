@@ -47,7 +47,7 @@ tr:last-child td{border-bottom:0}
 <body>
 <main>
 <h1>Typography bibliography</h1>
-<p class="lead">Every source the rules rest on: 6 read so far. Each row says who wrote it, links to it, what it is, the one thing we rely on, and which rules and languages cite it. Generated from <code>scripts/sources.ts</code> by <code>bun run docs:sources</code>; do not edit by hand. The decisions themselves, with their gaps, are on the <a href="sources.html">sources page</a>.</p>
+<p class="lead">Every source the rules rest on: 14 read so far. Each row says who wrote it, links to it, what it is, the one thing we rely on, and which rules and languages cite it. Generated from <code>scripts/sources.ts</code> by <code>bun run docs:sources</code>; do not edit by hand. The decisions themselves, with their gaps, are on the <a href="sources.html">sources page</a>.</p>
 <div class="table">
 <table>
 <thead><tr><th>Source</th><th>Author</th><th>Kind</th><th>What it is</th><th>Relied on</th><th>Used in</th><th>Read</th></tr></thead>
@@ -79,6 +79,15 @@ tr:last-child td{border-bottom:0}
 <td><a class="chip" href="sources.html#rule-space-number">space.number</a></td>
 <td><span class="via summary">Summary only, check by hand</span><br><span class="meta">2026-10-20</span></td>
 </tr>
+<tr id="src-uax14">
+<td><b><a href="https://www.unicode.org/reports/tr14/" target="_blank" rel="noopener">UAX #14: Unicode Line Breaking Algorithm, revision 57 (Unicode 18.0.0, 2026-09-01) ↗</a></b><br><span class="meta">uax14</span></td>
+<td>Unicode Consortium (editor Robin Leroy)</td>
+<td>Standard</td>
+<td>The standard that decides where a line may break. It is the mechanism behind every no-break rule here: it says what a no-break space does, not which words to bind.</td>
+<td>U+00A0 NO-BREAK SPACE is class GL and prohibits a break on either side, and is the preferred way to keep two words on a line (a title and a name); U+202F is the same but narrow; the horizontal ellipsis is class IN, so breaks between consecutive ellipses are never allowed.</td>
+<td><a class="chip" href="sources.html#rule-ellipsis">ellipsis</a><br><a class="chip" href="sources.html#rule-dash-sentence">dash.sentence</a><br><a class="chip" href="sources.html#rule-space-title">space.title</a><br><a class="chip" href="sources.html#rule-space-abbreviation">space.abbreviation</a><br><a class="chip" href="sources.html#rule-space-number">space.number</a><br><a class="chip" href="sources.html#rule-space-percent">space.percent</a><br><a class="chip" href="sources.html#rule-space-copyright">space.copyright</a></td>
+<td><span class="via summary">Summary only, check by hand</span><br><span class="meta">2026-10-20</span></td>
+</tr>
 <tr id="src-unicode-names">
 <td><b><a href="https://www.unicode.org/Public/UNIDATA/NamesList.txt" target="_blank" rel="noopener">The Unicode Standard 18.0.0: NamesList.txt ↗</a></b><br><span class="meta">unicode-names</span></td>
 <td>Unicode Consortium</td>
@@ -87,6 +96,15 @@ tr:last-child td{border-bottom:0}
 <td>U+2212 MINUS SIGN and U+00D7 MULTIPLICATION SIGN are characters of their own, cross-referenced to hyphen-minus (U+002D) and to latin small letter x (U+0078) as different characters.</td>
 <td><a class="chip" href="sources.html#rule-symbol-minus">symbol.minus</a><br><a class="chip" href="sources.html#rule-symbol-multiply">symbol.multiply</a></td>
 <td><span class="via raw">Raw data</span><br><span class="meta">2026-10-20</span></td>
+</tr>
+<tr id="src-butterick-apostrophes">
+<td><b><a href="https://practicaltypography.com/apostrophes.html" target="_blank" rel="noopener">Practical Typography: Apostrophes ↗</a></b><br><span class="meta">butterick-apostrophes</span></td>
+<td>Matthew Butterick (the page itself names no author)</td>
+<td>Style guide</td>
+<td>The handbook on the apostrophe: always the curly closing mark, including at the start of an elided word.</td>
+<td>An apostrophe for possession, contraction or an elided start (’70s, ’n’ in rock ’n’ roll) is a curly apostrophe, not an opening single quote; Hawaiian okina is the exception and takes an opening single quote.</td>
+<td><a class="chip" href="sources.html#rule-apostrophe">apostrophe</a> <span class="meta">en</span></td>
+<td><span class="via summary">Summary only, check by hand</span><br><span class="meta">2026-10-20</span></td>
 </tr>
 <tr id="src-butterick-dashes">
 <td><b><a href="https://practicaltypography.com/hyphens-and-dashes.html" target="_blank" rel="noopener">Practical Typography: Hyphens and dashes ↗</a></b><br><span class="meta">butterick-dashes</span></td>
@@ -97,6 +115,33 @@ tr:last-child td{border-bottom:0}
 <td><a class="chip" href="sources.html#rule-dash-sentence">dash.sentence</a> <span class="meta">en</span><br><a class="chip" href="sources.html#rule-symbol-minus">symbol.minus</a></td>
 <td><span class="via summary">Summary only, check by hand</span><br><span class="meta">2026-10-20</span></td>
 </tr>
+<tr id="src-butterick-ellipsis">
+<td><b><a href="https://practicaltypography.com/ellipses.html" target="_blank" rel="noopener">Practical Typography: Ellipses ↗</a></b><br><span class="meta">butterick-ellipsis</span></td>
+<td>Matthew Butterick (the page itself names no author)</td>
+<td>Style guide</td>
+<td>The handbook on the ellipsis: the single character, spaced as the writer prefers, with a no-break space where text is on one side only.</td>
+<td>Use the ellipsis character, not three periods with or without spaces; put a no-break space on a side that has no text so the ellipsis stays with its text; do not let the dots split across lines.</td>
+<td><a class="chip" href="sources.html#rule-ellipsis">ellipsis</a> <span class="meta">en</span></td>
+<td><span class="via summary">Summary only, check by hand</span><br><span class="meta">2026-10-20</span></td>
+</tr>
+<tr id="src-butterick-legal">
+<td><b><a href="https://practicaltypography.com/trademark-and-copyright-symbols.html" target="_blank" rel="noopener">Practical Typography: Trademark and copyright symbols ↗</a></b><br><span class="meta">butterick-legal</span></td>
+<td>Matthew Butterick (the page itself names no author)</td>
+<td>Style guide</td>
+<td>The handbook on ©, ® and ™: the real characters, where they sit, and a warning that autocorrecting (c) damages text such as &quot;Section 12(c)&quot;.</td>
+<td>Replace (c), (R) and (TM) with ©, ® and ™; no space before ™ or ®; a no-break space between © and the year; do not autocorrect (c) inside citations such as &quot;Section 12(c)&quot;.</td>
+<td><a class="chip" href="sources.html#rule-symbol-legal">symbol.legal</a> <span class="meta">en</span><br><a class="chip" href="sources.html#rule-space-copyright">space.copyright</a></td>
+<td><span class="via summary">Summary only, check by hand</span><br><span class="meta">2026-10-20</span></td>
+</tr>
+<tr id="src-butterick-math">
+<td><b><a href="https://practicaltypography.com/math-symbols.html" target="_blank" rel="noopener">Practical Typography: Math symbols ↗</a></b><br><span class="meta">butterick-math</span></td>
+<td>Matthew Butterick (the page itself names no author)</td>
+<td>Style guide</td>
+<td>The handbook on mathematical signs: use real symbols, × for multiplication including dimensions. Its minus guidance names the en dash and the HTML entity for the minus sign in the same breath, so it does not settle which character to use.</td>
+<td>Use × instead of the letter x for multiplication, dimensions such as 8.5″ × 14″ included; for a minus sign use an en dash (and the HTML entity &amp;minus; is listed).</td>
+<td><a class="chip" href="sources.html#rule-symbol-minus">symbol.minus</a><br><a class="chip" href="sources.html#rule-symbol-multiply">symbol.multiply</a> <span class="meta">en</span></td>
+<td><span class="via summary">Summary only, check by hand</span><br><span class="meta">2026-10-20</span></td>
+</tr>
 <tr id="src-butterick-nbsp">
 <td><b><a href="https://practicaltypography.com/nonbreaking-spaces.html" target="_blank" rel="noopener">Practical Typography: Nonbreaking spaces ↗</a></b><br><span class="meta">butterick-nbsp</span></td>
 <td>Matthew Butterick (the page itself names no author)</td>
@@ -104,6 +149,33 @@ tr:last-child td{border-bottom:0}
 <td>The same handbook on where to prevent a line break: titles, abbreviations before numbers, section signs and the copyright and trademark symbols. English only; the page does not mention units or initials.</td>
 <td>Use a nonbreaking space after § and ¶, after abbreviations such as &quot;Ex.&quot; and &quot;Fig.&quot; before a letter or number, between a title and a name (&quot;Ms.&quot;), and with the trademark and copyright symbols.</td>
 <td><a class="chip" href="sources.html#rule-space-title">space.title</a> <span class="meta">en</span><br><a class="chip" href="sources.html#rule-space-abbreviation">space.abbreviation</a> <span class="meta">en</span><br><a class="chip" href="sources.html#rule-space-copyright">space.copyright</a></td>
+<td><span class="via summary">Summary only, check by hand</span><br><span class="meta">2026-10-20</span></td>
+</tr>
+<tr id="src-butterick-quotes">
+<td><b><a href="https://practicaltypography.com/straight-and-curly-quotes.html" target="_blank" rel="noopener">Practical Typography: Straight and curly quotes ↗</a></b><br><span class="meta">butterick-quotes</span></td>
+<td>Matthew Butterick (the page itself names no author)</td>
+<td>Style guide</td>
+<td>The handbook on quotation marks: use curly quotes, keep straight ones only for foot and inch marks and for code. English-centred; it gives no per-language mark sets.</td>
+<td>Use curly quotes, never straight ones; foot and inch marks are the exception; fix quotes before apostrophes (a word-initial apostrophe is a closing single curly quote); quote styles vary by language; do not convert quotes in code.</td>
+<td><a class="chip" href="sources.html#rule-quote">quote</a> <span class="meta">en</span><br><a class="chip" href="sources.html#rule-apostrophe">apostrophe</a></td>
+<td><span class="via summary">Summary only, check by hand</span><br><span class="meta">2026-10-20</span></td>
+</tr>
+<tr id="src-butterick-word-spaces">
+<td><b><a href="https://practicaltypography.com/word-spaces.html" target="_blank" rel="noopener">Practical Typography: Word spaces ↗</a></b><br><span class="meta">butterick-word-spaces</span></td>
+<td>Matthew Butterick (the page itself names no author)</td>
+<td>Style guide</td>
+<td>The handbook on spaces between words: one space, also after a full stop. A thin space is offered for initials.</td>
+<td>Use exactly one word space between words and one after a sentence-ending period; a thin space is suitable after the periods in initials such as W. A. Dwiggins.</td>
+<td><a class="chip" href="sources.html#rule-space-collapse">space.collapse</a></td>
+<td><span class="via summary">Summary only, check by hand</span><br><span class="meta">2026-10-20</span></td>
+</tr>
+<tr id="src-oqlf-espacement">
+<td><b><a href="https://vitrinelinguistique.oqlf.gouv.qc.ca/22039/la-typographie/espacement/espacement-avant-et-apres-les-signes-de-ponctuation-et-les-symboles" target="_blank" rel="noopener">Espacement avant et après les signes de ponctuation et les symboles ↗</a></b><br><span class="meta">oqlf-espacement</span></td>
+<td>Office québécois de la langue française (Banque de dépannage linguistique)</td>
+<td>Style guide</td>
+<td>The Quebec language office’s table of the spaces around punctuation and symbols in French, last updated 2024. A Quebec authority, so where France or Switzerland differ (a fine space instead of a full no-break space) it does not say so.</td>
+<td>In French a no-break space goes inside the guillemets (after « and before »), before %, before $ and €, and before a colon; before ; ! and ? there is no space or a fine space; no space goes before an ellipsis or a comma.</td>
+<td><a class="chip" href="sources.html#rule-quote">quote</a> <span class="meta">fr</span><br><a class="chip" href="sources.html#rule-space-percent">space.percent</a> <span class="meta">fr</span></td>
 <td><span class="via summary">Summary only, check by hand</span><br><span class="meta">2026-10-20</span></td>
 </tr>
 </tbody>

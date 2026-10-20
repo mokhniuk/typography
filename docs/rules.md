@@ -69,7 +69,7 @@ after   Er sagte »Sie rief ›Haus‹ laut« und ging.
 
 A straight ' in a word or before a year becomes ’
 
-Why: [sources.md](sources.md#apostrophe), `general-knowledge`.
+Why: [sources.md](sources.md#apostrophe), `verified`.
 
 ```text
 (en)
@@ -91,7 +91,7 @@ Before a year.
 
 ... becomes …
 
-Why: [sources.md](sources.md#ellipsis), `general-knowledge`.
+Why: [sources.md](sources.md#ellipsis), `verified`.
 
 ```text
 (en)
@@ -121,7 +121,7 @@ after   ← Back
 
 (c) before a year, (C), (R) and (TM) become © ® ™
 
-Why: [sources.md](sources.md#symbollegal), `general-knowledge`.
+Why: [sources.md](sources.md#symbollegal), `verified`.
 
 ```text
 (en)
@@ -211,7 +211,7 @@ after   It was −5 degrees (−3 inside).
 
 The letter x between numbers (1920x1080, 3 x 4) becomes ×
 
-Why: [sources.md](sources.md#symbolmultiply), `general-knowledge`.
+Why: [sources.md](sources.md#symbolmultiply), `verified`.
 
 ```text
 (en)
@@ -223,7 +223,7 @@ after   A 1920×1080 screen, a 3~× 4 grid.
 
 A run of spaces becomes one
 
-Why: [sources.md](sources.md#spacecollapse), `general-knowledge`.
+Why: [sources.md](sources.md#spacecollapse), `verified`.
 
 ```text
 (en)
