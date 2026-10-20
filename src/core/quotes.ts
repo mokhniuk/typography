@@ -76,7 +76,18 @@ type Setup = {
   /** A mark that stands for an apostrophe: inside a word, on a year, or an elision. */
   apostrophe: RegExp;
   elisionGroups: number;
+  /**
+   * Whether the text holds a character this rule can act on: a mark of a pair, a lone mark, an
+   * apostrophe, or one of the three placeholders (a text that already holds one has it read as one).
+   * Without any, every step below leaves the text as it is.
+   */
+  relevant: RegExp;
+  /** Whether a pair, or a single-quote pair, can still match (they start with one of these). */
+  pairable: RegExp;
+  /** Whether a lone opening or closing mark is left (both read only the marks of `LONE`). */
+  lone: RegExp;
 };
+const charClass = (chars: string) => new RegExp(`[${chars.replace(/[\\\]^-]/g, '\\$&')}]`);
 function setupOf(pack: LangPack): Setup {
   // What may stand before an opening mark: the start, a space, a bracket, another opening mark, and the
   // pack's `openers` (Spanish ¿ ¡).
@@ -111,6 +122,9 @@ function setupOf(pack: LangPack): Setup {
       'gu',
     ),
     elisionGroups: elision.groups,
+    relevant: charClass(`${RAW}${LONE}${SPACED}${SPACED_CLOSING}'${turnedMarks.join('')}${OPEN}${CLOSE}${APOSTROPHE}`),
+    pairable: charClass(`${RAW}'${turnedMarks.join('')}`),
+    lone: charClass(`${LONE}${SPACED}${SPACED_CLOSING}`),
   };
   return made;
 }
@@ -125,8 +139,10 @@ const US: readonly Level[] = [
 export function quotesFor(
   pack: LangPack,
 ): (text: string, register?: Register, quoteStyle?: QuoteStyle) => string {
-  const { pairs, single, loneOpening, apostrophe, elisionGroups } = setupOf(pack);
+  const { pairs, single, loneOpening, apostrophe, elisionGroups, relevant, pairable, lone } =
+    setupOf(pack);
   return (text, register = 'display', quoteStyle = 'language') => {
+    if (!relevant.test(text)) return text;
     // The apostrophes are put back as they were; the `apostrophe` rule sets them.
     const kept: string[] = [];
     let out = text.replace(apostrophe, (mark: string, ...groups: (string | undefined)[]) => {
@@ -134,7 +150,7 @@ export function quotesFor(
       return APOSTROPHE;
     });
     // Innermost pairs first, so a quotation inside a quotation resolves before its outer one.
-    for (let changed = true; changed; ) {
+    for (let changed = pairable.test(out); changed; ) {
       const before = out;
       for (const pair of pairs) {
         out = out.replace(pair, (_, inner: string) => `${OPEN}${trimInner(inner)}${CLOSE}`);
@@ -143,18 +159,20 @@ export function quotesFor(
         single,
         (_, lead: string, inner: string) => `${lead}${OPEN}${trimInner(inner)}${CLOSE}`,
       );
-      changed = out !== before;
+      changed = out !== before && pairable.test(out);
     }
     // A quotation mark that found no partner is read by where it stands: an opening one after
     // a space, a bracket or the start, before a word; a closing one after a word or a mark. Not
     // after a digit (5'10"), which is an inch. Quoting several paragraphs, books open the quote
     // in each and close it only in the last. Reading marks by position, not by shape, makes the
     // result stable: set once, a lone « or » is read the same way when it is typeset again.
-    for (let before = ''; before !== out; ) {
-      before = out;
-      out = out.replace(loneOpening, OPEN);
+    if (lone.test(out)) {
+      for (let before = ''; before !== out; ) {
+        before = out;
+        out = out.replace(loneOpening, OPEN);
+      }
+      out = out.replace(LONE_CLOSING, CLOSE);
     }
-    out = out.replace(LONE_CLOSING, CLOSE);
     const levels =
       quoteStyle === 'us' ? US : (register === 'literary' && pack.literary) || pack.quotes;
     let depth = 0;
