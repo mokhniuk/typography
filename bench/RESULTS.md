@@ -48,15 +48,15 @@ English text in one piece, best of three (one run at 1 MB), text mode. "not run"
 
 | Tool | 10 KB | 100 KB | 1000 KB |
 |---|---|---|---|
-| podiia | 0 ms | 3 ms | 33 ms |
-| podiia literary | 0 ms | 3 ms | 31 ms |
-| typograf | 1 ms | 6 ms | 59 ms |
-| typograf +nbsp | 1 ms | 6 ms | 60 ms |
-| typopo | 21 ms | 1086 ms | 100010 ms |
-| richtypo | 2502 ms | not run (~249 s) | not run (~24862 s) |
-| tipograph | 0 ms | 1 ms | 12 ms |
-| smartypants | 0 ms | 1 ms | 10 ms |
-| retext-smartypants | 3 ms | 32 ms | 543 ms |
+| podiia | 1 ms | 6 ms | 57 ms |
+| podiia literary | 1 ms | 6 ms | 54 ms |
+| typograf | 1 ms | 11 ms | 115 ms |
+| typograf +nbsp | 1 ms | 11 ms | 119 ms |
+| typopo | 39 ms | 2075 ms | not run (~207 s) |
+| richtypo | 4933 ms | not run (~491 s) | not run (~49020 s) |
+| tipograph | 0 ms | 2 ms | 23 ms |
+| smartypants | 0 ms | 2 ms | 18 ms |
+| retext-smartypants | 5 ms | 51 ms | 1057 ms |
 
 ## Every case
 

@@ -40,9 +40,19 @@ Each is a limit of the pack format or an unverified choice, not a crash:
 - **`symbol.degree`** knows an English label list only (`Type C`, `Vitamin C`).
 - The opt-in rules' own limits are in [limits.md](limits.md#opt-in-rules).
 
+### Keep the original when the font lacks the glyph
+
+A rule that inserts a character the font does not have shows a box or a mismatched fallback glyph; the text as typed is better. The engine is string to string and cannot see the font, so the plan is an option that names the characters to avoid:
+
+- A rule whose output would contain an avoided character is skipped for that match, and the original stays (the change is not recorded by `explain`). Default on, with a documented default set of characters the engine expects every font to have; the user lists what their font lacks (for example `⇒`, `½ ¼ ¾`, `−`, `→`). The candidates at risk are the symbols the rules insert: `⇒ ½ ¼ ¾ ± − × → ← ™ ® ° …` and the quote marks of unusual fonts.
+- Threaded through every mode like `enable` was: `typographic`, `typesetBlock`, text, HTML, Markdown, rehype, React, CLI, playground, `scripts/gen-rules-doc.ts`.
+- Docs: explained next to the other options, and every opt-in rule and flag gets a before/after preview in the docs and the playground (a "preview" for each feature flag), so a reader sees what a flag changes and which characters it needs.
+- Later, a browser add-on: `supports(char)` in the React/DOM layer (`document.fonts.check` or a canvas measure), used when given; server rendering uses the option.
+- Done when: a golden test per rule shows the original text kept when its character is avoided, idempotence holds, and `explain` records nothing for the skipped match.
+
 ### Speed: what is left
 
-0.2.0 made the engine faster than typograf (33 ms against 59 ms per MB of English). What remains is in [limits.md](limits.md#speed): the quote rule is quadratic on thousands of opening marks in a row and slow (60 to 100 ms per MB) on text full of unpaired marks. Fix by custom loops, test-first, with `bun run compare` at 0 differences and `bun scripts/stress.ts` flat. React already memoises per component (`useMemo` in `Typeset`), so no paragraph cache is needed.
+Nothing superlinear is known (0.2.1). Typical text costs 30 to 60 ms per MB; the biggest rules are `quote`, `space.abbreviation` and `space.title` at 5 to 10 ms each. Further gains would be constant-factor work on those; tipograph and smartypants (10 to 20 ms) do much less. React already memoises per component (`useMemo` in `Typeset`), so no paragraph cache is needed.
 
 ## P2 (deferred by choice)
 
