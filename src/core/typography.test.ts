@@ -261,7 +261,7 @@ describe('literary register', () => {
     const sample = '“x ‘y’ z” - and 21-26 September';
     // Every language whose literary register has no marks or dialogue dash of its own.
     const plain = LANGS.filter((lang) => !LITERARY[lang] && !PACK[lang].dialogueDash);
-    expect(plain).toEqual(['de', 'pl', 'fr', 'ch', 'es']);
+    expect(plain).toEqual(['de', 'pl', 'fr', 'ch', 'es', 'it']);
     for (const lang of plain) {
       expect(t(sample, lang, literary)).toBe(t(sample, lang));
     }
