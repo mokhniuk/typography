@@ -49,6 +49,18 @@ export const EXAMPLES: Record<string, readonly Example[]> = {
     { input: `The '90s were loud.`, note: 'Before a year.' },
   ],
   ellipsis: [{ input: 'Wait... what?' }],
+  'space.before-punctuation': [
+    { input: 'Hello , world . Is it ready ? (yes )', note: 'Off by default.' },
+    { input: 'Oui : non , bon !', lang: 'fr', note: 'French keeps its space before : ; ! ?, the rest is tidied.' },
+  ],
+  'space.after-comma': [
+    { input: 'apples,pears,plums', note: 'Digits are left alone: 1,5 stays.' },
+    { input: 'Hallo,Welt und 3,14' , lang: 'de' },
+  ],
+  'punctuation.double': [
+    { input: 'Wow!!! Really??' },
+    { input: 'What?!! No!!!? Stop!!!', note: '?! and !? stay as a pair; a run beside one collapses.' },
+  ],
   arrow: [{ input: 'Read more ->' }, { input: '<- Back' }],
   'symbol.legal': [
     { input: '(c) 2026 Studio (R) (TM)', note: '(c) needs a year after it; (C) does not.' },
@@ -74,6 +86,16 @@ export const EXAMPLES: Record<string, readonly Example[]> = {
       note: 'A spaced en dash in British English, literary register.',
     },
   ],
+  'symbol.implies': [{ input: 'A => B' }, { input: 'if x=>y then z', note: 'Not =>>, ==>, =>= or <=>.' }],
+  'symbol.plusminus': [{ input: 'Tolerance +-5 mm' }, { input: '(+-0.2) and +-10%', note: 'Not a+-b or 1+-5.' }],
+  'symbol.fraction': [
+    { input: 'Add 1/2 cup and 3/4 of the milk, then 1/4.', note: 'Only whole numbers: 11/2, 1/20, a1/2 and a date such as 1/2/2026 stay. A short word after the fraction gets the no-break space.' },
+    { input: 'Take 2 1/2 hours', note: 'A mixed number keeps its integer: 2 ½.' },
+  ],
+  'symbol.degree': [
+    { input: 'It was 20°C, then 68 F and 20 C.', note: 'Every spelling becomes number, no-break space, °C or °F.' },
+    { input: 'Vitamin C 5 C and 5 °C', note: 'A bare C or F after a label or a single letter is not a temperature.' },
+  ],
   'symbol.minus': [{ input: 'It was -5 degrees (-3 inside).' }],
   'symbol.multiply': [{ input: 'A 1920x1080 screen, a 3 x 4 grid.' }],
   'space.collapse': [{ input: 'Two   spaces,    four.' }],
@@ -97,6 +119,10 @@ export const EXAMPLES: Record<string, readonly Example[]> = {
     { input: 'Idę w las i z nim', lang: 'pl' },
   ],
   'space.arrow': [{ input: 'Read more →' }, { input: '← Back' }],
+  'space.trailing': [
+    { input: 'First line   \nSecond line\t\nThird', note: 'Spaces and tabs at the end of a line; the lines stay.' },
+    { input: 'One trailing space ' },
+  ],
 };
 
 const show = (text: string): string => text.replaceAll(NBSP, '~');

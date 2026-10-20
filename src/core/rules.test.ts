@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { type Rule, DEFAULT_RULES, RULE_IDS, RULES, addRule, selectRules, typographic, without } from './index';
+import { DEFAULT_RULES, type Rule, RULE_IDS, RULES, addRule, selectRules, typographic, without } from './index';
 
 /** A rule that is off unless asked for, and one that is on, for a list that is not the built-in one. */
 const shout: Rule = { id: 'extra.shout', about: 'Upper case', defaultOn: false, apply: (t) => t.toUpperCase() };

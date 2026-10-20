@@ -47,8 +47,6 @@ describe('docs/rules.md with a rule that is off by default', () => {
   });
 
   test('with every rule on by default the wording is the plain one', () => {
-    expect(render(DEFAULT_RULES)).toContain(
-      `The engine has ${DEFAULT_RULES.length} rules. \`typographic\``,
-    );
+    expect(render(DEFAULT_RULES)).toContain(`The engine has ${DEFAULT_RULES.length} rules. \`typographic\``);
   });
 });
