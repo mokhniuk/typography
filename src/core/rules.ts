@@ -170,10 +170,21 @@ export function selectRules({
   disable?: readonly string[] | undefined;
   enable?: readonly string[] | undefined;
 } = {}): readonly Rule[] {
+  const seen = new Set<string>();
+  for (const rule of rules) {
+    if (seen.has(rule.id)) throw new Error(`Typography rule "${rule.id}" is already in the list`);
+    seen.add(rule.id);
+  }
   const off = named(rules, disable);
   const on = named(rules, enable);
-  for (const id of on) {
-    if (off.has(id)) throw new Error(`Typography rule "${id}" is in both disable and enable`);
+  // Enabling a rule that is on already does nothing, so a group that holds a rule `disable` names is no
+  // clash. One does arise for a rule `enable` could turn on, and for a rule both lists name by its own id.
+  const literally = (list: readonly string[], id: string) => list.some((name) => name === id);
+  for (const rule of rules) {
+    const turnedOn = rule.defaultOn === false && on.has(rule.id);
+    if (off.has(rule.id) && (turnedOn || (literally(enable, rule.id) && literally(disable, rule.id)))) {
+      throw new Error(`Typography rule "${rule.id}" is in both disable and enable`);
+    }
   }
   return rules.filter((rule) => !off.has(rule.id) && (rule.defaultOn !== false || on.has(rule.id)));
 }

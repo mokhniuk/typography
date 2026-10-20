@@ -51,6 +51,19 @@ describe('selectRules', () => {
     expect(() => selectRules({ rules: [bang, shout], disable: ['extra'], enable: ['extra.shout'] })).toThrow(/both/);
   });
 
+  test('enabling a group does not clash with disabling a member that is on by default', () => {
+    expect(ids(selectRules({ enable: ['dash'], disable: ['dash.range'] }))).toEqual(
+      ids(selectRules({ disable: ['dash.range'] })),
+    );
+    expect(ids(selectRules({ enable: ['symbol'], disable: ['symbol.minus'] }))).not.toContain('symbol.minus');
+    // A member that only enable could turn on is still ambiguous.
+    expect(() => selectRules({ rules: [bang, shout], enable: ['extra'], disable: ['extra.shout'] })).toThrow(/both/);
+  });
+
+  test('a hand-built list with a duplicate id is an error', () => {
+    expect(() => selectRules({ rules: [bang, { ...bang }] })).toThrow(/already in the list|duplicate/i);
+  });
+
   test('disable and enable of different rules work together', () => {
     expect(ids(selectRules({ rules: [bang, shout], disable: ['extra.bang'], enable: ['extra.shout'] }))).toEqual([
       'extra.shout',

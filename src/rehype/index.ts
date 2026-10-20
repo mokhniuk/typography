@@ -12,10 +12,9 @@ import { BLOCK, RAW_BLOCK, RAW_INLINE } from '../shared/elements';
  * `kbd`, `samp`, `textarea`, `script`, `style`, `svg`, `math`, `template`, anything
  * with `data-typography="off"`, and every attribute. An element's `lang` attribute
  * sets the language of its subtree, when it is one the package has a profile for (the
- * primary subtag is read, in any case: `uk-UA` is `uk`); `en-US` also sets
- * `quoteStyle: 'us'` for the subtree, and any other declared language goes back to the
- * `quoteStyle` option. An inline element in another language is typeset on its own, so a
- * quotation does not pair across it.
+ * primary subtag is read, in any case: `uk-UA` is `uk`); the `quoteStyle` option is
+ * kept for every subtree, so `lang="en-US"` alone does not change the quotes. An inline
+ * element in another language is typeset on its own, so a quotation does not pair across it.
  *
  * hast text is already decoded, so entities are not a concern here: text comes back
  * as characters, and the serializer escapes what it must.
@@ -40,14 +39,14 @@ const isText = (node: Node): node is Text => node.type === 'text' && typeof node
 /** What an element's `lang` sets for its subtree: the language, and the quote style that goes with it. */
 type Setting = { lang: Lang; quoteStyle: QuoteStyle | undefined };
 
-/** The setting an element declares, if its language is one of ours: `uk-UA` is `uk`, `en-US` is `en` with US quotes. */
+/** The setting an element declares, if its language is one of ours: `uk-UA` is `uk`. The quote style stays the option's. */
 function declared(element: Element, quoteStyle: QuoteStyle | undefined): Setting | null {
   const raw = element.properties?.lang ?? element.properties?.xmlLang;
   if (typeof raw !== 'string') return null;
   const tag = raw.toLowerCase();
   const lang = LANGS.find((l) => l === tag.split('-')[0]);
   if (!lang) return null;
-  return { lang, quoteStyle: tag === 'en-us' ? 'us' : quoteStyle };
+  return { lang, quoteStyle };
 }
 
 const off = (element: Element) =>

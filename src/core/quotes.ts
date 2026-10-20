@@ -114,13 +114,13 @@ function setupOf(pack: LangPack): Setup {
   return made;
 }
 
-/** The quote setter of one pack: marks of its language, register and nesting level; source quotes may be of any style. */
 /** `quoteStyle: 'us'`: “…” with ‘…’ inside, whatever the language and register. */
 const US: readonly Level[] = [
   ['“', '”'],
   ['‘', '’'],
 ];
 
+/** The quote setter of one pack: marks of its language, register and nesting level; source quotes may be of any style. */
 export function quotesFor(
   pack: LangPack,
 ): (text: string, register?: Register, quoteStyle?: QuoteStyle) => string {

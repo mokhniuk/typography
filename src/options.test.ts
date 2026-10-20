@@ -91,11 +91,12 @@ describe("quoteStyle reaches every mode", () => {
     expect(typesetText('"x"', { ...us, lang: 'de', register: 'literary' })).toBe('“x”');
   });
 
-  test('rehype: the option, and lang="en-US" in any case', () => {
+  test('rehype: the option sets US quotes; lang="en-US" alone does not change the default', () => {
     expect(run('<p>"x"</p>', us)).toBe('<p>“x”</p>');
-    expect(run('<p lang="en-US">"x"</p>')).toBe('<p lang="en-US">“x”</p>');
-    expect(run('<p lang="EN-us">"x"</p>')).toBe('<p lang="EN-us">“x”</p>');
-    expect(run('<p lang="en_US">"x"</p>')).toBe('<p lang="en_US">«x»</p>');
+    expect(run('<p lang="en-US">"x"</p>', us)).toBe('<p lang="en-US">“x”</p>');
+    // <html lang="en-US"> is common: it must not change output nobody asked to change.
+    expect(run('<p lang="en-US">"x"</p>')).toBe('<p lang="en-US">«x»</p>');
+    expect(run('<p lang="EN-us">"x"</p>')).toBe('<p lang="EN-us">«x»</p>');
   });
 
   test('rehype: other English and other languages keep the language table', () => {
@@ -104,16 +105,7 @@ describe("quoteStyle reaches every mode", () => {
     expect(run('<p lang="de">"x"</p>')).toBe('<p lang="de">»x«</p>');
   });
 
-  test('rehype: en-US applies to its subtree only, and an inline en-US element is typeset on its own', () => {
-    expect(run('<div lang="en-US"><p>"a"</p></div><p>"b"</p>')).toBe(
-      '<div lang="en-US"><p>“a”</p></div><p>«b»</p>',
-    );
-    expect(run('<p>"x <span lang="en-US">"y"</span> z"</p>')).toBe(
-      '<p>«x <span lang="en-US">“y”</span> z»</p>',
-    );
-  });
-
-  test('rehype: a declared language resets en-US to the option', () => {
+  test('rehype: a declared language keeps the quote style option', () => {
     expect(run('<div lang="en-US"><p lang="de">"x"</p></div>')).toBe(
       '<div lang="en-US"><p lang="de">»x«</p></div>',
     );
