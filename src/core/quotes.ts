@@ -55,6 +55,16 @@ const trimInner = (s: string) => s.replace(/^[\s\u00A0]+|[\s\u00A0]+$/g, '');
 // An apostrophe inside a word (don't, don’t, Maria’s) must not be taken for a quote mark, or
 // the quotation around it would not pair. It is set aside as a placeholder and put back.
 const APOSTROPHE = '\uE002';
+// Words that start with an apostrophe for dropped letters ('til, 'em, 'cause), and 'n' as in rock 'n' roll.
+// Each alternative holds the apostrophe in a group so the replacer can tell it from the others. A word
+// that goes on (the 'emergency' exit) or is closed by another ' (the 'til' button) stays a quotation.
+const EDGE = '(?<=^|[\\s([])';
+const ELISION = [
+  `${EDGE}(')(?=(?:[Ee]m|[Tt]ill?|[Cc]ause|[Bb]out|[Rr]ound|[Tt]is|[Tt]was|[Cc]os)(?![\\p{L}'’]))`,
+  `${EDGE}(')(?=[Nn]'(?=$|[\\s).,;:!?\\]]))`,
+  `(?<=${EDGE}'[Nn])(')(?=$|[\\s).,;:!?\\]])`,
+].join('|');
+const ELISION_GROUPS = 3;
 
 /** Sets the quotation marks of the language, register and nesting level; source quotes may be of any style. */
 export function quotes(text: string, lang: Lang, register: Register): string {
@@ -63,9 +73,14 @@ export function quotes(text: string, lang: Lang, register: Register): string {
   let out = text.replace(
     // Inside a word, or a leading apostrophe on a year (the ’90s: two digits). A straight ' there may open
     // a quoted number ('12'), a curly ’ cannot, so only the straight one is told apart by what follows.
-    /(?<=\p{L})['’](?=\p{L})|(?<=^|[\s([])’(?=\d{2}s?(?![\d\p{L}]))|(?<=^|[\s([])'(?=\d{2}s?(?![\d'’\p{L}]))/gu,
-    (mark) => {
-      kept.push(mark);
+    // The second group is an apostrophe for dropped letters, rock 'n' roll and 'til: it is set curly here,
+    // since the `apostrophe` rule only turns a straight ' after a letter or before a digit.
+    new RegExp(
+      `(?<=\\p{L})['’](?=\\p{L})|(?<=^|[\\s([])’(?=\\d{2}s?(?![\\d\\p{L}]))|(?<=^|[\\s([])'(?=\\d{2}s?(?![\\d'’\\p{L}]))|${ELISION}`,
+      'gu',
+    ),
+    (mark: string, ...groups: (string | undefined)[]) => {
+      kept.push(groups.slice(0, ELISION_GROUPS).some(Boolean) ? '’' : mark);
       return APOSTROPHE;
     },
   );

@@ -27,14 +27,6 @@ English gets `«…»` with `„…“` inside, and the literary register is Bri
 
 - Done when: `typographic('He said "stone"', 'en', { … })` can return `He said “stone”`, with a nested pair `“a ‘b’ c”`, and a golden test and a `docs/languages.md` row say so.
 
-### Three English bugs
-
-Found while probing; each needs a failing case in the benchmark's `cases.ts` (untracked, see [contributing.md](contributing.md#the-benchmark)) or a golden test first.
-
-- `call 555-1234` becomes `555–1234`: a short phone number is read as a range. The docs say phone numbers are skipped; only the longer `020-7946-0958` form is.
-- `rock 'n' roll` becomes `rock «n» roll`: the pair of apostrophes around `n` is read as a quotation.
-- `'til dawn` and `'em` keep a straight apostrophe: a leading apostrophe on a word is only recognised on years (`’90s`).
-
 ### EU languages, tier 1: es, it, pt, nl, cs, sk, ro, hu, sv
 
 typograf ships 20 of the 24 EU languages; we ship 4 (plus Ukrainian). These nine are the ones a user will compare us on. For each: quote marks and nesting, dash style, the no-break rules, and `%`/currency spacing, from a style guide and not from memory, then a native reader's check (see [contributing.md](contributing.md#adding-a-language)).

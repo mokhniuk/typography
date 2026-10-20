@@ -3,10 +3,12 @@ import { NBSP } from './types';
 /**
  * Whether `a`-`b` is a range of numbers rather than an identifier, a partial date
  * or a phone number: ascending, no leading zeros, not a year and a month (2026-10),
- * and not part of a number that began with a plus sign.
+ * not an unspaced three and four digits (555-1234, a local phone number), and not
+ * part of a number that began with a plus sign.
  */
-function isNumericRange(a: string, b: string, before: string): boolean {
+function isNumericRange(a: string, b: string, before: string, gap: string): boolean {
   if (a.length > 4 || b.length > 4) return false;
+  if (a.length === 3 && b.length === 4 && !/\s|\u00A0/.test(gap)) return false;
   if (/^0\d/.test(a) || /^0\d/.test(b)) return false;
   if (Number(a) >= Number(b)) return false;
   if (a.length === 4 && b.length === 2 && Number(b) <= 12) return false;
@@ -32,8 +34,8 @@ export function dashRange(text: string): string {
       // A range between numbers, spaced or not; a chain (a date, a phone number) is left alone.
       .replace(
         /(?<![\d:–-])(\d+)([ \u00A0]*(?:--|[-–])[ \u00A0]*)(\d+)(?![\d:–-])/g,
-        (match, a: string, _gap: string, b: string, offset: number, whole: string) =>
-          isNumericRange(a, b, whole.slice(Math.max(0, offset - 20), offset)) ? `${a}–${b}` : match,
+        (match, a: string, gap: string, b: string, offset: number, whole: string) =>
+          isNumericRange(a, b, whole.slice(Math.max(0, offset - 20), offset), gap) ? `${a}–${b}` : match,
       )
   );
 }

@@ -78,6 +78,12 @@ describe('dashes', () => {
     expect(t('score 3-1')).toBe('score 3-1');
   });
 
+  test('leaves a seven-digit local phone number alone, but not a spaced range', () => {
+    expect(t('call 555-1234')).toBe('call 555-1234');
+    expect(t('call 555-1234 now')).toBe('call 555-1234~now');
+    expect(t('555 - 1234')).toBe('555–1234');
+  });
+
   test('leaves dates, chains and compounds alone', () => {
     expect(t('2026-10-19')).toBe('2026-10-19');
     expect(t('one-week, value-based, 20th- and 21st-century')).toBe(
@@ -168,6 +174,30 @@ describe('text that is left alone', () => {
 
   test('the text around them is still typeset', () => {
     expect(t('“quoted” https://a.b/c-d - and more')).toBe('«quoted» https://a.b/c-d~— and more');
+  });
+});
+
+describe('an apostrophe that stands for dropped letters', () => {
+  test('rock \'n\' roll is not a quotation', () => {
+    expect(t("rock 'n' roll")).toBe('rock ’n’ roll');
+    expect(t('“rock \'n\' roll” forever')).toBe('«rock ’n’ roll» forever');
+    expect(t("Rock 'N' Roll")).toBe('Rock ’N’ Roll');
+  });
+
+  test('a leading apostrophe on \'til, \'em and \'cause is an apostrophe', () => {
+    expect(t("'til dawn and 'em all")).toBe('’til dawn and ’em all');
+    expect(t("Wait 'cause it's late, 'Til then")).toBe('Wait ’cause it’s late, ’Til then');
+  });
+
+  test('a quoted word that starts like one is still a quotation', () => {
+    expect(t("the 'emergency' exit")).toBe('the «emergency» exit');
+    expect(t("the 'til' button")).toBe('the «til» button');
+  });
+
+  test('is stable on its own output', () => {
+    for (const s of ["rock 'n' roll", "'til dawn and 'em all"]) {
+      expect(t(t(s))).toBe(t(s));
+    }
   });
 });
 
