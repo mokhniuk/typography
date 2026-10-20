@@ -32,6 +32,9 @@ describe('space.before-punctuation', () => {
   test('keeps line breaks and a space at a line start', () => {
     expect(run('one\n ,two\nthree \n. four')).toBe('one\n ,two\nthree \n. four');
   });
+  test('never builds a ... out of spaced dots', () => {
+    expect(run('a .. . b and . . .')).toBe('a .. . b and. . .');
+  });
   test('is idempotent', () => {
     const once = run('a , b ;  c .');
     expect(run(once)).toBe(once);
@@ -142,6 +145,11 @@ describe('symbol.degree', () => {
     expect(run('20\u00A0°C')).toBe(out);
     expect(run('20° C')).toBe(out);
     expect(run('68 F and -5 C and 3,5 °C')).toBe('68\u00A0°F and -5\u00A0°C and 3,5\u00A0°C');
+  });
+  test('two temperatures in a row are both read, in one pass', () => {
+    expect(run('20 C 20 F and 20° C 68 F')).toBe(
+      '20\u00A0°C 20\u00A0°F and 20\u00A0°C 68\u00A0°F',
+    );
   });
   test('is idempotent on its own output and after space.number', () => {
     expect(run(out)).toBe(out);

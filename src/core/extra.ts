@@ -18,7 +18,8 @@ export function beforePunctuation(text: string, lang: Lang): string {
     /(?<=[^\s(\[{“"«‘„])[ \t]+([,.;:!?)])(?![\p{L}\p{N}])/gu,
     (match: string, mark: string, offset: number, whole: string) => {
       const next = whole.charAt(offset + match.length);
-      if (mark === '.' && next === '.') return match;
+      // A dot is not pulled against a dot on either side: that would make a ... after `ellipsis` ran.
+      if (mark === '.' && (next === '.' || whole.charAt(offset - 1) === '.')) return match;
       if ((mark === ':' || mark === ';') && /[-)(/|\\'*]/.test(next)) return match;
       if (mark === ':' && /\d/.test(whole.charAt(offset - 1)) && /^[ \t]*\d/.test(whole.slice(offset + match.length))) {
         return match;
@@ -74,7 +75,10 @@ export const degrees = (text: string): string =>
   text.replace(
     /(?<![\p{L}\p{N}])([\u2212+\u00B1-]?\d+(?:[.,]\d+)?)(?:[ \u00A0]*(°)[ \u00A0]*|[ \u00A0]+)([CF])(?![\p{L}\p{N}]|\.\p{L})/gu,
     (match: string, number: string, sign: string | undefined, unit: string, offset: number, whole: string) => {
-      if (!sign && LABEL.test(whole.slice(0, offset))) return match;
+      const before = whole.slice(0, offset);
+      // A C or F that is itself the unit of the number before it (`20 C 20 F`) is no label.
+      const afterUnit = /(?:\d[ \u00A0]+|°[ \u00A0]*)[CF][ \u00A0]+$/.test(before);
+      if (!sign && !afterUnit && LABEL.test(before)) return match;
       return `${number}${NBSP}°${unit}`;
     },
   );
