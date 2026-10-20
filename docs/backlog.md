@@ -42,7 +42,7 @@ Each is a limit of the pack format or an unverified choice, not a crash:
 
 ### Speed: what is left
 
-0.2.0 made the engine faster than typograf (33 ms against 59 ms per MB of English). What remains is in [limits.md](limits.md#speed): the opt-in `space.before-punctuation`, `punctuation.double` and `symbol.degree` still open with a lookbehind (16 to 20 ms per MB each when on); a few rules are quadratic on very long runs of one character; the quote rule is quadratic on thousands of opening marks in a row and slow (60 to 100 ms per MB) on text full of unpaired marks. Fix by custom loops, test-first, with `bun run compare` at 0 differences. React already memoises per component (`useMemo` in `Typeset`), so no paragraph cache is needed.
+0.2.0 made the engine faster than typograf (33 ms against 59 ms per MB of English). What remains is in [limits.md](limits.md#speed): the quote rule is quadratic on thousands of opening marks in a row and slow (60 to 100 ms per MB) on text full of unpaired marks. Fix by custom loops, test-first, with `bun run compare` at 0 differences and `bun scripts/stress.ts` flat. React already memoises per component (`useMemo` in `Typeset`), so no paragraph cache is needed.
 
 ## P2 (deferred by choice)
 

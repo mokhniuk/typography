@@ -43,7 +43,33 @@ export const initials = (text: string): string =>
 export const numberUnit = (text: string): string =>
   text.replace(/(\d)[ ]+(?=[\p{L}]{1,9}(?![\p{L}])|[%°€$£])/gu, `$1${NBSP}`);
 
-export const association = (text: string): string => text.replace(/[ ]+(?=e\.V\.)/g, NBSP);
+const ASSOCIATION = /e\.V\./g;
+
+/**
+ * No-break space before e.V. Was `text.replace(/[ ]+(?=e\.V\.)/g, NBSP)`, whose run of spaces is tried from
+ * every space and scans to its end each time (quadratic on tens of thousands of spaces). The `e.V.` is
+ * found first and the spaces before it read back by hand.
+ */
+export function association(text: string): string {
+  return spacesBefore(text, ASSOCIATION);
+}
+
+/** Replaces the spaces (U+0020 only) directly before each match of the global literal `re` by one no-break space. */
+function spacesBefore(text: string, re: RegExp): string {
+  let out = '';
+  let from = 0;
+  re.lastIndex = 0;
+  for (let m = re.exec(text); m; m = re.exec(text)) {
+    let start = m.index;
+    while (start > from && text.charCodeAt(start - 1) === 0x20) start--;
+    if (start < m.index) {
+      out += text.slice(from, start) + NBSP;
+      from = m.index;
+    }
+  }
+  re.lastIndex = 0;
+  return from === 0 ? text : out + text.slice(from);
+}
 
 export const copyright = (text: string): string => text.replace(/©[ ]+(?=\d)/g, `©${NBSP}`);
 
@@ -142,5 +168,8 @@ export const unitSymbol = (text: string, lang: Lang): string =>
     : text;
 
 /** An arrow stays with the word it points from or to: «Read more →», «← Back». */
+const ARROW_RIGHT = /→/g;
+
+/** Was `/\u0020+(?=→)/g` (quadratic on a long run of spaces, see `association`) and `/←\u0020+/g`. */
 export const arrowSpace = (text: string): string =>
-  text.replace(/\u0020+(?=→)/g, NBSP).replace(/←\u0020+/g, `←${NBSP}`);
+  spacesBefore(text, ARROW_RIGHT).replace(/←\u0020+/g, `←${NBSP}`);

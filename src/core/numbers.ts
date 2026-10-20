@@ -46,13 +46,25 @@ function groupable(text: string, start: number, end: number, decimal: string): b
   return true;
 }
 
+/**
+ * `run` (digits only) in threes from the right, joined by `separator`. Was
+ * `run.replace(/\B(?=(?:\d{3})+$)/g, separator)`, whose lookahead reads to the end of the run at every
+ * position (quadratic on a long run of digits).
+ */
+export function groupDigits(run: string, separator: string): string {
+  const head = run.length % 3 || 3;
+  let out = run.slice(0, head);
+  for (let i = head; i < run.length; i += 3) out += separator + run.slice(i, i + 3);
+  return out;
+}
+
 /** Groups the digits of every integer of five or more digits in threes from the right, with the separator of the pack. */
 export function groupNumbers(text: string, lang: Lang): string {
   const format = PACK[lang].numbers;
   if (!format) return text;
   return text.replace(DIGITS, (run, offset: number, whole: string) =>
     groupable(whole, offset, offset + run.length, format.decimal)
-      ? run.replace(/\B(?=(?:\d{3})+$)/g, format.group)
+      ? groupDigits(run, format.group)
       : run,
   );
 }
