@@ -56,5 +56,11 @@ export function dashRange(text: string): string {
 export function dashSentence(text: string, dash = '—'): string {
   return text
     .replace(/[ \u00A0]+(?:--|[-–—])[ \u00A0]+/g, `${NBSP}${dash} `)
-    .replace(/(?<=\S)--(?=\S)/g, `${NBSP}${dash} `);
+    // Not a double hyphen that is the whole of a quotation («--»): its space would sit inside the marks
+    // and a second pass would read it as the space of a French mark.
+    .replace(/(?<=\S)--(?=\S)/g, (match, offset: number, whole: string) =>
+      /[«„“‘‚‹»›"']/.test(whole.charAt(offset - 1)) && /[»“”’‘«‹›"']/.test(whole.charAt(offset + 2))
+        ? match
+        : `${NBSP}${dash} `,
+    );
 }

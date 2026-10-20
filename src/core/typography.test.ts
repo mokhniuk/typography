@@ -92,6 +92,17 @@ describe('dashes', () => {
     );
   });
 
+  test('a double hyphen that is the whole of a quotation is left, and stays stable', () => {
+    for (const lang of ['en', 'uk', 'de', 'fr', 'es', 'it'] as const) {
+      const once = typographic('say „--“ and “--” ok', lang);
+      expect(typographic(once, lang)).toBe(once);
+      // French pads its marks with no-break spaces, so there the dash is spaced (and stable).
+      if (lang !== 'fr') expect(once).toContain('--');
+    }
+    // A dash before or after a quotation is still a sentence dash.
+    expect(t('yes--"no"')).toBe('yes~— «no»');
+  });
+
   test('keeps a list marker at a line start', () => {
     expect(t('first\n- second')).toBe('first\n- second');
   });
