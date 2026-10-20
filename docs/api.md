@@ -21,13 +21,18 @@ These are the options the functions below take. Which function takes which is in
 
 | Option | Type | Default | Meaning |
 |---|---|---|---|
-| `lang` | `Lang` | `'en'` | Language of the text. `Lang` is `'en' \| 'uk' \| 'de' \| 'pl' \| 'fr' \| 'ch'` (`ch` is Swiss usage). See [languages.md](languages.md). |
+| `lang` | `Lang` | `'en'` | Language of the text. `Lang` is `'en' \| 'uk' \| 'de' \| 'pl' \| 'fr' \| 'ch'` (`ch` is Swiss usage), derived from the packs in `src/core/lang/`. See [languages.md](languages.md). |
 | `register` | `Register` | `'display'` | `'display'` (marketing and interface text) or `'literary'` (book-like text). `literary` has its own rules for English (British quotes, spaced en dash) and Ukrainian (dialogue dash); every other language keeps its display rules. |
+| `quoteStyle` | `QuoteStyle` | `'language'` | `'language'` is the language's own quote marks (its literary ones in the literary register). `'us'` is `“…”` with `‘…’` inside for any language, and takes precedence over both the language table and the literary register. The rehype plugin sets it for a subtree whose `lang` is `en-US` (any case). |
+| `enable` | `readonly string[]` | none | Rules to switch on that are off by default (`Rule.defaultOn: false`): ids or groups, checked like `disable`. Enabling a rule that is already on does nothing; a rule named in both `enable` and `disable` throws. No built-in rule is off by default yet. |
+| `rules` | `readonly Rule[]` | `RULES` | The list of rules to run, in order, instead of the built-in one; build it with `addRule`. `disable` and `enable` are checked against this list, not the built-in one. A rule with `defaultOn: false` in it runs only when named in `enable`. |
 | `disable` | `readonly string[]` | none | Rules to switch off: ids (`'dash.range'`) or groups (`'space'`, or `'space.*'`). A name that matches no rule throws an `Error` that lists the rule ids, so a typo cannot pass for "everything stays on". See [rules.md](rules.md). |
 | `onChange` | `(change: Change) => void` | none | Called with each change a rule makes, in the order the rules ran (not in text order). Costs one word-level diff per rule that changed anything. |
 | `blockStart` | `boolean` | `true` | Whether the text opens its paragraph. Only then can its first dash be read as a Ukrainian literary dialogue dash (`dash.dialogue`). Taken by `typographic` and `explain` only; the text, HTML, Markdown and rehype modes always treat each block as opening a paragraph. |
 | `nbsp` | `'entity' \| 'char'` | `'entity'` | HTML only (`HtmlOptions`, and `--nbsp` on the command line). How a no-break space is written in a block that changed: as `&nbsp;`, or as the character U+00A0. |
 | `early` | `boolean` | `true` | A prop of `TypographyRoot`, not an engine option. Whether the root sends the hanging pass inline (`HangScript`). Set `false` on a page whose content security policy forbids inline scripts. |
+
+`quoteStyle`, `enable` and `rules` go wherever `register` and `disable` go (every function and component in the table, including `TypographyRoot` and `Typeset`, and `--quotes` and `--enable` on the command line).
 
 | Function or component | `lang` | `register` | `disable` | `onChange` | `blockStart` | `nbsp` | `early` |
 |---|---|---|---|---|---|---|---|
@@ -60,8 +65,11 @@ A change is a stretch that one rule replaced, found by a word-level diff of the 
 ```ts
 type TypographicOptions = {
   register?: Register;     // default 'display'
+  quoteStyle?: QuoteStyle; // default 'language'
   blockStart?: boolean;    // default true
   disable?: readonly string[];
+  enable?: readonly string[];
+  rules?: readonly Rule[];
   onChange?: (change: Change) => void;
 };
 ```
@@ -103,7 +111,10 @@ The building block of the modes. Typesets one block with `ModeOptions` and holds
 type ModeOptions = {
   lang?: Lang;          // default 'en'
   register?: Register;  // default 'display'
+  quoteStyle?: QuoteStyle; // default 'language'
   disable?: readonly string[];
+  enable?: readonly string[];
+  rules?: readonly Rule[];
   onChange?: (change: Change) => void;
 };
 ```
@@ -112,13 +123,16 @@ type ModeOptions = {
 
 | Export | What it is |
 |---|---|
-| `RULES: readonly Rule[]` | The rules in the order they run. `Rule` is `{ id: string; about: string; apply(text, context): string }`. |
+| `RULES: readonly Rule[]` | The rules in the order they run. `Rule` is `{ id: string; about: string; defaultOn?: boolean; apply(text, context): string }`; `defaultOn: false` means the rule runs only when named in `enable`. |
+| `selectRules({ rules?, disable?, enable? })` | The rules that run, in order. Names are checked against `rules` (the built-in list unless given); an unknown name, or a rule named in both `disable` and `enable`, throws. `without(disable)` is `selectRules({ disable })`. |
+| `addRule(list, rule, position)` | A new list with `rule` at `{ before: id }`, `{ after: id }`, `{ first: true }` or `{ last: true }`. Does not change `list` or `RULES`; an unknown anchor or a duplicate id throws. |
 | `RULE_IDS: readonly string[]` | `RULES.map(r => r.id)`. |
-| `LANGS: readonly Lang[]` | Every language that has a profile: `en`, `uk`, `de`, `pl`, `fr`, `ch`. |
+| `LANGS: readonly Lang[]` | Every language that has a pack: `en`, `uk`, `de`, `pl`, `fr`, `ch`. |
+| `PACKS`, `PACK`, `LangPack` | The language packs (`src/core/lang/`), as a list and by code, and their type. See [contributing.md](contributing.md#adding-a-language). |
 | `REGISTERS: readonly Register[]` | `display`, `literary`. |
 | `NBSP` | The no-break space character, U+00A0. |
-| `Context` | `{ lang, register, blockStart }`, what a rule is given besides the text. |
-| `Lang`, `Register` | The two unions above. |
+| `Context` | `{ lang, register, quoteStyle, blockStart }`, what a rule is given besides the text. |
+| `Lang`, `Register`, `QuoteStyle` | The unions above; `Lang` is derived from the packs. |
 | `splitHangs`, `TextPart` | See [Hanging punctuation](#hanging-punctuation). |
 
 ## `./text`
@@ -267,7 +281,13 @@ Runs `hangPunctuation` over everything under `root.current` for as long as the c
 ### `TypographyContext` and `TypographySetting`
 
 ```ts
-type TypographySetting = { lang: Lang; register: Register };
+type TypographySetting = {
+  lang: Lang;
+  register: Register;
+  quoteStyle?: QuoteStyle;
+  enable?: readonly string[];
+  rules?: readonly Rule[];
+};
 const TypographyContext: React.Context<TypographySetting>; // default { lang: 'en', register: 'display' }
 ```
 
