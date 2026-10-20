@@ -2,3 +2,7 @@ node_modules
 dist
 playground/dist
 .DS_Store
+
+# The benchmark is a separate project (its own package.json); only its results are kept.
+bench/*
+!bench/RESULTS.md
