@@ -51,26 +51,33 @@ What the engine deliberately leaves alone, what it knowingly does not do, and wh
 
 ## Speed
 
-About 5 times slower than typograf on large text. `bun run bench` (see `bench/RESULTS.md`, generated 2026-10-20 on the author's machine) reports, for English text in one piece, text mode, best of three (one run at 1 MB):
+About 5 times slower than typograf on large text, and about 14 times slower than tipograph and smartypants, which do much less (smartypants only quotes, dashes and ellipses; neither has abbreviations or ranges). The benchmark (`bench/RESULTS.md`, generated 2026-10-20 on the author's machine) reports, for English text in one piece, text mode, best of three (one run at 1 MB):
 
 | Tool | 10 KB | 100 KB | 1000 KB |
 |---|---|---|---|
-| this package | 6 ms | 63 ms | 706 ms |
-| typograf | 1 ms | 11 ms | 113 ms |
-| typopo | 41 ms | 2143 ms | not run (the file estimates about 214 s, extrapolating a quadratic) |
+| this package | 3 ms | 33 ms | 324 ms |
+| typograf | 1 ms | 6 ms | 60 ms |
+| typopo | 20 ms | 1047 ms | 114894 ms |
+| richtypo | 4945 ms | not run (the file estimates about 492 s, extrapolating a quadratic) | not run |
+| tipograph | 0 ms | 2 ms | 24 ms |
+| smartypants | 0 ms | 2 ms | 22 ms |
+| retext-smartypants | 5 ms | 47 ms | 1019 ms |
 
-That is 0.7 s against 0.11 s at 1 MB, a factor of 5 to 6 in that run. Fast enough for a page; a build over very large content would want the per-rule regular expressions combined. Not done: nothing here is near the limit. Speed numbers depend on the machine; re-run the benchmark to see your own.
+That is 0.32 s against 0.06 s for typograf at 1 MB. Fast enough for a page; a build over very large content would want the per-rule regular expressions combined. Not done: nothing here is near the limit. Speed numbers depend on the machine; re-run the benchmark (see [contributing.md](contributing.md#the-benchmark)) to see your own.
 
 ## Benchmark caveats
 
 These are repeated at the top of `bench/RESULTS.md`.
 
-- The style-neutral cases (69 are scored for this package, plus 2 register cases) were written by the author of this package. They check what is right (a German quotation is `„…“` or `»…«`; an ISO date is not a range), not one tool's house style, but a tool's default that differs from them is reported as a failure, including this package's own `«…»` for English. Read the cases (`bench/cases.ts`) and contest them.
+- The style-neutral cases (69 are scored for this package, plus 2 register cases) were written by the author of this package. They check what is right (a German quotation is `„…“` or `»…«`; an ISO date is not a range), not one tool's house style, but a tool's default that differs from them is reported as a failure, including this package's own `«…»` for English. Read the cases in `bench/RESULTS.md` and contest them.
 - They cover what typography tools claim to do, not everything a typographer cares about.
-- Most cases are English: of the 66 cases in `bench/cases.ts` (the 5 stability checks are separate), 34 are English, 9 German, 10 Ukrainian, 7 Polish and 6 French. None is Swiss (`ch`).
+- Most cases are English: of the 66 cases in the benchmark (the 5 stability checks are separate), 34 are English, 9 German, 10 Ukrainian, 7 Polish and 6 French. None is Swiss (`ch`).
 - typograf was run with its default rules and the locales it ships that this package also covers. The only typographic rule it has off by default for these languages (`common/nbsp/afterNumber`) is also run, as a separate column. The other default-off rules insert a final newline, strip or escape HTML, wrap paragraphs, or are for a language this package does not cover.
 - typopo only supports English and German here, and a language a tool does not support is not scored, so the totals compare different numbers of cases: read each tool's row against its own denominator.
+- richtypo was run with its recommended rules for English and French (it has none for the other languages). tipograph was run with its default presets for English, German, Polish and French (no Ukrainian). smartypants and retext-smartypants were run for English only: they have no locale, so another language would be judged on English quotes. smartypants was given quotes, dashes and ellipses (`qde`); retext-smartypants has default options. The last three are text only here, except richtypo and tipograph, which read HTML.
 - Speed is one machine, one run of each size, best of three below 1 MB.
+
+Where the time goes in this package, and what to do about it, is in [backlog.md](backlog.md).
 
 ## Distribution
 

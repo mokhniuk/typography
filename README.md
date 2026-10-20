@@ -13,9 +13,15 @@ There are 20 rules (see [docs/rules.md](docs/rules.md)) and six languages: `en` 
 
 ## Install and use
 
-The package is meant to be lifted out as it stands. Copy the folder into your project and depend on it by path (a workspace or `file:` dependency), or import from its `src/` directly. Inline what `tsconfig.json` extends (see [docs/contributing.md](docs/contributing.md#lifting-the-package-out)). Nothing in it imports anything outside the folder except `react` (the `./react` entry only).
+Depend on a release tag over SSH (the repository is private, so the machine needs access to it):
 
-The import names below are the workspace name `@podiia/typography`.
+```sh
+bun add git+ssh://git@github.com/mokhniuk/typography.git#vX.Y.Z
+```
+
+Replace `vX.Y.Z` with a version from [CHANGELOG.md](CHANGELOG.md). Releases are plain git tags, created from `version` in `package.json` when a commit reaches `main`. A consumer takes a new version when it changes the tag. Tag handling in Bun, linking for local development and bundler notes are in [docs/contributing.md](docs/contributing.md#using-it-from-another-project).
+
+Nothing in the package imports anything outside the folder except `react` (the `./react` entry only).
 
 ## Entry points
 
@@ -133,7 +139,8 @@ Run it as `bun run src/cli/main.ts` before the `typo` bin is linked.
 | [docs/languages.md](docs/languages.md) | Quote marks, dashes, orphan letters, abbreviations and `%`/`€` spacing per language; review status; what is not implemented |
 | [docs/cli.md](docs/cli.md) | All flags, exit codes, standard input, format by extension, examples |
 | [docs/limits.md](docs/limits.md) | Known limits, speed, benchmark caveats |
-| [docs/contributing.md](docs/contributing.md) | Tests, adding a rule or a language, the benchmark, the playground, lifting the package out |
+| [docs/contributing.md](docs/contributing.md) | Tests, adding a rule or a language, the benchmark, the playground, releasing, using it from another project |
+| [docs/backlog.md](docs/backlog.md) | What is missing against the other tools, by priority, with the measurements behind each item |
 | [CHANGELOG.md](CHANGELOG.md) | What changed in each release, and whether it can change output you already have |
 
 ## Hanging punctuation without a jump on a prerendered page
@@ -148,7 +155,7 @@ To check this on your own page: block the JavaScript bundle (for example in the 
 
 ## Benchmark
 
-`bun run bench` runs this package, typograf and typopo over the same style-neutral checks and writes every case, check and output to `bench/RESULTS.md`. The cases were written by this package's author: read them (`bench/cases.ts`), contest them, and read the caveats at the top of the results and in [docs/limits.md](docs/limits.md). This package is roughly 5 times slower than typograf on large text.
+`bench/RESULTS.md` holds the results of running this package, typograf, typopo, richtypo, tipograph, smartypants and retext-smartypants over the same style-neutral checks, with every case, check and output. The runner is a separate project in `bench/` that git ignores (see [docs/contributing.md](docs/contributing.md#the-benchmark)). The cases were written by this package's author: read them in the results, contest them, and read the caveats at the top of the results and in [docs/limits.md](docs/limits.md). This package is roughly 5 times slower than typograf on large text.
 
 ## Develop
 
@@ -158,7 +165,7 @@ bun run typecheck
 bun run docs:rules     # regenerate docs/rules.md
 ```
 
-The package is meant to stay liftable: `src/boundary.test.ts` fails if anything in `src/` or `playground/` imports from outside the package or from anything but `react`. See [docs/contributing.md](docs/contributing.md).
+The package has to stay self-contained: `src/boundary.test.ts` fails if anything in `src/` or `playground/` imports from outside the package or from anything but `react`. See [docs/contributing.md](docs/contributing.md).
 
 ## Licence
 

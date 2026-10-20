@@ -1,6 +1,6 @@
 # API reference
 
-Every entry point in `package.json` `exports`, plus the `typo` command (see [cli.md](cli.md)). All of them ship as TypeScript sources: there is no build step and no `.d.ts` files; a TypeScript-aware bundler or Bun reads the `.ts` directly. The package is private and not published, so the import names below are the workspace name `@podiia/typography`; outside the monorepo, they are whatever you map them to.
+Every entry point in `package.json` `exports`, plus the `typo` command (see [cli.md](cli.md)). All of them ship as TypeScript sources: there is no build step and no `.d.ts` files; a TypeScript-aware bundler or Bun reads the `.ts` directly. The package is private and not published to a registry; it is installed from a git tag (see [contributing.md](contributing.md#using-it-from-another-project)), and the import names below are its package name `@podiia/typography`.
 
 | Entry | Source | What it exports |
 |---|---|---|
