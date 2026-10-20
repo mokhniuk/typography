@@ -35,33 +35,45 @@ export function dialogue(text: string): string {
 }
 
 const TIME_RANGE = /(\d{1,2}:\d{2})[ \u00A0]*(?:--|[-–])[ \u00A0]*(?=\d{1,2}:\d{2})/g;
-const NUMBER_RANGE = /(\d+)([ \u00A0]*(?:--|[-–])[ \u00A0]*)(\d+)(?![\d:–-])/g;
+/**
+ * The range between two numbers, found from the LAST digit of the first one: the original pattern was
+ * `(?<![\d:–-])(\d+)([ \u00A0]*(?:--|[-–])[ \u00A0]*)(\d+)(?![\d:–-])`, whose lookbehind is tried at every
+ * position. Without it `(\d+)` would be tried from every digit of a long number (quadratic); starting at
+ * the last digit costs one step at each of the others.
+ */
+const NUMBER_RANGE = /(\d)([ \u00A0]*(?:--|[-–])[ \u00A0]*)(\d+)(?![\d:–-])/g;
 const NOT_BEFORE_RANGE = /[\d:–-]/;
 
+const isDigit = (code: number): boolean => code >= 0x30 && code <= 0x39;
+
 /**
- * A range between numbers, spaced or not; a chain (a date, a phone number) is left alone. The pattern
- * used to open with `(?<![\d:–-])`, tried at every position; it is now found without it and the
- * character before the first number is read here. A match refused for it is retried from the end of
- * its first number: every start inside that number has a digit before it, so the lookbehind would
- * have refused it too, and the engine reaches the gap and the second number next, as it did.
+ * A range between numbers, spaced or not; a chain (a date, a phone number) is left alone. The first
+ * number starts where its run of digits does, and the character before that is the lookbehind of the
+ * original pattern, read here. A match it refuses is retried from the next character, as the engine
+ * would, so a second number that has a space before it still starts a range of its own.
  */
 function numberRanges(text: string): string {
   NUMBER_RANGE.lastIndex = 0;
   let out = '';
   let from = 0;
   for (let m = NUMBER_RANGE.exec(text); m; m = NUMBER_RANGE.exec(text)) {
-    const [match, a = '', gap = '', b = ''] = m;
-    const offset = m.index;
-    if (offset > 0 && NOT_BEFORE_RANGE.test(text.charAt(offset - 1))) {
-      NUMBER_RANGE.lastIndex = offset + a.length;
+    const last = m.index;
+    let start = last;
+    while (start > 0 && isDigit(text.charCodeAt(start - 1))) start--;
+    if (start > 0 && NOT_BEFORE_RANGE.test(text.charAt(start - 1))) {
+      NUMBER_RANGE.lastIndex = last + 1;
       continue;
     }
+    const a = text.slice(start, last + 1);
+    const gap = m[2] ?? '';
+    const b = m[3] ?? '';
+    const end = last + m[0].length;
     if (
-      !insideGroups(text, offset, offset + match.length) &&
-      isNumericRange(a, b, text.slice(Math.max(0, offset - 20), offset), gap)
+      !insideGroups(text, start, end) &&
+      isNumericRange(a, b, text.slice(Math.max(0, start - 20), start), gap)
     ) {
-      out += `${text.slice(from, offset)}${a}–${b}`;
-      from = offset + match.length;
+      out += `${text.slice(from, start)}${a}–${b}`;
+      from = end;
     }
   }
   NUMBER_RANGE.lastIndex = 0;
