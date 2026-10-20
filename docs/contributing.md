@@ -96,6 +96,7 @@ bun run compare                  # this checkout against the git ref `speed-base
 bun run compare <ref> --n 20000  # against another ref; --slice N runs all N strings through every combination (slow)
 bun run snapshot                 # ONLY for an intentional output change or a new language: rewrites src/snapshot.digests.json
 cd bench && bun run profile      # where the time goes, rule by rule
+bun scripts/stress.ts [srcDir]   # every rule on long runs of one character at 20k, 40k and 80k: flags quadratic cost
 ```
 
 - `bun run compare` extracts `src/` of the base ref into a temp directory with `git archive`, then, for every language, register (`display`, `literary`), `quoteStyle` (`language`, `us`), rule set (default; every opt-in rule enabled) and mode (`typographic` with `explain`, text, HTML, Markdown, hast), compares the output and every change record (rule id, `from`, `to`, order), the rule table and a thrown error. It prints the first ten differences with input, mode, language and both results, exits 1 on any difference, and ends with a timing table (best of 3, on a 1 MB paragraph and on 1000 paragraphs of 1 KB). Languages that exist here but not in the base are skipped. Expect `0 differences`.

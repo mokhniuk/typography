@@ -79,14 +79,13 @@ Since 0.2.0 the package is faster than typograf on English text in one piece, an
 
 That is 0.03 s against 0.06 s for typograf at 1 MB; 0.2.0 took it from 0.32 s (the output is identical: a differential run against the engine as it was before the speed work, over 2.5 million combinations, finds no difference). The cost is linear in the text. What made the old engine slow was a regular expression that opens with a lookbehind, which the engine tries at every position; the rules now find a literal first and read the character before it (`src/core/scan.ts`), and a rule is skipped when a cheap test (`Rule.when`) shows its trigger is absent. The quote rule is 5 ms per MB of ordinary prose, 60 to 100 ms on text full of unpaired marks.
 
-Known slow spots, all unchanged by 0.2.0:
+Known slow spots:
 
 - A run of one opening mark (`“` repeated thousands of times) is quadratic in the quote rule.
-- Long runs of digits, `x`, `-`, `.` or `+-` cost 300 to 500 ms at 20,000 characters.
-- The opt-in `space.before-punctuation`, `punctuation.double` and `symbol.degree` still open with a lookbehind: about 16 to 20 ms per MB each when switched on.
-- Several rules are quadratic on tens of thousands of spaces in a row (`dash.sentence`, `space.association`, `space.arrow`, `space.trailing`), and `number.group` on a very long digit run.
 
-On a JavaScriptCore engine (Bun) a lookbehind with `\p{L}` or `\p{N}` does not see letters outside the Basic Multilingual Plane. The scan helpers reproduce whatever the running engine does, so the output equals the old engine's on the same runtime. One residual difference exists, only for ill-formed UTF-16 (a lone high surrogate directly after a fraction, followed by a character at U+E000 or above) and only with `symbol.fraction` on: the `½` is skipped. Well-formed text cannot reach it. Speed numbers depend on the machine; re-run the benchmark (see [contributing.md](contributing.md#the-benchmark)) to see your own. `src/speed.test.ts` is a loose budget (linear scaling, a 1 MB ceiling), not a measurement.
+Every other rule is linear on a long run of one character (spaces, digits, `x`, `-`, `--`, `.`, `+-`, `1x`, `!`, `)`), and the opt-in `space.before-punctuation`, `punctuation.double` and `symbol.degree` no longer open with a lookbehind (about 1, 2 and 5 ms per MB when switched on, from 40, 40 and 200). `bun scripts/stress.ts` times each rule at 20,000, 40,000 and 80,000 characters of each such run and flags a doubling that costs more than 2.5 times; `src/core/linear.test.ts` holds the loose version of that as a test.
+
+On a JavaScriptCore engine (Bun) a lookbehind with `\p{L}` or `\p{N}` does not see letters outside the Basic Multilingual Plane. The scan helpers reproduce whatever the running engine does, so the output equals the old engine's on the same runtime. One residual difference exists, only for ill-formed UTF-16 (a lone high surrogate directly after a fraction, followed by a character at U+E000 or above) and only with `symbol.fraction` on: the `½` is skipped. Well-formed text cannot reach it. A second JavaScriptCore quirk is in the original zone regex (`src/core/zones.ts`): when its email alternative scans a run of word characters, dots and hyphens that holds a `www.` and an astral character follows, the old engine reported the address one character late (`.www.😀)😀` zoned `ww.😀)😀`). The rewrite finds the address correctly, so on such text, and only there, the output differs from the old engine's. Speed numbers depend on the machine; re-run the benchmark (see [contributing.md](contributing.md#the-benchmark)) to see your own. `src/speed.test.ts` is a loose budget (linear scaling, a 1 MB ceiling), not a measurement.
 
 ## Benchmark caveats
 

@@ -2,6 +2,15 @@
 
 Versions follow semver while the package is below 1.0.0: a **minor** release may change the output of the engine or the API (every entry says whether it can change output you already have), a **patch** release fixes a bug without changing output you rely on. If you depend on exact output, pin a tag and read this file before you move it.
 
+## Unreleased
+
+### Speed
+
+- Every rule but the quote rule is now linear on a long run of one character. Before, 20,000 characters of `x`, digits, `-`, `.` or `+-` took 360 ms in every call, because the email part of the zone shield (`src/core/zones.ts`) was tried from every position of the run; tens of thousands of spaces took seconds in `space.trailing`, `dash.sentence`, `space.association` and `space.arrow`, and a long digit run in `number.group`; an address ending in thousands of `)` in the shield. Each now finds a literal first and reads the run by hand.
+- The opt-in `space.before-punctuation`, `punctuation.double` and `symbol.degree` no longer open with a lookbehind: 1 MB of prose costs about 1, 2 and 5 ms with them on (it was 40, 40 and 200). `symbol.degree` no longer reads the whole text before each match.
+- `scripts/stress.ts` times each rule on long runs; `src/core/linear.test.ts` holds an equivalence test against each original implementation and a scaling test.
+- Can change existing output: no, with one exception. Output and `explain` records are identical to the previous engine (`bun run compare --slice 6000`: 0 differences). The exception is a JavaScriptCore bug in the old zone regex that put the start of a `www.` address one character late when a run of word characters before it was followed by an astral character; the rewrite finds the address correctly. See [docs/limits.md](docs/limits.md#speed).
+
 ## 0.2.0 (2026-10-20)
 
 Fixes that change output come first; everything new is opt-in or an option, so output you already have changes only where an entry says so.
