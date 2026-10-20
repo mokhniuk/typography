@@ -32,10 +32,9 @@ describe('Estonian quotation (ISG 4.2.3, 5.10, 10.1.6: „…“ at every level)
     expect(t(ready)).toBe(ready);
   });
 
-  // KNOWN CORE GAP (every language, not Estonian only): the ISG omission mark [---] (5.10, 10.1.6) comes
-  // out as "[ – -]". Needs a core change in the dash rules; marked failing so the suite stays green and
-  // turns red, telling the maintainer to drop the marker, once it is fixed.
-  test.failing('ISG 5.10: the omission mark [---] stays as written (core gap)', () => {
+  // The ISG omission mark [---] (5.10, 10.1.6) was set as "[ – -]" in every language until the dash
+  // rules learned that a run of three hyphens is no double hyphen.
+  test('ISG 5.10: the omission mark [---] stays as written', () => {
     expect(t('„Nõukogu tahtis võtta meetmeid [---], kuid loobus.“')).toBe(
       '„Nõukogu tahtis võtta meetmeid [---], kuid loobus.“',
     );

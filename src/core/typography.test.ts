@@ -92,6 +92,16 @@ describe('dashes', () => {
     );
   });
 
+  test('a run of three or more hyphens is not a double hyphen: the omission mark [---] stays', () => {
+    expect(t('meetmeid [---], kuid')).toBe('meetmeid [---], kuid');
+    expect(t('a [---] b')).toBe('a~[---] b');
+    expect(t('x ---- y')).toBe('x ---- y');
+    expect(t('a---b')).toBe('a---b');
+    for (const text of ['meetmeid [---], kuid', 'a---b']) expect(t(t(text))).toBe(t(text));
+    // Two hyphens are still a sentence dash.
+    expect(t('a--b')).toBe('a~— b');
+  });
+
   test('a double hyphen that is the whole of a quotation is left, and stays stable', () => {
     for (const lang of ['en', 'uk', 'de', 'fr', 'es', 'it'] as const) {
       const once = typographic('say „--“ and “--” ok', lang);
