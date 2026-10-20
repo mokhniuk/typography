@@ -50,6 +50,26 @@ A rule that inserts a character the font does not have shows a box or a mismatch
 - Later, a browser add-on: `supports(char)` in the React/DOM layer (`document.fonts.check` or a canvas measure), used when given; server rendering uses the option.
 - Done when: a golden test per rule shows the original text kept when its character is avoided, idempotence holds, and `explain` records nothing for the skipped match.
 
+### Phone numbers
+
+Today the engine only protects them: a hyphenated phone number is not read as a range (`555-1234`, `044-123-45-67`, `+49 30 123456-0` keep their hyphens), and nothing else is done. Checked on 0.2.1:
+
+- `+380 44 123 45 67`, `+44 20 7946 0958` and `+1 (555) 123-4567` keep plain spaces inside, so a number can wrap in the middle. Only the space before a following word is bound (`123 45 67~now`).
+- Plan: an opt-in rule `phone.bind` (off by default, named in the changelog) that joins the groups of an international number (`+` or `00`, then digits, spaces, hyphens and parentheses, at least seven digits) with no-break spaces and non-breaking hyphens (U+2011) so it never wraps, without reformatting the digits. Locale formats (`+380 44 123 45 67`, `(555) 123-4567`) are a pack field for later; start with "do not break", not "reformat".
+- Guards: dates (`2026-10-20`), ranges (`100-1200`), ISO numbers, IBANs, and anything in a link or `tel:` href are left alone; `number.group` must not group a phone number.
+- Done when: golden tests per shape above, no change to dates, ranges and identifiers, idempotence, and the letters-and-digits property holds (U+2011 replaces `-`, so the property needs a hyphen-aware check).
+
+### Currencies
+
+Partly there: `space.number` binds a number to the symbol or code after it (`49~€`, `100~USD`, `5~$`, `20~zł`, `100~грн`), and `space.percent` handles `%` and `€` spacing for de and fr only. Gaps found on 0.2.1:
+
+- **Code or symbol before the amount** is not bound: `USD 5 000` and `€ 49.99` can wrap between the code and the number.
+- **Grouped amounts** keep plain spaces between the groups unless `number.group` (opt-in) is on: `1 000 грн` becomes `1 000~грн`, so the number can still break in the middle.
+- **Placement and spacing per locale** (`€49.99` in en, `49,99 €` in de, fr and uk, `49,99 zł` in pl) is not applied: the engine never moves a symbol, which is right, but the pack has no field that says whether a space belongs between amount and symbol. `percentSpace` is one flag for both `%` and currency (see the language gaps above); split it into `percentSpace` and `currencySpace`.
+- **Swiss apostrophe grouping** (`CHF 1'000`) is not read as a number group, and the apostrophe is not a quote.
+- **Symbols and codes** are an inline list; a code list (ISO 4217) and the symbols of the audience's currencies (`€ $ £ ₴ zł Kč Ft lei лв kr`) should be one table in `src/core`, not in two rules.
+- Done when: golden tests per locale for the amount, the symbol and the code before and after; `space.number` and `number.group` agree on grouped amounts; no rule moves or adds a currency symbol.
+
 ### Speed: what is left
 
 Nothing superlinear is known (0.2.1). Typical text costs 30 to 60 ms per MB; the biggest rules are `quote`, `space.abbreviation` and `space.title` at 5 to 10 ms each. Further gains would be constant-factor work on those; tipograph and smartypants (10 to 20 ms) do much less. React already memoises per component (`useMemo` in `Typeset`), so no paragraph cache is needed.
