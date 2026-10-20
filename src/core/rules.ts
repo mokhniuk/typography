@@ -2,6 +2,7 @@ import { dashRange, dashSentence, dialogue } from './dashes';
 import { apostrophe, arrows, ellipsis, legal, minus, multiply } from './marks';
 import { PACK, PACKS } from './lang';
 import { SENTENCE_DASH, SENTENCE_DASH_LITERARY } from './profiles';
+import { groupNumbers } from './numbers';
 import { quotes } from './quotes';
 import {
   abbreviations,
@@ -75,6 +76,13 @@ export const RULES: readonly Rule[] = [
       'A Ukrainian dialogue line (literary register) opens with an em dash and a no-break space',
     apply: (text, { lang, register, blockStart }) =>
       register === 'literary' && PACK[lang].dialogueDash && blockStart ? dialogue(text) : text,
+  },
+  {
+    id: 'number.group',
+    about:
+      'Digits of an integer of five or more are grouped in threes with the language separator (1,000,000; 1 000 000)',
+    defaultOn: false,
+    apply: (text, { lang }) => groupNumbers(text, lang),
   },
   {
     id: 'dash.range',

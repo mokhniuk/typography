@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'bun:test';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { addRule, RULE_IDS, RULES, type Rule } from './core';
+import { addRule, DEFAULT_RULES, RULE_IDS, RULES, type Rule } from './core';
 import { EXAMPLES, render, runOnly } from '../scripts/gen-rules-doc';
 
 describe('docs/rules.md', () => {
@@ -42,11 +42,13 @@ describe('docs/rules.md with a rule that is off by default', () => {
 
   test('the page says how many rules are on by default, and marks the opt-in one', () => {
     const page = render(list);
-    expect(page).toContain(`The engine has ${RULES.length + 1} rules, ${RULES.length} on by default`);
+    expect(page).toContain(`The engine has ${RULES.length + 1} rules, ${DEFAULT_RULES.length} on by default`);
     expect(page).toContain(`${RULES.length + 1}. \`extra.shout\` (off by default)`);
   });
 
   test('with every rule on by default the wording is the plain one', () => {
-    expect(render()).toContain(`The engine has ${RULES.length} rules. \`typographic\``);
+    expect(render(DEFAULT_RULES)).toContain(
+      `The engine has ${DEFAULT_RULES.length} rules. \`typographic\``,
+    );
   });
 });

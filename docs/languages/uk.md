@@ -38,12 +38,12 @@ An apostrophe before a dropped-letter word is not a quotation mark: `'em`, `'til
 
 ## Numbers
 
-No number format yet.
+Groups of three are separated by `~`, the decimal mark is `,`.
 
 ## Sources
 
-None cited yet.
+- https://style-guide.europa.eu/en/content/-/isg/topic?identifier=6.5-punctuation-in-figures
 
 ## Notes
 
-The literary register keeps the display quotes; what differs is the dialogue dash (an em dash and a no-break space).
+The literary register keeps the display quotes; what differs is the dialogue dash (an em dash and a no-break space). Digits are grouped with a no-break space (number.group), as the Interinstitutional Style Guide sets for all languages; the decimal mark is a comma.

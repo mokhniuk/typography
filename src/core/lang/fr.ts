@@ -14,7 +14,9 @@ export const fr = {
   ],
   percentSpace: true,
   elisions: ELISIONS_EN,
+  numbers: { group: NBSP, decimal: ',' },
   reviewed: false,
-  sources: [],
-  notes: 'A no-break space is set inside the guillemets.',
+  sources: ['https://style-guide.europa.eu/en/content/-/isg/topic?identifier=6.5-punctuation-in-figures'],
+  notes:
+    'A no-break space is set inside the guillemets. Digits are grouped with a no-break space (number.group), as the Interinstitutional Style Guide sets for all languages; the decimal mark is a comma.',
 } as const satisfies LangPack;
