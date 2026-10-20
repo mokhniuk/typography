@@ -81,6 +81,10 @@ The rules are a flat list with dotted group names (`dash`, `space`, `symbol`, `n
 
 Open questions: is a category a prefix of the rule id (a rename, so a breaking change for `disable`), or a separate tag on `Rule` (`category`) with the ids unchanged? Which categories are on by default? How do the categories show in `typo --rules`, `docs/rules.md` and the playground? Research what typograf (its groups), tipograph (its presets) and the style guides call these groups before choosing. Whatever is chosen must keep the old ids working for `disable` and `enable`, and say in the changelog whether output can change.
 
+### Scottish Gaelic (and Manx)
+
+`ga` is Irish (Gaeilge), an official EU language, and has a pack. Scottish Gaelic (`gd`) is a different language and has none; Manx (`gv`) neither. Neither is an official EU language, so they are outside the 26 target languages, but Scottish Gaelic is in use in the UK. Add `gd` (and `gv` if wanted) as packs from the style guides that exist (for Scottish Gaelic, Bòrd na Gàidhlig and the Scottish Parliament's guidance), `reviewed: false`, following the language recipe in [contributing.md](contributing.md#adding-a-language). Check first: quote marks (British single `‘…’` is the usual print style), the apostrophe and hyphen in `t-` and `n-` prefixes (`an t-òran`, `na h-òrain`) must not be read as quotes or ranges, and `Mc`/`Mac`-style abbreviations. Irish has the same prefix question (`an t-athair`, `na hÉireann`): check that the `ga` pack handles it, and add a test if not. Which of the two the user means by "Gaelic" should be confirmed before building.
+
 ### Short words, conjunctions and the end of the line
 
 Today `space.orphan` binds a one-letter word in a language's list to the next word (`a~long`, `в~місті`), `space.number` binds a number to a short word, and `space.title`, `space.initial` and `space.abbreviation` bind their cases. Not covered, checked on 0.2.1:
