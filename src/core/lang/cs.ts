@@ -1,3 +1,4 @@
+import { NBSP } from '../types';
 import type { LangPack } from './pack';
 
 export const cs = {
@@ -15,7 +16,7 @@ export const cs = {
   sentenceDash: '–',
   sentenceDashLiterary: '–',
   percentSpace: true,
-  numbers: { group: ' ', decimal: ',' },
+  numbers: { group: NBSP, decimal: ',' },
   reviewed: false,
   sources: [
     'https://prirucka.ujc.cas.cz/?slovo=uvozovky',

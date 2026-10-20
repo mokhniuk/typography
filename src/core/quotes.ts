@@ -45,7 +45,8 @@ const APOSTROPHE = '\uE002';
 // listed in `elisions` on the language pack. Each alternative holds the apostrophe in a group so the
 // replacer can tell it from the others. A word that goes on (the 'emergency' exit) or is closed by
 // another ' (the 'til' button) stays a quotation.
-const EDGE = '(?<=^|[\\s([])';
+// An elision may also follow an opening quote mark: "'tis fine", “'s avonds”.
+const EDGE = '(?<=^|[\\s(["“„«‘‚»›])';
 const escapeRegex = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const caseless = (word: string) => {
   const [first = ''] = word;

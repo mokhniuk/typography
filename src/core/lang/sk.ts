@@ -1,3 +1,4 @@
+import { NBSP } from '../types';
 import type { LangPack } from './pack';
 
 export const sk = {
@@ -9,7 +10,7 @@ export const sk = {
     ['„', '“'],
     ['‚', '‘'],
   ],
-  numbers: { group: ' ', decimal: ',' },
+  numbers: { group: NBSP, decimal: ',' },
   reviewed: false,
   sources: [
     'https://www.teraz.sk/slovencina/slovencina-ako-pouzivat-slovenske/348361-clanok.html',

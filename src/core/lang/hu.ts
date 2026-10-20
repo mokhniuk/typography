@@ -1,3 +1,4 @@
+import { NBSP } from '../types';
 import type { LangPack } from './pack';
 
 export const hu = {
@@ -12,7 +13,7 @@ export const hu = {
     ['’', '’'],
   ],
   turnedPairs: [['»', '«']],
-  numbers: { group: ' ', decimal: ',' },
+  numbers: { group: NBSP, decimal: ',' },
   reviewed: false,
   sources: [
     'https://op.europa.eu/en/web/eu-vocabularies/formex/physical-specifications/character-encoding/use-of-quotation-marks-in-the-different-languages',

@@ -61,7 +61,8 @@ export type LangPack = {
   openers?: string;
   /**
    * The language opens and closes a quotation with the same mark (Swedish ”…”). Carried and
-   * documented only: the engine does not act on it yet.
+   * documented only: no code reads it. Such a language works because a mark with no partner is read
+   * by where it stands (an opening one after a space or the start, a closing one after a word).
    */
   sameMarkQuotes?: boolean;
   numbers?: NumberFormat;

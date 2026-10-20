@@ -213,6 +213,23 @@ describe('an apostrophe that stands for dropped letters', () => {
   });
 });
 
+describe('an apostrophe that opens a quotation is still an apostrophe', () => {
+  test('an elision right after an opening quote mark', () => {
+    expect(t('He said "\'tis fine" today')).toBe('He said «’tis fine» today');
+    expect(t('He said “\'tis fine” today')).toBe('He said «’tis fine» today');
+    expect(t('He said "\'til dawn" today')).toBe('He said «’til dawn» today');
+  });
+
+  test('Dutch \'s and \'t after a quote mark', () => {
+    expect(t('Hij zei "\'s avonds gaan we" en ging.', 'nl')).toBe('Hij zei “’s avonds gaan we” en ging.');
+    expect(t('Hij zei "\'t is mooi" en ging.', 'nl')).toBe('Hij zei “’t is mooi” en ging.');
+  });
+
+  test('a quoted word that merely starts with one of them is still a quotation', () => {
+    expect(t('He said "\'emergency\' exit" today')).toBe('He said «„emergency“ exit» today');
+  });
+});
+
 describe('a leading apostrophe on a year', () => {
   test('does not stop a quotation from pairing', () => {
     expect(t('“the ’90s were loud”')).toBe('«the ’90s were loud»');
