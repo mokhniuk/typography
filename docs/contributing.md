@@ -90,11 +90,12 @@ To release:
 1. Move the new entries of `CHANGELOG.md` under a heading `## X.Y.Z (date)`.
 2. Set `version` in `package.json` (`typo --version` reads it).
 3. Run `bun test src playground`, `bun run typecheck`, `bun run docs:rules` and, if `src/dom/hang.ts` changed, `bun run gen:script`, and commit with the message `release: X.Y.Z`.
-4. Tag it: `git tag vX.Y.Z`, then `git push --follow-tags`.
+4. Tag it with a plain tag, `git tag vX.Y.Z` (not `-a`, see below), then `git push origin main vX.Y.Z`.
 
 ## Using it from another project
 
-- Pinned: depend on a tag, `bun add git+ssh://git@github.com/<owner>/typography.git#vX.Y.Z` (it needs SSH access to the repository).
-- While developing both: run `bun link` once in this folder, and `"@podiia/typography": "link:@podiia/typography"` in the consumer resolves to this folder, so edits show up at once.
-- The package ships `.ts` sources with no build step. A consumer needs Bun or a TypeScript-aware bundler; with Vite's server-side build, list the package under `ssr.noExternal`.
+- Depend on a release tag over SSH: `"@podiia/typography": "git+ssh://git@github.com/<owner>/typography.git#vX.Y.Z"` (it needs SSH access to the repository). The consumer takes a new version only when it changes the tag.
+- Tag releases with a plain `git tag vX.Y.Z`, not `git tag -a`: Bun 1.3 cannot resolve an annotated tag by name, and it cannot resolve a version range (`#semver:`) either.
+- Bun keeps its own copy of a git repository and does not see tags pushed after it made that copy. If the consumer's install says "no commit matching", run `bun pm cache rm` once and retry. A consumer that already installed a tag keeps working: `bun.lock` holds the commit.
+- The package ships `.ts` sources with no build step. A consumer needs Bun or a TypeScript-aware bundler. If the consumer's dev server shows an old copy after an update, clear its bundler cache (for Vite, `node_modules/.vite`).
 - `react` is an optional peer dependency (`>=18`), needed only by the `./react` entry.
