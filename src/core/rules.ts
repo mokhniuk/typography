@@ -33,7 +33,28 @@ function names(packs: readonly { name: string }[]): string {
   return list.length > 1 ? `${list.slice(0, -1).join(', ')} and ${list.at(-1)}` : (list[0] ?? '');
 }
 
-/** The rules, in the order they run. */
+/**
+ * The rules, in the order they run.
+ *
+ * Reserved places. Rules planned for the opt-in set and for digit grouping go in these places, so
+ * that two people adding rules do not choose different orders (src/core/rules-order.test.ts holds
+ * the built-in order and checks each of these once the rule exists). Do not add them here ahead
+ * of their implementation.
+ *
+ *  - `number.group` goes after `dash.dialogue` and before `dash.range`, hence before
+ *    `space.number`: it works on a bare number, and a spaced thousands group (1 000) must be
+ *    one number by the time the number rules look at it.
+ *  - `symbol.fraction` goes before `space.number`, after `symbol.multiply`, so 1/2 is ½ before a
+ *    unit is bound to it.
+ *  - `symbol.plusminus` goes immediately before `symbol.minus`: +- becomes ± before a hyphen
+ *    ahead of a digit is read as a minus.
+ *  - the punctuation-space rules (`space.before-punctuation`, `space.after-comma`,
+ *    `punctuation.double`) go immediately after `ellipsis`: a ... is already … when they run, and
+ *    they run before any rule that binds a space.
+ *  - `symbol.degree` goes after `space.number` (and `space.percent`): the number rules bind the
+ *    degree sign's space first, and this rule only tidies what is left.
+ *  - `space.trailing` is the last rule, so nothing runs after it and it cannot be undone by one.
+ */
 export const RULES: readonly Rule[] = [
   {
     id: 'quote',
