@@ -70,14 +70,36 @@ function zonesOf(text: string): [number, number][] {
   return found;
 }
 
-/** Whether the last character of `zone.slice(0, end)` is sentence punctuation rather than part of the address. */
-function isTail(zone: string, end: number): boolean {
-  const ch = zone.charAt(end - 1);
-  if (/[.,;:!?'’…]/.test(ch)) return true;
-  const head = zone.slice(0, end);
-  if (ch === ')') return head.split('(').length < head.split(')').length;
-  if (ch === ']') return head.split('[').length < head.split(']').length;
-  return false;
+const SENTENCE_PUNCTUATION = /[.,;:!?'’…]/;
+
+/**
+ * How much of an address (not a code span) is the address: the rest is sentence punctuation that
+ * followed it. A trailing `.,;:!?'’…` is cut, and so is a `)` or `]` with no `(` or `[` to close in the
+ * address before it. The brackets are counted once and kept up to date as characters are cut (this
+ * used to split the head of the address at every step, quadratic on an address ending in many `)`).
+ */
+function addressLength(zone: string): number {
+  let open = 0;
+  let close = 0;
+  let squareOpen = 0;
+  let squareClose = 0;
+  for (let i = 0; i < zone.length; i++) {
+    const ch = zone.charCodeAt(i);
+    if (ch === 0x28) open++;
+    else if (ch === 0x29) close++;
+    else if (ch === 0x5b) squareOpen++;
+    else if (ch === 0x5d) squareClose++;
+  }
+  let end = zone.length;
+  while (end > 0) {
+    const ch = zone.charAt(end - 1);
+    if (ch === ')' ? open < close : ch === ']' ? squareOpen < squareClose : SENTENCE_PUNCTUATION.test(ch)) {
+      if (ch === ')') close--;
+      else if (ch === ']') squareClose--;
+      end--;
+    } else break;
+  }
+  return end;
 }
 
 /** Sets the zones aside; the second value puts them back into the typeset text. */
@@ -88,8 +110,7 @@ export function shield(text: string): [string, (typeset: string) => string] {
   let copied = 0;
   for (const [start, end] of zonesOf(text)) {
     const match = text.slice(start, end);
-    let kept = match.length;
-    if (!match.startsWith('`')) while (kept > 0 && isTail(match, kept)) kept--;
+    const kept = match.startsWith('`') ? match.length : addressLength(match);
     zones.push(match.slice(0, kept));
     out += text.slice(copied, start) + ZONE + match.slice(kept);
     copied = end;

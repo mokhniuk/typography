@@ -176,6 +176,9 @@ describe('shield (zones.ts)', () => {
   scales('shield on +-', (t) => shield(t), rep('+-'));
   scales('shield on 1x', (t) => shield(t), rep('1x'));
   scales('shield on a run, then an @', (t) => shield(t), (n) => `${'x'.repeat(n)}@`);
+  scales('shield on an address ending in many )', (t) => shield(t), (n) => `http://a${')'.repeat(n)}`);
+  scales('shield on an address ending in many ]', (t) => shield(t), (n) => `http://a${']'.repeat(n)}`);
+  scales('shield on an address ending in many )) and .', (t) => shield(t), (n) => `www.a(${'.)'.repeat(n / 2)}`);
 });
 
 describe('space.trailing', () => {

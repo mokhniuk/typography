@@ -58,6 +58,27 @@ export const classes: Record<string, string> = {
   '1,': '1,',
   '(': '(',
   a1: 'a1',
+  nbsp: '\u00A0',
+  'nbsp-': '\u00A0-\u00A0',
+  '–': '–',
+  '—': '—',
+  ' – ': ' – ',
+  '1–': '1–',
+  '1:00-': '1:00-',
+  '1.5': '1.5',
+  '$': '$',
+  '€': '€',
+  '%': '%',
+  'a.': 'a.',
+  'I ': 'I ',
+  'z. B.': 'z. B. ',
+  '"': '"',
+  '//': '/',
+  '`': '`',
+  '@': '@',
+  'http': 'http://',
+  'www.': 'www.',
+  ')': ')',
 };
 
 const time = (fn: () => unknown): number => {
@@ -79,6 +100,8 @@ const wraps: [string, (run: string) => string][] = [
   ['+-', (r) => `${r}-`],
   ['+C', (r) => `${r}C`],
   ['a+', (r) => `a${r}`],
+  // A prefix that opens the cheap gates (`Rule.when`) of the rules that look for a literal first.
+  ['g+', (r) => `e.V.→©C-x.1/2 ${r}a`],
 ];
 const variants = Object.entries(classes).flatMap(([name, unit]) =>
   wraps.map(([w, f]) => [`${name}${w}`, unit, f] as const),
