@@ -41,6 +41,7 @@ const trimInner = (s: string) => s.replace(/^[\s\u00A0]+|[\s\u00A0]+$/g, '');
 // An apostrophe inside a word (don't, don’t, Maria’s) must not be taken for a quote mark, or
 // the quotation around it would not pair. It is set aside as a placeholder and put back.
 const APOSTROPHE = '\uE002';
+const PLACEHOLDERS = new RegExp(`[${OPEN}${CLOSE}${APOSTROPHE}]`, 'g');
 // The only characters the `apostrophe` regex of a language can match.
 const APOSTROPHE_MARK = /['’]/g;
 // Words that start with an apostrophe for dropped letters ('til, 'em, 'cause), and 'n' as in rock 'n' roll,
@@ -186,21 +187,18 @@ export function quotesFor(
       quoteStyle === 'us' ? US : (register === 'literary' && pack.literary) || pack.quotes;
     let depth = 0;
     let next = 0;
-    let result = '';
-    for (const ch of out) {
+    return out.replace(PLACEHOLDERS, (ch) => {
       if (ch === OPEN) {
-        result += levels[depth % levels.length]?.[0] ?? '';
+        const mark = levels[depth % levels.length]?.[0] ?? '';
         depth++;
-      } else if (ch === CLOSE) {
-        depth = Math.max(0, depth - 1);
-        result += levels[depth % levels.length]?.[1] ?? '';
-      } else if (ch === APOSTROPHE) {
-        result += kept[next++] ?? '’';
-      } else {
-        result += ch;
+        return mark;
       }
-    }
-    return result;
+      if (ch === CLOSE) {
+        depth = Math.max(0, depth - 1);
+        return levels[depth % levels.length]?.[1] ?? '';
+      }
+      return kept[next++] ?? '’';
+    });
   };
 }
 
