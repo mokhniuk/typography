@@ -22,6 +22,10 @@ Bun project, TypeScript sources shipped as they are (no build step). Details: `R
 
 `docs/backlog.md` is the list of what we lack against the other tools (P0 to P2). When you finish an item, move it to `CHANGELOG.md` and delete it there; when a benchmark shows a new gap, add it with the measurement.
 
+## Comparison page
+
+The benchmark findings are published as an artifact: https://claude.ai/artifact/4GjMbDUzengRYRAv97de87. Its source is `bench/comparison.html` (untracked, with the benchmark). After every update that changes what it shows (a fixed bug, a new rule or language, new benchmark numbers, a finished backlog item), edit that file to match and republish it to that URL with the Artifact tool (`url` set, so the link stays), without being asked.
+
 ## Before pushing to main (or opening a PR into it)
 
 If the changes since the last tag touch `src/` (anything that ships), check that a release is prepared. If it is not, prepare it first and tell me what you chose:

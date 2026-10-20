@@ -13,7 +13,7 @@ Priorities: **P0** blocks the audience, **P1** closes a gap other tools do not h
 | 1 MB of English, text mode | 324 ms | typograf 60 ms, tipograph 24 ms, smartypants 22 ms | `cd bench && bun run bench` |
 | 1 KB paragraph | 0.7 ms per call | typograf 0.14 ms, tipograph 0.04 ms | `bun run latency` in `bench/` |
 | Target languages covered (26) | 5 | typograf 22, tipograph 12 | below |
-| Features of 37 in the feature matrix (✓ = 1, ◐ = ½) | 28.5 | typograf 22.5 | the comparison page |
+| Features of 37 in the feature matrix (✓ = 1, ◐ = ½) | 29 | typograf 22.5 | the comparison page |
 
 The 26 target languages are the 24 official languages of the EU, Ukrainian and US English. The 34 checks were written by this package's author; read the caveats in [limits.md](limits.md).
 
