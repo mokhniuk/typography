@@ -39,8 +39,12 @@ export const en = {
   abbreviations: { page: ['No', 'Nos', 'Fig', 'Figs', 'Vol', 'Ch', 'Sec', 'Art', 'p', 'pp'] },
   sentenceDashLiterary: '–',
   elisions: ELISIONS_EN,
+  numbers: { group: ',', decimal: '.' },
   reviewed: false,
-  sources: [],
+  sources: [
+    'https://commission.europa.eu/system/files/2023-11/styleguide_english_dgt_en.pdf',
+    'https://style-guide.europa.eu/en/content/-/isg/topic?identifier=6.5-punctuation-in-figures',
+  ],
   notes:
-    'Display register uses guillemets by house style; British quotes are the literary register.',
+    'Display register uses guillemets by house style; British quotes are the literary register. Digits of a number of five or more are grouped with a comma (opt-in rule number.group): the EU English Style Guide sets a hard space in running text and allows a comma for web writing, promotional material and press releases, which is what this engine is for. Set numbers.group to a no-break space for the EU form.',
 } as const satisfies LangPack;

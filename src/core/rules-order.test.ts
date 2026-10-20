@@ -14,6 +14,7 @@ const ORDER = [
   'arrow',
   'symbol.legal',
   'dash.dialogue',
+  'number.group',
   'dash.range',
   'dash.sentence',
   'symbol.minus',

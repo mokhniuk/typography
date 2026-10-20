@@ -31,7 +31,9 @@ export const pl = {
     page: ['nr', 's', 'poz'],
   },
   elisions: ELISIONS_EN,
+  numbers: { group: ' ', decimal: ',' },
   reviewed: false,
-  sources: [],
-  notes: 'One-letter conjunctions and prepositions are bound to the next word.',
+  sources: ['https://style-guide.europa.eu/en/content/-/isg/topic?identifier=6.5-punctuation-in-figures'],
+  notes:
+    'One-letter conjunctions and prepositions are bound to the next word. Digits are grouped with a no-break space (number.group), as the Interinstitutional Style Guide sets for all languages; the decimal mark is a comma.',
 } as const satisfies LangPack;

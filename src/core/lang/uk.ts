@@ -19,8 +19,9 @@ export const uk = {
   },
   dialogueDash: true,
   elisions: ELISIONS_EN,
+  numbers: { group: ' ', decimal: ',' },
   reviewed: false,
-  sources: [],
+  sources: ['https://style-guide.europa.eu/en/content/-/isg/topic?identifier=6.5-punctuation-in-figures'],
   notes:
-    'The literary register keeps the display quotes; what differs is the dialogue dash (an em dash and a no-break space).',
+    'The literary register keeps the display quotes; what differs is the dialogue dash (an em dash and a no-break space). Digits are grouped with a no-break space (number.group), as the Interinstitutional Style Guide sets for all languages; the decimal mark is a comma.',
 } as const satisfies LangPack;

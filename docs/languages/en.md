@@ -36,12 +36,13 @@ An apostrophe before a dropped-letter word is not a quotation mark: `'em`, `'til
 
 ## Numbers
 
-No number format yet.
+Groups of three are separated by `,`, the decimal mark is `.`.
 
 ## Sources
 
-None cited yet.
+- https://commission.europa.eu/system/files/2023-11/styleguide_english_dgt_en.pdf
+- https://style-guide.europa.eu/en/content/-/isg/topic?identifier=6.5-punctuation-in-figures
 
 ## Notes
 
-Display register uses guillemets by house style; British quotes are the literary register.
+Display register uses guillemets by house style; British quotes are the literary register. Digits of a number of five or more are grouped with a comma (opt-in rule number.group): the EU English Style Guide sets a hard space in running text and allows a comma for web writing, promotional material and press releases, which is what this engine is for. Set numbers.group to a no-break space for the EU form.

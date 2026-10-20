@@ -22,6 +22,15 @@ export type Example = {
 
 /** The hand-written part: a few examples for every rule id. */
 export const EXAMPLES: Record<string, readonly Example[]> = {
+  'number.group': [
+    { input: 'We sold 1234567 copies in 2026.', note: 'A run of five or more digits; years are left.' },
+    {
+      input: 'Wir verkauften 1234567 Exemplare, Pi ist 3,14159265.',
+      lang: 'de',
+      note: 'A no-break space; the fraction is left alone.',
+    },
+    { input: 'Продано 12345 примірників, код v1000000.', lang: 'uk', note: 'A name glued to digits is left.' },
+  ],
   quote: [
     { input: 'He said "stone" and left.', note: 'Display register, the default.' },
     {

@@ -31,12 +31,12 @@ An apostrophe before a dropped-letter word is not a quotation mark: `'em`, `'til
 
 ## Numbers
 
-No number format yet.
+Groups of three are separated by `~`, the decimal mark is `.`.
 
 ## Sources
 
-None cited yet.
+- https://www.bk.admin.ch/bk/de/home/dokumentation/sprachen/hilfsmittel-textredaktion/schreibweisungen.html
 
 ## Notes
 
-Swiss quotes: «outer ‹inner› outer», without spaces inside.
+Swiss quotes: «outer ‹inner› outer», without spaces inside. Digits are grouped with a no-break space (number.group): the Swiss Federal Chancellery Schreibweisungen (Rz. 512) group digits in threes with a Festabstand (no-break space). Everyday Swiss usage often writes the apostrophe (1’000’000); it is not used here, and numbers.group can be set to it. The decimal mark is a point (Rz. 514, 543 for francs).

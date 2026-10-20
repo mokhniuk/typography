@@ -40,12 +40,12 @@ An apostrophe before a dropped-letter word is not a quotation mark: `'em`, `'til
 
 ## Numbers
 
-No number format yet.
+Groups of three are separated by `~`, the decimal mark is `,`.
 
 ## Sources
 
-None cited yet.
+- https://style-guide.europa.eu/en/content/-/isg/topic?identifier=6.5-punctuation-in-figures
 
 ## Notes
 
-The other German style, „outer ‚inner‘ outer“, is a literary profile that does not exist yet.
+The other German style, „outer ‚inner‘ outer“, is a literary profile that does not exist yet. Digits are grouped with a no-break space (number.group), as the Interinstitutional Style Guide sets for all languages; a point is not used for thousands. The decimal mark is a comma.
