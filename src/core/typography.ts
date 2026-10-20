@@ -125,6 +125,7 @@ export function typographic(
   const [shielded, restore] = shield(text);
   let out = shielded;
   for (const rule of rules) {
+    if (rule.when && !rule.when(out, context)) continue;
     const next = rule.apply(out, context);
     if (onChange && next !== out) {
       for (const change of changesOf(rule.id, diff(out, next))) onChange(change);

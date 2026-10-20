@@ -11,7 +11,7 @@ import {
   trailingSpace,
 } from './extra';
 import { PACK, PACKS } from './lang';
-import { SENTENCE_DASH, SENTENCE_DASH_LITERARY } from './profiles';
+import { ORPHANS, SENTENCE_DASH, SENTENCE_DASH_LITERARY } from './profiles';
 import { groupNumbers } from './numbers';
 import { quotes } from './quotes';
 import {
@@ -21,6 +21,7 @@ import {
   collapse,
   copyright,
   initials,
+  mayAbbreviate,
   numberUnit,
   orphans,
   titles,
@@ -35,8 +36,21 @@ export type Rule = {
   about: string;
   /** Whether the rule runs unless it is switched off. `false`: it runs only when named in `enable`. Default `true`. */
   defaultOn?: boolean;
+  /**
+   * An optional cheap test of the text. If it returns `false`, `apply` MUST return the text unchanged,
+   * so the rule is skipped, and no change is recorded (`onChange` and `explain` only see rules that
+   * changed something). A rule without `when` always runs, as every custom rule does.
+   * `rules.when.test.ts` checks it on every built-in rule that has one.
+   */
+  when?: (text: string, context: Context) => boolean;
   apply: (text: string, context: Context) => string;
 };
+
+const has = (needle: string) => (text: string) => text.includes(needle);
+const hasAny =
+  (...needles: string[]) =>
+  (text: string) =>
+    needles.some((needle) => text.includes(needle));
 
 /** Short English names of some packs, joined for a description: `German and French`. */
 function names(packs: readonly { name: string }[]): string {
@@ -75,29 +89,44 @@ export const RULES: readonly Rule[] = [
   {
     id: 'apostrophe',
     about: "A straight ' in a word or before a year becomes ’",
+    when: has("'"),
     apply: apostrophe,
   },
-  { id: 'ellipsis', about: '... becomes …', apply: ellipsis },
+  {
+    id: 'ellipsis',
+    about: '... becomes …',
+    when: has('...'),
+    apply: ellipsis,
+  },
   {
     id: 'space.before-punctuation',
     about: 'Removes a space before , . ; : ! ? ) (French keeps the space before : ; ! ?)',
     defaultOn: false,
+    when: hasAny(' ', '\t'),
     apply: (text, { lang }) => beforePunctuation(text, lang),
   },
   {
     id: 'space.after-comma',
     about: 'A comma followed directly by a letter gets a space (a,b becomes a, b)',
     defaultOn: false,
+    when: has(','),
     apply: afterComma,
   },
   {
     id: 'punctuation.double',
     about: 'A run of ! or ? becomes one mark (Wow!!! becomes Wow!); ?! and !? stay',
     defaultOn: false,
+    when: hasAny('!!', '??'),
     apply: doubleMarks,
   },
   { id: 'arrow', about: '-> and <- become → and ←', apply: arrows },
-  { id: 'symbol.implies', about: '=> becomes ⇒', defaultOn: false, apply: implies },
+  {
+    id: 'symbol.implies',
+    about: '=> becomes ⇒',
+    defaultOn: false,
+    when: has('=>'),
+    apply: implies,
+  },
   { id: 'symbol.legal', about: '(c) before a year, (C), (R) and (TM) become © ® ™', apply: legal },
   {
     id: 'dash.dialogue',
@@ -116,12 +145,14 @@ export const RULES: readonly Rule[] = [
   {
     id: 'dash.range',
     about: 'A hyphen between two numbers (21-26, 10:00-12:00) becomes an unspaced en dash',
+    when: hasAny('-', '–'),
     apply: dashRange,
   },
   {
     id: 'dash.sentence',
     about:
       'A spaced hyphen, dash or double hyphen becomes a spaced dash (em; en in German and literary British English), no-break before it',
+    when: hasAny('-', '–', '—'),
     apply: (text, { lang, register }) =>
       dashSentence(
         text,
@@ -134,31 +165,51 @@ export const RULES: readonly Rule[] = [
     id: 'symbol.plusminus',
     about: '+- before a digit becomes ± (+-5 becomes ±5)',
     defaultOn: false,
+    when: has('+-'),
     apply: plusMinus,
   },
   {
     id: 'symbol.minus',
     about: 'A hyphen before a digit (-5) becomes a minus sign (−5)',
+    when: has('-'),
     apply: minus,
   },
   {
     id: 'symbol.multiply',
     about: 'The letter x between numbers (1920x1080, 3 x 4) becomes ×',
+    when: has('x'),
     apply: multiply,
   },
   {
     id: 'symbol.fraction',
     about: '1/2, 1/4 and 3/4 become ½ ¼ ¾, as whole numbers only (not 11/2, 1/20 or a date)',
     defaultOn: false,
+    when: has('/'),
     apply: fractions,
   },
-  { id: 'space.collapse', about: 'A run of spaces becomes one', apply: collapse },
-  { id: 'space.title', about: 'No-break space after Prof., Dr., Mr. …', apply: titles },
-  { id: 'space.initial', about: 'No-break space after an initial (K. Słoboda)', apply: initials },
+  {
+    id: 'space.collapse',
+    about: 'A run of spaces becomes one',
+    when: has('  '),
+    apply: collapse,
+  },
+  {
+    id: 'space.title',
+    about: 'No-break space after Prof., Dr., Mr. …',
+    when: has('.'),
+    apply: titles,
+  },
+  {
+    id: 'space.initial',
+    about: 'No-break space after an initial (K. Słoboda)',
+    when: has('.'),
+    apply: initials,
+  },
   {
     id: 'space.abbreviation',
     about:
       'Parts of an abbreviation stay together (z. B.), and Nr., ul., S. stay with what follows',
+    when: (text, { lang }) => mayAbbreviate(text, lang),
     apply: (text, { lang }) => abbreviations(text, lang),
   },
   {
@@ -170,26 +221,45 @@ export const RULES: readonly Rule[] = [
   {
     id: 'space.percent',
     about: `${names(PACKS.filter((pack) => 'percentSpace' in pack && pack.percentSpace))}: a no-break space between a number and % or € (5 %, 49 €)`,
+    when: (text, { lang }) => !!PACK[lang].percentSpace && hasAny('%', '€')(text),
     apply: (text, { lang }) => unitSymbol(text, lang),
   },
   {
     id: 'symbol.degree',
     about: '20 C, 20°C and 20 °C become 20 °C, with a no-break space before the unit',
     defaultOn: false,
+    when: hasAny('C', 'F'),
     apply: (text, { lang }) => degrees(text, lang),
   },
-  { id: 'space.association', about: 'No-break space before e.V.', apply: association },
-  { id: 'space.copyright', about: 'No-break space after ©', apply: copyright },
+  {
+    id: 'space.association',
+    about: 'No-break space before e.V.',
+    when: has('e.V.'),
+    apply: association,
+  },
+  {
+    id: 'space.copyright',
+    about: 'No-break space after ©',
+    when: has('©'),
+    apply: copyright,
+  },
   {
     id: 'space.orphan',
     about: 'No-break space after a one-letter word the language must not strand at a line end',
+    when: (_text, { lang }) => ORPHANS[lang] !== undefined,
     apply: (text, { lang }) => orphans(text, lang),
   },
-  { id: 'space.arrow', about: 'No-break space before → and after ←', apply: arrowSpace },
+  {
+    id: 'space.arrow',
+    about: 'No-break space before → and after ←',
+    when: hasAny('→', '←'),
+    apply: arrowSpace,
+  },
   {
     id: 'space.trailing',
     about: 'Spaces and tabs at the end of a line are removed',
     defaultOn: false,
+    when: hasAny(' ', '\t'),
     apply: trailingSpace,
   },
 ];

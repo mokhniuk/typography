@@ -62,6 +62,18 @@ function patternsFor(lang: Lang) {
   return made;
 }
 
+/**
+ * Whether `abbreviations` can change `text` in `lang`: a cheap test for the rule table. `bind` and
+ * `page` patterns need a full stop; `together` ones need it only if every entry has one (read from
+ * the pack, not assumed), otherwise the rule always runs. No pattern at all: it never changes anything.
+ */
+export const mayAbbreviate = (text: string, lang: Lang): boolean => {
+  const { together, bind, page } = patternsFor(lang);
+  if (!together && !bind && !page) return false;
+  const list: Abbreviations = ABBREVIATIONS[lang] ?? {};
+  return !together || (list.together ?? []).every((a) => a.includes('.')) ? text.includes('.') : true;
+};
+
 /** The parts of an abbreviation stay together, and a short one stays with what it introduces. */
 export const abbreviations = (text: string, lang: Lang): string => {
   const { together, bind, page } = patternsFor(lang);
