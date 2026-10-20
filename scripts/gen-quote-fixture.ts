@@ -2,7 +2,7 @@
  * Writes `src/core/quotes.fixture.json`: adversarial quote inputs and what the engine returned for
  * them, so a rewrite of `src/core/quotes.ts` can be held to the same output (`src/core/quotes.fixture.test.ts`).
  *
- *   bun scripts/gen-quote-fixture.ts [srcDir] [outFile]
+ *   bun scripts/gen-quote-fixture.ts [srcDir] [outFile] [lone]   (`lone` writes the second fixture, quotes.lone.fixture.json)
  *
  * `srcDir` is a `src/` directory (default: this checkout's). To pin the frozen engine:
  *   git archive speed-baseline src | tar -x -C $T && bun scripts/gen-quote-fixture.ts $T/src
@@ -102,6 +102,58 @@ export function inputs(elisions: readonly string[]): string[] {
   return out.slice(0, COUNT);
 }
 
+/**
+ * Second class: long runs of one mark, many lone marks (dialogue, unbalanced), and mixes. These hit the
+ * fix-point and whole-text passes for marks that found no partner. Runs are up to a few thousand marks,
+ * since the frozen engine is quadratic on them (the 40k case is timed by hand, see the commit message).
+ */
+export function loneInputs(): string[] {
+  const rand = lcg(20261021);
+  const out: string[] = [];
+  const LONES = ['"', '„', '“', '”', '‚', '«', '»', '‹', '›', '‘', '’', "'"];
+  const NB = '\u00A0';
+  for (const m of LONES) {
+    for (const n of [1, 2, 3, 5, 17, 60]) {
+      const r = m.repeat(n);
+      out.push(r, `${r} x`, `x ${r}`, `x ${r}y`, `${r}x`, `${r} `, `(${r}x`, `5${r}x`, `x${r}`, `${r}${NB}x`);
+    }
+    const big = m.repeat(300);
+    out.push(`x ${big}y`, `${big} x`, big);
+    if ('“«„‘'.includes(m)) out.push(`x ${m.repeat(1200)}y`);
+  }
+  for (const m of ['«', '‹', '»', '›']) {
+    for (const n of [2, 6, 30, 250]) {
+      out.push(`${m}${NB}`.repeat(n) + 'x', `x ${m}${NB}`.repeat(n), `${m}${NB}${m}`.repeat(n), `a${NB}${m}`.repeat(n) + ' b', `${m}${NB} `.repeat(n), `${m} ${NB}${m}x`.repeat(n));
+    }
+  }
+  // mixed runs of different marks, with and without spaces
+  for (let i = 0; i < 120; i++) {
+    const a = pick(rand, LONES), b = pick(rand, LONES), c = pick(rand, [...LONES, NB, ' ', '1']);
+    const n = 1 + Math.floor(rand() * (i % 10 === 0 ? 250 : 40));
+    const unit = [a, b, c].slice(0, 1 + Math.floor(rand() * 3)).join('');
+    out.push(unit.repeat(n), `w ${unit.repeat(n)} w`, `${unit.repeat(n)}x ${unit.repeat(n)}`);
+  }
+  // dialogue and unbalanced prose
+  const SENT = ['He said it.', 'Well, ok', "It's fine", 'Привіт', 'Nein, danke', 'a 5" pipe', "the '90s", 'Ça va'];
+  const OPENS = ['“', '"', '„', '«', '‘', '‚', '»', '”', '’', '‹', "'"];
+  for (let i = 0; i < 700; i++) {
+    let s = '';
+    const lines = 1 + Math.floor(rand() * 30);
+    for (let l = 0; l < lines; l++) {
+      const r = rand();
+      const o = pick(rand, OPENS), cl = pick(rand, OPENS);
+      if (r < 0.4) s += `${o}${pick(rand, SENT)}${rand() < 0.5 ? cl : ''}`;
+      else if (r < 0.6) s += `${pick(rand, SENT)} ${o}${o}${pick(rand, SENT)}`;
+      else if (r < 0.75) s += `${pick(rand, SENT)}${cl}`;
+      else if (r < 0.85) s += `${o}${NB}${pick(rand, SENT)}${NB}${cl}`;
+      else s += pick(rand, SENT);
+      s += pick(rand, [' ', '\n', ' ', '\n\n', NB, '  ']);
+    }
+    out.push(s);
+  }
+  return out;
+}
+
 export type Fixture = {
   inputs: string[];
   combos: string[];
@@ -144,7 +196,7 @@ if (import.meta.main) {
   const { quotes } = await import(pathToFileURL(`${srcDir}/core/quotes.ts`).href);
   const { PACKS } = await import(pathToFileURL(`${srcDir}/core/lang/index.ts`).href);
   const elisions = [...new Set<string>(PACKS.flatMap((p: { elisions?: string[] }) => p.elisions ?? []))];
-  const list = inputs(elisions);
+  const list = process.argv[4] === 'lone' ? loneInputs() : inputs(elisions);
   const fixture: Fixture = { inputs: list, ...digest(quotes, PACKS.map((p: { code: string }) => p.code), list) };
   writeFileSync(outFile, `${JSON.stringify(fixture)}\n`);
   console.log(`${fixture.inputs.length} inputs x ${fixture.combos.length} combinations -> ${outFile}`);
