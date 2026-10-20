@@ -16,7 +16,10 @@ const PAIRS = [
   new RegExp(`‘(${BODY})’`, 'g'),
   GUILLEMETS,
   SINGLE_GUILLEMETS,
-  new RegExp(`"(${BODY})"`, 'g'),
+  // A straight " cannot open a quotation straight after a letter or digit: there it is an inch mark
+  // (2" pipe), so two inch marks in one text do not pair. Closing after a digit is still allowed
+  // ("call 911"), because an opener that stands where a quotation opens has been found.
+  new RegExp(`(?<![\\p{L}\\p{N}])"(${BODY})"`, 'gu'),
 ];
 // German sets »…« and ›…‹, turned the other way. Read as «…», the « that ends one quotation and the »
 // that opens the next would pair (»a« und »b«), and so would ‹ › between two inner ones, so in German

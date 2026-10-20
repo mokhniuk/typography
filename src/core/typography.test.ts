@@ -446,6 +446,18 @@ describe('a quote with no partner', () => {
     expect(t('a 5\'10" man')).toBe('a~5\'10" man');
   });
 
+  test('two inch marks in one text are not read as a quotation', () => {
+    expect(t('A 2" pipe and a 4" pipe.')).toBe('A~2" pipe and a~4" pipe.');
+    expect(t('He is 5\'10" and she is 5\'6" tall.')).toBe('He is 5\'10" and she is 5\'6" tall.');
+    expect(t('Cut 2" off, then 3" more.', 'de')).toBe('Cut 2" off, then 3" more.');
+  });
+
+  test('a quotation that ends in a digit still closes, and one opens after a dash or a colon', () => {
+    expect(t('He said "call 911" and left.')).toBe('He said «call 911» and left.');
+    expect(t('He said: "stop"')).toBe('He said: «stop»');
+    expect(t('Stop—"now"—he said.')).toBe('Stop—«now»—he said.');
+  });
+
   test('literary text takes the marks of its register', () => {
     expect(t('"first', 'en', literary)).toBe('‘first');
     expect(t('last."', 'en', literary)).toBe('last.’');
