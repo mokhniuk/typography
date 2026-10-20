@@ -2,6 +2,7 @@
  * The opt-in rules (`defaultOn: false` in rules.ts): each runs only when named in `enable`.
  * Their guards err towards leaving text alone; the known limits are in docs/limits.md.
  */
+import { before, isLetterOrNumber } from './scan';
 import { NBSP } from './types';
 import type { Lang } from './types';
 
@@ -52,11 +53,19 @@ export const doubleMarks = (text: string): string =>
 /** Trims spaces and tabs at the end of each line; a line break and a no-break space stay. */
 export const trailingSpace = (text: string): string => text.replace(/[ \t]+$/gm, '');
 
-/** `+-` before a digit is ±. Not after a letter, a digit or another `+` (`a+-b`, `1+-5`). */
+/**
+ * `+-` before a digit is ±. Not after a letter, a digit or another `+` (`a+-b`, `1+-5`). Was
+ * `(?<![\p{L}\p{N}+])\+-(?=\d)`, tried at every position; the `+-` is found first and what stands before it read by hand.
+ */
 export const plusMinus = (text: string): string =>
-  text.replace(/(?<![\p{L}\p{N}+])\+-(?=\d)/gu, '\u00B1');
+  text.replace(/\+-(?=\d)/g, (match, offset: number, whole: string) => {
+    const prev = before(whole, offset);
+    return prev === '+' || isLetterOrNumber(prev) ? match : '\u00B1';
+  });
 
 const FRACTIONS: Record<string, string> = { '1/2': '\u00BD', '1/4': '\u00BC', '3/4': '\u00BE' };
+
+const FRACTION_BEHIND = /[/.,]/;
 
 /**
  * 1/2, 1/4 and 3/4 become ½ ¼ ¾, only as whole numbers: not 11/2, 1/20, a1/2, 1/2/2026, 5/1/2,
@@ -64,10 +73,15 @@ const FRACTIONS: Record<string, string> = { '1/2': '\u00BD', '1/4': '\u00BC', '3
  * does for a digit (its pattern cannot see a ½), so the rule keeps `½ cup` together by itself.
  */
 export const fractions = (text: string): string =>
+  // The pattern was `(?<![\p{L}\p{N}/.,])` + this, tried at every position; the lookbehind is read by hand.
   text.replace(
-    /(?<![\p{L}\p{N}/.,])(1\/2|1\/4|3\/4)(?![\p{L}\p{N}/"]|[.,]\d)([ ]+(?=\p{L}{1,9}(?!\p{L})|[%°€$£]))?/gu,
-    (_m, fraction: string, gap: string | undefined) =>
-      `${FRACTIONS[fraction] ?? fraction}${gap ? NBSP : ''}`,
+    /(1\/2|1\/4|3\/4)(?![\p{L}\p{N}/"]|[.,]\d)([ ]+(?=\p{L}{1,9}(?!\p{L})|[%°€$£]))?/gu,
+    (match, fraction: string, gap: string | undefined, offset: number, whole: string) => {
+      const prev = before(whole, offset);
+      return isLetterOrNumber(prev) || FRACTION_BEHIND.test(prev)
+        ? match
+        : `${FRACTIONS[fraction] ?? fraction}${gap ? NBSP : ''}`;
+    },
   );
 
 /** A bare C or F is no temperature after a label: `Type 2 F`, `Vitamin C 5 C`. */
@@ -93,4 +107,8 @@ export const degrees = (text: string, lang: Lang = 'en'): string =>
   );
 
 /** `=>` is ⇒. Not `=>>`, `==>`, `=>=` or `<=>`. */
-export const implies = (text: string): string => text.replace(/(?<![=<>])=>(?![>=])/g, '\u21D2');
+export const implies = (text: string): string =>
+  // Was `(?<![=<>])=>(?![>=])`, tried at every position; the `=>` is found first and the character before it read by hand.
+  text.replace(/=>(?![>=])/g, (match, offset: number, whole: string) =>
+    offset > 0 && /[=<>]/.test(whole.charAt(offset - 1)) ? match : '\u21D2',
+  );
