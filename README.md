@@ -36,7 +36,7 @@ Nothing in the package imports anything outside the folder except `react` (the `
 | `@podiia/typography/react` | React pages | `Typeset`, `TypographyRoot`, `HangText`, `HangScript`, `useHangingPunctuation`, `TypographyContext` |
 | `typo` (bin) | The command line; needs Bun | see [docs/cli.md](docs/cli.md) |
 
-Every function that typesets takes `lang`, `register`, `disable` and `onChange`; the full table of options and the signatures are in [docs/api.md](docs/api.md).
+Every function that typesets takes `lang`, `register`, `quoteStyle`, `disable`, `enable`, `rules` and `onChange`; the full table of options and the signatures are in [docs/api.md](docs/api.md).
 
 ### Main entry
 
@@ -50,6 +50,10 @@ typographic('He said "we\'re here"', 'en', { register: 'literary' });
 // He said ‘we’re here’
 
 typographic('21-26 - x', 'en', { disable: ['dash.range'] }); // a rule, or a group such as 'space', off
+
+typographic('He said "hi"', 'de', { quoteStyle: 'us' }); // “hi” in any language (default: the language's own marks)
+typographic('Call 1000000 , now', 'en', { enable: ['number.group', 'space.before-punctuation'] });
+// nine rules are off until named in `enable`; docs/rules.md lists them
 
 explain('He said "hi"... 21-26');
 // { output: 'He said «hi»… 21–26',
