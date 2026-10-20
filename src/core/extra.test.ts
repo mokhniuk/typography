@@ -33,7 +33,8 @@ describe('space.before-punctuation', () => {
     expect(run('one\n ,two\nthree \n. four')).toBe('one\n ,two\nthree \n. four');
   });
   test('never builds a ... out of spaced dots', () => {
-    expect(run('a .. . b and . . .')).toBe('a .. . b and. . .');
+    // A spaced ellipsis is a form of its own: it keeps its spaces (it used to lose the first one).
+    expect(run('a .. . b and . . .')).toBe('a .. . b and . . .');
   });
   test('is idempotent', () => {
     const once = run('a , b ;  c .');
@@ -181,5 +182,66 @@ describe('symbol.implies', () => {
   });
   test('runs after arrow: -> and => in one text', () => {
     expect(typographic('a -> b => c', 'en', { enable: ['symbol.implies'] })).toContain('⇒');
+  });
+});
+
+describe('review findings', () => {
+  const all = (text: string, lang: Lang = 'en') =>
+    typographic(text, lang, {
+      enable: [
+        'space.before-punctuation',
+        'space.after-comma',
+        'punctuation.double',
+        'space.trailing',
+        'symbol.plusminus',
+        'symbol.fraction',
+        'symbol.degree',
+        'symbol.implies',
+      ],
+    });
+  const twice = (text: string, lang: Lang = 'en') => all(all(text, lang), lang);
+
+  test('a space before a Markdown image is not a space before punctuation', () => {
+    expect(only('space.before-punctuation', 'x [link](http://a.com) ![alt](i.png) y')).toBe(
+      'x [link](http://a.com) ![alt](i.png) y',
+    );
+    expect(only('space.before-punctuation', 'see ![a](b) now')).toBe('see ![a](b) now');
+    expect(only('space.before-punctuation', 'Wow ! really')).toBe('Wow! really');
+  });
+
+  test('a comma a letter follows is pulled in once and spaced once, in a single pass', () => {
+    expect(all('Hello ,world')).toBe('Hello, world');
+    expect(all('a, b ,c')).toBe('a, b, c');
+    for (const text of ['Hello ,world', 'a, b ,c', 'a ,b', 'fr: Salut ,ça va']) {
+      expect(twice(text)).toBe(all(text));
+    }
+    expect(only('space.before-punctuation', 'Hello ,world')).toBe('Hello,world');
+  });
+
+  test('a run of marks followed by a letter or digit is left whole', () => {
+    expect(only('punctuation.double', 'Wow!!!x')).toBe('Wow!!!x');
+    expect(only('punctuation.double', 'Wow!!!1')).toBe('Wow!!!1');
+    expect(only('punctuation.double', 'Hi!!!Bob')).toBe('Hi!!!Bob');
+    expect(only('punctuation.double', 'Wow!!!_x')).toBe('Wow!!!_x');
+    expect(only('punctuation.double', 'Wow!!! ok')).toBe('Wow! ok');
+  });
+
+  test('a fraction before a closing quote is left, so a second pass cannot read it differently', () => {
+    expect(only('symbol.fraction', '3/4" pipe')).toBe('3/4" pipe');
+    expect(only('symbol.fraction', '1/2".')).toBe('1/2".');
+    expect(only('symbol.fraction', 'add 3/4 cup')).toBe(`add ¾${'\u00A0'}cup`);
+  });
+
+  test('a spaced ellipsis keeps its spaces', () => {
+    expect(only('space.before-punctuation', 'Wait . . . what')).toBe('Wait . . . what');
+    expect(only('space.before-punctuation', 'a . . b')).toBe('a . . b');
+  });
+
+  test('a bare number and C or F is a temperature only in English', () => {
+    expect(only('symbol.degree', 'It was 20 C today')).toBe(`It was 20${'\u00A0'}°C today`);
+    expect(only('symbol.degree', 'Abschnitt 3 C und Punkt 2 F', 'de')).toBe('Abschnitt 3 C und Punkt 2 F');
+    expect(only('symbol.degree', 'Pytanie 3 C, wariant 2 F', 'pl')).toBe('Pytanie 3 C, wariant 2 F');
+    // With the degree sign it is read in every language.
+    expect(only('symbol.degree', 'Heute 20°C', 'de')).toBe(`Heute 20${'\u00A0'}°C`);
   });
 });

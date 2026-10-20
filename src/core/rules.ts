@@ -176,7 +176,7 @@ export const RULES: readonly Rule[] = [
     id: 'symbol.degree',
     about: '20 C, 20°C and 20 °C become 20 °C, with a no-break space before the unit',
     defaultOn: false,
-    apply: degrees,
+    apply: (text, { lang }) => degrees(text, lang),
   },
   { id: 'space.association', about: 'No-break space before e.V.', apply: association },
   { id: 'space.copyright', about: 'No-break space after ©', apply: copyright },

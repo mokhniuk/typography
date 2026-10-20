@@ -15,9 +15,16 @@ const SPACE_BEFORE_HIGH = new Set<Lang>(['fr']);
  */
 export function beforePunctuation(text: string, lang: Lang): string {
   return text.replace(
-    /(?<=[^\s(\[{“"«‘„])[ \t]+([,.;:!?)])(?![\p{L}\p{N}])/gu,
+    /(?<=[^\s(\[{“"«‘„])[ \t]+([,.;:!?)])/gu,
     (match: string, mark: string, offset: number, whole: string) => {
       const next = whole.charAt(offset + match.length);
+      // A mark that a letter or digit follows is the start of a word or number (.5, .gitignore, 3 ,5), except
+      // a comma before a letter (`Hello ,world`), which `space.after-comma` spaces right after.
+      if (/[\p{L}\p{N}]/u.test(next) && !(mark === ',' && /\p{L}/u.test(next))) return match;
+      // `![` opens a Markdown image: the space before it is not a space before punctuation.
+      if (mark === '!' && next === '[') return match;
+      // A dot followed by spaces and another dot is a spaced ellipsis (`Wait . . . what`).
+      if (mark === '.' && /^[ \t]*\./.test(whole.slice(offset + match.length))) return match;
       // A dot is not pulled against a dot on either side: that would make a ... after `ellipsis` ran.
       if (mark === '.' && (next === '.' || whole.charAt(offset - 1) === '.')) return match;
       if ((mark === ':' || mark === ';') && /[-)(/|\\'*]/.test(next)) return match;
@@ -40,7 +47,7 @@ export const afterComma = (text: string): string => text.replace(/,(?=\p{L})/gu,
  * by a letter or digit: `a ?? b`, `!!x` and `(!!y)` are left. `?!` and `!?` are two marks and stay.
  */
 export const doubleMarks = (text: string): string =>
-  text.replace(/(?<=[^\s(\[{!?])([!?])\1+(?![\p{L}\p{N}_])/gu, '$1');
+  text.replace(/(?<=[^\s(\[{!?])([!?])\1+(?!\1)(?![\p{L}\p{N}_])/gu, '$1');
 
 /** Trims spaces and tabs at the end of each line; a line break and a no-break space stay. */
 export const trailingSpace = (text: string): string => text.replace(/[ \t]+$/gm, '');
@@ -58,7 +65,7 @@ const FRACTIONS: Record<string, string> = { '1/2': '\u00BD', '1/4': '\u00BC', '3
  */
 export const fractions = (text: string): string =>
   text.replace(
-    /(?<![\p{L}\p{N}/.,])(1\/2|1\/4|3\/4)(?![\p{L}\p{N}/]|[.,]\d)([ ]+(?=\p{L}{1,9}(?!\p{L})|[%°€$£]))?/gu,
+    /(?<![\p{L}\p{N}/.,])(1\/2|1\/4|3\/4)(?![\p{L}\p{N}/"]|[.,]\d)([ ]+(?=\p{L}{1,9}(?!\p{L})|[%°€$£]))?/gu,
     (_m, fraction: string, gap: string | undefined) =>
       `${FRACTIONS[fraction] ?? fraction}${gap ? NBSP : ''}`,
   );
@@ -68,16 +75,18 @@ const LABEL = /(?:^|[\s(])(?:\p{L}|Type|Class|Section|Plan|Grade|Level|Group|Vit
 
 /**
  * A number and C or F, with or without the degree sign and space (20C is not read, 20 C, 20 °C,
- * 20°C and 20° C are), becomes the number, a no-break space and °C or °F. A bare `20 C` is only read
+ * 20°C and 20° C are; a bare 20 C only in English), becomes the number, a no-break space and °C or °F. A bare `20 C` is only read
  * when the word before the number is not a label or a single letter. Not 20 Celsius, 20 F1, 5 C.E.
  */
-export const degrees = (text: string): string =>
+export const degrees = (text: string, lang: Lang = 'en'): string =>
   text.replace(
     /(?<![\p{L}\p{N}])([\u2212+\u00B1-]?\d+(?:[.,]\d+)?)(?:[ \u00A0]*(°)[ \u00A0]*|[ \u00A0]+)([CF])(?![\p{L}\p{N}]|\.\p{L})/gu,
     (match: string, number: string, sign: string | undefined, unit: string, offset: number, whole: string) => {
       const before = whole.slice(0, offset);
       // A C or F that is itself the unit of the number before it (`20 C 20 F`) is no label.
       const afterUnit = /(?:\d[ \u00A0]+|°[ \u00A0]*)[CF][ \u00A0]+$/.test(before);
+      // The label list is English: another language needs the degree sign to be read as a temperature.
+      if (!sign && lang !== 'en') return match;
       if (!sign && !afterUnit && LABEL.test(before)) return match;
       return `${number}${NBSP}°${unit}`;
     },
