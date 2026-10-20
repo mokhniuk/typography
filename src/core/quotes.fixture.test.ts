@@ -47,3 +47,16 @@ describe(`quotes against the frozen engine (${name}${fixture.inputs.length} inpu
   });
 });
 }
+
+// A long run of one mark used to be quadratic (the fix-point over opening marks): 40,000 of them took a minute.
+describe('quotes on long runs of one mark', () => {
+  for (const mark of ['“', '«', '„', '”', '"']) {
+    test(`40,000 ${mark} are read in linear time`, () => {
+      const start = performance.now();
+      for (const text of [`x ${mark.repeat(40000)}y`, `x ${mark.repeat(40000)}`, mark.repeat(40000)]) {
+        expect(quotes(text, 'en', 'display', 'language').length).toBe(text.length);
+      }
+      expect(performance.now() - start).toBeLessThan(1500);
+    });
+  }
+});
