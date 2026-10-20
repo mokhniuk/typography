@@ -70,11 +70,35 @@ Partly there: `space.number` binds a number to the symbol or code after it (`49~
 - **Symbols and codes** are an inline list; a code list (ISO 4217) and the symbols of the audience's currencies (`€ $ £ ₴ zł Kč Ft lei лв kr`) should be one table in `src/core`, not in two rules.
 - Done when: golden tests per locale for the amount, the symbol and the code before and after; `space.number` and `number.group` agree on grouped amounts; no rule moves or adds a currency symbol.
 
+### Rule categories
+
+The rules are a flat list with dotted group names (`dash`, `space`, `symbol`, `number`, ...). Group names describe the mechanism, not why a reader would want a rule. To research, then decide: split them into categories a user can switch on or off as a set, for example
+
+- **Typographic traditions**: quotes, dashes, ellipsis, no-break spaces, hyphenation hints, orphans: what a style guide for the language asks for.
+- **Modern symbols**: `->` to `→`, `(c)` to `©`, `=>` to `⇒`, `(TM)`, emoji-adjacent forms: a taste and a font question (see "Keep the original when the font lacks the glyph").
+- **Math**: minus, multiplication, `±`, fractions, degrees, ranges.
+- **Phone numbers**, **currencies**, **units and dates**: the data-shaped text each with its own locale rules (see the two items below).
+
+Open questions: is a category a prefix of the rule id (a rename, so a breaking change for `disable`), or a separate tag on `Rule` (`category`) with the ids unchanged? Which categories are on by default? How do the categories show in `typo --rules`, `docs/rules.md` and the playground? Research what typograf (its groups), tipograph (its presets) and the style guides call these groups before choosing. Whatever is chosen must keep the old ids working for `disable` and `enable`, and say in the changelog whether output can change.
+
+### Short words, conjunctions and the end of the line
+
+Today `space.orphan` binds a one-letter word in a language's list to the next word (`a~long`, `в~місті`), `space.number` binds a number to a short word, and `space.title`, `space.initial` and `space.abbreviation` bind their cases. Not covered, checked on 0.2.1:
+
+- `&`, `+`, `=` and other operators between words (`Tom & Jerry`, `rock + roll`) get no no-break space: a line can end on `&`, or start with it.
+- Short words of two or three letters (`to`, `of`, `the`; `на`, `до`; `der`, `die`) are bound only where a pack lists them as one-letter orphans.
+- **The last words of a paragraph (widows and runts):** keep the last two or three words together, or at least never leave one short word alone on the last line (`a~short~tail` instead of `short tail`). This is the one with a real cost: a no-break space is a line-break constraint, so binding too much makes ragged lines, and what looks right depends on the width, which the engine does not know. Options to discuss: bind the last two words only; bind the last word to the one before when it is shorter than N letters; do it in the browser (CSS `text-wrap: pretty` or `balance`) and leave the string alone; an opt-in rule with a limit on the length of the bound tail.
+- Discuss before building. Done when the choice is written down in `docs/limits.md`, each rule has golden tests per language that has the pattern, and no rule can bind a whole line.
+
 ### Speed: what is left
 
 Nothing superlinear is known (0.2.1). Typical text costs 30 to 60 ms per MB; the biggest rules are `quote`, `space.abbreviation` and `space.title` at 5 to 10 ms each. Further gains would be constant-factor work on those; tipograph and smartypants (10 to 20 ms) do much less. React already memoises per component (`useMemo` in `Typeset`), so no paragraph cache is needed.
 
 ## P2 (deferred by choice)
+
+### Accessibility checker (future)
+
+A tool that tells whether text is readable: too small, too little contrast, a line too long or too short, too tight a leading, a font that lacks glyphs (see the glyph item). It is a different kind of tool from the engine (it needs rendered styles, not a string), so decide first where it lives: a separate entry (`@podiia/typography/a11y`), a function over the DOM that reads computed styles, or a lint step in the playground. Starting points to research: WCAG 2.2 contrast (1.4.3, 1.4.6, 1.4.11), text spacing (1.4.12), resize text (1.4.4), and readable line length (about 45 to 90 characters). Open: which checks need only strings and CSS values, and which need a browser; how it reports (a list of findings like `explain`, not a score). Not started.
 
 ### Publish to npm, with a licence and compiled output
 
