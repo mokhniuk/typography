@@ -22,21 +22,23 @@ Passed / scored. "–" means the tool has no such feature or language (not score
 
 | Group | podiia | podiia literary | typograf | typograf +nbsp | typopo | richtypo | tipograph | smartypants | retext-smartypants |
 |---|---|---|---|---|---|---|---|---|---|
-| Quotes | 24/25 | 25/25 | 20/21 | 20/21 | 4/4 | 2/2 | 11/11 | 1/1 | 1/1 |
+| Quotes | 35/40 | 40/40 | 33/36 | 33/36 | 19/19 | 14/17 | 24/26 | 14/16 | 13/16 |
 | Nested quotes | 24/25 | 25/25 | 0/21 | 0/21 | 4/4 | 0/2 | 10/11 | 1/1 | 1/1 |
 | Apostrophes and ellipsis | 3/3 | 3/3 | 3/3 | 3/3 | 2/2 | 1/2 | 2/2 | 2/2 | 2/2 |
-| Dashes | 25/25 | 25/25 | 1/21 | 1/21 | 3/4 | 2/2 | 11/11 | 0/1 | 0/1 |
+| Dashes | 36/36 | 36/36 | 7/32 | 7/32 | 11/15 | 9/13 | 20/22 | 6/12 | 6/12 |
 | Ranges | 25/25 | 25/25 | 0/21 | 0/21 | 4/4 | 0/2 | 11/11 | 0/1 | 0/1 |
 | Left alone | 5/5 | 5/5 | 5/5 | 5/5 | 1/5 | 5/5 | 1/5 | 5/5 | 5/5 |
 | No-break spaces | 9/9 | 9/9 | 4/9 | 8/9 | 4/6 | 3/5 | 0/7 | 0/5 | 0/5 |
 | Abbreviations | 5/5 | 5/5 | 0/5 | 0/5 | 2/3 | 0/1 | 0/4 | 0/1 | 0/1 |
-| Symbols | 8/8 | 8/8 | 3/8 | 3/8 | 1/7 | 1/7 | 4/8 | 1/6 | 1/6 |
+| Symbols | 17/17 | 17/17 | 10/17 | 10/17 | 7/16 | 5/16 | 12/17 | 5/15 | 5/15 |
 | Protected text | 3/3 | 3/3 | 2/3 | 2/3 | 2/3 | 2/3 | 1/3 | 1/3 | 1/3 |
 | HTML | 4/6 | 6/6 | 4/6 | 4/6 | – | 4/6 | 6/6 | – | – |
-| Safety | 25/25 | 25/25 | 21/21 | 21/21 | 4/4 | 2/2 | 11/11 | 1/1 | 1/1 |
+| Safety | 33/33 | 33/33 | 28/29 | 28/29 | 11/12 | 9/10 | 17/19 | 7/9 | 7/9 |
 | Registers | – | 2/2 | – | – | – | – | – | – | – |
+| Ellipsis | 5/5 | 5/5 | 5/5 | 5/5 | 5/5 | 3/5 | 3/5 | 4/5 | 4/5 |
+| Spacing | 13/13 | 13/13 | 9/13 | 11/13 | 9/13 | 12/13 | 8/13 | 7/13 | 7/13 |
 | Stability | 25/25 | 25/25 | 21/21 | 21/21 | 4/4 | 1/2 | 11/11 | 1/1 | 1/1 |
-| **All (without Registers)** | **185/189** | **189/189** | **84/165** | **88/165** | **35/50** | **23/41** | **79/101** | **13/28** | **13/28** |
+| **All (without Registers)** | **242/250** | **250/250** | **131/226** | **137/226** | **85/111** | **68/102** | **126/162** | **53/89** | **52/89** |
 
 A language a tool does not support is not scored, so the totals compare different numbers of cases: read each tool's row against its own denominator.
 
@@ -46,15 +48,15 @@ English text in one piece, best of three (one run at 1 MB), text mode. "not run"
 
 | Tool | 10 KB | 100 KB | 1000 KB |
 |---|---|---|---|
-| podiia | 0 ms | 3 ms | 34 ms |
+| podiia | 0 ms | 3 ms | 33 ms |
 | podiia literary | 0 ms | 3 ms | 31 ms |
-| typograf | 1 ms | 6 ms | 60 ms |
-| typograf +nbsp | 1 ms | 5 ms | 58 ms |
-| typopo | 20 ms | 1082 ms | 99494 ms |
-| richtypo | 2496 ms | not run (~248 s) | not run (~24803 s) |
-| tipograph | 0 ms | 1 ms | 11 ms |
+| typograf | 1 ms | 6 ms | 59 ms |
+| typograf +nbsp | 1 ms | 6 ms | 60 ms |
+| typopo | 21 ms | 1086 ms | 100010 ms |
+| richtypo | 2502 ms | not run (~249 s) | not run (~24862 s) |
+| tipograph | 0 ms | 1 ms | 12 ms |
 | smartypants | 0 ms | 1 ms | 10 ms |
-| retext-smartypants | 3 ms | 28 ms | 1120 ms |
+| retext-smartypants | 3 ms | 32 ms | 543 ms |
 
 ## Every case
 
@@ -411,6 +413,216 @@ Input: `Είπε "σπίτι" και έφυγε`
 - – tipograph: 
 - – smartypants: 
 - – retext-smartypants: 
+
+**en-quote-single-word** (en): a quoted word is paired
+
+Input: `She said "no"`
+
+- ✗ podiia: `She said «no»`
+- ✓ podiia literary: `She said ‘no’`
+- ✓ typograf: `She said “no”`
+- ✓ typograf +nbsp: `She said “no”`
+- ✓ typopo: `She said “no”`
+- ✓ richtypo: `She said~“no”`
+- ✓ tipograph: `She said “no”`
+- ✓ smartypants: `She said “no”`
+- ✓ retext-smartypants: `She said “no”`
+
+**en-quote-after-colon** (en): a quote after a colon opens
+
+Input: `Note: "stone"`
+
+- ✗ podiia: `Note: «stone»`
+- ✓ podiia literary: `Note: ‘stone’`
+- ✓ typograf: `Note: “stone”`
+- ✓ typograf +nbsp: `Note: “stone”`
+- ✓ typopo: `Note, “stone”`
+- ✓ richtypo: `Note:~“stone”`
+- ✓ tipograph: `Note: “stone”`
+- ✓ smartypants: `Note: “stone”`
+- ✓ retext-smartypants: `Note: “stone”`
+
+**en-quote-in-parens** (en): a quote inside parentheses pairs
+
+Input: `It ("stone") ends`
+
+- ✗ podiia: `It («stone») ends`
+- ✓ podiia literary: `It (‘stone’) ends`
+- ✓ typograf: `It~(“stone”) ends`
+- ✓ typograf +nbsp: `It~(“stone”) ends`
+- ✓ typopo: `It (“stone”) ends`
+- ✓ richtypo: `It~(“stone”)~ends`
+- ✓ tipograph: `It (“stone”) ends`
+- ✓ smartypants: `It (“stone”) ends`
+- ✓ retext-smartypants: `It (“stone”) ends`
+
+**en-quote-then-period** (en): a quote before a full stop pairs
+
+Input: `He left "stone".`
+
+- ✗ podiia: `He left «stone».`
+- ✓ podiia literary: `He left ‘stone’.`
+- ✓ typograf: `He~left “stone”.`
+- ✓ typograf +nbsp: `He~left “stone”.`
+- ✓ typopo: `He left “stone”.`
+- ✓ richtypo: `He~left~“stone”.`
+- ✓ tipograph: `He left “stone”.`
+- ✓ smartypants: `He left “stone”.`
+- ✓ retext-smartypants: `He left “stone”.`
+
+**en-quote-two-pairs** (en): two quotes on one line both pair
+
+Input: `"a" and "b"`
+
+- ✓ podiia: `«a» and «b»`
+- ✓ podiia literary: `‘a’ and ‘b’`
+- ✓ typograf: `“a” and~“b”`
+- ✓ typograf +nbsp: `“a” and~“b”`
+- ✓ typopo: `“a” and “b”`
+- ✓ richtypo: `“a” and~“b”`
+- ✓ tipograph: `“a” and “b”`
+- ✓ smartypants: `“a” and “b”`
+- ✓ retext-smartypants: `“a” and “b”`
+
+**en-quote-multiword** (en): a multi-word quote pairs
+
+Input: `He said "stone by stone" twice`
+
+- ✓ podiia: `He said «stone by stone» twice`
+- ✓ podiia literary: `He said ‘stone by stone’ twice`
+- ✓ typograf: `He~said “stone by~stone” twice`
+- ✓ typograf +nbsp: `He~said “stone by~stone” twice`
+- ✓ typopo: `He said “stone by stone” twice`
+- ✓ richtypo: `He~said “stone by~stone”~twice`
+- ✓ tipograph: `He said “stone by stone” twice`
+- ✓ smartypants: `He said “stone by stone” twice`
+- ✓ retext-smartypants: `He said “stone by stone” twice`
+
+**en-quote-apostrophe-contraction** (en): contraction apostrophes stay apostrophes
+
+Input: `It's don't can't`
+
+- ✓ podiia: `It’s don’t can’t`
+- ✓ podiia literary: `It’s don’t can’t`
+- ✓ typograf: `It’s don’t can’t`
+- ✓ typograf +nbsp: `It’s don’t can’t`
+- ✓ typopo: `It’s don’t can’t`
+- ✗ richtypo: `It's don't~can't`
+- ✓ tipograph: `It’s don’t can’t`
+- ✓ smartypants: `It’s don’t can’t`
+- ✓ retext-smartypants: `It’s don’t can’t`
+
+**en-quote-apostrophe-possessive** (en): possessive apostrophes are not quotes
+
+Input: `the dogs' bowls and Tom's`
+
+- ✓ podiia: `the dogs’ bowls and Tom’s`
+- ✓ podiia literary: `the dogs’ bowls and Tom’s`
+- ✓ typograf: `the~dogs' bowls and~Tom’s`
+- ✓ typograf +nbsp: `the~dogs' bowls and~Tom’s`
+- ✓ typopo: `the dogs’ bowls and Tom’s`
+- ✓ richtypo: `the~dogs' bowls and~Tom's`
+- ✓ tipograph: `the dogs' bowls and Tom’s`
+- ✓ smartypants: `the dogs’ bowls and Tom’s`
+- ✓ retext-smartypants: `the dogs’ bowls and Tom’s`
+
+**en-quote-apostrophe-year** (en): an apostrophe before a decade is a closing mark, not an opening quote
+
+Input: `the '90s`
+
+- ✓ podiia: `the ’90s`
+- ✓ podiia literary: `the ’90s`
+- ✗ typograf: `the~'90s`
+- ✗ typograf +nbsp: `the~'90s`
+- ✓ typopo: `the ’90s`
+- ✗ richtypo: `the~'90s`
+- ✓ tipograph: `the ’90s`
+- ✓ smartypants: `the ’90s`
+- ✓ retext-smartypants: `the ’90s`
+
+**en-quote-rock-n-roll** (en): the elided 'n' keeps apostrophes
+
+Input: `rock 'n' roll`
+
+- ✓ podiia: `rock ’n’ roll`
+- ✓ podiia literary: `rock ’n’ roll`
+- ✓ typograf: `rock 'n' roll`
+- ✓ typograf +nbsp: `rock 'n' roll`
+- ✓ typopo: `rock~’n’~roll`
+- ✓ richtypo: `rock 'n'~roll`
+- ✗ tipograph: `rock ‘n’ roll`
+- ✗ smartypants: `rock ‘n’ roll`
+- ✗ retext-smartypants: `rock ‘n’ roll`
+
+**en-quote-inches** (en): feet and inches are not quotes
+
+Input: `A 5'10" frame`
+
+- ✓ podiia: `A~5'10" frame`
+- ✓ podiia literary: `A~5'10" frame`
+- ✗ typograf: `A~5'10” frame`
+- ✗ typograf +nbsp: `A~5'10” frame`
+- ✓ typopo: `A~5′10″ frame`
+- ✗ richtypo: `A~5'10”~frame`
+- ✓ tipograph: `A 5′10″ frame`
+- ✗ smartypants: `A 5’10” frame`
+- ✗ retext-smartypants: `A 5’10” frame`
+
+**en-quote-unbalanced** (en): an unclosed quote does not crash or lose text
+
+Input: `He said "stone`
+
+- ✓ podiia: `He said «stone`
+- ✓ podiia literary: `He said ‘stone`
+- ✓ typograf: `He~said “stone`
+- ✓ typograf +nbsp: `He~said “stone`
+- ✓ typopo: `He said “stone`
+- ✓ richtypo: `He~said~“stone`
+- ✓ tipograph: `He said "stone`
+- ✓ smartypants: `He said “stone`
+- ✓ retext-smartypants: `He said “stone`
+
+**en-quote-empty** (en): an empty pair stays a pair
+
+Input: `An empty "" pair`
+
+- ✓ podiia: `An empty «» pair`
+- ✓ podiia literary: `An empty ‘’ pair`
+- ✓ typograf: `An~empty “” pair`
+- ✓ typograf +nbsp: `An~empty “” pair`
+- ✓ typopo: `An empty “” pair`
+- ✓ richtypo: `An~empty ””~pair`
+- ✗ tipograph: `An empty "" pair`
+- ✓ smartypants: `An empty “” pair`
+- ✗ retext-smartypants: `An empty "" pair`
+
+**en-quote-at-line-start** (en): a quote opening a line pairs
+
+Input: `"Stone," he said.`
+
+- ✓ podiia: `«Stone,» he said.`
+- ✓ podiia literary: `‘Stone,’ he said.`
+- ✓ typograf: `“Stone,” he~said.`
+- ✓ typograf +nbsp: `“Stone,” he~said.`
+- ✓ typopo: `“Stone”, he said.`
+- ✓ richtypo: `“Stone,” he~said.`
+- ✓ tipograph: `“Stone,” he said.`
+- ✓ smartypants: `“Stone,” he said.`
+- ✓ retext-smartypants: `“Stone,” he said.`
+
+**en-quote-multiline** (en): each line pairs on its own
+
+Input: `"one"⏎"two"`
+
+- ✓ podiia: `«one»⏎«two»`
+- ✓ podiia literary: `‘one’⏎‘two’`
+- ✓ typograf: `“one”⏎“two”`
+- ✓ typograf +nbsp: `“one”⏎“two”`
+- ✓ typopo: `“one”⏎“two”`
+- ✓ richtypo: `“one”⏎“two”`
+- ✓ tipograph: `“one”⏎“two”`
+- ✓ smartypants: `“one”⏎“two”`
+- ✓ retext-smartypants: `“one”⏎“two”`
 
 ### Nested quotes
 
@@ -1160,6 +1372,160 @@ Input: `Πέτρα - μνήμη - και χρόνος`
 - – smartypants: 
 - – retext-smartypants: 
 
+**en-dash-spaced-hyphen** (en): a spaced hyphen between words is a dash
+
+Input: `Stone - memory`
+
+- ✓ podiia: `Stone~— memory`
+- ✓ podiia literary: `Stone~– memory`
+- ✓ typograf: `Stone~— memory`
+- ✓ typograf +nbsp: `Stone~— memory`
+- ✓ typopo: `Stone—memory`
+- ✓ richtypo: `Stone~— memory`
+- ✓ tipograph: `Stone – memory`
+- ✗ smartypants: `Stone - memory`
+- ✗ retext-smartypants: `Stone - memory`
+
+**en-dash-double-hyphen** (en): a double hyphen is a dash
+
+Input: `Stone--memory`
+
+- ✓ podiia: `Stone~— memory`
+- ✓ podiia literary: `Stone~– memory`
+- ✗ typograf: `Stone--memory`
+- ✗ typograf +nbsp: `Stone--memory`
+- ✗ typopo: `Stone--memory`
+- ✓ richtypo: `Stone~— memory`
+- ✓ tipograph: `Stone–memory`
+- ✓ smartypants: `Stone—memory`
+- ✓ retext-smartypants: `Stone—memory`
+
+**en-dash-triple-hyphen-kept** (en): a run of three hyphens is not turned into a double-hyphen dash
+
+Input: `a --- b`
+
+- ✓ podiia: `a~--- b`
+- ✓ podiia literary: `a~--- b`
+- ✓ typograf: `a~--- b`
+- ✓ typograf +nbsp: `a~--- b`
+- ✓ typopo: `a—b`
+- ✓ richtypo: `a~— b`
+- ✓ tipograph: `a — b`
+- ✓ smartypants: `a —- b`
+- ✓ retext-smartypants: `a --- b`
+
+**en-dash-range-pages** (en): a page range uses an en dash
+
+Input: `pp. 21-26`
+
+- ✓ podiia: `pp.~21–26`
+- ✓ podiia literary: `pp.~21–26`
+- ✗ typograf: `pp. 21-26`
+- ✗ typograf +nbsp: `pp. 21-26`
+- ✓ typopo: `pp.~21–26`
+- ✗ richtypo: `pp.~21-26`
+- ✓ tipograph: `pp. 21–26`
+- ✗ smartypants: `pp. 21-26`
+- ✗ retext-smartypants: `pp. 21-26`
+
+**en-dash-range-years** (en): a year range uses an en dash
+
+Input: `1914-1918`
+
+- ✓ podiia: `1914–1918`
+- ✓ podiia literary: `1914–1918`
+- ✗ typograf: `1914-1918`
+- ✗ typograf +nbsp: `1914-1918`
+- ✓ typopo: `1914–1918`
+- ✗ richtypo: `1914-1918`
+- ✓ tipograph: `1914–1918`
+- ✗ smartypants: `1914-1918`
+- ✗ retext-smartypants: `1914-1918`
+
+**en-dash-range-time** (en): a time range uses an en dash
+
+Input: `10:00-12:00`
+
+- ✓ podiia: `10:00–12:00`
+- ✓ podiia literary: `10:00–12:00`
+- ✗ typograf: `10:00-12:00`
+- ✗ typograf +nbsp: `10:00-12:00`
+- ✓ typopo: `10:00–12:00`
+- ✗ richtypo: `10:00-12:00`
+- ✓ tipograph: `10:00–12:00`
+- ✗ smartypants: `10:00-12:00`
+- ✗ retext-smartypants: `10:00-12:00`
+
+**en-dash-iso-date-kept** (en): an ISO date is not a range
+
+Input: `2026-10-20`
+
+- ✓ podiia: `2026-10-20`
+- ✓ podiia literary: `2026-10-20`
+- ✓ typograf: `2026-10-20`
+- ✓ typograf +nbsp: `2026-10-20`
+- ✗ typopo: `2026–10–20`
+- ✓ richtypo: `2026-10-20`
+- ✗ tipograph: `2026–10–20`
+- ✓ smartypants: `2026-10-20`
+- ✓ retext-smartypants: `2026-10-20`
+
+**en-dash-phone-kept** (en): a phone number keeps its hyphen
+
+Input: `Call 555-0123`
+
+- ✓ podiia: `Call 555-0123`
+- ✓ podiia literary: `Call 555-0123`
+- ✓ typograf: `Call 555-0123`
+- ✓ typograf +nbsp: `Call 555-0123`
+- ✗ typopo: `Call 555–0123`
+- ✓ richtypo: `Call~555-0123`
+- ✗ tipograph: `Call 555–0123`
+- ✓ smartypants: `Call 555-0123`
+- ✓ retext-smartypants: `Call 555-0123`
+
+**en-dash-compound-kept** (en): hyphenated compounds are untouched
+
+Input: `a well-known state-of-the-art tool`
+
+- ✓ podiia: `a~well-known state-of-the-art tool`
+- ✓ podiia literary: `a~well-known state-of-the-art tool`
+- ✓ typograf: `a~well-known state-of-the-art tool`
+- ✓ typograf +nbsp: `a~well-known state-of-the-art tool`
+- ✓ typopo: `a~well-known state-of-the-art tool`
+- ✓ richtypo: `a~well-known state-of-the-art~tool`
+- ✓ tipograph: `a well-known state-of-the-art tool`
+- ✓ smartypants: `a well-known state-of-the-art tool`
+- ✓ retext-smartypants: `a well-known state-of-the-art tool`
+
+**en-dash-negative-kept** (en): a negative number keeps a sign, never a dash
+
+Input: `It was -5 degrees`
+
+- ✓ podiia: `It was −5~degrees`
+- ✓ podiia literary: `It was −5~degrees`
+- ✓ typograf: `It~was -5 degrees`
+- ✓ typograf +nbsp: `It~was -5 degrees`
+- ✓ typopo: `It was -5~degrees`
+- ✓ richtypo: `It~was -5~degrees`
+- ✓ tipograph: `It was −5 degrees`
+- ✓ smartypants: `It was -5 degrees`
+- ✓ retext-smartypants: `It was -5 degrees`
+
+**en-dash-uk-range** (en): a range is not an ordinary hyphen run
+
+Input: `pages 21-26`
+
+- ✓ podiia: `pages 21–26`
+- ✓ podiia literary: `pages 21–26`
+- ✗ typograf: `pages 21-26`
+- ✗ typograf +nbsp: `pages 21-26`
+- ✓ typopo: `pages 21–26`
+- ✗ richtypo: `pages~21-26`
+- ✓ tipograph: `pages 21–26`
+- ✗ smartypants: `pages 21-26`
+- ✗ retext-smartypants: `pages 21-26`
+
 ### Ranges
 
 **range-en** (en): 21-26 and 10:00-12:00 get an en dash
@@ -1898,6 +2264,132 @@ Input: `Cela fait 5% de 49€`
 - – smartypants: 
 - – retext-smartypants: 
 
+**en-symbol-trademark** (en): (TM) becomes ™
+
+Input: `Podiia (TM)`
+
+- ✓ podiia: `Podiia ™`
+- ✓ podiia literary: `Podiia ™`
+- ✓ typograf: `Podiia ™`
+- ✓ typograf +nbsp: `Podiia ™`
+- ✓ typopo: `Podiia™`
+- ✗ richtypo: `Podiia~(TM)`
+- ✓ tipograph: `Podiia ™~`
+- ✗ smartypants: `Podiia (TM)`
+- ✗ retext-smartypants: `Podiia (TM)`
+
+**en-symbol-registered** (en): (R) becomes ®
+
+Input: `Podiia (R)`
+
+- ✓ podiia: `Podiia ®`
+- ✓ podiia literary: `Podiia ®`
+- ✓ typograf: `Podiia ®`
+- ✓ typograf +nbsp: `Podiia ®`
+- ✓ typopo: `Podiia®`
+- ✗ richtypo: `Podiia~(R)`
+- ✓ tipograph: `Podiia ®~`
+- ✗ smartypants: `Podiia (R)`
+- ✗ retext-smartypants: `Podiia (R)`
+
+**en-symbol-copyright-upper** (en): (C) becomes ©
+
+Input: `(C) 2026`
+
+- ✓ podiia: `©~2026`
+- ✓ podiia literary: `©~2026`
+- ✓ typograf: `© 2026`
+- ✓ typograf +nbsp: `© 2026`
+- ✓ typopo: `©~2026`
+- ✗ richtypo: `(C)~2026`
+- ✓ tipograph: `©~2026`
+- ✗ smartypants: `(C) 2026`
+- ✗ retext-smartypants: `(C) 2026`
+
+**en-symbol-arrow-left** (en): <- becomes ←
+
+Input: `Back <-`
+
+- ✓ podiia: `Back ←`
+- ✓ podiia literary: `Back ←`
+- ✓ typograf: `Back ←`
+- ✓ typograf +nbsp: `Back ←`
+- ✗ typopo: `Back <-`
+- ✗ richtypo: `Back~<-`
+- ✓ tipograph: `Back ←`
+- ✗ smartypants: `Back <-`
+- ✗ retext-smartypants: `Back <-`
+
+**en-symbol-arrow-code-kept** (en): an arrow in a code span is untouched
+
+Input: `Use `a -> b` here`
+
+- ✓ podiia: `Use `a -> b` here`
+- ✓ podiia literary: `Use `a -> b` here`
+- ✗ typograf: `Use `a → b` here`
+- ✗ typograf +nbsp: `Use `a → b` here`
+- ✗ typopo: `Use ’a -> b’ here`
+- ✓ richtypo: `Use `a -> b`~here`
+- ✗ tipograph: `Use `a → b` here`
+- ✓ smartypants: `Use `a -> b` here`
+- ✓ retext-smartypants: `Use `a -> b` here`
+
+**en-symbol-multiply-spaced** (en): a spaced x between numbers becomes ×
+
+Input: `3 x 4`
+
+- ✓ podiia: `3~× 4`
+- ✓ podiia literary: `3~× 4`
+- ✓ typograf: `3×4`
+- ✓ typograf +nbsp: `3×4`
+- ✓ typopo: `3~×~4`
+- ✗ richtypo: `3~x~4`
+- ✓ tipograph: `3 × 4`
+- ✗ smartypants: `3 x 4`
+- ✗ retext-smartypants: `3 x 4`
+
+**en-symbol-multiply-word-kept** (en): x inside words is not a multiplication
+
+Input: `a box and an ox`
+
+- ✓ podiia: `a~box and an ox`
+- ✓ podiia literary: `a~box and an ox`
+- ✓ typograf: `a~box and~an~ox`
+- ✓ typograf +nbsp: `a~box and~an~ox`
+- ✓ typopo: `a~box and an ox`
+- ✓ richtypo: `a~box and~an~ox`
+- ✓ tipograph: `a box and an ox`
+- ✓ smartypants: `a box and an ox`
+- ✓ retext-smartypants: `a box and an ox`
+
+**en-symbol-multiply-hex-kept** (en): a hex literal keeps its x
+
+Input: `color 0x1f`
+
+- ✓ podiia: `color 0x1f`
+- ✓ podiia literary: `color 0x1f`
+- ✗ typograf: `color 0×1f`
+- ✗ typograf +nbsp: `color 0×1f`
+- ✗ typopo: `color 0~×~1f`
+- ✓ richtypo: `color~0x1f`
+- ✓ tipograph: `color 0x1f`
+- ✓ smartypants: `color 0x1f`
+- ✓ retext-smartypants: `color 0x1f`
+
+**en-symbol-minus** (en): arithmetic keeps its numbers
+
+Input: `Score 5 - 3 = 2`
+
+- ✓ podiia: `Score 5~— 3 = 2`
+- ✓ podiia literary: `Score 5~– 3 = 2`
+- ✓ typograf: `Score 5~— 3 = 2`
+- ✓ typograf +nbsp: `Score 5~— 3 = 2`
+- ✓ typopo: `Score 5–3 = 2`
+- ✓ richtypo: `Score 5~— 3~=~2`
+- ✓ tipograph: `Score 5 – 3 = 2`
+- ✓ smartypants: `Score 5 - 3 = 2`
+- ✓ retext-smartypants: `Score 5 - 3 = 2`
+
 ### Protected text
 
 **protect-url** (en): the web address comes back exactly
@@ -2380,6 +2872,118 @@ Input: `Είπε "είμαστε εδώ" - και έφυγε... Διαρκεί 2
 - – smartypants: 
 - – retext-smartypants: 
 
+**en-safety-url** (en): a URL is untouched
+
+Input: `Visit https://a.com/x-y--z?q=1&r=2 today`
+
+- ✓ podiia: `Visit https://a.com/x-y--z?q=1&r=2 today`
+- ✓ podiia literary: `Visit https://a.com/x-y--z?q=1&r=2 today`
+- ✓ typograf: `Visit https://a.com/x-y--z?q=1&r=2 today`
+- ✓ typograf +nbsp: `Visit https://a.com/x-y--z?q=1&r=2 today`
+- ✓ typopo: `Visit https://a.com/x-y--z?q=1&r=2 today`
+- ✗ richtypo: `Visit https://a.com/x-y~— z?q=1&r=2~today`
+- ✗ tipograph: `Visit https://a.com/x-y–z?q=1&r=2 today`
+- ✗ smartypants: `Visit https://a.com/x-y—z?q=1&r=2 today`
+- ✗ retext-smartypants: `Visit https://a.com/x-y—z?q=1&r=2 today`
+
+**en-safety-email** (en): an email is untouched
+
+Input: `Mail a.b-c@x.org -- now`
+
+- ✓ podiia: `Mail a.b-c@x.org~— now`
+- ✓ podiia literary: `Mail a.b-c@x.org~– now`
+- ✓ typograf: `Mail a.b-c@x.org~— now`
+- ✓ typograf +nbsp: `Mail a.b-c@x.org~— now`
+- ✓ typopo: `Mail a.b-c@x.org -- now`
+- ✓ richtypo: `Mail a.b-c@x.org~— now`
+- ✓ tipograph: `Mail a.b-c@x.org – now`
+- ✓ smartypants: `Mail a.b-c@x.org — now`
+- ✓ retext-smartypants: `Mail a.b-c@x.org — now`
+
+**en-safety-code-span** (en): inline code is untouched
+
+Input: `Run `a -- b "c"` now`
+
+- ✓ podiia: `Run `a -- b "c"` now`
+- ✓ podiia literary: `Run `a -- b "c"` now`
+- ✗ typograf: `Run `a~— b~“c"` now`
+- ✗ typograf +nbsp: `Run `a~— b~“c"` now`
+- ✗ typopo: `Run ’a—b~“c”’ now`
+- ✓ richtypo: `Run `a -- b "c"`~now`
+- ✗ tipograph: `Run `a – b “c”` now`
+- ✗ smartypants: `Run `a — b “c”` now`
+- ✗ retext-smartypants: `Run `a — b “c”` now`
+
+**en-safety-path** (en): a path is untouched
+
+Input: `open C:\a\b-c.txt`
+
+- ✓ podiia: `open C:\a\b-c.txt`
+- ✓ podiia literary: `open C:\a\b-c.txt`
+- ✓ typograf: `open C:\a\b-c.txt`
+- ✓ typograf +nbsp: `open C:\a\b-c.txt`
+- ✓ typopo: `open C:\a\b-c.txt`
+- ✓ richtypo: `open C:\a\b-c.txt`
+- ✓ tipograph: `open C:\a\b-c.txt`
+- ✓ smartypants: `open C:\a\b-c.txt`
+- ✓ retext-smartypants: `open C:\a\b-c.txt`
+
+**en-safety-empty** (en): empty text stays empty
+
+Input: ``
+
+- ✓ podiia: ``
+- ✓ podiia literary: ``
+- ✓ typograf: ``
+- ✓ typograf +nbsp: ``
+- ✓ typopo: ``
+- ✓ richtypo: ``
+- ✓ tipograph: ``
+- ✓ smartypants: ``
+- ✓ retext-smartypants: ``
+
+**en-safety-emoji** (en): astral characters survive
+
+Input: `Hi 👋 "x" 🎉`
+
+- ✓ podiia: `Hi 👋 «x» 🎉`
+- ✓ podiia literary: `Hi 👋 ‘x’ 🎉`
+- ✓ typograf: `Hi~👋 “x” 🎉`
+- ✓ typograf +nbsp: `Hi~👋 “x” 🎉`
+- ✓ typopo: `Hi 👋 “x” 🎉`
+- ✓ richtypo: `Hi~👋 “x”~🎉`
+- ✓ tipograph: `Hi 👋 “x” 🎉`
+- ✓ smartypants: `Hi 👋 “x” 🎉`
+- ✓ retext-smartypants: `Hi 👋 “x” 🎉`
+
+**en-safety-cjk** (en): other scripts survive
+
+Input: `你好 "x" 世界`
+
+- ✓ podiia: `你好 «x» 世界`
+- ✓ podiia literary: `你好 ‘x’ 世界`
+- ✓ typograf: `你好 “x” 世界`
+- ✓ typograf +nbsp: `你好 “x” 世界`
+- ✓ typopo: `你好 “x” 世界`
+- ✓ richtypo: `你好 “x”~世界`
+- ✓ tipograph: `你好 “x” 世界`
+- ✓ smartypants: `你好 “x” 世界`
+- ✓ retext-smartypants: `你好 “x” 世界`
+
+**en-safety-plain-unchanged** (en): text with nothing to fix is unchanged
+
+Input: `Plain words with no marks`
+
+- ✓ podiia: `Plain words with no marks`
+- ✓ podiia literary: `Plain words with no marks`
+- ✓ typograf: `Plain words with no~marks`
+- ✓ typograf +nbsp: `Plain words with no~marks`
+- ✓ typopo: `Plain words with no marks`
+- ✓ richtypo: `Plain words with no~marks`
+- ✓ tipograph: `Plain words with no marks`
+- ✓ smartypants: `Plain words with no marks`
+- ✓ retext-smartypants: `Plain words with no marks`
+
 ### Registers
 
 **dialogue-uk** (uk): a dialogue line opens with an em dash
@@ -2409,6 +3013,262 @@ Input: `She said "stone" and left`
 - – tipograph: 
 - – smartypants: 
 - – retext-smartypants: 
+
+### Ellipsis
+
+**en-ellipsis-three-dots** (en): three dots become …
+
+Input: `Wait...`
+
+- ✓ podiia: `Wait…`
+- ✓ podiia literary: `Wait…`
+- ✓ typograf: `Wait…`
+- ✓ typograf +nbsp: `Wait…`
+- ✓ typopo: `Wait…`
+- ✓ richtypo: `Wait…`
+- ✓ tipograph: `Wait…`
+- ✓ smartypants: `Wait…`
+- ✓ retext-smartypants: `Wait…`
+
+**en-ellipsis-four-dots** (en): four dots keep a full stop after …
+
+Input: `Wait....`
+
+- ✓ podiia: `Wait….`
+- ✓ podiia literary: `Wait….`
+- ✓ typograf: `Wait….`
+- ✓ typograf +nbsp: `Wait….`
+- ✓ typopo: `Wait…`
+- ✓ richtypo: `Wait…`
+- ✗ tipograph: `Wait....`
+- ✓ smartypants: `Wait….`
+- ✓ retext-smartypants: `Wait…`
+
+**en-ellipsis-two-dots-kept** (en): two dots are not an ellipsis
+
+Input: `Wait..`
+
+- ✓ podiia: `Wait..`
+- ✓ podiia literary: `Wait..`
+- ✓ typograf: `Wait.`
+- ✓ typograf +nbsp: `Wait.`
+- ✓ typopo: `Wait.`
+- ✗ richtypo: `Wait…`
+- ✓ tipograph: `Wait..`
+- ✓ smartypants: `Wait..`
+- ✓ retext-smartypants: `Wait..`
+
+**en-ellipsis-spaced** (en): spaced dots are left alone or joined, never lost
+
+Input: `Wait . . . now`
+
+- ✓ podiia: `Wait . . . now`
+- ✓ podiia literary: `Wait . . . now`
+- ✓ typograf: `Wait. . . now`
+- ✓ typograf +nbsp: `Wait. . . now`
+- ✓ typopo: `Wait. . now`
+- ✓ richtypo: `Wait . . .~now`
+- ✓ tipograph: `Wait . . . now`
+- ✓ smartypants: `Wait … now`
+- ✓ retext-smartypants: `Wait … now`
+
+**en-ellipsis-url-kept** (en): a URL is untouched
+
+Input: `see http://a.com/x...y now`
+
+- ✓ podiia: `see http://a.com/x...y now`
+- ✓ podiia literary: `see http://a.com/x...y now`
+- ✓ typograf: `see http://a.com/x...y now`
+- ✓ typograf +nbsp: `see http://a.com/x...y now`
+- ✓ typopo: `see http://a.com/x...y now`
+- ✗ richtypo: `see http://a.com/x…y~now`
+- ✗ tipograph: `see http://a.com/x…y now`
+- ✗ smartypants: `see http://a.com/x…y now`
+- ✗ retext-smartypants: `see http://a.com/x…y now`
+
+### Spacing
+
+**en-space-percent** (en): a percent keeps its number
+
+Input: `50 %`
+
+- ✓ podiia: `50~%`
+- ✓ podiia literary: `50~%`
+- ✓ typograf: `50%`
+- ✓ typograf +nbsp: `50%`
+- ✓ typopo: `50%`
+- ✓ richtypo: `50~%`
+- ✓ tipograph: `50 %`
+- ✓ smartypants: `50 %`
+- ✓ retext-smartypants: `50 %`
+
+**en-space-number-unit** (en): no-break space between number and unit
+
+Input: `5 km away`
+
+- ✓ podiia: `5~km away`
+- ✓ podiia literary: `5~km away`
+- ✗ typograf: `5 km~away`
+- ✓ typograf +nbsp: `5~km~away`
+- ✓ typopo: `5~km away`
+- ✓ richtypo: `5~km~away`
+- ✗ tipograph: `5 km away`
+- ✗ smartypants: `5 km away`
+- ✗ retext-smartypants: `5 km away`
+
+**en-space-number-unit-glued** (en): a glued unit is left readable
+
+Input: `5km away`
+
+- ✓ podiia: `5km away`
+- ✓ podiia literary: `5km away`
+- ✓ typograf: `5km away`
+- ✓ typograf +nbsp: `5km away`
+- ✓ typopo: `5km away`
+- ✓ richtypo: `5km~away`
+- ✓ tipograph: `5km away`
+- ✓ smartypants: `5km away`
+- ✓ retext-smartypants: `5km away`
+
+**en-space-thousand-kept** (en): thousands separators are untouched
+
+Input: `1,000,000 people`
+
+- ✓ podiia: `1,000,000~people`
+- ✓ podiia literary: `1,000,000~people`
+- ✓ typograf: `1,000,000 people`
+- ✓ typograf +nbsp: `1,000,000 people`
+- ✓ typopo: `1,000,000 people`
+- ✓ richtypo: `1,000,000~people`
+- ✓ tipograph: `1,000,000 people`
+- ✓ smartypants: `1,000,000 people`
+- ✓ retext-smartypants: `1,000,000 people`
+
+**en-space-collapse** (en): repeated spaces collapse
+
+Input: `a  b   c`
+
+- ✓ podiia: `a~b c`
+- ✓ podiia literary: `a~b c`
+- ✓ typograf: `a~b~c`
+- ✓ typograf +nbsp: `a~b~c`
+- ✗ typopo: `a~b~  c`
+- ✓ richtypo: `a~b~c`
+- ✓ tipograph: `a b c`
+- ✗ smartypants: `a  b   c`
+- ✗ retext-smartypants: `a  b   c`
+
+**en-space-newline-kept** (en): blank lines survive
+
+Input: `a⏎⏎b`
+
+- ✓ podiia: `a⏎⏎b`
+- ✓ podiia literary: `a⏎⏎b`
+- ✓ typograf: `a⏎⏎b`
+- ✓ typograf +nbsp: `a⏎⏎b`
+- ✗ typopo: `a⏎b`
+- ✓ richtypo: `a⏎⏎b`
+- ✓ tipograph: `a⏎⏎b`
+- ✓ smartypants: `a⏎⏎b`
+- ✓ retext-smartypants: `a⏎⏎b`
+
+**en-space-leading-kept** (en): text mode keeps a leading indent
+
+Input: `  indented`
+
+- ✓ podiia: `  indented`
+- ✓ podiia literary: `  indented`
+- ✓ typograf: `indented`
+- ✓ typograf +nbsp: `indented`
+- ✓ typopo: `indented`
+- ✓ richtypo: `~indented`
+- ✓ tipograph: ` indented`
+- ✓ smartypants: `  indented`
+- ✓ retext-smartypants: `  indented`
+
+**en-space-orphan-a** (en): no short word is left at a line end
+
+Input: `I saw a cat in the yard`
+
+- ✓ podiia: `I~saw a~cat in the yard`
+- ✓ podiia literary: `I~saw a~cat in the yard`
+- ✓ typograf: `I~saw a~cat in~the~yard`
+- ✓ typograf +nbsp: `I~saw a~cat in~the~yard`
+- ✓ typopo: `I~saw a~cat in the yard`
+- ✓ richtypo: `I~saw a~cat in~the~yard`
+- ✗ tipograph: `I saw a cat in the yard`
+- ✗ smartypants: `I saw a cat in the yard`
+- ✗ retext-smartypants: `I saw a cat in the yard`
+
+**en-space-title-mr** (en): a title stays with the name
+
+Input: `Mr. Smith left`
+
+- ✓ podiia: `Mr.~Smith left`
+- ✓ podiia literary: `Mr.~Smith left`
+- ✗ typograf: `Mr. Smith left`
+- ✗ typograf +nbsp: `Mr. Smith left`
+- ✓ typopo: `Mr.~Smith left`
+- ✗ richtypo: `Mr. Smith~left`
+- ✗ tipograph: `Mr. Smith left`
+- ✗ smartypants: `Mr. Smith left`
+- ✗ retext-smartypants: `Mr. Smith left`
+
+**en-space-month-day** (en): a day stays with its month
+
+Input: `on 21 September`
+
+- ✓ podiia: `on 21~September`
+- ✓ podiia literary: `on 21~September`
+- ✗ typograf: `on~21 September`
+- ✓ typograf +nbsp: `on~21~September`
+- ✓ typopo: `on 21~September`
+- ✓ richtypo: `on~21~September`
+- ✗ tipograph: `on 21 September`
+- ✗ smartypants: `on 21 September`
+- ✗ retext-smartypants: `on 21 September`
+
+**en-space-initials** (en): initials stay with the surname
+
+Input: `J. R. R. Tolkien`
+
+- ✓ podiia: `J.~R.~R.~Tolkien`
+- ✓ podiia literary: `J.~R.~R.~Tolkien`
+- ✓ typograf: `J. R. R. Tolkien`
+- ✓ typograf +nbsp: `J. R. R. Tolkien`
+- ✗ typopo: `J.R.R. Tolkien`
+- ✓ richtypo: `J. R. R.~Tolkien`
+- ✓ tipograph: `J. R. R. Tolkien`
+- ✓ smartypants: `J. R. R. Tolkien`
+- ✓ retext-smartypants: `J. R. R. Tolkien`
+
+**en-space-fig** (en): Fig. stays with its number
+
+Input: `see Fig. 3`
+
+- ✓ podiia: `see Fig.~3`
+- ✓ podiia literary: `see Fig.~3`
+- ✗ typograf: `see Fig. 3`
+- ✗ typograf +nbsp: `see Fig. 3`
+- ✗ typopo: `see Fig. 3`
+- ✓ richtypo: `see Fig.~3`
+- ✗ tipograph: `see Fig. 3`
+- ✗ smartypants: `see Fig. 3`
+- ✗ retext-smartypants: `see Fig. 3`
+
+**en-space-eg-kept** (en): e.g. is not split or lost
+
+Input: `e.g. this`
+
+- ✓ podiia: `e.g. this`
+- ✓ podiia literary: `e.g. this`
+- ✓ typograf: `e.g. this`
+- ✓ typograf +nbsp: `e.g. this`
+- ✓ typopo: `e.g. this`
+- ✓ richtypo: `e.g.~this`
+- ✓ tipograph: `e.g. this`
+- ✓ smartypants: `e.g. this`
+- ✓ retext-smartypants: `e.g. this`
 
 ### Stability
 
