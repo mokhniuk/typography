@@ -69,3 +69,57 @@ describe('enable and rules reach every mode', () => {
     expect(seen).toEqual(['extra.shout']);
   });
 });
+
+describe("quoteStyle reaches every mode", () => {
+  const us = { quoteStyle: 'us' } as const;
+  const run = (html: string, options: object = {}) =>
+    plain(
+      String(
+        unified()
+          .use(rehypeParse, { fragment: true })
+          .use(rehypeTypography, options)
+          .use(rehypeStringify)
+          .processSync(html),
+      ),
+    );
+
+  test('typographic, text, HTML and Markdown', () => {
+    expect(typographic('"x \'y\'"', 'en', us)).toBe('“x ‘y’”');
+    expect(typesetText('"x"\n\n"y"', us)).toBe('“x”\n\n“y”');
+    expect(typesetHtml('<p>"x \'y\' <em>z</em>"</p>', us)).toBe('<p>“x ‘y’ <em>z</em>”</p>');
+    expect(typesetMarkdown('"x" and `"y"`\n', us)).toBe('“x” and `"y"`\n');
+    expect(typesetText('"x"', { ...us, lang: 'de', register: 'literary' })).toBe('“x”');
+  });
+
+  test('rehype: the option, and lang="en-US" in any case', () => {
+    expect(run('<p>"x"</p>', us)).toBe('<p>“x”</p>');
+    expect(run('<p lang="en-US">"x"</p>')).toBe('<p lang="en-US">“x”</p>');
+    expect(run('<p lang="EN-us">"x"</p>')).toBe('<p lang="EN-us">“x”</p>');
+    expect(run('<p lang="en_US">"x"</p>')).toBe('<p lang="en_US">«x»</p>');
+  });
+
+  test('rehype: other English and other languages keep the language table', () => {
+    expect(run('<p lang="en">"x"</p>')).toBe('<p lang="en">«x»</p>');
+    expect(run('<p lang="en-GB">"x"</p>')).toBe('<p lang="en-GB">«x»</p>');
+    expect(run('<p lang="de">"x"</p>')).toBe('<p lang="de">»x«</p>');
+  });
+
+  test('rehype: en-US applies to its subtree only, and an inline en-US element is typeset on its own', () => {
+    expect(run('<div lang="en-US"><p>"a"</p></div><p>"b"</p>')).toBe(
+      '<div lang="en-US"><p>“a”</p></div><p>«b»</p>',
+    );
+    expect(run('<p>"x <span lang="en-US">"y"</span> z"</p>')).toBe(
+      '<p>«x <span lang="en-US">“y”</span> z»</p>',
+    );
+  });
+
+  test('rehype: a declared language resets en-US to the option', () => {
+    expect(run('<div lang="en-US"><p lang="de">"x"</p></div>')).toBe(
+      '<div lang="en-US"><p lang="de">»x«</p></div>',
+    );
+    expect(run('<div lang="en-US"><p lang="de">"x"</p></div>', us)).toBe(
+      '<div lang="en-US"><p lang="de">“x”</p></div>',
+    );
+  });
+});
+

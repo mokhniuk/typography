@@ -33,4 +33,11 @@ describe('typesetFor', () => {
     expect(typesetFor('so loud', { ...root, rules }, true)).toBe('so loud');
     expect(typesetFor('so loud', { ...root, rules, enable: ['extra.shout'] }, true)).toBe('so LOUD');
   });
+
+  test('passes quoteStyle on, and it beats the literary register', () => {
+    expect(typesetFor('"x"', { ...root, quoteStyle: 'us' }, true)).toBe('“x”');
+    expect(typesetFor('"x"', { lang: 'de', register: 'literary', quoteStyle: 'us' }, true)).toBe('“x”');
+    expect(typesetFor('"x"', { ...root, quoteStyle: 'language' }, true)).toBe('«x»');
+  });
 });
+

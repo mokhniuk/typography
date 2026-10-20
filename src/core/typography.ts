@@ -53,7 +53,7 @@
 
 import { type DiffRun, diff } from './diff';
 import { DEFAULT_RULES, type Rule, selectRules } from './rules';
-import type { Context, Lang, Register } from './types';
+import type { Context, Lang, QuoteStyle, Register } from './types';
 import { shield } from './zones';
 
 export type Change = {
@@ -66,6 +66,8 @@ export type Change = {
 export type TypographicOptions = {
   /** What the text is for; `display` unless a page says it is book-like text. */
   register?: Register | undefined;
+  /** `language` (the default): the language's quote marks. `us`: “…” and ‘…’ in any language and register. */
+  quoteStyle?: QuoteStyle | undefined;
   /** Whether `text` opens its paragraph. Only then can its first dash be a dialogue dash. */
   blockStart?: boolean | undefined;
   /** Rules to switch off: ids (`dash.range`) or groups (`space`). An unknown name throws. */
@@ -105,13 +107,21 @@ function changesOf(rule: string, runs: readonly DiffRun[]): Change[] {
 export function typographic(
   text: string,
   lang: Lang = 'en',
-  { register = 'display', blockStart = true, disable, enable, rules: custom, onChange }: TypographicOptions = {},
+  {
+    register = 'display',
+    quoteStyle = 'language',
+    blockStart = true,
+    disable,
+    enable,
+    rules: custom,
+    onChange,
+  }: TypographicOptions = {},
 ): string {
   const rules =
     disable?.length || enable?.length || custom
       ? selectRules({ rules: custom, disable, enable })
       : DEFAULT_RULES;
-  const context: Context = { lang, register, blockStart };
+  const context: Context = { lang, register, quoteStyle, blockStart };
   const [shielded, restore] = shield(text);
   let out = shielded;
   for (const rule of rules) {
@@ -140,6 +150,8 @@ export type ModeOptions = {
   /** Language of the text; `en` unless given. */
   lang?: Lang | undefined;
   register?: Register | undefined;
+  /** `language` (the default) or `us`; see `TypographicOptions`. */
+  quoteStyle?: QuoteStyle | undefined;
   /** Rules to switch off: ids (`dash.range`) or groups (`space`). An unknown name throws. */
   disable?: readonly string[] | undefined;
   /** Rules to switch on that are off by default: ids or groups. An unknown name throws. */
@@ -157,11 +169,20 @@ export type ModeOptions = {
  */
 export function typesetBlock(
   joined: string,
-  { lang = 'en', register = 'display', disable, enable, rules, onChange }: ModeOptions,
+  {
+    lang = 'en',
+    register = 'display',
+    quoteStyle,
+    disable,
+    enable,
+    rules,
+    onChange,
+  }: ModeOptions,
 ): { text: string; keep: () => void } {
   const found: Change[] = [];
   const text = typographic(joined, lang, {
     register,
+    quoteStyle,
     blockStart: true,
     disable,
     enable,

@@ -151,10 +151,32 @@ describe('typo', () => {
     expect(v.err()).toContain('both');
   });
 
-  test('--help mentions --enable', async () => {
+  test('--quotes us sets “…” and ‘…’ in any language; the default is the language', async () => {
+    const t = fake({}, '"x \'y\'"\n');
+    expect(await run(['--quotes', 'us'], t.io)).toBe(0);
+    expect(t.out()).toBe('“x ‘y’”\n');
+    const u = fake({}, '"x"\n');
+    await run(['--quotes', 'us', '-l', 'de', '-r', 'literary'], u.io);
+    expect(u.out()).toBe('“x”\n');
+    const v = fake({}, '"x"\n');
+    await run(['--quotes', 'language', '-l', 'de'], v.io);
+    expect(v.out()).toBe('»x«\n');
+    const w = fake({ 'a.html': '<p>"x"</p>', 'b.md': '"x"\n' });
+    await run(['--quotes', 'us', 'a.html'], w.io);
+    expect(w.out()).toBe('<p>“x”</p>');
+  });
+
+  test('--quotes with anything else is a usage error', async () => {
+    const t = fake({}, 'x');
+    expect(await run(['--quotes', 'uk'], t.io)).toBe(2);
+    expect(t.err()).toContain('--quotes');
+  });
+
+  test('--help mentions --enable and --quotes', async () => {
     const t = fake();
     await run(['--help'], t.io);
     expect(t.out()).toContain('--enable');
+    expect(t.out()).toContain('--quotes');
   });
 });
 

@@ -4,6 +4,7 @@ import {
   type Change,
   type Lang,
   LANGS,
+  type QuoteStyle,
   REGISTERS,
   type Register,
   RULES,
@@ -34,6 +35,8 @@ Usage
 Options
   -l, --lang <${LANGS.join('|')}>   language of the text (default en)
   -r, --register <${REGISTERS.join('|')}>   display (default) or literary
+      --quotes <language|us>      language (default): the quote marks of the language;
+                                  us: “…” and ‘…’ in any language and register
   -f, --format <text|html|markdown>   how to read the input; by default from the
                                       file extension (.html, .md), else text
   -d, --disable <rules>           switch rules off: ids or groups, comma separated
@@ -98,6 +101,10 @@ export async function run(argv: string[], io: Io): Promise<number> {
   if (!LANGS.includes(lang))
     return usage(io, `unknown language "${values.lang}" (${LANGS.join(', ')})`);
   if (!REGISTERS.includes(register)) return usage(io, `unknown register "${values.register}"`);
+  if (values.quotes && values.quotes !== 'language' && values.quotes !== 'us') {
+    return usage(io, `--quotes is "language" or "us", not "${values.quotes}"`);
+  }
+  const quoteStyle = (values.quotes ?? 'language') as QuoteStyle;
   if (values.nbsp && values.nbsp !== 'entity' && values.nbsp !== 'char') {
     return usage(io, `--nbsp is "entity" or "char", not "${values.nbsp}"`);
   }
@@ -128,6 +135,7 @@ export async function run(argv: string[], io: Io): Promise<number> {
     const options = {
       lang,
       register,
+      quoteStyle,
       disable,
       enable,
       onChange: values.explain ? (change: Change) => found.push({ file, ...change }) : undefined,
@@ -214,6 +222,7 @@ function parse(argv: string[]) {
     options: {
       lang: { type: 'string', short: 'l' },
       register: { type: 'string', short: 'r' },
+      quotes: { type: 'string' },
       format: { type: 'string', short: 'f' },
       nbsp: { type: 'string' },
       disable: { type: 'string', short: 'd', multiple: true },

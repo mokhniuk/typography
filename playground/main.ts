@@ -5,6 +5,7 @@ import {
   type Lang,
   LANGS,
   PACKS,
+  type QuoteStyle,
   type Register,
   REGISTERS,
   RULES,
@@ -22,6 +23,7 @@ type State = {
   mode: Mode;
   lang: Lang;
   register: Register;
+  quoteStyle: QuoteStyle;
   nbsp: 'entity' | 'char';
   view: View;
   mark: boolean;
@@ -60,6 +62,7 @@ function load(): State {
     mode: 'text',
     lang: 'en',
     register: 'display',
+    quoteStyle: 'language',
     nbsp: 'entity',
     view: 'result',
     mark: false,
@@ -73,6 +76,7 @@ function load(): State {
       mode: saved.mode === 'html' || saved.mode === 'markdown' ? saved.mode : 'text',
       lang: LANGS.includes(saved.lang as Lang) ? (saved.lang as Lang) : 'en',
       register: saved.register === 'literary' ? 'literary' : 'display',
+      quoteStyle: saved.quoteStyle === 'us' ? 'us' : 'language',
       nbsp: saved.nbsp === 'char' ? 'char' : 'entity',
       view: saved.view === 'changes' || saved.view === 'preview' ? saved.view : 'result',
       mark: saved.mark === true,
@@ -106,6 +110,7 @@ const note = el<HTMLParagraphElement>('note');
 const count = el<HTMLSpanElement>('count');
 const langSelect = el<HTMLSelectElement>('lang');
 const registerSelect = el<HTMLSelectElement>('register');
+const quoteStyleSelect = el<HTMLSelectElement>('quoteStyle');
 const nbspSelect = el<HTMLSelectElement>('nbsp');
 const nbspField = el<HTMLLabelElement>('nbspField');
 const mark = el<HTMLInputElement>('mark');
@@ -147,9 +152,9 @@ const escapeHtml = (text: string) =>
 const visible = (text: string) => text.replaceAll(' ', '⍽');
 
 function convert(): { output: string; changes: Change[] } {
-  const { lang, register, disable, enable } = state;
+  const { lang, register, quoteStyle, disable, enable } = state;
   const changes: Change[] = [];
-  const options = { lang, register, disable, enable, onChange: (change: Change) => changes.push(change) };
+  const options = { lang, register, quoteStyle, disable, enable, onChange: (change: Change) => changes.push(change) };
   const output =
     state.mode === 'html'
       ? typesetHtml(state.input, { ...options, nbsp: state.nbsp })
@@ -215,6 +220,7 @@ function render() {
   }
   langSelect.value = state.lang;
   registerSelect.value = state.register;
+  quoteStyleSelect.value = state.quoteStyle;
   nbspSelect.value = state.nbsp;
   mark.checked = state.mark;
   nbspField.hidden = state.mode !== 'html';
@@ -296,6 +302,10 @@ langSelect.addEventListener('change', () => {
 });
 registerSelect.addEventListener('change', () => {
   state.register = registerSelect.value as Register;
+  schedule();
+});
+quoteStyleSelect.addEventListener('change', () => {
+  state.quoteStyle = quoteStyleSelect.value === 'us' ? 'us' : 'language';
   schedule();
 });
 nbspSelect.addEventListener('change', () => {

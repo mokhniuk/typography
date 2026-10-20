@@ -59,7 +59,7 @@ export const RULES: readonly Rule[] = [
   {
     id: 'quote',
     about: 'Quotation marks by language, register and nesting level, from any source style',
-    apply: (text, { lang, register }) => quotes(text, lang, register),
+    apply: (text, { lang, register, quoteStyle }) => quotes(text, lang, register, quoteStyle),
   },
   {
     id: 'apostrophe',

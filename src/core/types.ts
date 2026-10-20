@@ -14,10 +14,18 @@ export type { Lang };
  */
 export type Register = 'display' | 'literary';
 
+/**
+ * Which quote marks to set. `language` (the default) is the language's own table, or its
+ * literary one in the literary register. `us` is “…” with ‘…’ inside for any language, and takes
+ * precedence over both the table and the register.
+ */
+export type QuoteStyle = 'language' | 'us';
+
 /** What a rule needs to know besides the text. */
 export type Context = {
   lang: Lang;
   register: Register;
+  quoteStyle: QuoteStyle;
   /** Whether the text opens its paragraph. Only then can its first dash be a dialogue dash. */
   blockStart: boolean;
 };

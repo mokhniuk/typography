@@ -1,5 +1,5 @@
-import { type LangPack, PACK } from './lang';
-import type { Lang, Register } from './types';
+import { type LangPack, type Level, PACK } from './lang';
+import type { Lang, QuoteStyle, Register } from './types';
 
 // Pairs found in source text are first swapped for these placeholders, then
 // given the marks of their level, so a text can mix any source styles.
@@ -115,9 +115,17 @@ function setupOf(pack: LangPack): Setup {
 }
 
 /** The quote setter of one pack: marks of its language, register and nesting level; source quotes may be of any style. */
-export function quotesFor(pack: LangPack): (text: string, register?: Register) => string {
+/** `quoteStyle: 'us'`: “…” with ‘…’ inside, whatever the language and register. */
+const US: readonly Level[] = [
+  ['“', '”'],
+  ['‘', '’'],
+];
+
+export function quotesFor(
+  pack: LangPack,
+): (text: string, register?: Register, quoteStyle?: QuoteStyle) => string {
   const { pairs, single, loneOpening, apostrophe, elisionGroups } = setupOf(pack);
-  return (text, register = 'display') => {
+  return (text, register = 'display', quoteStyle = 'language') => {
     // The apostrophes are put back as they were; the `apostrophe` rule sets them.
     const kept: string[] = [];
     let out = text.replace(apostrophe, (mark: string, ...groups: (string | undefined)[]) => {
@@ -146,7 +154,8 @@ export function quotesFor(pack: LangPack): (text: string, register?: Register) =
       out = out.replace(loneOpening, OPEN);
     }
     out = out.replace(LONE_CLOSING, CLOSE);
-    const levels = (register === 'literary' && pack.literary) || pack.quotes;
+    const levels =
+      quoteStyle === 'us' ? US : (register === 'literary' && pack.literary) || pack.quotes;
     let depth = 0;
     let next = 0;
     let result = '';
@@ -170,11 +179,16 @@ export function quotesFor(pack: LangPack): (text: string, register?: Register) =
 const setters = new Map<Lang, ReturnType<typeof quotesFor>>();
 
 /** Sets the quotation marks of the language, register and nesting level; source quotes may be of any style. */
-export function quotes(text: string, lang: Lang, register: Register): string {
+export function quotes(
+  text: string,
+  lang: Lang,
+  register: Register,
+  quoteStyle: QuoteStyle = 'language',
+): string {
   let set = setters.get(lang);
   if (!set) {
     set = quotesFor(PACK[lang]);
     setters.set(lang, set);
   }
-  return set(text, register);
+  return set(text, register, quoteStyle);
 }

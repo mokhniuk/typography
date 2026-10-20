@@ -20,4 +20,4 @@ export {
   typesetBlock,
   typographic,
 } from './typography';
-export { type Context, type Lang, NBSP, type Register } from './types';
+export { type Context, type Lang, NBSP, type QuoteStyle, type Register } from './types';
