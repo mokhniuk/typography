@@ -1,6 +1,8 @@
 # Languages
 
-The engine has profiles for six languages, `Lang = 'en' | 'uk' | 'de' | 'pl' | 'fr' | 'ch'` (`ch` is Swiss usage), and `en` is the default when none is given. The data below is read from `src/core/profiles.ts`; this page is written by hand, so when you change that file, change this page too.
+One generated page per language, read from its pack: [languages/index.md](languages/index.md).
+
+The engine has profiles for six languages, `Lang = 'en' | 'uk' | 'de' | 'pl' | 'fr' | 'ch'` (`ch` is Swiss usage), and `en` is the default when none is given. The data below is read from the language packs in `src/core/lang/`; this page is written by hand, so when you change a pack, change this page too.
 
 ## Read this first
 

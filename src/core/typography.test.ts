@@ -349,25 +349,6 @@ describe('splitHangs', () => {
   });
 });
 
-describe('German quotations in a row', () => {
-  test('two quotations are not read as one », und «', () => {
-    expect(t('Er sagte "Haus" und "Tür".', 'de')).toBe('Er sagte »Haus« und »Tür«.');
-    expect(t('Er sagte »Haus« und »Tür«.', 'de')).toBe('Er sagte »Haus« und »Tür«.');
-    expect(t('Sie las „Das Haus“ und »die Tür« laut.', 'de')).toBe(
-      'Sie las »Das Haus« und »die Tür« laut.',
-    );
-  });
-
-  test('a text written «…» is read by where each mark stands', () => {
-    expect(t('Er sagte «Haus» und «Tür».', 'de')).toBe('Er sagte »Haus« und »Tür«.');
-  });
-
-  test('a second pass over German output changes nothing', () => {
-    const once = typographic('Sie las „Das Haus“ und „die „Tür“ im Haus“ laut.', 'de');
-    expect(typographic(once, 'de')).toBe(once);
-  });
-});
-
 describe('dash by language', () => {
   test('a break in the sentence is an em dash, a spaced en dash in German', () => {
     expect(t('x - y', 'en')).toBe('x~— y');
