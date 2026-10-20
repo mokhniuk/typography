@@ -85,9 +85,93 @@ describe('space.trailing', () => {
     expect(run('a  \nb\t \n\nc   ')).toBe('a\nb\n\nc');
   });
   test('leaves a no-break space and inner spaces alone', () => {
-    expect(run('a b \nc  d')).toBe('a b \nc  d');
+    expect(run('a b\u00A0\nc  d')).toBe('a b\u00A0\nc  d');
   });
   test('keeps CRLF', () => {
     expect(run('a \r\nb ')).toBe('a\r\nb');
+  });
+});
+
+describe('symbol.plusminus', () => {
+  const run = (text: string) => only('symbol.plusminus', text);
+  test('+- before a digit becomes ±', () => {
+    expect(run('Tolerance +-5 mm, (+-0.2) and +-10%')).toBe('Tolerance ±5 mm, (±0.2) and ±10%');
+  });
+  test('not after a letter or digit, not before a non-digit', () => {
+    expect(run('a+-b and 1+-5 and x+-5 and +-x and +-')).toBe(
+      'a+-b and 1+-5 and x+-5 and +-x and +-',
+    );
+  });
+  test('runs before symbol.minus: no stray minus is left', () => {
+    expect(typographic('+-5 and -5', 'en', { enable: ['symbol.plusminus'] })).toBe(
+      '±5\u00A0and \u22125',
+    );
+  });
+});
+
+describe('symbol.fraction', () => {
+  const run = (text: string) => only('symbol.fraction', text);
+  test('1/2, 1/4 and 3/4 become ½ ¼ ¾ (and bind a short word after)', () => {
+    expect(run('Add 1/2, 1/4 and 3/4.')).toBe('Add ½, ¼\u00A0and ¾.');
+  });
+  test('only as whole numbers: not 11/2, 1/20, a1/2, dates, 2/3, paths', () => {
+    const text =
+      '11/2 and 1/20 and a1/2 and 1/2/2026 and 2/3 and 5/1/2 and 0.1/2 and 1/2a and x/1/4';
+    expect(run(text)).toBe(text);
+  });
+  test('not inside a web address', () => {
+    expect(run('see https://a.b/1/2 now')).toBe('see https://a.b/1/2 now');
+  });
+  test('a mixed number keeps its integer: 2 1/2 becomes 2 ½', () => {
+    expect(run('2 1/2 cups')).toBe('2 ½\u00A0cups');
+  });
+  test('binds a short word (up to nine letters) like space.number, and is stable', () => {
+    expect(run('1/2 cup')).toBe('½\u00A0cup');
+    expect(run(run('1/2 cup'))).toBe('½\u00A0cup');
+    expect(run('1/2 of it and 3/4 kilometres')).toBe('½\u00A0of it and ¾ kilometres');
+  });
+});
+
+describe('symbol.degree', () => {
+  const run = (text: string) => only('symbol.degree', text);
+  const out = '20\u00A0°C';
+  test('every spelling of a temperature becomes number, no-break space, °C', () => {
+    expect(run('20°C')).toBe(out);
+    expect(run('20 °C')).toBe(out);
+    expect(run('20 C')).toBe(out);
+    expect(run('20\u00A0°C')).toBe(out);
+    expect(run('20° C')).toBe(out);
+    expect(run('68 F and -5 C and 3,5 °C')).toBe('68\u00A0°F and -5\u00A0°C and 3,5\u00A0°C');
+  });
+  test('is idempotent on its own output and after space.number', () => {
+    expect(run(out)).toBe(out);
+    expect(typographic('20 °C and 20 C', 'en', { enable: ['symbol.degree'] })).toBe(
+      `${out} and ${out}`,
+    );
+  });
+  test('only a standalone C or F: not 20 Celsius, 20 Cat, 20C, 20 F1, a bare degree', () => {
+    const text = '20 Celsius and 20 Cat and 20C and 20 F1 and 20° and 5 C.E. and B20 C';
+    expect(run(text)).toBe(text);
+  });
+  test('a bare C or F after a label or a single letter is not a temperature', () => {
+    const text = 'Vitamin C 5 C and Type 2 F and Section 5 C and Plan 3 F';
+    expect(run(text)).toBe(text);
+    expect(run('Vitamin C 5 °C')).toBe('Vitamin C 5\u00A0°C');
+  });
+});
+
+describe('symbol.implies', () => {
+  const run = (text: string) => only('symbol.implies', text);
+  test('=> becomes ⇒', () => {
+    expect(run('A => B and x=>y')).toBe('A ⇒ B and x⇒y');
+  });
+  test('not =>> , ==> , =>= or <=>', () => {
+    expect(run('a =>> b ==> c =>= d <=> e')).toBe('a =>> b ==> c =>= d <=> e');
+  });
+  test('not inside a code span', () => {
+    expect(run('`(x) => x` and a => b')).toBe('`(x) => x` and a ⇒ b');
+  });
+  test('runs after arrow: -> and => in one text', () => {
+    expect(typographic('a -> b => c', 'en', { enable: ['symbol.implies'] })).toContain('⇒');
   });
 });

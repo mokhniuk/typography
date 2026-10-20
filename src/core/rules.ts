@@ -1,6 +1,15 @@
 import { dashRange, dashSentence, dialogue } from './dashes';
 import { apostrophe, arrows, ellipsis, legal, minus, multiply } from './marks';
-import { afterComma, beforePunctuation, doubleMarks, trailingSpace } from './extra';
+import {
+  afterComma,
+  beforePunctuation,
+  degrees,
+  doubleMarks,
+  fractions,
+  implies,
+  plusMinus,
+  trailingSpace,
+} from './extra';
 import { PACK, PACKS } from './lang';
 import { SENTENCE_DASH, SENTENCE_DASH_LITERARY } from './profiles';
 import { quotes } from './quotes';
@@ -87,6 +96,7 @@ export const RULES: readonly Rule[] = [
     apply: doubleMarks,
   },
   { id: 'arrow', about: '-> and <- become → and ←', apply: arrows },
+  { id: 'symbol.implies', about: '=> becomes ⇒', defaultOn: false, apply: implies },
   { id: 'symbol.legal', about: '(c) before a year, (C), (R) and (TM) become © ® ™', apply: legal },
   {
     id: 'dash.dialogue',
@@ -113,6 +123,12 @@ export const RULES: readonly Rule[] = [
       ),
   },
   {
+    id: 'symbol.plusminus',
+    about: '+- before a digit becomes ± (+-5 becomes ±5)',
+    defaultOn: false,
+    apply: plusMinus,
+  },
+  {
     id: 'symbol.minus',
     about: 'A hyphen before a digit (-5) becomes a minus sign (−5)',
     apply: minus,
@@ -121,6 +137,12 @@ export const RULES: readonly Rule[] = [
     id: 'symbol.multiply',
     about: 'The letter x between numbers (1920x1080, 3 x 4) becomes ×',
     apply: multiply,
+  },
+  {
+    id: 'symbol.fraction',
+    about: '1/2, 1/4 and 3/4 become ½ ¼ ¾, as whole numbers only (not 11/2, 1/20 or a date)',
+    defaultOn: false,
+    apply: fractions,
   },
   { id: 'space.collapse', about: 'A run of spaces becomes one', apply: collapse },
   { id: 'space.title', about: 'No-break space after Prof., Dr., Mr. …', apply: titles },
@@ -141,6 +163,12 @@ export const RULES: readonly Rule[] = [
     id: 'space.percent',
     about: `${names(PACKS.filter((pack) => 'percentSpace' in pack && pack.percentSpace))}: a no-break space between a number and % or € (5 %, 49 €)`,
     apply: (text, { lang }) => unitSymbol(text, lang),
+  },
+  {
+    id: 'symbol.degree',
+    about: '20 C, 20°C and 20 °C become 20 °C, with a no-break space before the unit',
+    defaultOn: false,
+    apply: degrees,
   },
   { id: 'space.association', about: 'No-break space before e.V.', apply: association },
   { id: 'space.copyright', about: 'No-break space after ©', apply: copyright },
