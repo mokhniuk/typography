@@ -23,6 +23,7 @@
     "playground": "vite --config playground/vite.config.ts",
     "playground:build": "vite build --config playground/vite.config.ts",
     "docs:rules": "bun scripts/gen-rules-doc.ts",
+    "docs:sources": "bun scripts/sources.ts",
     "gen:script": "bun scripts/gen-hang-script.ts"
   },
   "peerDependencies": {

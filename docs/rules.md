@@ -33,6 +33,8 @@ Each example runs the engine with every rule except the one shown switched off, 
 
 Quotation marks by language, register and nesting level, from any source style
 
+Why: [sources.md](sources.md#quote), `general-knowledge`.
+
 ```text
 (en)
 before  He said "stone" and left.
@@ -67,6 +69,8 @@ after   Er sagte »Sie rief ›Haus‹ laut« und ging.
 
 A straight ' in a word or before a year becomes ’
 
+Why: [sources.md](sources.md#apostrophe), `general-knowledge`.
+
 ```text
 (en)
 before  It's Maria's turn, don't wait.
@@ -87,6 +91,8 @@ Before a year.
 
 ... becomes …
 
+Why: [sources.md](sources.md#ellipsis), `general-knowledge`.
+
 ```text
 (en)
 before  Wait... what?
@@ -96,6 +102,8 @@ after   Wait… what?
 ## `arrow`
 
 -> and <- become → and ←
+
+Why: [sources.md](sources.md#arrow), `general-knowledge`.
 
 ```text
 (en)
@@ -113,6 +121,8 @@ after   ← Back
 
 (c) before a year, (C), (R) and (TM) become © ® ™
 
+Why: [sources.md](sources.md#symbollegal), `general-knowledge`.
+
 ```text
 (en)
 before  (c) 2026 Studio (R) (TM)
@@ -125,6 +135,8 @@ after   © 2026 Studio ® ™
 
 A Ukrainian dialogue line (literary register) opens with an em dash and a no-break space
 
+Why: [sources.md](sources.md#dashdialogue), `general-knowledge`.
+
 ```text
 (uk, literary)
 before  - Привіт, - сказав він.
@@ -136,6 +148,8 @@ Only the dash that opens the paragraph; the second one belongs to dash.sentence.
 ## `dash.range`
 
 A hyphen between two numbers (21-26, 10:00-12:00) becomes an unspaced en dash
+
+Why: [sources.md](sources.md#dashrange), `general-knowledge`.
 
 ```text
 (en)
@@ -154,6 +168,8 @@ Spaced, too.
 ## `dash.sentence`
 
 A spaced hyphen, dash or double hyphen becomes a spaced dash (em; en in German and literary British English), no-break before it
+
+Why: [sources.md](sources.md#dashsentence), `general-knowledge`.
 
 ```text
 (en)
@@ -183,6 +199,8 @@ A spaced en dash in British English, literary register.
 
 A hyphen before a digit (-5) becomes a minus sign (−5)
 
+Why: [sources.md](sources.md#symbolminus), `general-knowledge`.
+
 ```text
 (en)
 before  It was -5 degrees (-3 inside).
@@ -192,6 +210,8 @@ after   It was −5 degrees (−3 inside).
 ## `symbol.multiply`
 
 The letter x between numbers (1920x1080, 3 x 4) becomes ×
+
+Why: [sources.md](sources.md#symbolmultiply), `general-knowledge`.
 
 ```text
 (en)
@@ -203,6 +223,8 @@ after   A 1920×1080 screen, a 3~× 4 grid.
 
 A run of spaces becomes one
 
+Why: [sources.md](sources.md#spacecollapse), `general-knowledge`.
+
 ```text
 (en)
 before  Two   spaces,    four.
@@ -212,6 +234,8 @@ after   Two spaces, four.
 ## `space.title`
 
 No-break space after Prof., Dr., Mr. …
+
+Why: [sources.md](sources.md#spacetitle), `general-knowledge`.
 
 ```text
 (en)
@@ -223,6 +247,8 @@ after   Prof.~Dr.~Oksana opens.
 
 No-break space after an initial (K. Słoboda)
 
+Why: [sources.md](sources.md#spaceinitial), `general-knowledge`.
+
 ```text
 (en)
 before  Written by K. Słoboda.
@@ -232,6 +258,8 @@ after   Written by K.~Słoboda.
 ## `space.abbreviation`
 
 Parts of an abbreviation stay together (z. B.), and Nr., ul., S. stay with what follows
+
+Why: [sources.md](sources.md#spaceabbreviation), `general-knowledge`.
 
 ```text
 (de)
@@ -255,6 +283,8 @@ after   See Fig.~2 and p.~14.
 
 No-break space between a number and a short word or unit after it, up to nine letters (21 September, 5 %)
 
+Why: [sources.md](sources.md#spacenumber), `general-knowledge`.
+
 ```text
 (en)
 before  On 21 September, 15 people paid 5 %.
@@ -264,6 +294,8 @@ after   On 21~September, 15~people paid 5~%.
 ## `space.percent`
 
 German and French: a no-break space between a number and % or € (5 %, 49 €)
+
+Why: [sources.md](sources.md#spacepercent), `general-knowledge`.
 
 ```text
 (de)
@@ -283,6 +315,8 @@ after   5~% and 49~€
 
 No-break space before e.V.
 
+Why: [sources.md](sources.md#spaceassociation), `general-knowledge`.
+
 ```text
 (de)
 before  Kulturverein e.V.
@@ -293,6 +327,8 @@ after   Kulturverein~e.V.
 
 No-break space after ©
 
+Why: [sources.md](sources.md#spacecopyright), `general-knowledge`.
+
 ```text
 (en)
 before  © 2026 Studio
@@ -302,6 +338,8 @@ after   ©~2026 Studio
 ## `space.orphan`
 
 No-break space after a one-letter word the language must not strand at a line end
+
+Why: [sources.md](sources.md#spaceorphan), `general-knowledge`.
 
 ```text
 (en)
@@ -324,6 +362,8 @@ after   Idę w~las i~z~nim
 ## `space.arrow`
 
 No-break space before → and after ←
+
+Why: [sources.md](sources.md#spacearrow), `general-knowledge`.
 
 ```text
 (en)

@@ -10,6 +10,7 @@
 import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { type Lang, NBSP, type Register, RULE_IDS, RULES, typographic } from '../src';
+import { RULE_SOURCES } from './sources';
 
 export type Example = {
   input: string;
@@ -123,7 +124,9 @@ export function render(): string {
     ...RULES.map((rule, i) => `${i + 1}. \`${rule.id}\``),
   ];
   for (const rule of RULES) {
+    const confidence = RULE_SOURCES[rule.id]?.confidence ?? 'general-knowledge';
     out.push('', `## \`${rule.id}\``, '', rule.about, '');
+    out.push(`Why: [sources.md](sources.md#${rule.id.replaceAll('.', '')}), \`${confidence}\`.`, '');
     for (const example of EXAMPLES[rule.id] ?? []) {
       out.push(
         '```text',
