@@ -41,6 +41,9 @@ const trimInner = (s: string) => s.replace(/^[\s\u00A0]+|[\s\u00A0]+$/g, '');
 // An apostrophe inside a word (don't, don’t, Maria’s) must not be taken for a quote mark, or
 // the quotation around it would not pair. It is set aside as a placeholder and put back.
 const APOSTROPHE = '\uE002';
+const PLACEHOLDERS = new RegExp(`[${OPEN}${CLOSE}${APOSTROPHE}]`, 'g');
+// The only characters the `apostrophe` regex of a language can match.
+const APOSTROPHE_MARK = /['’]/g;
 // Words that start with an apostrophe for dropped letters ('til, 'em, 'cause), and 'n' as in rock 'n' roll,
 // listed in `elisions` on the language pack. Each alternative holds the apostrophe in a group so the
 // replacer can tell it from the others. A word that goes on (the 'emergency' exit) or is closed by
@@ -73,10 +76,25 @@ type Setup = {
   single: RegExp;
   /** An opening mark may follow another (»„ at the start of a nested quotation), so it is read until none is left. French sets a no-break space inside « », which belongs to the mark. */
   loneOpening: RegExp;
-  /** A mark that stands for an apostrophe: inside a word, on a year, or an elision. */
+  /**
+   * A mark that stands for an apostrophe: inside a word, on a year, or an elision. Sticky: every
+   * alternative matches the one character ' or ’ and nothing after it, so it is tried only where
+   * `APOSTROPHE_MARK` finds one, and the `\p{L}` lookbehinds are not run at every character of the text.
+   */
   apostrophe: RegExp;
   elisionGroups: number;
+  /**
+   * Whether the text holds a character this rule can act on: a mark of a pair, a lone mark, an
+   * apostrophe, or one of the three placeholders (a text that already holds one has it read as one).
+   * Without any, every step below leaves the text as it is.
+   */
+  relevant: RegExp;
+  /** Whether a pair, or a single-quote pair, can still match (they start with one of these). */
+  pairable: RegExp;
+  /** Whether a lone opening or closing mark is left (both read only the marks of `LONE`). */
+  lone: RegExp;
 };
+const charClass = (chars: string) => new RegExp(`[${chars.replace(/[\\\]^-]/g, '\\$&')}]`);
 function setupOf(pack: LangPack): Setup {
   // What may stand before an opening mark: the start, a space, a bracket, another opening mark, and the
   // pack's `openers` (Spanish ¿ ¡).
@@ -108,9 +126,12 @@ function setupOf(pack: LangPack): Setup {
     // here, since the `apostrophe` rule only turns a straight ' after a letter or before a digit.
     apostrophe: new RegExp(
       `(?<=\\p{L})['’](?=\\p{L})|(?<=^|[\\s([])’(?=\\d{2}s?(?![\\d\\p{L}]))|(?<=^|[\\s([])'(?=\\d{2}s?(?![\\d'’\\p{L}]))${elision.source ? `|${elision.source}` : ''}`,
-      'gu',
+      'yu',
     ),
     elisionGroups: elision.groups,
+    relevant: charClass(`${RAW}${LONE}${SPACED}${SPACED_CLOSING}'${turnedMarks.join('')}${OPEN}${CLOSE}${APOSTROPHE}`),
+    pairable: charClass(`${RAW}'${turnedMarks.join('')}`),
+    lone: charClass(`${LONE}${SPACED}${SPACED_CLOSING}`),
   };
   return made;
 }
@@ -125,16 +146,21 @@ const US: readonly Level[] = [
 export function quotesFor(
   pack: LangPack,
 ): (text: string, register?: Register, quoteStyle?: QuoteStyle) => string {
-  const { pairs, single, loneOpening, apostrophe, elisionGroups } = setupOf(pack);
+  const { pairs, single, loneOpening, apostrophe, elisionGroups, relevant, pairable, lone } =
+    setupOf(pack);
   return (text, register = 'display', quoteStyle = 'language') => {
+    if (!relevant.test(text)) return text;
     // The apostrophes are put back as they were; the `apostrophe` rule sets them.
     const kept: string[] = [];
-    let out = text.replace(apostrophe, (mark: string, ...groups: (string | undefined)[]) => {
-      kept.push(groups.slice(0, elisionGroups).some(Boolean) ? '’' : mark);
+    let out = text.replace(APOSTROPHE_MARK, (mark: string, at: number) => {
+      apostrophe.lastIndex = at;
+      const found = apostrophe.exec(text);
+      if (!found) return mark;
+      kept.push(found.slice(1, 1 + elisionGroups).some(Boolean) ? '’' : mark);
       return APOSTROPHE;
     });
     // Innermost pairs first, so a quotation inside a quotation resolves before its outer one.
-    for (let changed = true; changed; ) {
+    for (let changed = pairable.test(out); changed; ) {
       const before = out;
       for (const pair of pairs) {
         out = out.replace(pair, (_, inner: string) => `${OPEN}${trimInner(inner)}${CLOSE}`);
@@ -143,37 +169,36 @@ export function quotesFor(
         single,
         (_, lead: string, inner: string) => `${lead}${OPEN}${trimInner(inner)}${CLOSE}`,
       );
-      changed = out !== before;
+      changed = out !== before && pairable.test(out);
     }
     // A quotation mark that found no partner is read by where it stands: an opening one after
     // a space, a bracket or the start, before a word; a closing one after a word or a mark. Not
     // after a digit (5'10"), which is an inch. Quoting several paragraphs, books open the quote
     // in each and close it only in the last. Reading marks by position, not by shape, makes the
     // result stable: set once, a lone « or » is read the same way when it is typeset again.
-    for (let before = ''; before !== out; ) {
-      before = out;
-      out = out.replace(loneOpening, OPEN);
+    if (lone.test(out)) {
+      for (let before = ''; before !== out; ) {
+        before = out;
+        out = out.replace(loneOpening, OPEN);
+      }
+      out = out.replace(LONE_CLOSING, CLOSE);
     }
-    out = out.replace(LONE_CLOSING, CLOSE);
     const levels =
       quoteStyle === 'us' ? US : (register === 'literary' && pack.literary) || pack.quotes;
     let depth = 0;
     let next = 0;
-    let result = '';
-    for (const ch of out) {
+    return out.replace(PLACEHOLDERS, (ch) => {
       if (ch === OPEN) {
-        result += levels[depth % levels.length]?.[0] ?? '';
+        const mark = levels[depth % levels.length]?.[0] ?? '';
         depth++;
-      } else if (ch === CLOSE) {
-        depth = Math.max(0, depth - 1);
-        result += levels[depth % levels.length]?.[1] ?? '';
-      } else if (ch === APOSTROPHE) {
-        result += kept[next++] ?? '’';
-      } else {
-        result += ch;
+        return mark;
       }
-    }
-    return result;
+      if (ch === CLOSE) {
+        depth = Math.max(0, depth - 1);
+        return levels[depth % levels.length]?.[1] ?? '';
+      }
+      return kept[next++] ?? '’';
+    });
   };
 }
 
