@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { RULE_IDS } from './core';
 import { render, RULE_SOURCES, SOURCES } from '../scripts/sources';
+import { renderBibliographyHtml } from '../scripts/bibliography-html';
 import { renderHtml } from '../scripts/sources-html';
 
 const known = new Set(SOURCES.map((source) => source.id));
@@ -18,6 +19,13 @@ describe('docs/sources.html', () => {
   test('is what `bun run docs:sources` writes', () => {
     const written = readFileSync(join(import.meta.dir, '..', 'docs', 'sources.html'), 'utf8');
     expect(written).toBe(renderHtml());
+  });
+});
+
+describe('docs/bibliography.html', () => {
+  test('is what `bun run docs:sources` writes', () => {
+    const written = readFileSync(join(import.meta.dir, '..', 'docs', 'bibliography.html'), 'utf8');
+    expect(written).toBe(renderBibliographyHtml());
   });
 });
 
@@ -37,6 +45,9 @@ describe('the sources registry', () => {
   for (const source of SOURCES) {
     test(`source ${source.id} is complete`, () => {
       expect(source.cite.trim()).not.toBe('');
+      expect(source.author.trim()).not.toBe('');
+      expect(source.title.trim()).not.toBe('');
+      expect(source.about.trim()).not.toBe('');
       expect(source.claim.trim()).not.toBe('');
       expect(source.accessed).toMatch(/^\d{4}-\d{2}-\d{2}$/);
       expect(['raw', 'summary']).toContain(source.readVia);

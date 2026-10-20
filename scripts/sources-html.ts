@@ -18,12 +18,47 @@ const VIA = {
 const slug = (id: string): string => id.replaceAll('.', '-');
 const chip = (id: string): string => `<a class="chip" href="#src-${esc(id)}">${esc(id)}</a>`;
 
-const usedBy = (sourceId: string): string[] =>
+export const usedBy = (sourceId: string): string[] =>
   RULES.filter((rule) => {
     const decision = RULE_SOURCES[rule.id];
     if (!decision) return false;
     return decision.sources.includes(sourceId) || Object.values(decision.langs ?? {}).flat().includes(sourceId);
   }).map((rule) => rule.id);
+
+
+/** The stylesheet shared by every generated page. */
+export const CSS = `:root{color-scheme:light dark;--bg:#f7f6f3;--fg:#1d2327;--muted:#5d666b;--line:#dcdad3;--card:#fff;--accent:#1f5f8b;--ok:#1c6b3f;--okbg:#e1f1e7;--bad:#8a2f1b;--badbg:#f8e3dd;--gk:#6b5b14;--gkbg:#f3ecc9}
+@media (prefers-color-scheme:dark){:root{--bg:#14181b;--fg:#e6e8e6;--muted:#9aa4a8;--line:#2b3236;--card:#1b2124;--accent:#7fb5da;--ok:#7fd0a0;--okbg:#17301f;--bad:#f0a590;--badbg:#3a1e18;--gk:#e3cf7a;--gkbg:#33300f}}
+*{box-sizing:border-box}
+body{margin:0;padding:32px 16px 64px;background:var(--bg);color:var(--fg);font:16px/1.55 Georgia,serif}
+main{max-width:760px;margin:0 auto}
+h1{font-size:2rem;line-height:1.15;margin:0 0 8px}
+h2{font-size:1.3rem;margin:44px 0 12px;padding-top:16px;border-top:1px solid var(--line)}
+h3{font:600 .95rem ui-monospace,Menlo,monospace;margin:0}
+a{color:var(--accent)}
+p{margin:6px 0}
+.lead,.meta,.about{color:var(--muted)}
+.about{font-style:italic}
+.meta{font-size:.88rem}
+.rule,.src{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:14px 16px;margin:12px 0;overflow-wrap:anywhere}
+.head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.pill{font:600 .75rem system-ui,sans-serif;padding:2px 10px;border-radius:999px;white-space:nowrap}
+.pill.verified{background:var(--okbg);color:var(--ok)}
+.pill.disputed{background:var(--badbg);color:var(--bad)}
+.pill.general-knowledge{background:var(--gkbg);color:var(--gk)}
+.chip{font:.8rem ui-monospace,Menlo,monospace;text-decoration:none;border:1px solid var(--line);padding:1px 8px;border-radius:4px;display:inline-block;margin:2px 2px 2px 0}
+.none{font-size:.85rem;color:var(--gk)}
+.lang{display:inline-block;margin-right:10px}
+.kind{font:.75rem system-ui,sans-serif;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.via{font-size:.9rem}
+.via.raw{color:var(--ok)}
+.via.summary{color:var(--bad)}
+.summary-row{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
+.filters button{font:.85rem system-ui,sans-serif;padding:6px 12px;border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:999px;cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+[hidden]{display:none!important}
+`;
 
 export function renderHtml(): string {
   const counts = { verified: 0, disputed: 0, 'general-knowledge': 0 };
@@ -67,43 +102,12 @@ export function renderHtml(): string {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Typography sources</title>
 <style>
-:root{color-scheme:light dark;--bg:#f7f6f3;--fg:#1d2327;--muted:#5d666b;--line:#dcdad3;--card:#fff;--accent:#1f5f8b;--ok:#1c6b3f;--okbg:#e1f1e7;--bad:#8a2f1b;--badbg:#f8e3dd;--gk:#6b5b14;--gkbg:#f3ecc9}
-@media (prefers-color-scheme:dark){:root{--bg:#14181b;--fg:#e6e8e6;--muted:#9aa4a8;--line:#2b3236;--card:#1b2124;--accent:#7fb5da;--ok:#7fd0a0;--okbg:#17301f;--bad:#f0a590;--badbg:#3a1e18;--gk:#e3cf7a;--gkbg:#33300f}}
-*{box-sizing:border-box}
-body{margin:0;padding:32px 16px 64px;background:var(--bg);color:var(--fg);font:16px/1.55 Georgia,serif}
-main{max-width:760px;margin:0 auto}
-h1{font-size:2rem;line-height:1.15;margin:0 0 8px}
-h2{font-size:1.3rem;margin:44px 0 12px;padding-top:16px;border-top:1px solid var(--line)}
-h3{font:600 .95rem ui-monospace,Menlo,monospace;margin:0}
-a{color:var(--accent)}
-p{margin:6px 0}
-.lead,.meta,.about{color:var(--muted)}
-.about{font-style:italic}
-.meta{font-size:.88rem}
-.rule,.src{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:14px 16px;margin:12px 0;overflow-wrap:anywhere}
-.head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-.pill{font:600 .75rem system-ui,sans-serif;padding:2px 10px;border-radius:999px;white-space:nowrap}
-.pill.verified{background:var(--okbg);color:var(--ok)}
-.pill.disputed{background:var(--badbg);color:var(--bad)}
-.pill.general-knowledge{background:var(--gkbg);color:var(--gk)}
-.chip{font:.8rem ui-monospace,Menlo,monospace;text-decoration:none;border:1px solid var(--line);padding:1px 8px;border-radius:4px;display:inline-block;margin:2px 2px 2px 0}
-.none{font-size:.85rem;color:var(--gk)}
-.lang{display:inline-block;margin-right:10px}
-.kind{font:.75rem system-ui,sans-serif;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
-.via{font-size:.9rem}
-.via.raw{color:var(--ok)}
-.via.summary{color:var(--bad)}
-.summary-row{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
-.filters{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
-.filters button{font:.85rem system-ui,sans-serif;padding:6px 12px;border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:999px;cursor:pointer}
-.filters button[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
-[hidden]{display:none!important}
-</style>
+${CSS}</style>
 </head>
 <body>
 <main>
 <h1>Typography sources</h1>
-<p class="lead">Why each of the ${RULES.length} rules exists, which source backs it, and what is not checked yet. Generated from <code>scripts/sources.ts</code> by <code>bun run docs:sources</code>; do not edit by hand.</p>
+<p class="lead">Why each of the ${RULES.length} rules exists, which source backs it, and what is not checked yet. Generated from <code>scripts/sources.ts</code> by <code>bun run docs:sources</code>; do not edit by hand. All sources in one table, with authors: <a href="bibliography.html">bibliography</a>.</p>
 <div class="summary-row">
 <span class="pill verified">${counts.verified} verified</span>
 <span class="pill disputed">${counts.disputed} disputed</span>

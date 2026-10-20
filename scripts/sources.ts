@@ -13,6 +13,12 @@ export type Source = {
   /** `cldr-quotes`, `chicago-17`, `bringhurst`. */
   id: string;
   kind: 'standard' | 'style-guide' | 'orthography' | 'research' | 'tool';
+  /** Who wrote or publishes it, as the source says; "not named" when the page names nobody. */
+  author: string;
+  /** The work's own title, without the section. */
+  title: string;
+  /** What the source is and why it counts, in a sentence or two. */
+  about: string;
   /** Author, title, edition, year, section. */
   cite: string;
   url?: string;
@@ -43,6 +49,10 @@ export const SOURCES: readonly Source[] = [
   {
     id: 'cldr-delimiters',
     kind: 'standard',
+    author: 'Unicode Consortium (CLDR project)',
+    title: 'CLDR 46 locale data: delimiters (cldr-misc-full 46.0.0)',
+    about:
+      'The quotation marks every major platform uses per locale, as published by the Unicode Common Locale Data Repository. A reference for what software sets by default, not a printed style guide.',
     cite: 'Unicode CLDR 46, cldr-misc-full 46.0.0, main/<locale>/delimiters.json (quotationStart, quotationEnd, alternateQuotationStart, alternateQuotationEnd), locales en, uk, de, pl, fr, de-CH, fr-CH.',
     url: 'https://cdn.jsdelivr.net/npm/cldr-misc-full@46.0.0/main/de-CH/delimiters.json',
     accessed: '2026-10-20',
@@ -53,6 +63,10 @@ export const SOURCES: readonly Source[] = [
   {
     id: 'butterick-dashes',
     kind: 'style-guide',
+    author: 'Matthew Butterick (the page itself names no author)',
+    title: 'Practical Typography: Hyphens and dashes',
+    about:
+      'An English-language typography handbook for working writers. Covers hyphen, en dash, em dash and minus; written for English text, so it says nothing about German or Ukrainian dash use.',
     cite: 'Matthew Butterick, Practical Typography, "Hyphens and dashes" (web page; no edition or year on the page).',
     url: 'https://practicaltypography.com/hyphens-and-dashes.html',
     accessed: '2026-10-20',
@@ -63,6 +77,10 @@ export const SOURCES: readonly Source[] = [
   {
     id: 'butterick-nbsp',
     kind: 'style-guide',
+    author: 'Matthew Butterick (the page itself names no author)',
+    title: 'Practical Typography: Nonbreaking spaces',
+    about:
+      'The same handbook on where to prevent a line break: titles, abbreviations before numbers, section signs and the copyright and trademark symbols. English only; the page does not mention units or initials.',
     cite: 'Matthew Butterick, Practical Typography, "Nonbreaking spaces" (web page; no edition or year on the page).',
     url: 'https://practicaltypography.com/nonbreaking-spaces.html',
     accessed: '2026-10-20',
@@ -73,6 +91,10 @@ export const SOURCES: readonly Source[] = [
   {
     id: 'nist-si-checklist',
     kind: 'standard',
+    author: 'Not named on the page (hosted by NIST at physics.nist.gov)',
+    title: 'SI Unit rules and style conventions: Check List for Reviewing Manuscripts',
+    about:
+      'A checklist of SI writing rules, including the space between a value and its unit. It backs the space itself, not that it must be a no-break space, and covers English-language SI usage only.',
     cite: 'SI Unit rules and style conventions: Check List for Reviewing Manuscripts (web page at physics.nist.gov, items 9, 10, 12 and 15; page names no publisher or year).',
     url: 'https://physics.nist.gov/cuu/Units/checklist.html',
     accessed: '2026-10-20',
@@ -83,6 +105,10 @@ export const SOURCES: readonly Source[] = [
   {
     id: 'unicode-names',
     kind: 'standard',
+    author: 'Unicode Consortium',
+    title: 'The Unicode Standard 18.0.0: NamesList.txt',
+    about:
+      'The official list of character names and cross-references. It shows that the minus sign and the multiplication sign are distinct characters; it does not say when typographers should use them.',
     cite: 'The Unicode Standard 18.0.0, NamesList-18.0.0.txt (generated 2026-08-10), entries U+2212 and U+00D7.',
     url: 'https://www.unicode.org/Public/UNIDATA/NamesList.txt',
     accessed: '2026-10-20',
@@ -93,6 +119,10 @@ export const SOURCES: readonly Source[] = [
   {
     id: 'cldr-numbers',
     kind: 'standard',
+    author: 'Unicode Consortium (CLDR project)',
+    title: 'CLDR 46 locale data: numbers (cldr-numbers-full 46.0.0)',
+    about:
+      'How each locale formats percentages and currency amounts, including the space before the sign. Describes software output, not a printed style guide.',
     cite: 'Unicode CLDR 46, cldr-numbers-full 46.0.0, main/<locale>/numbers.json (percentFormats standard, currencyFormats standard), locales en, uk, de, pl, fr, de-CH, fr-CH.',
     url: 'https://cdn.jsdelivr.net/npm/cldr-numbers-full@46.0.0/main/de/numbers.json',
     accessed: '2026-10-20',

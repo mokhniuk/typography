@@ -28,7 +28,7 @@ bun run docs:rules           # writes docs/rules.md
 | `src/dom`, `src/react` | Hanging punctuation, framework-free and React |
 | `src/cli` | The `typo` command; `run.ts` takes an `Io` object so it can be tested without a process |
 | `scripts/gen-rules-doc.ts` | Generates `docs/rules.md` |
-| `scripts/sources.ts` | The sources registry. `bun run docs:sources` generates `docs/sources.md` and `docs/sources.html` (a page to open in a browser, with links and a filter) |
+| `scripts/sources.ts` | The sources registry. `bun run docs:sources` generates `docs/sources.md`, `docs/sources.html` (decisions, with a filter) and `docs/bibliography.html` (every source in one table: author, link, what it is, where it is used); open the HTML ones in a browser |
 | `bench/` | The benchmark: a separate project, not tracked except `RESULTS.md` (see below) |
 | `playground/` | The web page |
 | `docs/` | These pages. `rules.md` is generated; the others are written by hand |

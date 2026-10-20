@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Typography bibliography</title>
+<style>
+:root{color-scheme:light dark;--bg:#f7f6f3;--fg:#1d2327;--muted:#5d666b;--line:#dcdad3;--card:#fff;--accent:#1f5f8b;--ok:#1c6b3f;--okbg:#e1f1e7;--bad:#8a2f1b;--badbg:#f8e3dd;--gk:#6b5b14;--gkbg:#f3ecc9}
+@media (prefers-color-scheme:dark){:root{--bg:#14181b;--fg:#e6e8e6;--muted:#9aa4a8;--line:#2b3236;--card:#1b2124;--accent:#7fb5da;--ok:#7fd0a0;--okbg:#17301f;--bad:#f0a590;--badbg:#3a1e18;--gk:#e3cf7a;--gkbg:#33300f}}
+*{box-sizing:border-box}
+body{margin:0;padding:32px 16px 64px;background:var(--bg);color:var(--fg);font:16px/1.55 Georgia,serif}
+main{max-width:760px;margin:0 auto}
+h1{font-size:2rem;line-height:1.15;margin:0 0 8px}
+h2{font-size:1.3rem;margin:44px 0 12px;padding-top:16px;border-top:1px solid var(--line)}
+h3{font:600 .95rem ui-monospace,Menlo,monospace;margin:0}
+a{color:var(--accent)}
+p{margin:6px 0}
+.lead,.meta,.about{color:var(--muted)}
+.about{font-style:italic}
+.meta{font-size:.88rem}
+.rule,.src{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:14px 16px;margin:12px 0;overflow-wrap:anywhere}
+.head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.pill{font:600 .75rem system-ui,sans-serif;padding:2px 10px;border-radius:999px;white-space:nowrap}
+.pill.verified{background:var(--okbg);color:var(--ok)}
+.pill.disputed{background:var(--badbg);color:var(--bad)}
+.pill.general-knowledge{background:var(--gkbg);color:var(--gk)}
+.chip{font:.8rem ui-monospace,Menlo,monospace;text-decoration:none;border:1px solid var(--line);padding:1px 8px;border-radius:4px;display:inline-block;margin:2px 2px 2px 0}
+.none{font-size:.85rem;color:var(--gk)}
+.lang{display:inline-block;margin-right:10px}
+.kind{font:.75rem system-ui,sans-serif;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.via{font-size:.9rem}
+.via.raw{color:var(--ok)}
+.via.summary{color:var(--bad)}
+.summary-row{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
+.filters button{font:.85rem system-ui,sans-serif;padding:6px 12px;border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:999px;cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+[hidden]{display:none!important}
+main{max-width:1200px}
+.table{overflow-x:auto;border:1px solid var(--line);border-radius:6px;background:var(--card)}
+table{border-collapse:collapse;width:100%;min-width:1000px;font-size:.9rem}
+th,td{text-align:left;vertical-align:top;padding:10px 12px;border-bottom:1px solid var(--line)}
+th{font:600 .75rem system-ui,sans-serif;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);background:var(--bg)}
+tr:last-child td{border-bottom:0}
+</style>
+</head>
+<body>
+<main>
+<h1>Typography bibliography</h1>
+<p class="lead">Every source the rules rest on: 6 read so far. Each row says who wrote it, links to it, what it is, the one thing we rely on, and which rules and languages cite it. Generated from <code>scripts/sources.ts</code> by <code>bun run docs:sources</code>; do not edit by hand. The decisions themselves, with their gaps, are on the <a href="sources.html">sources page</a>.</p>
+<div class="table">
+<table>
+<thead><tr><th>Source</th><th>Author</th><th>Kind</th><th>What it is</th><th>Relied on</th><th>Used in</th><th>Read</th></tr></thead>
+<tbody>
+<tr id="src-cldr-delimiters">
+<td><b><a href="https://cdn.jsdelivr.net/npm/cldr-misc-full@46.0.0/main/de-CH/delimiters.json" target="_blank" rel="noopener">CLDR 46 locale data: delimiters (cldr-misc-full 46.0.0) ↗</a></b><br><span class="meta">cldr-delimiters</span></td>
+<td>Unicode Consortium (CLDR project)</td>
+<td>Standard</td>
+<td>The quotation marks every major platform uses per locale, as published by the Unicode Common Locale Data Repository. A reference for what software sets by default, not a printed style guide.</td>
+<td>Per locale: en “ ” and ‘ ’; uk « » and „ “; de „ “ and ‚ ‘; pl „ ” and « »; fr « » and « »; de-CH „ “ and ‚ ‘; fr-CH « » and ‹ ›.</td>
+<td><a class="chip" href="sources.html#rule-quote">quote</a> <span class="meta">en, uk, de, pl, fr, ch</span></td>
+<td><span class="via raw">Raw data</span><br><span class="meta">2026-10-20</span></td>
+</tr>
+<tr id="src-cldr-numbers">
+<td><b><a href="https://cdn.jsdelivr.net/npm/cldr-numbers-full@46.0.0/main/de/numbers.json" target="_blank" rel="noopener">CLDR 46 locale data: numbers (cldr-numbers-full 46.0.0) ↗</a></b><br><span class="meta">cldr-numbers</span></td>
+<td>Unicode Consortium (CLDR project)</td>
+<td>Standard</td>
+<td>How each locale formats percentages and currency amounts, including the space before the sign. Describes software output, not a printed style guide.</td>
+<td>The percent pattern is &quot;#,##0 %&quot; with U+00A0 before the sign in de and fr, and &quot;#,##0%&quot; in en, uk, pl, de-CH and fr-CH; the currency pattern puts U+00A0 between the amount and the currency sign in de, fr, uk, pl and fr-CH.</td>
+<td><a class="chip" href="sources.html#rule-space-percent">space.percent</a> <span class="meta">de, fr</span></td>
+<td><span class="via raw">Raw data</span><br><span class="meta">2026-10-20</span></td>
+</tr>
+<tr id="src-nist-si-checklist">
+<td><b><a href="https://physics.nist.gov/cuu/Units/checklist.html" target="_blank" rel="noopener">SI Unit rules and style conventions: Check List for Reviewing Manuscripts ↗</a></b><br><span class="meta">nist-si-checklist</span></td>
+<td>Not named on the page (hosted by NIST at physics.nist.gov)</td>
+<td>Standard</td>
+<td>A checklist of SI writing rules, including the space between a value and its unit. It backs the space itself, not that it must be a no-break space, and covers English-language SI usage only.</td>
+<td>There is a space between a numerical value and a unit symbol, and between a number and the percent sign (&quot;10 %&quot;); the page does not say the space is nonbreaking.</td>
+<td><a class="chip" href="sources.html#rule-space-number">space.number</a></td>
+<td><span class="via summary">Summary only, check by hand</span><br><span class="meta">2026-10-20</span></td>
+</tr>
+<tr id="src-unicode-names">
+<td><b><a href="https://www.unicode.org/Public/UNIDATA/NamesList.txt" target="_blank" rel="noopener">The Unicode Standard 18.0.0: NamesList.txt ↗</a></b><br><span class="meta">unicode-names</span></td>
+<td>Unicode Consortium</td>
+<td>Standard</td>
+<td>The official list of character names and cross-references. It shows that the minus sign and the multiplication sign are distinct characters; it does not say when typographers should use them.</td>
+<td>U+2212 MINUS SIGN and U+00D7 MULTIPLICATION SIGN are characters of their own, cross-referenced to hyphen-minus (U+002D) and to latin small letter x (U+0078) as different characters.</td>
+<td><a class="chip" href="sources.html#rule-symbol-minus">symbol.minus</a><br><a class="chip" href="sources.html#rule-symbol-multiply">symbol.multiply</a></td>
+<td><span class="via raw">Raw data</span><br><span class="meta">2026-10-20</span></td>
+</tr>
+<tr id="src-butterick-dashes">
+<td><b><a href="https://practicaltypography.com/hyphens-and-dashes.html" target="_blank" rel="noopener">Practical Typography: Hyphens and dashes ↗</a></b><br><span class="meta">butterick-dashes</span></td>
+<td>Matthew Butterick (the page itself names no author)</td>
+<td>Style guide</td>
+<td>An English-language typography handbook for working writers. Covers hyphen, en dash, em dash and minus; written for English text, so it says nothing about German or Ukrainian dash use.</td>
+<td>The em dash marks a break within a sentence; em and en dashes are normally set without spaces, and adding a space on each side is acceptable when they look crushed; the en dash is for ranges of values.</td>
+<td><a class="chip" href="sources.html#rule-dash-sentence">dash.sentence</a> <span class="meta">en</span><br><a class="chip" href="sources.html#rule-symbol-minus">symbol.minus</a></td>
+<td><span class="via summary">Summary only, check by hand</span><br><span class="meta">2026-10-20</span></td>
+</tr>
+<tr id="src-butterick-nbsp">
+<td><b><a href="https://practicaltypography.com/nonbreaking-spaces.html" target="_blank" rel="noopener">Practical Typography: Nonbreaking spaces ↗</a></b><br><span class="meta">butterick-nbsp</span></td>
+<td>Matthew Butterick (the page itself names no author)</td>
+<td>Style guide</td>
+<td>The same handbook on where to prevent a line break: titles, abbreviations before numbers, section signs and the copyright and trademark symbols. English only; the page does not mention units or initials.</td>
+<td>Use a nonbreaking space after § and ¶, after abbreviations such as &quot;Ex.&quot; and &quot;Fig.&quot; before a letter or number, between a title and a name (&quot;Ms.&quot;), and with the trademark and copyright symbols.</td>
+<td><a class="chip" href="sources.html#rule-space-title">space.title</a> <span class="meta">en</span><br><a class="chip" href="sources.html#rule-space-abbreviation">space.abbreviation</a> <span class="meta">en</span><br><a class="chip" href="sources.html#rule-space-copyright">space.copyright</a></td>
+<td><span class="via summary">Summary only, check by hand</span><br><span class="meta">2026-10-20</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</main>
+</body>
+</html>
