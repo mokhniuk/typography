@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Typography sources</title>
+<style>
+:root{color-scheme:light dark;--bg:#f7f6f3;--fg:#1d2327;--muted:#5d666b;--line:#dcdad3;--card:#fff;--accent:#1f5f8b;--ok:#1c6b3f;--okbg:#e1f1e7;--bad:#8a2f1b;--badbg:#f8e3dd;--gk:#6b5b14;--gkbg:#f3ecc9}
+@media (prefers-color-scheme:dark){:root{--bg:#14181b;--fg:#e6e8e6;--muted:#9aa4a8;--line:#2b3236;--card:#1b2124;--accent:#7fb5da;--ok:#7fd0a0;--okbg:#17301f;--bad:#f0a590;--badbg:#3a1e18;--gk:#e3cf7a;--gkbg:#33300f}}
+*{box-sizing:border-box}
+body{margin:0;padding:32px 16px 64px;background:var(--bg);color:var(--fg);font:16px/1.55 Georgia,serif}
+main{max-width:760px;margin:0 auto}
+h1{font-size:2rem;line-height:1.15;margin:0 0 8px}
+h2{font-size:1.3rem;margin:44px 0 12px;padding-top:16px;border-top:1px solid var(--line)}
+h3{font:600 .95rem ui-monospace,Menlo,monospace;margin:0}
+a{color:var(--accent)}
+p{margin:6px 0}
+.lead,.meta,.about{color:var(--muted)}
+.about{font-style:italic}
+.meta{font-size:.88rem}
+.rule,.src{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:14px 16px;margin:12px 0;overflow-wrap:anywhere}
+.head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.pill{font:600 .75rem system-ui,sans-serif;padding:2px 10px;border-radius:999px;white-space:nowrap}
+.pill.verified{background:var(--okbg);color:var(--ok)}
+.pill.disputed{background:var(--badbg);color:var(--bad)}
+.pill.general-knowledge{background:var(--gkbg);color:var(--gk)}
+.chip{font:.8rem ui-monospace,Menlo,monospace;text-decoration:none;border:1px solid var(--line);padding:1px 8px;border-radius:4px;display:inline-block;margin:2px 2px 2px 0}
+.none{font-size:.85rem;color:var(--gk)}
+.lang{display:inline-block;margin-right:10px}
+.kind{font:.75rem system-ui,sans-serif;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.via{font-size:.9rem}
+.via.raw{color:var(--ok)}
+.via.summary{color:var(--bad)}
+.summary-row{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
+.filters button{font:.85rem system-ui,sans-serif;padding:6px 12px;border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:999px;cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main>
+<h1>Typography sources</h1>
+<p class="lead">Why each of the 20 rules exists, which source backs it, and what is not checked yet. Generated from <code>scripts/sources.ts</code> by <code>bun run docs:sources</code>; do not edit by hand.</p>
+<div class="summary-row">
+<span class="pill verified">6 verified</span>
+<span class="pill disputed">1 disputed</span>
+<span class="pill general-knowledge">13 unchecked</span>
+</div>
+<p>To check a rule, open its sources and confirm the “Relied on” line is in the text. “Verified” means a source read says what the rule does for the cases named; read the gaps in each entry. Sources marked in red were read as summaries and need a look by hand.</p>
+<h2>Rules</h2>
+<div class="filters" role="group" aria-label="Filter rules by confidence">
+<button type="button" data-f="all" aria-pressed="true">All 20</button>
+<button type="button" data-f="verified" aria-pressed="false">Verified</button>
+<button type="button" data-f="disputed" aria-pressed="false">Disputed</button>
+<button type="button" data-f="general-knowledge" aria-pressed="false">Unchecked</button>
+</div>
+<article class="rule" id="rule-quote" data-c="disputed">
+<div class="head"><h3>quote</h3><span class="pill disputed">Disputed</span></div>
+<p class="about">Quotation marks by language, register and nesting level, from any source style</p>
+<p><b>Why:</b> Each language has its own quotation marks, and nesting alternates a second pair. uk (« » „ “) and pl („ ” « ») match CLDR; fr level one and ch (« » ‹ ›, as fr-CH) match too.</p>
+<p><b>Others, gaps, unread:</b> CLDR gives English “ ” ‘ ’ (the engine default is « » „ “, a gap already in the backlog as P0), German „ “ ‚ ‘ (the engine sets » « › ‹ on display), French « » with « » inside (the engine uses “ ” inside), and de-CH „ “ ‚ ‘ (the engine ch profile is the fr-CH one). The backlog records that every other tool in the benchmark produces “ ” for English by default (bench/RESULTS.md). Not read: the Swiss Federal Chancellery Schreibweisungen (a PDF this work could not extract text from), Pravopys 2019 (server refused the fetch), Imprimerie nationale Lexique.</p>
+<p class="meta">Sources: <a class="chip" href="#src-cldr-delimiters">cldr-delimiters</a><br>By language: <span class="lang"><b>en</b> <a class="chip" href="#src-cldr-delimiters">cldr-delimiters</a></span> <span class="lang"><b>uk</b> <a class="chip" href="#src-cldr-delimiters">cldr-delimiters</a></span> <span class="lang"><b>de</b> <a class="chip" href="#src-cldr-delimiters">cldr-delimiters</a></span> <span class="lang"><b>pl</b> <a class="chip" href="#src-cldr-delimiters">cldr-delimiters</a></span> <span class="lang"><b>fr</b> <a class="chip" href="#src-cldr-delimiters">cldr-delimiters</a></span> <span class="lang"><b>ch</b> <a class="chip" href="#src-cldr-delimiters">cldr-delimiters</a></span></p>
+</article>
+<article class="rule" id="rule-apostrophe" data-c="general-knowledge">
+<div class="head"><h3>apostrophe</h3><span class="pill general-knowledge">Unchecked</span></div>
+<p class="about">A straight ' in a word or before a year becomes ’</p>
+<p><b>Why:</b> A typographic apostrophe is ’, not the straight typewriter mark.</p>
+<p><b>Others, gaps, unread:</b> Not yet researched.</p>
+<p class="meta">Sources: <span class="none">none read</span></p>
+</article>
+<article class="rule" id="rule-ellipsis" data-c="general-knowledge">
+<div class="head"><h3>ellipsis</h3><span class="pill general-knowledge">Unchecked</span></div>
+<p class="about">... becomes …</p>
+<p><b>Why:</b> Three dots are one character, …, so they cannot break across lines.</p>
+<p><b>Others, gaps, unread:</b> Not yet researched.</p>
+<p class="meta">Sources: <span class="none">none read</span></p>
+</article>
+<article class="rule" id="rule-arrow" data-c="general-knowledge">
+<div class="head"><h3>arrow</h3><span class="pill general-knowledge">Unchecked</span></div>
+<p class="about">-&gt; and &lt;- become → and ←</p>
+<p><b>Why:</b> Typed ASCII arrows have a proper character.</p>
+<p><b>Others, gaps, unread:</b> Not yet researched.</p>
+<p class="meta">Sources: <span class="none">none read</span></p>
+</article>
+<article class="rule" id="rule-symbol-legal" data-c="general-knowledge">
+<div class="head"><h3>symbol.legal</h3><span class="pill general-knowledge">Unchecked</span></div>
+<p class="about">(c) before a year, (C), (R) and (TM) become © ® ™</p>
+<p><b>Why:</b> (c), (R) and (TM) have proper characters.</p>
+<p><b>Others, gaps, unread:</b> Not yet researched.</p>
+<p class="meta">Sources: <span class="none">none read</span></p>
+</article>
+<article class="rule" id="rule-dash-dialogue" data-c="general-knowledge">
+<div class="head"><h3>dash.dialogue</h3><span class="pill general-knowledge">Unchecked</span></div>
+<p class="about">A Ukrainian dialogue line (literary register) opens with an em dash and a no-break space</p>
+<p><b>Why:</b> Ukrainian dialogue opens a paragraph with a dash.</p>
+<p><b>Others, gaps, unread:</b> Not researched to a primary source: the Pravopys 2019 PDF (mon.gov.ua) refused the fetch (HTTP 403). A secondary page names Український правопис 2019, § 161 &quot;Тире&quot; (pp. 230–241) as the dash section; read that section before marking this verified.</p>
+<p class="meta">Sources: <span class="none">none read</span></p>
+</article>
+<article class="rule" id="rule-dash-range" data-c="general-knowledge">
+<div class="head"><h3>dash.range</h3><span class="pill general-knowledge">Unchecked</span></div>
+<p class="about">A hyphen between two numbers (21-26, 10:00-12:00) becomes an unspaced en dash</p>
+<p><b>Why:</b> A range of numbers takes an en dash, not a hyphen.</p>
+<p><b>Others, gaps, unread:</b> Not yet researched.</p>
+<p class="meta">Sources: <span class="none">none read</span></p>
+</article>
+<article class="rule" id="rule-dash-sentence" data-c="verified">
+<div class="head"><h3>dash.sentence</h3><span class="pill verified">Verified</span></div>
+<p class="about">A spaced hyphen, dash or double hyphen becomes a spaced dash (em; en in German and literary British English), no-break before it</p>
+<p><b>Why:</b> A break in a sentence takes a dash, and its form depends on the language. For English the em dash is backed by the source; it is the engine default.</p>
+<p><b>Others, gaps, unread:</b> The source sets the em dash flush against the words and calls spaces acceptable; the engine sets it spaced, with a no-break space before it. The spaced en dash for German and for British literary English is not backed by any source read yet.</p>
+<p class="meta">Sources: <a class="chip" href="#src-butterick-dashes">butterick-dashes</a><br>By language: <span class="lang"><b>en</b> <a class="chip" href="#src-butterick-dashes">butterick-dashes</a></span></p>
+</article>
+<article class="rule" id="rule-symbol-minus" data-c="general-knowledge">
+<div class="head"><h3>symbol.minus</h3><span class="pill general-knowledge">Unchecked</span></div>
+<p class="about">A hyphen before a digit (-5) becomes a minus sign (−5)</p>
+<p><b>Why:</b> A minus sign is −, not a hyphen.</p>
+<p><b>Others, gaps, unread:</b> Unicode only shows that the character exists; it does not say when to use it. Butterick calls an en dash an acceptable minus sign in spreadsheets and math, so a style guide that prefers − over – was not found. Still unchecked.</p>
+<p class="meta">Sources: <a class="chip" href="#src-unicode-names">unicode-names</a> <a class="chip" href="#src-butterick-dashes">butterick-dashes</a></p>
+</article>
+<article class="rule" id="rule-symbol-multiply" data-c="general-knowledge">
+<div class="head"><h3>symbol.multiply</h3><span class="pill general-knowledge">Unchecked</span></div>
+<p class="about">The letter x between numbers (1920x1080, 3 x 4) becomes ×</p>
+<p><b>Why:</b> A dimension takes ×, not the letter x.</p>
+<p><b>Others, gaps, unread:</b> Unicode only shows that the character exists. The NIST SI checklist, as summarised by the fetch tool, does not address the × character, so it is no help here. Still unchecked.</p>
+<p class="meta">Sources: <a class="chip" href="#src-unicode-names">unicode-names</a></p>
+</article>
+<article class="rule" id="rule-space-collapse" data-c="general-knowledge">
+<div class="head"><h3>space.collapse</h3><span class="pill general-knowledge">Unchecked</span></div>
+<p class="about">A run of spaces becomes one</p>
+<p><b>Why:</b> A run of spaces is a typing accident, not a setting.</p>
+<p><b>Others, gaps, unread:</b> Not yet researched.</p>
+<p class="meta">Sources: <span class="none">none read</span></p>
+</article>
+<article class="rule" id="rule-space-title" data-c="verified">
+<div class="head"><h3>space.title</h3><span class="pill verified">Verified</span></div>
+<p class="about">No-break space after Prof., Dr., Mr. …</p>
+<p><b>Why:</b> A title stays on the line of the name it belongs to.</p>
+<p><b>Others, gaps, unread:</b> Not compared with other tools or with guides for the other languages.</p>
+<p class="meta">Sources: <a class="chip" href="#src-butterick-nbsp">butterick-nbsp</a><br>By language: <span class="lang"><b>en</b> <a class="chip" href="#src-butterick-nbsp">butterick-nbsp</a></span></p>
+</article>
+<article class="rule" id="rule-space-initial" data-c="general-knowledge">
+<div class="head"><h3>space.initial</h3><span class="pill general-knowledge">Unchecked</span></div>
+<p class="about">No-break space after an initial (K. Słoboda)</p>
+<p><b>Why:</b> An initial stays on the line of the surname it belongs to.</p>
+<p><b>Others, gaps, unread:</b> Not yet researched.</p>
+<p class="meta">Sources: <span class="none">none read</span></p>
+</article>
+<article class="rule" id="rule-space-abbreviation" data-c="verified">
+<div class="head"><h3>space.abbreviation</h3><span class="pill verified">Verified</span></div>
+<p class="about">Parts of an abbreviation stay together (z. B.), and Nr., ul., S. stay with what follows</p>
+<p><b>Why:</b> An abbreviation stays on the line of what it qualifies.</p>
+<p><b>Others, gaps, unread:</b> Only the English case (&quot;Fig.&quot; before a number) is backed by a source read. The German, Ukrainian and Polish lists (profiles.ts) are still from general knowledge and have not been read by a native speaker; they stay unchecked even though the decision as a whole reads verified.</p>
+<p class="meta">Sources: <a class="chip" href="#src-butterick-nbsp">butterick-nbsp</a><br>By language: <span class="lang"><b>en</b> <a class="chip" href="#src-butterick-nbsp">butterick-nbsp</a></span></p>
+</article>
+<article class="rule" id="rule-space-number" data-c="verified">
+<div class="head"><h3>space.number</h3><span class="pill verified">Verified</span></div>
+<p class="about">No-break space between a number and a short word or unit after it, up to nine letters (21 September, 5 %)</p>
+<p><b>Why:</b> A number stays on the line of its unit or month. The source backs a space between a value and a unit, percent included.</p>
+<p><b>Others, gaps, unread:</b> The source does not say the space is nonbreaking, and says nothing about dates (&quot;21 September&quot;); both are our choice. It spaces % in English, while CLDR sets no space there (see space.percent) and the engine follows CLDR.</p>
+<p class="meta">Sources: <a class="chip" href="#src-nist-si-checklist">nist-si-checklist</a></p>
+</article>
+<article class="rule" id="rule-space-percent" data-c="verified">
+<div class="head"><h3>space.percent</h3><span class="pill verified">Verified</span></div>
+<p class="about">German and French: a no-break space between a number and % or € (5 %, 49 €)</p>
+<p><b>Why:</b> German and French set a no-break space before % and a currency sign. CLDR agrees for % in de and fr, and for the currency sign in de and fr; it sets no space before % in en, uk, pl, de-CH and fr-CH, which is what the engine does.</p>
+<p><b>Others, gaps, unread:</b> CLDR also puts a no-break space before the currency sign in uk, pl and fr-CH; the engine leaves 49€ alone there (a gap, in the backlog). The pattern is how software formats a number, not a printed style guide; no printed guide (Duden, Imprimerie nationale Lexique) was read.</p>
+<p class="meta">Sources: <a class="chip" href="#src-cldr-numbers">cldr-numbers</a><br>By language: <span class="lang"><b>de</b> <a class="chip" href="#src-cldr-numbers">cldr-numbers</a></span> <span class="lang"><b>fr</b> <a class="chip" href="#src-cldr-numbers">cldr-numbers</a></span></p>
+</article>
+<article class="rule" id="rule-space-association" data-c="general-knowledge">
+<div class="head"><h3>space.association</h3><span class="pill general-knowledge">Unchecked</span></div>
+<p class="about">No-break space before e.V.</p>
+<p><b>Why:</b> e.V. stays on the line of the name it follows.</p>
+<p><b>Others, gaps, unread:</b> Not yet researched.</p>
+<p class="meta">Sources: <span class="none">none read</span></p>
+</article>
+<article class="rule" id="rule-space-copyright" data-c="verified">
+<div class="head"><h3>space.copyright</h3><span class="pill verified">Verified</span></div>
+<p class="about">No-break space after ©</p>
+<p><b>Why:</b> © stays on the line of the year or name after it.</p>
+<p><b>Others, gaps, unread:</b> Not compared with other tools or with guides for the other languages.</p>
+<p class="meta">Sources: <a class="chip" href="#src-butterick-nbsp">butterick-nbsp</a></p>
+</article>
+<article class="rule" id="rule-space-orphan" data-c="general-knowledge">
+<div class="head"><h3>space.orphan</h3><span class="pill general-knowledge">Unchecked</span></div>
+<p class="about">No-break space after a one-letter word the language must not strand at a line end</p>
+<p><b>Why:</b> A one-letter word does not end a line.</p>
+<p><b>Others, gaps, unread:</b> No authoritative source found. Only secondary pages (a WebKit bug thread, a Czech nbsp generator, plugin pages) state the Polish and Czech practice; none is a style guide, so none is cited. A Polish or Ukrainian typography guide is needed, and the English a/I rule has no source at all.</p>
+<p class="meta">Sources: <span class="none">none read</span></p>
+</article>
+<article class="rule" id="rule-space-arrow" data-c="general-knowledge">
+<div class="head"><h3>space.arrow</h3><span class="pill general-knowledge">Unchecked</span></div>
+<p class="about">No-break space before → and after ←</p>
+<p><b>Why:</b> An arrow stays on the line of the word it points from or to.</p>
+<p><b>Others, gaps, unread:</b> Not yet researched.</p>
+<p class="meta">Sources: <span class="none">none read</span></p>
+</article>
+<h2>Sources read</h2>
+<article class="src" id="src-cldr-delimiters">
+<div class="head"><h3>cldr-delimiters</h3><span class="kind">standard</span></div>
+<p>Unicode CLDR 46, cldr-misc-full 46.0.0, main/&lt;locale&gt;/delimiters.json (quotationStart, quotationEnd, alternateQuotationStart, alternateQuotationEnd), locales en, uk, de, pl, fr, de-CH, fr-CH.</p>
+<p><b>Relied on:</b> Per locale: en “ ” and ‘ ’; uk « » and „ “; de „ “ and ‚ ‘; pl „ ” and « »; fr « » and « »; de-CH „ “ and ‚ ‘; fr-CH « » and ‹ ›.</p>
+<p class="via raw">Read as raw data.</p>
+<p class="meta">Read 2026-10-20 · <a href="https://cdn.jsdelivr.net/npm/cldr-misc-full@46.0.0/main/de-CH/delimiters.json" target="_blank" rel="noopener">open source ↗</a><br>Used by: <a class="chip" href="#rule-quote">quote</a></p>
+</article>
+<article class="src" id="src-butterick-dashes">
+<div class="head"><h3>butterick-dashes</h3><span class="kind">style-guide</span></div>
+<p>Matthew Butterick, Practical Typography, &quot;Hyphens and dashes&quot; (web page; no edition or year on the page).</p>
+<p><b>Relied on:</b> The em dash marks a break within a sentence; em and en dashes are normally set without spaces, and adding a space on each side is acceptable when they look crushed; the en dash is for ranges of values.</p>
+<p class="via summary">Read as a summary by a fetch tool. Check it by hand.</p>
+<p class="meta">Read 2026-10-20 · <a href="https://practicaltypography.com/hyphens-and-dashes.html" target="_blank" rel="noopener">open source ↗</a><br>Used by: <a class="chip" href="#rule-dash-sentence">dash.sentence</a> <a class="chip" href="#rule-symbol-minus">symbol.minus</a></p>
+</article>
+<article class="src" id="src-butterick-nbsp">
+<div class="head"><h3>butterick-nbsp</h3><span class="kind">style-guide</span></div>
+<p>Matthew Butterick, Practical Typography, &quot;Nonbreaking spaces&quot; (web page; no edition or year on the page).</p>
+<p><b>Relied on:</b> Use a nonbreaking space after § and ¶, after abbreviations such as &quot;Ex.&quot; and &quot;Fig.&quot; before a letter or number, between a title and a name (&quot;Ms.&quot;), and with the trademark and copyright symbols.</p>
+<p class="via summary">Read as a summary by a fetch tool. Check it by hand.</p>
+<p class="meta">Read 2026-10-20 · <a href="https://practicaltypography.com/nonbreaking-spaces.html" target="_blank" rel="noopener">open source ↗</a><br>Used by: <a class="chip" href="#rule-space-title">space.title</a> <a class="chip" href="#rule-space-abbreviation">space.abbreviation</a> <a class="chip" href="#rule-space-copyright">space.copyright</a></p>
+</article>
+<article class="src" id="src-nist-si-checklist">
+<div class="head"><h3>nist-si-checklist</h3><span class="kind">standard</span></div>
+<p>SI Unit rules and style conventions: Check List for Reviewing Manuscripts (web page at physics.nist.gov, items 9, 10, 12 and 15; page names no publisher or year).</p>
+<p><b>Relied on:</b> There is a space between a numerical value and a unit symbol, and between a number and the percent sign (&quot;10 %&quot;); the page does not say the space is nonbreaking.</p>
+<p class="via summary">Read as a summary by a fetch tool. Check it by hand.</p>
+<p class="meta">Read 2026-10-20 · <a href="https://physics.nist.gov/cuu/Units/checklist.html" target="_blank" rel="noopener">open source ↗</a><br>Used by: <a class="chip" href="#rule-space-number">space.number</a></p>
+</article>
+<article class="src" id="src-unicode-names">
+<div class="head"><h3>unicode-names</h3><span class="kind">standard</span></div>
+<p>The Unicode Standard 18.0.0, NamesList-18.0.0.txt (generated 2026-08-10), entries U+2212 and U+00D7.</p>
+<p><b>Relied on:</b> U+2212 MINUS SIGN and U+00D7 MULTIPLICATION SIGN are characters of their own, cross-referenced to hyphen-minus (U+002D) and to latin small letter x (U+0078) as different characters.</p>
+<p class="via raw">Read as raw data.</p>
+<p class="meta">Read 2026-10-20 · <a href="https://www.unicode.org/Public/UNIDATA/NamesList.txt" target="_blank" rel="noopener">open source ↗</a><br>Used by: <a class="chip" href="#rule-symbol-minus">symbol.minus</a> <a class="chip" href="#rule-symbol-multiply">symbol.multiply</a></p>
+</article>
+<article class="src" id="src-cldr-numbers">
+<div class="head"><h3>cldr-numbers</h3><span class="kind">standard</span></div>
+<p>Unicode CLDR 46, cldr-numbers-full 46.0.0, main/&lt;locale&gt;/numbers.json (percentFormats standard, currencyFormats standard), locales en, uk, de, pl, fr, de-CH, fr-CH.</p>
+<p><b>Relied on:</b> The percent pattern is &quot;#,##0 %&quot; with U+00A0 before the sign in de and fr, and &quot;#,##0%&quot; in en, uk, pl, de-CH and fr-CH; the currency pattern puts U+00A0 between the amount and the currency sign in de, fr, uk, pl and fr-CH.</p>
+<p class="via raw">Read as raw data.</p>
+<p class="meta">Read 2026-10-20 · <a href="https://cdn.jsdelivr.net/npm/cldr-numbers-full@46.0.0/main/de/numbers.json" target="_blank" rel="noopener">open source ↗</a><br>Used by: <a class="chip" href="#rule-space-percent">space.percent</a></p>
+</article>
+</main>
+<script>
+(function(){
+var buttons=document.querySelectorAll('.filters button'),rules=document.querySelectorAll('.rule');
+buttons.forEach(function(button){button.addEventListener('click',function(){
+var f=button.getAttribute('data-f');
+buttons.forEach(function(b){b.setAttribute('aria-pressed',b===button?'true':'false')});
+rules.forEach(function(r){r.hidden=!(f==='all'||r.getAttribute('data-c')===f)});
+})});
+})();
+</script>
+</body>
+</html>

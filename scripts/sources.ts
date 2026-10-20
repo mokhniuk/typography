@@ -1,15 +1,12 @@
 /**
  * The registry of why each rule exists: a bibliography (SOURCES) and one decision
- * record per rule (RULE_SOURCES). Writes docs/sources.md.
- *
- *     bun scripts/sources.ts        (or: bun run docs:sources)
+ * record per rule (RULE_SOURCES). `render()` is the Markdown page; the HTML page is
+ * `renderHtml()` in sources-html.ts. `bun run docs:sources` (gen-sources.ts) writes both.
  *
  * Every source is read before it is entered here; nothing is cited from memory.
  * A rule whose decision is not yet backed by a source read stays `general-knowledge`,
  * so the gap shows. Imports only from ../src and node:, so the package stays liftable.
  */
-import { writeFileSync } from 'node:fs';
-import { join } from 'node:path';
 import { type Lang, RULES } from '../src';
 
 export type Source = {
@@ -21,6 +18,11 @@ export type Source = {
   url?: string;
   /** ISO date on which the source was read. */
   accessed: string;
+  /**
+   * How the text was read: `raw` is the data or file itself, `summary` is a page as
+   * summarised by a fetch tool. A `summary` source is checked by hand before it is trusted.
+   */
+  readVia: 'raw' | 'summary';
   /** What it says that we rely on, in one sentence. */
   claim: string;
 };
@@ -44,6 +46,7 @@ export const SOURCES: readonly Source[] = [
     cite: 'Unicode CLDR 46, cldr-misc-full 46.0.0, main/<locale>/delimiters.json (quotationStart, quotationEnd, alternateQuotationStart, alternateQuotationEnd), locales en, uk, de, pl, fr, de-CH, fr-CH.',
     url: 'https://cdn.jsdelivr.net/npm/cldr-misc-full@46.0.0/main/de-CH/delimiters.json',
     accessed: '2026-10-20',
+    readVia: 'raw',
     claim:
       'Per locale: en “ ” and ‘ ’; uk « » and „ “; de „ “ and ‚ ‘; pl „ ” and « »; fr « » and « »; de-CH „ “ and ‚ ‘; fr-CH « » and ‹ ›.',
   },
@@ -53,6 +56,7 @@ export const SOURCES: readonly Source[] = [
     cite: 'Matthew Butterick, Practical Typography, "Hyphens and dashes" (web page; no edition or year on the page).',
     url: 'https://practicaltypography.com/hyphens-and-dashes.html',
     accessed: '2026-10-20',
+    readVia: 'summary',
     claim:
       'The em dash marks a break within a sentence; em and en dashes are normally set without spaces, and adding a space on each side is acceptable when they look crushed; the en dash is for ranges of values.',
   },
@@ -62,6 +66,7 @@ export const SOURCES: readonly Source[] = [
     cite: 'Matthew Butterick, Practical Typography, "Nonbreaking spaces" (web page; no edition or year on the page).',
     url: 'https://practicaltypography.com/nonbreaking-spaces.html',
     accessed: '2026-10-20',
+    readVia: 'summary',
     claim:
       'Use a nonbreaking space after § and ¶, after abbreviations such as "Ex." and "Fig." before a letter or number, between a title and a name ("Ms."), and with the trademark and copyright symbols.',
   },
@@ -71,6 +76,7 @@ export const SOURCES: readonly Source[] = [
     cite: 'SI Unit rules and style conventions: Check List for Reviewing Manuscripts (web page at physics.nist.gov, items 9, 10, 12 and 15; page names no publisher or year).',
     url: 'https://physics.nist.gov/cuu/Units/checklist.html',
     accessed: '2026-10-20',
+    readVia: 'summary',
     claim:
       'There is a space between a numerical value and a unit symbol, and between a number and the percent sign ("10 %"); the page does not say the space is nonbreaking.',
   },
@@ -80,6 +86,7 @@ export const SOURCES: readonly Source[] = [
     cite: 'The Unicode Standard 18.0.0, NamesList-18.0.0.txt (generated 2026-08-10), entries U+2212 and U+00D7.',
     url: 'https://www.unicode.org/Public/UNIDATA/NamesList.txt',
     accessed: '2026-10-20',
+    readVia: 'raw',
     claim:
       'U+2212 MINUS SIGN and U+00D7 MULTIPLICATION SIGN are characters of their own, cross-referenced to hyphen-minus (U+002D) and to latin small letter x (U+0078) as different characters.',
   },
@@ -89,6 +96,7 @@ export const SOURCES: readonly Source[] = [
     cite: 'Unicode CLDR 46, cldr-numbers-full 46.0.0, main/<locale>/numbers.json (percentFormats standard, currencyFormats standard), locales en, uk, de, pl, fr, de-CH, fr-CH.',
     url: 'https://cdn.jsdelivr.net/npm/cldr-numbers-full@46.0.0/main/de/numbers.json',
     accessed: '2026-10-20',
+    readVia: 'raw',
     claim:
       'The percent pattern is "#,##0 %" with U+00A0 before the sign in de and fr, and "#,##0%" in en, uk, pl, de-CH and fr-CH; the currency pattern puts U+00A0 between the amount and the currency sign in de, fr, uk, pl and fr-CH.',
   },
@@ -240,14 +248,11 @@ export function render(): string {
     out.push(`### ${KIND_TITLES[kind]}`, '');
     for (const source of group) {
       out.push(`<a id="${anchor(source.id)}"></a>`, `**${source.id}**. ${source.cite}`, '');
-      if (source.url) out.push(`<${source.url}>, read ${source.accessed}.`, '');
-      else out.push(`Read ${source.accessed}.`, '');
+      const via = source.readVia === 'raw' ? 'read as raw data' : 'read as a summary by a fetch tool, check it by hand';
+      if (source.url) out.push(`<${source.url}>, ${via} on ${source.accessed}.`, '');
+      else out.push(`${via[0]?.toUpperCase()}${via.slice(1)} on ${source.accessed}.`, '');
       out.push(`Relied on: ${source.claim}`, '');
     }
   }
   return `${out.join('\n').trimEnd()}\n`;
-}
-
-if (import.meta.main) {
-  writeFileSync(join(import.meta.dir, '..', 'docs', 'sources.md'), render());
 }

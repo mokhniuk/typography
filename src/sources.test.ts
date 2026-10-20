@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { RULE_IDS } from './core';
 import { render, RULE_SOURCES, SOURCES } from '../scripts/sources';
+import { renderHtml } from '../scripts/sources-html';
 
 const known = new Set(SOURCES.map((source) => source.id));
 
@@ -10,6 +11,13 @@ describe('docs/sources.md', () => {
   test('is what `bun run docs:sources` writes', () => {
     const written = readFileSync(join(import.meta.dir, '..', 'docs', 'sources.md'), 'utf8');
     expect(written).toBe(render());
+  });
+});
+
+describe('docs/sources.html', () => {
+  test('is what `bun run docs:sources` writes', () => {
+    const written = readFileSync(join(import.meta.dir, '..', 'docs', 'sources.html'), 'utf8');
+    expect(written).toBe(renderHtml());
   });
 });
 
@@ -31,6 +39,8 @@ describe('the sources registry', () => {
       expect(source.cite.trim()).not.toBe('');
       expect(source.claim.trim()).not.toBe('');
       expect(source.accessed).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      expect(['raw', 'summary']).toContain(source.readVia);
+      expect(source.url ?? '').toMatch(/^(https:\/\/.+)?$/);
     });
   }
 

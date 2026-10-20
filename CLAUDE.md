@@ -16,7 +16,7 @@ Bun project, TypeScript sources shipped as they are (no build step). Details: `R
 - Rules live in the `RULES` table in `src/core/rules.ts`; never add a step inside `typographic()`. Order matters. Adding a rule or language: follow `docs/contributing.md`.
 - Nothing in `src/` or `playground/` may import from outside the package except `react` (`src/boundary.test.ts`).
 - Every change to engine output or API gets a `CHANGELOG.md` entry saying whether it can change existing output.
-- Every rule has a decision record in `scripts/sources.ts` (`RULE_SOURCES`); `bun run docs:sources` regenerates `docs/sources.md` (generated, never edit; `src/sources.test.ts` checks it). Read a source before you cite it; no source read means `general-knowledge`.
+- Every rule has a decision record in `scripts/sources.ts` (`RULE_SOURCES`); `bun run docs:sources` regenerates `docs/sources.md` and `docs/sources.html` (generated, never edit; `src/sources.test.ts` checks both; open the HTML to browse the sources). Read a source before you cite it; no source read means `general-knowledge`.
 - Hand-written docs: `api.md`, `cli.md`, `languages.md`, `limits.md`, `contributing.md`, `README.md`. Update them when behaviour they describe changes (rule count, languages, exports, speed numbers).
 
 ## Backlog
