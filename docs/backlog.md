@@ -81,9 +81,18 @@ The rules are a flat list with dotted group names (`dash`, `space`, `symbol`, `n
 
 Open questions: is a category a prefix of the rule id (a rename, so a breaking change for `disable`), or a separate tag on `Rule` (`category`) with the ids unchanged? Which categories are on by default? How do the categories show in `typo --rules`, `docs/rules.md` and the playground? Research what typograf (its groups), tipograph (its presets) and the style guides call these groups before choosing. Whatever is chosen must keep the old ids working for `disable` and `enable`, and say in the changelog whether output can change.
 
-### Scottish Gaelic (and Manx)
+### Irish (`ga`): make the pack real
 
-`ga` is Irish (Gaeilge), an official EU language, and has a pack. Scottish Gaelic (`gd`) is a different language and has none; Manx (`gv`) neither. Neither is an official EU language, so they are outside the 26 target languages, but Scottish Gaelic is in use in the UK. Add `gd` (and `gv` if wanted) as packs from the style guides that exist (for Scottish Gaelic, Bòrd na Gàidhlig and the Scottish Parliament's guidance), `reviewed: false`, following the language recipe in [contributing.md](contributing.md#adding-a-language). Check first: quote marks (British single `‘…’` is the usual print style), the apostrophe and hyphen in `t-` and `n-` prefixes (`an t-òran`, `na h-òrain`) must not be read as quotes or ranges, and `Mc`/`Mac`-style abbreviations. Irish has the same prefix question (`an t-athair`, `na hÉireann`): check that the `ga` pack handles it, and add a test if not. Which of the two the user means by "Gaelic" should be confirmed before building.
+The pack exists but is thin, because the Irish edition of the Interinstitutional Style Guide (`style-guide.europa.eu/ga`, section 4.2.3) could not be read; what is there comes from the Publications Office quotation table and from statements about Irish in the Maltese edition. Open:
+
+- **Quotes:** `‘…’` then `“…”` (the Publications Office table) against `“…”` first (Wikipedia). Settle it from the Irish ISG or Foras na Gaeilge / An Gúm, or from a native reader.
+- **Sentence dash and ranges:** not read; the pack defaults to the spaced em dash.
+- **Short words and abbreviations:** none (`orphans`, `abbreviations` empty). Candidates to source: `a`, `i`, `is`, `ar`, `le`, `go`, `de`, `do`; abbreviations such as `m.sh.`, `srl.`, `lch.` (Foras na Gaeilge's lists).
+- **Initial mutations:** the hyphen and apostrophe forms (`an t-athair`, `na h-oibrithe`, `d'fhág`, `b'fhéidir`) pass through unchanged today and a test pins `d'`, `b'`, `m'`; add goldens for `t-`, `n-` and `h-` prefixes (`an t-uisce`, `i n-Éirinn`, `go h-álainn`) inside and outside quotes, since a hyphen after a single letter must never read as a range or a dash.
+- **`€`:** the pack puts a no-break space before `€` through `percentSpace`, but Irish writes `€30`. Needs the split of `percentSpace` into `percentSpace` and `currencySpace` (see Currencies).
+- **Review:** `reviewed: false`; get an Irish reader to check the page.
+
+Scottish Gaelic (`gd`) and Manx (`gv`) are different languages with no pack and are outside the 26 target languages; add them only if wanted, with the same recipe.
 
 ### Short words, conjunctions and the end of the line
 
