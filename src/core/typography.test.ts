@@ -261,7 +261,10 @@ describe('literary register', () => {
     const sample = '“x ‘y’ z” - and 21-26 September';
     // Every language whose literary register has no marks or dialogue dash of its own.
     const plain = LANGS.filter((lang) => !LITERARY[lang] && !PACK[lang].dialogueDash);
-    expect(plain).toEqual(['de', 'pl', 'fr', 'ch']);
+    // English and Ukrainian have a literary profile; the rest of the registry grows without this list.
+    expect(plain).toEqual(expect.arrayContaining(['de', 'pl', 'fr', 'ch']));
+    expect(plain).not.toContain('en');
+    expect(plain).not.toContain('uk');
     for (const lang of plain) {
       expect(t(sample, lang, literary)).toBe(t(sample, lang));
     }
