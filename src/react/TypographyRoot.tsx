@@ -21,7 +21,9 @@ export function HangScript() {
   const prerendering = useServerRender();
   if (!prerendering) return null;
   // biome-ignore lint/security/noDangerouslySetInnerHtml: the source is this package's own function, not user input
-  return <script dangerouslySetInnerHTML={{ __html: hangScript() }} />;
+  // The function's source is printed by the server build and by the client build, and a bundler
+  // formats it differently (comments, whitespace); the script has already run, so the text is not read again.
+  return <script suppressHydrationWarning dangerouslySetInnerHTML={{ __html: hangScript() }} />;
 }
 
 /** Runs the hanging pass over everything under `root`, for as long as it is mounted. */

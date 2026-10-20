@@ -138,7 +138,7 @@ Run it as `bun run src/cli/main.ts` before the `typo` bin is linked.
 
 ## Hanging punctuation without a jump on a prerendered page
 
-Hanging is measured, so on a prerendered page the marks that start a wrapped line would move by their own width once the bundle has loaded. `TypographyRoot` (and `<HangScript />`, for a page that wires the hook itself; put it last inside the element that holds the text) sends the same pass inline, so it runs as the page is parsed. The cost is the length of `hangScript()`, about 2.4 kB of HTML (`hangScript().length` prints it). `early={false}` turns it off.
+Hanging is measured, so on a prerendered page the marks that start a wrapped line would move by their own width once the bundle has loaded. `TypographyRoot` (and `<HangScript />`, for a page that wires the hook itself; put it last inside the element that holds the text) sends the same pass inline, so it runs as the page is parsed. The cost is the length of `hangScript()`, about 1.4 kB of HTML (`hangScript().length` prints it). `early={false}` turns it off.
 
 To check this on your own page: block the JavaScript bundle (for example in the browser's developer tools), load the page at a narrow width, and count the marks that start a wrapped line and are already hung at first paint; then let the bundle load and count the marks that move. Without the inline script the first count is low and the second high; with it, the first should be all and the second none. This is a method, not a result: it has not been measured on any page that ships with this package, and it needs a production build (the inline script has not been looked at in a dev server; see [docs/limits.md](docs/limits.md)).
 

@@ -1,6 +1,6 @@
 {
   "name": "@podiia/typography",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "type": "module",
   "description": "Typography for running text: quotation by language and register, dashes, non-breaking spaces, measured hanging punctuation.",
@@ -23,7 +23,8 @@
     "playground": "vite --config playground/vite.config.ts",
     "playground:build": "vite build --config playground/vite.config.ts",
     "bench": "bun bench/run.ts",
-    "docs:rules": "bun scripts/gen-rules-doc.ts"
+    "docs:rules": "bun scripts/gen-rules-doc.ts",
+    "gen:script": "bun scripts/gen-hang-script.ts"
   },
   "peerDependencies": {
     "react": ">=18"

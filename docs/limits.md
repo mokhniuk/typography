@@ -43,7 +43,7 @@ What the engine deliberately leaves alone, what it knowingly does not do, and wh
 
 ## Hanging punctuation
 
-- **The inline hanging script (`HangScript`) has not been looked at in a dev server.** The author checked it in a production build (no console errors, no hydration warning); that check is not reproducible from this folder. React's development build may warn about a script rendered by a component; if it does, gate it on the production build.
+- **The inline hanging script (`HangScript`) was checked in a Vite dev server and a production build by the author** (no hydration warning, no console errors, marks hang as the page is parsed); that check is not reproducible from this folder. It needs a content security policy that allows inline scripts (`early={false}` otherwise). After updating the package, clear the bundler's dependency cache (for Vite, `node_modules/.vite`), or the dev server may keep the old script.
 - **It needs a content security policy that allows inline scripts.** On a page that forbids them, use `early={false}` on `TypographyRoot` and drop `<HangScript />`; the marks then hang once the bundle has loaded, and a mark that starts a wrapped line on a prerendered page moves by its own width at that moment.
 - **Hanging is left-to-right, left-aligned text only.** Right-to-left, centred and indented text have no hang; a mark that starts a line in a justified paragraph is not given an optical margin on the right either.
 - Hanging covers opening marks only. Closing quotes, commas and full stops hang at the end of a line, which shows only in justified text.

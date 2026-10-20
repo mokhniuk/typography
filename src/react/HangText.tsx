@@ -16,6 +16,9 @@ export function HangText({ text, atStart = true }: { text: string; atStart?: boo
             // biome-ignore lint/suspicious/noArrayIndexKey: parts have no identity beyond their position
             key={i}
             data-hang=""
+            // The inline script (hangScript) sets the margin and a few data attributes before React
+            // hydrates; React's development build would warn about the difference.
+            suppressHydrationWarning
             style={part.lead ? { marginLeft: '-0.5em' } : undefined}
           >
             {part.text}

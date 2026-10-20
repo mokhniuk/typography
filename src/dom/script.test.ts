@@ -1,4 +1,5 @@
 import { describe, expect, test } from 'bun:test';
+import { buildHangScript } from '../../scripts/gen-hang-script';
 import { hangScript } from './hang';
 
 describe('hangScript', () => {
@@ -38,5 +39,9 @@ describe('hangScript', () => {
     );
     expect(typeof dispose).toBe('function');
     expect(calls).toEqual(['ResizeObserver', 'MutationObserver']);
+  });
+
+  test('is the script generated from hangPunctuation, so it is not stale (bun run gen:script)', async () => {
+    expect(hangScript()).toBe(await buildHangScript());
   });
 });

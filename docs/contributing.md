@@ -89,7 +89,7 @@ To release:
 
 1. Move the new entries of `CHANGELOG.md` under a heading `## X.Y.Z (date)`.
 2. Set `version` in `package.json` (`typo --version` reads it).
-3. Run `bun test src playground`, `bun run typecheck` and `bun run docs:rules`, and commit with the message `release: X.Y.Z`.
+3. Run `bun test src playground`, `bun run typecheck`, `bun run docs:rules` and, if `src/dom/hang.ts` changed, `bun run gen:script`, and commit with the message `release: X.Y.Z`.
 4. Tag it: `git tag vX.Y.Z`, then `git push --follow-tags`.
 
 ## Using it from another project

@@ -1,3 +1,5 @@
+import { HANG_SCRIPT } from './script';
+
 /**
  * Hangs the opening punctuation marked with `data-hang` (see `HangText` in the
  * react entry, or wrap marks yourself) under `root`, wherever a line happens to
@@ -110,8 +112,9 @@ export function hangPunctuation(el: HTMLElement): () => void {
  * for a prerendered page: put it as an inline `<script>` right after the text, and
  * the marks hang as the page is parsed, not when the bundle has loaded and hydrated.
  * Without it the marks that start a wrapped line move by their own width at that
- * moment.
+ * moment. The text is generated from `hangPunctuation` (`bun run gen:script`), so
+ * the server build and the client build print the same script.
  */
 export function hangScript(): string {
-  return `(${hangPunctuation.toString()})(document.currentScript.parentElement)`;
+  return HANG_SCRIPT;
 }

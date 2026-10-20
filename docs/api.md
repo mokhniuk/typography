@@ -189,7 +189,7 @@ This is measured on purpose. CSS `hanging-punctuation: first` covers only the fi
 
 ### `hangScript(): string`
 
-Returns the source of a script that runs `hangPunctuation` on its own parent element: `(<function source>)(document.currentScript.parentElement)`. The function is self-contained (only browser globals are free in it), which is what lets its source be sent to the page.
+Returns the source of a script that runs `hangPunctuation` on its own parent element: `(<minified function>)(document.currentScript.parentElement)`. The string is generated from `hangPunctuation` by `bun run gen:script` into `src/dom/script.ts` and a test fails when it is out of date, so a server build and a client build print the same text (a bundler formats a function's source differently in each, and React's development build warns about two different scripts on hydration). The function is self-contained (only browser globals are free in it), which is what lets its source be sent to the page.
 
 Placement: put it as an inline `<script>` as the last child of the element that holds the text, so the text before it has been parsed when it runs. The marks then hang as the page is parsed, not after the bundle has loaded and hydrated; without it, marks that start a wrapped line on a prerendered page move by their own width at that moment. It needs a content security policy that allows inline scripts.
 
