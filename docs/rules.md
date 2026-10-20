@@ -33,7 +33,7 @@ Each example runs the engine with every rule except the one shown switched off, 
 
 Quotation marks by language, register and nesting level, from any source style
 
-Why: [sources.md](sources.md#quote), `general-knowledge`.
+Why: [sources.md](sources.md#quote), `disputed`.
 
 ```text
 (en)
@@ -169,7 +169,7 @@ Spaced, too.
 
 A spaced hyphen, dash or double hyphen becomes a spaced dash (em; en in German and literary British English), no-break before it
 
-Why: [sources.md](sources.md#dashsentence), `general-knowledge`.
+Why: [sources.md](sources.md#dashsentence), `verified`.
 
 ```text
 (en)
@@ -235,7 +235,7 @@ after   Two spaces, four.
 
 No-break space after Prof., Dr., Mr. …
 
-Why: [sources.md](sources.md#spacetitle), `general-knowledge`.
+Why: [sources.md](sources.md#spacetitle), `verified`.
 
 ```text
 (en)
@@ -259,7 +259,7 @@ after   Written by K.~Słoboda.
 
 Parts of an abbreviation stay together (z. B.), and Nr., ul., S. stay with what follows
 
-Why: [sources.md](sources.md#spaceabbreviation), `general-knowledge`.
+Why: [sources.md](sources.md#spaceabbreviation), `verified`.
 
 ```text
 (de)
@@ -283,7 +283,7 @@ after   See Fig.~2 and p.~14.
 
 No-break space between a number and a short word or unit after it, up to nine letters (21 September, 5 %)
 
-Why: [sources.md](sources.md#spacenumber), `general-knowledge`.
+Why: [sources.md](sources.md#spacenumber), `verified`.
 
 ```text
 (en)
@@ -295,7 +295,7 @@ after   On 21~September, 15~people paid 5~%.
 
 German and French: a no-break space between a number and % or € (5 %, 49 €)
 
-Why: [sources.md](sources.md#spacepercent), `general-knowledge`.
+Why: [sources.md](sources.md#spacepercent), `verified`.
 
 ```text
 (de)
@@ -327,7 +327,7 @@ after   Kulturverein~e.V.
 
 No-break space after ©
 
-Why: [sources.md](sources.md#spacecopyright), `general-knowledge`.
+Why: [sources.md](sources.md#spacecopyright), `verified`.
 
 ```text
 (en)

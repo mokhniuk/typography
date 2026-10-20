@@ -12,11 +12,20 @@ Every source was read before it was entered, on the date given. The `confidence`
 
 ### `quote`
 
-Confidence: `general-knowledge`.
+Confidence: `disputed`.
 
-Why: Each language has its own quotation marks, and nesting alternates a second pair.
+Why: Each language has its own quotation marks, and nesting alternates a second pair. uk (« » „ “) and pl („ ” « ») match CLDR; fr level one and ch (« » ‹ ›, as fr-CH) match too.
 
-Alternative: Not yet researched.
+Alternative: CLDR gives English “ ” ‘ ’ (the engine default is « » „ “, a gap already in the backlog as P0), German „ “ ‚ ‘ (the engine sets » « › ‹ on display), French « » with « » inside (the engine uses “ ” inside), and de-CH „ “ ‚ ‘ (the engine ch profile is the fr-CH one). The backlog records that every other tool in the benchmark produces “ ” for English by default (bench/RESULTS.md). Not read: the Swiss Federal Chancellery Schreibweisungen (a PDF this work could not extract text from), Pravopys 2019 (server refused the fetch), Imprimerie nationale Lexique.
+
+Sources: [cldr-delimiters](#src-cldr-delimiters)
+
+- `en`: [cldr-delimiters](#src-cldr-delimiters)
+- `uk`: [cldr-delimiters](#src-cldr-delimiters)
+- `de`: [cldr-delimiters](#src-cldr-delimiters)
+- `pl`: [cldr-delimiters](#src-cldr-delimiters)
+- `fr`: [cldr-delimiters](#src-cldr-delimiters)
+- `ch`: [cldr-delimiters](#src-cldr-delimiters)
 
 ### `apostrophe`
 
@@ -68,11 +77,15 @@ Alternative: Not yet researched.
 
 ### `dash.sentence`
 
-Confidence: `general-knowledge`.
+Confidence: `verified`.
 
-Why: A break in a sentence takes a dash whose form depends on the language.
+Why: A break in a sentence takes a dash, and its form depends on the language. For English the em dash is backed by the source; it is the engine default.
 
-Alternative: Not yet researched.
+Alternative: The source sets the em dash flush against the words and calls spaces acceptable; the engine sets it spaced, with a no-break space before it. The spaced en dash for German and for British literary English is not backed by any source read yet.
+
+Sources: [butterick-dashes](#src-butterick-dashes)
+
+- `en`: [butterick-dashes](#src-butterick-dashes)
 
 ### `symbol.minus`
 
@@ -80,7 +93,9 @@ Confidence: `general-knowledge`.
 
 Why: A minus sign is −, not a hyphen.
 
-Alternative: Not yet researched.
+Alternative: Unicode only shows that the character exists; it does not say when to use it. Butterick calls an en dash an acceptable minus sign in spreadsheets and math, so a style guide that prefers − over – was not found. Still unchecked.
+
+Sources: [unicode-names](#src-unicode-names), [butterick-dashes](#src-butterick-dashes)
 
 ### `symbol.multiply`
 
@@ -88,7 +103,9 @@ Confidence: `general-knowledge`.
 
 Why: A dimension takes ×, not the letter x.
 
-Alternative: Not yet researched.
+Alternative: Unicode only shows that the character exists. The NIST SI checklist, as summarised by the fetch tool, does not address the × character, so it is no help here. Still unchecked.
+
+Sources: [unicode-names](#src-unicode-names)
 
 ### `space.collapse`
 
@@ -100,11 +117,15 @@ Alternative: Not yet researched.
 
 ### `space.title`
 
-Confidence: `general-knowledge`.
+Confidence: `verified`.
 
 Why: A title stays on the line of the name it belongs to.
 
-Alternative: Not yet researched.
+Alternative: Not compared with other tools or with guides for the other languages.
+
+Sources: [butterick-nbsp](#src-butterick-nbsp)
+
+- `en`: [butterick-nbsp](#src-butterick-nbsp)
 
 ### `space.initial`
 
@@ -116,27 +137,38 @@ Alternative: Not yet researched.
 
 ### `space.abbreviation`
 
-Confidence: `general-knowledge`.
+Confidence: `verified`.
 
 Why: An abbreviation stays on the line of what it qualifies.
 
-Alternative: Not yet researched.
+Alternative: Only the English case ("Fig." before a number) is backed by a source read. The German, Ukrainian and Polish lists (profiles.ts) are still from general knowledge and have not been read by a native speaker; they stay unchecked even though the decision as a whole reads verified.
+
+Sources: [butterick-nbsp](#src-butterick-nbsp)
+
+- `en`: [butterick-nbsp](#src-butterick-nbsp)
 
 ### `space.number`
 
-Confidence: `general-knowledge`.
+Confidence: `verified`.
 
-Why: A number stays on the line of its unit or month.
+Why: A number stays on the line of its unit or month. The source backs a space between a value and a unit, percent included.
 
-Alternative: Not yet researched.
+Alternative: The source does not say the space is nonbreaking, and says nothing about dates ("21 September"); both are our choice. It spaces % in English, while CLDR sets no space there (see space.percent) and the engine follows CLDR.
+
+Sources: [nist-si-checklist](#src-nist-si-checklist)
 
 ### `space.percent`
 
-Confidence: `general-knowledge`.
+Confidence: `verified`.
 
-Why: German and French set a space before % and a currency sign.
+Why: German and French set a no-break space before % and a currency sign. CLDR agrees for % in de and fr, and for the currency sign in de and fr; it sets no space before % in en, uk, pl, de-CH and fr-CH, which is what the engine does.
 
-Alternative: Not yet researched.
+Alternative: CLDR also puts a no-break space before the currency sign in uk, pl and fr-CH; the engine leaves 49€ alone there (a gap, in the backlog). The pattern is how software formats a number, not a printed style guide; no printed guide (Duden, Imprimerie nationale Lexique) was read.
+
+Sources: [cldr-numbers](#src-cldr-numbers)
+
+- `de`: [cldr-numbers](#src-cldr-numbers)
+- `fr`: [cldr-numbers](#src-cldr-numbers)
 
 ### `space.association`
 
@@ -148,11 +180,13 @@ Alternative: Not yet researched.
 
 ### `space.copyright`
 
-Confidence: `general-knowledge`.
+Confidence: `verified`.
 
 Why: © stays on the line of the year or name after it.
 
-Alternative: Not yet researched.
+Alternative: Not compared with other tools or with guides for the other languages.
+
+Sources: [butterick-nbsp](#src-butterick-nbsp)
 
 ### `space.orphan`
 
@@ -172,4 +206,48 @@ Alternative: Not yet researched.
 
 ## Bibliography
 
-No source has been read yet.
+### Standards
+
+<a id="src-cldr-delimiters"></a>
+**cldr-delimiters**. Unicode CLDR 46, cldr-misc-full 46.0.0, main/<locale>/delimiters.json (quotationStart, quotationEnd, alternateQuotationStart, alternateQuotationEnd), locales en, uk, de, pl, fr, de-CH, fr-CH.
+
+<https://cdn.jsdelivr.net/npm/cldr-misc-full@46.0.0/main/de-CH/delimiters.json>, read 2026-10-20.
+
+Relied on: Per locale: en “ ” and ‘ ’; uk « » and „ “; de „ “ and ‚ ‘; pl „ ” and « »; fr « » and « »; de-CH „ “ and ‚ ‘; fr-CH « » and ‹ ›.
+
+<a id="src-nist-si-checklist"></a>
+**nist-si-checklist**. SI Unit rules and style conventions: Check List for Reviewing Manuscripts (web page at physics.nist.gov, items 9, 10, 12 and 15; page names no publisher or year).
+
+<https://physics.nist.gov/cuu/Units/checklist.html>, read 2026-10-20.
+
+Relied on: There is a space between a numerical value and a unit symbol, and between a number and the percent sign ("10 %"); the page does not say the space is nonbreaking.
+
+<a id="src-unicode-names"></a>
+**unicode-names**. The Unicode Standard 18.0.0, NamesList-18.0.0.txt (generated 2026-08-10), entries U+2212 and U+00D7.
+
+<https://www.unicode.org/Public/UNIDATA/NamesList.txt>, read 2026-10-20.
+
+Relied on: U+2212 MINUS SIGN and U+00D7 MULTIPLICATION SIGN are characters of their own, cross-referenced to hyphen-minus (U+002D) and to latin small letter x (U+0078) as different characters.
+
+<a id="src-cldr-numbers"></a>
+**cldr-numbers**. Unicode CLDR 46, cldr-numbers-full 46.0.0, main/<locale>/numbers.json (percentFormats standard, currencyFormats standard), locales en, uk, de, pl, fr, de-CH, fr-CH.
+
+<https://cdn.jsdelivr.net/npm/cldr-numbers-full@46.0.0/main/de/numbers.json>, read 2026-10-20.
+
+Relied on: The percent pattern is "#,##0 %" with U+00A0 before the sign in de and fr, and "#,##0%" in en, uk, pl, de-CH and fr-CH; the currency pattern puts U+00A0 between the amount and the currency sign in de, fr, uk, pl and fr-CH.
+
+### Style guides
+
+<a id="src-butterick-dashes"></a>
+**butterick-dashes**. Matthew Butterick, Practical Typography, "Hyphens and dashes" (web page; no edition or year on the page).
+
+<https://practicaltypography.com/hyphens-and-dashes.html>, read 2026-10-20.
+
+Relied on: The em dash marks a break within a sentence; em and en dashes are normally set without spaces, and adding a space on each side is acceptable when they look crushed; the en dash is for ranges of values.
+
+<a id="src-butterick-nbsp"></a>
+**butterick-nbsp**. Matthew Butterick, Practical Typography, "Nonbreaking spaces" (web page; no edition or year on the page).
+
+<https://practicaltypography.com/nonbreaking-spaces.html>, read 2026-10-20.
+
+Relied on: Use a nonbreaking space after § and ¶, after abbreviations such as "Ex." and "Fig." before a letter or number, between a title and a name ("Ms."), and with the trademark and copyright symbols.
