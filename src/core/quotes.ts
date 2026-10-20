@@ -30,11 +30,56 @@ const LONE = '"„“”‚«»‹›‘';
 const SPACED = '«‹';
 const SPACED_CLOSING = '»›';
 const NBSP = '\u00A0';
-// After a digit only a curly or guillemet mark closes: the straight " is an inch (5'10").
-const LONE_CLOSING = new RegExp(
-  `(?<=[^\\s\\d(\\[])[${LONE}]|(?<=\\d)[${LONE.replace('"', '')}]|(?<=\\S)${NBSP}[${SPACED_CLOSING}]`,
-  'g',
-);
+const LONE_MARK = new RegExp(`[${LONE}]`, 'g');
+// Closing: a mark, or a no-break space and a closing guillemet (« text » in French).
+const LONE_CLOSING = new RegExp(`[${LONE}]|${NBSP}[${SPACED_CLOSING}]`, 'g');
+const SPACE = /\s/;
+const NON_SPACE = /\S/;
+const DIGIT = /\d/;
+const BEFORE_CLOSING_BLOCKED = /[\s(\[]/;
+
+/**
+ * Every opening mark that stands where a quotation opens (`openerBefore` tells which characters may
+ * stand before it) and is followed by a non-space becomes OPEN, and so does each mark of a run directly
+ * after it, since an OPEN is a place where a quotation opens. French « and ‹ may be followed by a
+ * no-break space, which belongs to the mark. One scan, the cost of the marks, not of the text.
+ */
+function openLone(text: string, openerBefore: RegExp): string {
+  let out = '';
+  let last = 0;
+  LONE_MARK.lastIndex = 0;
+  for (let found = LONE_MARK.exec(text); found; found = LONE_MARK.exec(text)) {
+    const at = found.index;
+    if (at > 0 && !openerBefore.test(text[at - 1] as string)) continue;
+    let count = 0;
+    let end = at;
+    for (;;) {
+      const mark = text[end];
+      if (mark === undefined || !LONE.includes(mark)) break;
+      let next = end + 1;
+      if (text[next] === NBSP && SPACED.includes(mark)) next++;
+      if (next >= text.length || SPACE.test(text[next] as string)) break;
+      count++;
+      end = next;
+    }
+    if (!count) continue;
+    out += text.slice(last, at) + OPEN.repeat(count);
+    last = end;
+    LONE_MARK.lastIndex = end;
+  }
+  return last ? out + text.slice(last) : text;
+}
+
+/** After a digit only a curly or guillemet mark closes: the straight " is an inch (5'10"). */
+function closeLone(text: string): string {
+  return text.replace(LONE_CLOSING, (found: string, at: number) => {
+    const before = text[at - 1];
+    if (before === undefined) return found;
+    if (found.length === 2) return NON_SPACE.test(before) ? CLOSE : found;
+    if (DIGIT.test(before)) return found === '"' ? found : CLOSE;
+    return BEFORE_CLOSING_BLOCKED.test(before) ? found : CLOSE;
+  });
+}
 
 const trimInner = (s: string) => s.replace(/^[\s\u00A0]+|[\s\u00A0]+$/g, '');
 
@@ -74,8 +119,8 @@ function elisionOf(words: readonly string[]): { source: string; groups: number }
 type Setup = {
   pairs: readonly RegExp[];
   single: RegExp;
-  /** An opening mark may follow another (»„ at the start of a nested quotation), so it is read until none is left. French sets a no-break space inside « », which belongs to the mark. */
-  loneOpening: RegExp;
+  /** What may stand before an opening mark: a space, a bracket, an OPEN and the pack's `openers` (the start of the text is checked apart). */
+  openerBefore: RegExp;
   /**
    * A mark that stands for an apostrophe: inside a word, on a year, or an elision. Sticky: every
    * alternative matches the one character ' or ’ and nothing after it, so it is tried only where
@@ -116,10 +161,7 @@ function setupOf(pack: LangPack): Setup {
   const made: Setup = {
     pairs,
     single: new RegExp(`(${before})'([^']+)'(?=[\\s).,;:!?\\]${CLOSE}]|$)`, 'g'),
-    loneOpening: new RegExp(
-      `(?<=${before})(?:[${LONE.replace(/[«‹]/g, '')}]|[${SPACED}]${NBSP}?)(?=\\S)`,
-      'g',
-    ),
+    openerBefore: new RegExp(`[\\s(\\[${OPEN}${extra}]`),
     // Inside a word, or a leading apostrophe on a year (the ’90s: two digits). A straight ' there may open
     // a quoted number ('12'), a curly ’ cannot, so only the straight one is told apart by what follows.
     // The last alternatives are an apostrophe for dropped letters, rock 'n' roll and 'til: it is set curly
@@ -146,7 +188,7 @@ const US: readonly Level[] = [
 export function quotesFor(
   pack: LangPack,
 ): (text: string, register?: Register, quoteStyle?: QuoteStyle) => string {
-  const { pairs, single, loneOpening, apostrophe, elisionGroups, relevant, pairable, lone } =
+  const { pairs, single, openerBefore, apostrophe, elisionGroups, relevant, pairable, lone } =
     setupOf(pack);
   return (text, register = 'display', quoteStyle = 'language') => {
     if (!relevant.test(text)) return text;
@@ -177,11 +219,7 @@ export function quotesFor(
     // in each and close it only in the last. Reading marks by position, not by shape, makes the
     // result stable: set once, a lone « or » is read the same way when it is typeset again.
     if (lone.test(out)) {
-      for (let before = ''; before !== out; ) {
-        before = out;
-        out = out.replace(loneOpening, OPEN);
-      }
-      out = out.replace(LONE_CLOSING, CLOSE);
+      out = closeLone(openLone(out, openerBefore));
     }
     const levels =
       quoteStyle === 'us' ? US : (register === 'literary' && pack.literary) || pack.quotes;
