@@ -7,6 +7,7 @@ import { fr } from './fr';
 import { hu } from './hu';
 import { it } from './it';
 import { lt } from './lt';
+import { lv } from './lv';
 import { nl } from './nl';
 import type { LangPack } from './pack';
 import { pt } from './pt';
@@ -22,7 +23,7 @@ export type { Abbreviations, LangPack, Level, NumberFormat } from './pack';
  * The single registry of languages: add a pack here and the language exists everywhere
  * (`Lang`, `LANGS`, the command line, the rehype plugin, the playground, the docs).
  */
-export const PACKS = [en, uk, de, pl, fr, ch, cs, sk, nl, sv, ro, hu, es, it, pt, lt] as const;
+export const PACKS = [en, uk, de, pl, fr, ch, cs, sk, nl, sv, ro, hu, es, it, pt, lt, lv] as const;
 
 /** Every language code, derived from the packs. */
 export type Lang = (typeof PACKS)[number]['code'];
