@@ -28,6 +28,7 @@ bun run docs:rules           # writes docs/rules.md
 | `src/dom`, `src/react` | Hanging punctuation, framework-free and React |
 | `src/cli` | The `typo` command; `run.ts` takes an `Io` object so it can be tested without a process |
 | `scripts/gen-rules-doc.ts` | Generates `docs/rules.md` |
+| `scripts/sources.ts` | The sources registry; generates `docs/sources.md` (`bun run docs:sources`) |
 | `bench/` | The benchmark: a separate project, not tracked except `RESULTS.md` (see below) |
 | `playground/` | The web page |
 | `docs/` | These pages. `rules.md` is generated; the others are written by hand |
@@ -38,8 +39,9 @@ bun run docs:rules           # writes docs/rules.md
 2. Add one entry to `RULES` in `src/core/rules.ts`, in the place in the order where it should run: `{ id, about, apply }`. The id is `group.name`, or one word for a rule that stands alone. `about` is the one-line description that `typo --rules` prints and `docs/rules.md` shows.
 3. Do not add a step inside `typographic()`. It only loops over `RULES`, which is what makes a rule switchable (`disable`) and reportable (`explain`, `onChange`).
 4. Add examples to `EXAMPLES` in `scripts/gen-rules-doc.ts` (at least one, each of which must change its text when only that rule runs), then `bun run docs:rules`. `src/docs.test.ts` fails if a rule has no examples, if an example changes nothing, or if `docs/rules.md` is out of date.
-5. Add tests in `src/core/typography.test.ts`. Run the property tests (below): a new rule must not lose or add a letter or digit, and must be stable on its own output.
-6. Update [limits.md](limits.md) if the rule has a known limit, and add an entry to [../CHANGELOG.md](../CHANGELOG.md) saying whether it can change existing output (a new rule almost always can).
+5. Add an entry for the rule to `RULE_SOURCES` in `scripts/sources.ts` (sources read, why, what others do instead, confidence), then `bun run docs:sources`. Read every source before you enter it; a rule with no source read is `general-knowledge`. `src/sources.test.ts` fails if the entry is missing or the page is stale.
+6. Add tests in `src/core/typography.test.ts`. Run the property tests (below): a new rule must not lose or add a letter or digit, and must be stable on its own output.
+7. Update [limits.md](limits.md) if the rule has a known limit, and add an entry to [../CHANGELOG.md](../CHANGELOG.md) saying whether it can change existing output (a new rule almost always can).
 
 The order is part of the behaviour. For example, `dash.range` runs before `dash.sentence` so a spaced range is not read as a break in the sentence.
 
@@ -50,7 +52,7 @@ The order is part of the behaviour. For example, `dash.range` runs before `dash.
 3. If a rule keys on the language by name rather than by table (`space.percent` in `src/core/spaces.ts` lists `de` and `fr`), extend it.
 4. Add tests (`src/core/typography.test.ts`) and an examples row in `scripts/gen-rules-doc.ts` for every rule that acts on the new language, then `bun run docs:rules`.
 5. Update [languages.md](languages.md) by hand: it is not generated.
-6. Abbreviation lists and the like come from a style guide, not from memory; say in `languages.md` whether a native reader has seen them.
+6. Abbreviation lists and the like come from a style guide, not from memory: record the source for the language in `langs` of the rule's entry in `scripts/sources.ts` (`bun run docs:sources`), and say in `languages.md` whether a native reader has seen them.
 
 The command line and the rehype plugin take the language list from `LANGS`, so they follow.
 

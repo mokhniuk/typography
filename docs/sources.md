@@ -65,7 +65,7 @@ Confidence: `general-knowledge`.
 
 Why: Ukrainian dialogue opens a paragraph with a dash.
 
-Alternative: Not yet researched.
+Alternative: Not researched to a primary source: the Pravopys 2019 PDF (mon.gov.ua) refused the fetch (HTTP 403). A secondary page names Український правопис 2019, § 161 "Тире" (pp. 230–241) as the dash section; read that section before marking this verified.
 
 ### `dash.range`
 
@@ -194,7 +194,7 @@ Confidence: `general-knowledge`.
 
 Why: A one-letter word does not end a line.
 
-Alternative: Not yet researched.
+Alternative: No authoritative source found. Only secondary pages (a WebKit bug thread, a Czech nbsp generator, plugin pages) state the Polish and Czech practice; none is a style guide, so none is cited. A Polish or Ukrainian typography guide is needed, and the English a/I rule has no source at all.
 
 ### `space.arrow`
 

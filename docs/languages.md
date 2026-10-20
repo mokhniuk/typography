@@ -6,6 +6,7 @@ The engine has profiles for six languages, `Lang = 'en' | 'uk' | 'de' | 'pl' | '
 
 - The abbreviation lists are short and have not been read by a native speaker. They came from general knowledge, not from a style guide. Add to them only from a style guide, and have a native reader check them before you rely on them. French and Swiss have none.
 - Dash profiles beyond German and literary British English were not checked. Every other language gets the spaced em dash; Polish, French and Swiss usage was not looked into.
+- Which decisions have a source read, and which are still general knowledge, is recorded per rule in [sources.md](sources.md). Quote marks are `disputed` there: CLDR 46 differs from the engine for English, German, French level two and de-CH.
 - No native-speaker review of any profile is recorded in the repository. The package's benchmark (its cases are in `bench/RESULTS.md`, written by the package author) has a handful of cases per language, mostly English: they check that the output is a defensible style, not that a native reader approves it.
 - What is not implemented is listed at the end of this page.
 

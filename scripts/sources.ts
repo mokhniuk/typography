@@ -118,7 +118,11 @@ export const RULE_SOURCES: Record<string, Decision> = {
   ellipsis: general('Three dots are one character, …, so they cannot break across lines.'),
   arrow: general('Typed ASCII arrows have a proper character.'),
   'symbol.legal': general('(c), (R) and (TM) have proper characters.'),
-  'dash.dialogue': general('Ukrainian dialogue opens a paragraph with a dash.'),
+  'dash.dialogue': {
+    ...general('Ukrainian dialogue opens a paragraph with a dash.'),
+    alternative:
+      'Not researched to a primary source: the Pravopys 2019 PDF (mon.gov.ua) refused the fetch (HTTP 403). A secondary page names Український правопис 2019, § 161 "Тире" (pp. 230–241) as the dash section; read that section before marking this verified.',
+  },
   'dash.range': general('A range of numbers takes an en dash, not a hyphen.'),
   'dash.sentence': {
     sources: ['butterick-dashes'],
@@ -181,7 +185,11 @@ export const RULE_SOURCES: Record<string, Decision> = {
     alternative: 'Not compared with other tools or with guides for the other languages.',
     confidence: 'verified',
   },
-  'space.orphan': general('A one-letter word does not end a line.'),
+  'space.orphan': {
+    ...general('A one-letter word does not end a line.'),
+    alternative:
+      'No authoritative source found. Only secondary pages (a WebKit bug thread, a Czech nbsp generator, plugin pages) state the Polish and Czech practice; none is a style guide, so none is cited. A Polish or Ukrainian typography guide is needed, and the English a/I rule has no source at all.',
+  },
   'space.arrow': general('An arrow stays on the line of the word it points from or to.'),
 };
 

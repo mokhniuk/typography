@@ -33,6 +33,14 @@ typograf ships 20 of the 24 EU languages; we ship 4 (plus Ukrainian). These nine
 
 ## P1
 
+### Finish the sources registry
+
+[sources.md](sources.md) has 13 of 20 decisions still `general-knowledge`, one `disputed`. Read the sources and upgrade them, and have a native speaker check each language. Found while building it (2026-10-20, CLDR 46):
+
+- `quote` is `disputed`: CLDR has English `“ ” ‘ ’` (see the American quotes item above), German `„ “ ‚ ‘` (the engine sets `» « › ‹`), French `« »` with `« »` inside (the engine uses `“ ”`), and de-CH `„ “ ‚ ‘` (the engine's `ch` profile is the fr-CH one: `« » ‹ ›`). Decide per language whether the engine or CLDR is right, citing a guide.
+- `space.percent` / currency: CLDR sets a no-break space before the currency sign in `uk`, `pl` and `fr-CH`; the engine leaves `49€` alone there.
+- Unread, to read next: Pravopys 2019 (§ 161 "Тире" for `dash.dialogue`, the quote section; mon.gov.ua refused the fetch), the Swiss Federal Chancellery Schreibweisungen § 2.1.1 (the PDF has no extractable text here; needs a PDF reader), Imprimerie nationale Lexique, Duden, a Polish or Ukrainian typography guide for `space.orphan`, Chicago, Bringhurst, and a guide that prefers `−` and `×` (`symbol.minus`, `symbol.multiply`).
+
 ### Missing English rules
 
 What typograf, typopo or tipograph do and we do not (from `bun run features` in `bench/`):

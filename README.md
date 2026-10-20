@@ -9,7 +9,7 @@ There are 20 rules (see [docs/rules.md](docs/rules.md)) and six languages: `en` 
 - Private (`"private": true`), not published to any registry.
 - Ships `.ts` sources with no build step. It needs Bun or a TypeScript-aware bundler.
 - The core has no dependencies. `react` (18 or later) is an optional peer dependency, needed only by `./react`.
-- The abbreviation lists are short and have not been read by a native speaker, and some language conventions were not checked. Read [docs/limits.md](docs/limits.md) and [docs/languages.md](docs/languages.md) before relying on a language.
+- The abbreviation lists are short and have not been read by a native speaker, and some language conventions were not checked. Read [docs/limits.md](docs/limits.md) and [docs/languages.md](docs/languages.md) before relying on a language. What each rule rests on, and which decisions are still unchecked, is in [docs/sources.md](docs/sources.md).
 
 ## Install and use
 
