@@ -28,18 +28,40 @@ export const legal = (text: string): string =>
     .replace(/\(R\)/g, '®')
     .replace(/\(TM\)/gi, '™');
 
-/** A hyphen straight before a digit, after a space or a parenthesis, is a minus sign: -5 becomes −5. */
-export const minus = (text: string): string => text.replace(/(?<=^|[\s(])-(?=\d)/g, '\u2212');
+const SPACE_OR_PAREN = /[\s(]/;
+
+/**
+ * A hyphen straight before a digit, after the start, a space or a parenthesis, is a minus sign: -5
+ * becomes −5. Was `(?<=^|[\s(])-(?=\d)`, which is tried at every position; the hyphen is found first
+ * and the character before it read here.
+ */
+export const minus = (text: string): string =>
+  text.replace(/-(?=\d)/g, (hyphen, offset: number, whole: string) =>
+    offset === 0 || SPACE_OR_PAREN.test(whole.charAt(offset - 1)) ? '\u2212' : hyphen,
+  );
+
+const WORD_OR_JOINER = /[\w.,-]/;
 
 /**
  * The letter x between numbers is a multiplication sign: 1920x1080 becomes 1920×1080,
  * 3 x 4 becomes 3 × 4. Not a hex number (0x1F), and not an identifier that runs on
  * (v2x3, a.1x2).
+ *
+ * Both patterns used to open with a lookbehind (`(?<![\w.,-])` and `(?<=\d)`), which is tried at
+ * every position. Now each is found without it and the character before the match is read here. A
+ * match refused for it is left whole and the search goes on after it: every position inside such a
+ * match has a digit, a separator or an x before it, so the lookbehind would have refused it too.
  */
 export const multiply = (text: string): string =>
   text
     .replace(
-      /(?<![\w.,-])(?!0[xX])(\d+(?:[.,]\d+)?)((?:x\d+(?:[.,]\d+)?)+)(?![A-Za-z]*\d)/g,
-      (_m, first: string, rest: string) => `${first}${rest.replaceAll('x', '\u00D7')}`,
+      /(?!0[xX])(\d+(?:[.,]\d+)?)((?:x\d+(?:[.,]\d+)?)+)(?![A-Za-z]*\d)/g,
+      (match, first: string, rest: string, offset: number, whole: string) =>
+        offset > 0 && WORD_OR_JOINER.test(whole.charAt(offset - 1))
+          ? match
+          : `${first}${rest.replaceAll('x', '\u00D7')}`,
     )
-    .replace(/(?<=\d)[ ]+x[ ]+(?=\d)/g, '\u00A0\u00D7 ');
+    .replace(/[ ]+x[ ]+(?=\d)/g, (match, offset: number, whole: string) => {
+      const prev = whole.charCodeAt(offset - 1);
+      return prev >= 0x30 && prev <= 0x39 ? '\u00A0\u00D7 ' : match;
+    });
