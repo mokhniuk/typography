@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Typeset</title>
+    <link rel="icon" href="data:," />
+    <meta name="description" content="Paste plain text, HTML or Markdown and get proper typography: quotes by language, dashes, no-break spaces, hanging punctuation. Runs in your browser." />
+  </head>
+  <body>
+    <main>
+      <header class="top">
+        <div>
+          <h1>Typeset</h1>
+          <p class="lede">Paste text, get proper typography. It runs in your browser; nothing is sent anywhere.</p>
+        </div>
+      </header>
+
+      <section class="controls" aria-label="Options">
+        <fieldset class="seg" id="mode">
+          <legend class="sr">Input format</legend>
+          <label><input type="radio" name="mode" value="text" /><span>Text</span></label>
+          <label><input type="radio" name="mode" value="html" /><span>HTML</span></label>
+          <label><input type="radio" name="mode" value="markdown" /><span>Markdown</span></label>
+        </fieldset>
+        <label>Language
+          <select id="lang"></select>
+        </label>
+        <label>Register
+          <select id="register">
+            <option value="display">Display (marketing, UI)</option>
+            <option value="literary">Literary (books)</option>
+          </select>
+        </label>
+        <label id="nbspField" hidden>No-break space as
+          <select id="nbsp">
+            <option value="entity">&amp;nbsp;</option>
+            <option value="char">the character</option>
+          </select>
+        </label>
+        <span class="grow"></span>
+        <button type="button" id="example" class="ghost">Insert example</button>
+        <button type="button" id="clear" class="ghost">Clear</button>
+      </section>
+
+      <details class="rules" id="rulesBox">
+        <summary>Rules <span id="ruleCount" class="badge"></span></summary>
+        <p class="note">Switch a rule off to see what it does. Each name is also what <code>typo --disable</code> takes.</p>
+        <div id="ruleList" class="rule-list"></div>
+        <button type="button" id="rulesAll" class="ghost">Switch all on</button>
+      </details>
+
+      <section class="panes">
+        <div class="pane">
+          <label class="pane-title" for="input">Your text</label>
+          <textarea id="input" spellcheck="false" placeholder="Paste or type here…"></textarea>
+        </div>
+
+        <div class="pane">
+          <div class="pane-head">
+            <div class="tabs" role="tablist" aria-label="Result view">
+              <button type="button" role="tab" data-view="result">Result</button>
+              <button type="button" role="tab" data-view="changes">Changes <span id="count" class="badge">0</span></button>
+              <button type="button" role="tab" data-view="preview">Preview</button>
+            </div>
+            <span class="grow"></span>
+            <label class="check" id="markField"><input type="checkbox" id="mark" /> Mark no-break spaces</label>
+            <button type="button" id="copy">Copy</button>
+          </div>
+          <textarea id="result" readonly spellcheck="false"></textarea>
+          <div id="changes" class="view" hidden></div>
+          <div id="preview" class="view" hidden></div>
+          <p id="note" class="note" hidden></p>
+        </div>
+      </section>
+    </main>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

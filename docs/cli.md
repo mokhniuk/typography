@@ -1,0 +1,105 @@
+# Command line: `typo`
+
+```
+typo [options] [file...]
+```
+
+The `typo` bin points at `src/cli/main.ts`, a Bun script (`#!/usr/bin/env bun`, using `node:util`, `node:fs/promises` and Bun's runtime). It needs Bun. Without linking the bin, run `bun run src/cli/main.ts ...` from the package folder (or `bun /path/to/typography/src/cli/main.ts`).
+
+It typesets text, HTML or Markdown with the same engine as the library functions (`typesetText`, `typesetHtml`, `typesetMarkdown`).
+
+## Options
+
+| Flag | Short | Argument | Default | Meaning |
+|---|---|---|---|---|
+| `--lang` | `-l` | `en`, `uk`, `de`, `pl`, `fr`, `ch` | `en` | Language of the text. |
+| `--register` | `-r` | `display`, `literary` | `display` | Register. |
+| `--format` | `-f` | `text`, `html`, `markdown` (`md` is accepted) | by extension | How to read the input. |
+| `--disable` | `-d` | rule ids or groups, comma separated | none | Switch rules off, for example `dash.range,space`. The flag may be given more than once. |
+| `--rules` | | | | List the rules with their descriptions and exit 0. |
+| `--explain` | | | | Print every change and the rule behind it, instead of the typeset text. |
+| `--json` | | | | JSON output for `--explain`. An error without `--explain`. |
+| `--write` | `-w` | | | Rewrite the files in place. |
+| `--check` | `-c` | | | Change nothing; exit 1 if any input would change. |
+| `--nbsp` | | `entity`, `char` | `entity` | HTML only: write a no-break space as `&nbsp;` or as the character. Checked for every format, used only for HTML. |
+| `--help` | `-h` | | | Show the help and exit 0. |
+| `--version` | `-v` | | | Print the version of the package (from `package.json`) and exit 0. |
+
+## Input
+
+- With no file (or `-` as the file), the command reads standard input to the end. A terminal with nothing piped in waits for input.
+- With files, each is read as UTF-8.
+- One file and no `--write`, `--check` or `--explain`: the typeset text goes to standard output.
+- Several files need `--write`, `--check` or `--explain`; otherwise the command refuses (exit 2), because their outputs would run together.
+- `--write` needs files; it does not work on standard input.
+
+### Format by extension
+
+When `-f` is not given:
+
+| File | Format |
+|---|---|
+| `.html`, `.htm`, `.xhtml` (any case) | `html` |
+| `.md`, `.markdown` (any case) | `markdown` |
+| anything else, and standard input | `text` |
+
+`-f` overrides the extension. An unknown format is a usage error.
+
+## Exit codes
+
+| Code | Meaning |
+|---|---|
+| 0 | Success. With `--check`: nothing would change. |
+| 1 | `--check` only: at least one input would change. |
+| 2 | A usage error (unknown flag, language, register, format, rule or `--nbsp` value; `--write` with `--check`; `--json` without `--explain`; `--explain` with `--write` or `--check`; `--write` without files; several files with no `--write`/`--check`/`--explain`) or a file that could not be read. |
+
+Messages go to standard error, prefixed `typo:`. With `--check`, each file that would change is named on standard error as `<file>: would change`. With `--write`, each file that was rewritten is named as `<file>: typeset`; a file that needs no change is not written. When a file cannot be read, the command reports it, goes on to the next file and exits 2 at the end (a later `would change` does not lower it to 1).
+
+`--write` and `--check` cannot be used together. `--explain` only reports.
+
+## `--explain`
+
+Prints one line per change, in the order the rules ran:
+
+```
+note.txt: quote: "\"" -> "«"
+note.txt: dash.range: "-" -> "–"
+```
+
+The file name is left out when the input is standard input. With `--json` the output is an array of `{ file, rule, from, to }` objects, where `file` is the path or `null` for standard input:
+
+```json
+[
+  { "file": null, "rule": "ellipsis", "from": "...", "to": "…" }
+]
+```
+
+`--explain` accepts several files and prints one combined list at the end. It exits 0 unless a file could not be read.
+
+## Examples
+
+```sh
+typo note.txt                       # typeset to standard output
+cat note.txt | typo -l uk           # standard input, Ukrainian
+typo -w docs/*.md                   # rewrite Markdown files in place
+typo -r literary -l en story.txt    # British quotes, spaced en dash
+typo -d dash.range,space page.html  # a rule and a whole group off
+typo -f html --nbsp char < page.txt # read as HTML, write a real no-break space
+typo --rules                        # the rule ids and what each does
+typo --explain note.txt             # what would change, and why
+typo --explain --json -l de < note.txt
+```
+
+### In CI
+
+`--check` changes nothing and fails the build if a file is not already typeset:
+
+```sh
+bun run src/cli/main.ts --check -l en docs/*.md || exit 1
+```
+
+Exit 1 means "would change", exit 2 means the command was misused or a file is missing, so a CI step can tell the two apart. A second run on the output of `--write` reports nothing (the engine is stable on its own output).
+
+## Rules and groups
+
+`--disable` and `--rules` use the ids in [rules.md](rules.md). A name that matches no rule is a usage error (exit 2) and the message lists the ids.

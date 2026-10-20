@@ -1,0 +1,344 @@
+import './style.css';
+import {
+  type Change,
+  diff,
+  type Lang,
+  LANGS,
+  type Register,
+  REGISTERS,
+  RULES,
+  RULE_IDS,
+  splitHangs,
+} from '../src/core';
+import { hangPunctuation } from '../src/dom';
+import { typesetHtml } from '../src/html';
+import { typesetMarkdown } from '../src/markdown';
+import { typesetText } from '../src/text';
+
+type Mode = 'text' | 'html' | 'markdown';
+type View = 'result' | 'changes' | 'preview';
+type State = {
+  mode: Mode;
+  lang: Lang;
+  register: Register;
+  nbsp: 'entity' | 'char';
+  view: View;
+  mark: boolean;
+  /** Rules switched off. */
+  disable: string[];
+  input: string;
+};
+
+const LANG_NAMES: Record<Lang, string> = {
+  en: 'English',
+  uk: 'Ukrainian (українська)',
+  de: 'German (Deutsch)',
+  pl: 'Polish (polski)',
+  fr: 'French (français)',
+  ch: 'Swiss (Schweiz)',
+};
+
+const SAMPLE: Record<Lang, string> = {
+  en: 'He said "we\'re here" - and left... The lab runs 21-26 September, 10:00-12:00. Read more ->',
+  uk: 'Він сказав: "ми тут" - і пішов... Лабораторія триває 21-26 вересня, 10:00-12:00. Докладніше ->',
+  de: 'Er sagte "wir sind da" - und ging... Das Labor läuft 21-26 September, 10:00-12:00. Mehr lesen ->',
+  pl: 'Powiedział "jesteśmy tu" - i wyszedł... Laboratorium trwa 21-26 września, 10:00-12:00. Czytaj więcej ->',
+  fr: 'Il a dit "nous voilà" - et il est parti... Le labo dure 21-26 septembre, 10:00-12:00. Lire la suite ->',
+  ch: 'Er sagte "wir sind da" - und ging... Das Labor läuft 21-26 September, 10:00-12:00. Mehr lesen ->',
+};
+
+function example(mode: Mode, lang: Lang): string {
+  const base = SAMPLE[lang];
+  if (mode === 'html') {
+    return `<h1>"Title" - subtitle</h1>\n<p>${base}</p>\n<p>Run <code>a -> b</code> and see <a href="https://example.org/1-2">the "docs"</a>.</p>`;
+  }
+  if (mode === 'markdown') {
+    return `# "Title" - subtitle\n\n${base}\n\nRun \`a -> b\` and see [the "docs"](https://example.org/1-2).`;
+  }
+  return `${base}\n\nSee https://example.org/1-2 or write to info@example.org (c) 2026.`;
+}
+
+const STORAGE = 'typeset-playground';
+
+function load(): State {
+  const fallback: State = {
+    mode: 'text',
+    lang: 'en',
+    register: 'display',
+    nbsp: 'entity',
+    view: 'result',
+    mark: false,
+    disable: [],
+    input: example('text', 'en'),
+  };
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE) ?? 'null') as Partial<State> | null;
+    if (!saved) return fallback;
+    return {
+      mode: saved.mode === 'html' || saved.mode === 'markdown' ? saved.mode : 'text',
+      lang: LANGS.includes(saved.lang as Lang) ? (saved.lang as Lang) : 'en',
+      register: saved.register === 'literary' ? 'literary' : 'display',
+      nbsp: saved.nbsp === 'char' ? 'char' : 'entity',
+      view: saved.view === 'changes' || saved.view === 'preview' ? saved.view : 'result',
+      mark: saved.mark === true,
+      disable: Array.isArray(saved.disable)
+        ? saved.disable.filter(
+            (id): id is string => typeof id === 'string' && RULE_IDS.includes(id),
+          )
+        : [],
+      input: typeof saved.input === 'string' ? saved.input : fallback.input,
+    };
+  } catch {
+    return fallback;
+  }
+}
+
+function save(state: State) {
+  try {
+    localStorage.setItem(STORAGE, JSON.stringify(state));
+  } catch {
+    // Private windows and blocked storage: the page works without it.
+  }
+}
+
+function el<T extends HTMLElement>(id: string): T {
+  const found = document.getElementById(id);
+  if (!found) throw new Error(`#${id} is missing`);
+  return found as T;
+}
+
+const input = el<HTMLTextAreaElement>('input');
+const result = el<HTMLTextAreaElement>('result');
+const changes = el<HTMLDivElement>('changes');
+const preview = el<HTMLDivElement>('preview');
+const note = el<HTMLParagraphElement>('note');
+const count = el<HTMLSpanElement>('count');
+const langSelect = el<HTMLSelectElement>('lang');
+const registerSelect = el<HTMLSelectElement>('register');
+const nbspSelect = el<HTMLSelectElement>('nbsp');
+const nbspField = el<HTMLLabelElement>('nbspField');
+const mark = el<HTMLInputElement>('mark');
+const markField = el<HTMLLabelElement>('markField');
+const copy = el<HTMLButtonElement>('copy');
+
+for (const lang of LANGS) langSelect.add(new Option(LANG_NAMES[lang], lang));
+for (const option of registerSelect.options) {
+  if (!REGISTERS.includes(option.value as Register)) throw new Error('register list out of date');
+}
+
+const state = load();
+
+const ruleList = el<HTMLDivElement>('ruleList');
+const ruleCount = el<HTMLSpanElement>('ruleCount');
+for (const rule of RULES) {
+  const label = document.createElement('label');
+  const box = document.createElement('input');
+  box.type = 'checkbox';
+  box.dataset.id = rule.id;
+  const name = document.createElement('code');
+  name.textContent = rule.id;
+  const about = document.createElement('small');
+  about.textContent = rule.about;
+  label.append(box, name, about);
+  ruleList.append(label);
+  box.addEventListener('change', () => {
+    state.disable = box.checked
+      ? state.disable.filter((id) => id !== rule.id)
+      : [...state.disable, rule.id];
+    schedule();
+  });
+}
+el('rulesAll').addEventListener('click', () => {
+  state.disable = [];
+  schedule();
+});
+
+const escapeHtml = (text: string) =>
+  text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const visible = (text: string) => text.replaceAll(' ', '⍽');
+
+function convert(): { output: string; changes: Change[] } {
+  const { lang, register, disable } = state;
+  const changes: Change[] = [];
+  const options = { lang, register, disable, onChange: (change: Change) => changes.push(change) };
+  const output =
+    state.mode === 'html'
+      ? typesetHtml(state.input, { ...options, nbsp: state.nbsp })
+      : state.mode === 'markdown'
+        ? typesetMarkdown(state.input, options)
+        : typesetText(state.input, options);
+  return { output, changes };
+}
+
+let stopHanging: (() => void) | null = null;
+
+function renderPreview(output: string) {
+  stopHanging?.();
+  stopHanging = null;
+  preview.replaceChildren();
+  if (state.mode === 'html') {
+    const frame = document.createElement('iframe');
+    // No scripts, no same-origin access: pasted HTML is shown, never run.
+    frame.setAttribute('sandbox', '');
+    frame.title = 'Preview of the HTML result';
+    frame.srcdoc = `<!doctype html><meta charset="utf-8"><style>body{font:19px/1.55 Georgia,serif;max-width:34em;margin:1em;color:#1b1b1a}code,pre{font-size:.85em}</style>${output}`;
+    preview.append(frame);
+    return;
+  }
+  for (const block of output.split(/\r?\n[ \t]*\r?\n/)) {
+    if (!/\S/.test(block)) continue;
+    const p = document.createElement('p');
+    for (const part of splitHangs(block, true)) {
+      if (part.hang) {
+        const span = document.createElement('span');
+        span.dataset.hang = '';
+        if (part.lead) span.style.marginLeft = '-0.5em';
+        span.textContent = part.text;
+        p.append(span);
+      } else {
+        p.append(part.text);
+      }
+    }
+    preview.append(p);
+  }
+  stopHanging = hangPunctuation(preview);
+}
+
+function groups(runs: ReturnType<typeof diff>): number {
+  let n = 0;
+  let inside = false;
+  for (const run of runs) {
+    if (run.kind === 'same') inside = false;
+    else if (!inside) {
+      inside = true;
+      n++;
+    }
+  }
+  return n;
+}
+
+function render() {
+  for (const radio of document.querySelectorAll<HTMLInputElement>('#mode input')) {
+    radio.checked = radio.value === state.mode;
+  }
+  for (const tab of document.querySelectorAll<HTMLButtonElement>('.tabs button')) {
+    tab.setAttribute('aria-selected', String(tab.dataset.view === state.view));
+  }
+  langSelect.value = state.lang;
+  registerSelect.value = state.register;
+  nbspSelect.value = state.nbsp;
+  mark.checked = state.mark;
+  nbspField.hidden = state.mode !== 'html';
+  for (const box of ruleList.querySelectorAll<HTMLInputElement>('input')) {
+    box.checked = !state.disable.includes(box.dataset.id ?? '');
+  }
+  ruleCount.textContent = state.disable.length ? `${state.disable.length} off` : '';
+  ruleCount.hidden = !state.disable.length;
+  if (input.value !== state.input) input.value = state.input;
+
+  const { output, changes: made } = convert();
+  const runs = diff(state.input, output);
+  count.textContent = String(groups(runs));
+
+  result.value = state.mark ? visible(output) : output;
+  const inline = runs
+    .map((run) => {
+      const text = escapeHtml(visible(run.text));
+      return run.kind === 'ins'
+        ? `<ins>${text}</ins>`
+        : run.kind === 'del'
+          ? `<del>${text}</del>`
+          : text;
+    })
+    .join('');
+  const used = RULES.flatMap((rule) => {
+    const own = made.filter((c) => c.rule === rule.id);
+    if (!own.length) return [];
+    const examples = [
+      ...new Set(own.map((c) => `${visible(c.from) || '∅'} → ${visible(c.to) || '∅'}`)),
+    ]
+      .slice(0, 3)
+      .map((e) => escapeHtml(e))
+      .join('; ');
+    return [`<li><code>${rule.id}</code> ×${own.length} <span class="ex">${examples}</span></li>`];
+  });
+  changes.innerHTML = `<div class="diff">${inline}</div>${used.length ? `<ul class="used">${used.join('')}</ul>` : ''}`;
+  result.hidden = state.view !== 'result';
+  changes.hidden = state.view !== 'changes';
+  preview.hidden = state.view !== 'preview';
+  markField.hidden = state.view !== 'result';
+  if (state.view === 'preview') renderPreview(output);
+  else {
+    stopHanging?.();
+    stopHanging = null;
+  }
+  note.hidden = !(state.view === 'preview' && state.mode === 'html');
+  note.textContent =
+    'Opening punctuation hangs in the margin in the text and Markdown previews; the HTML preview does not show it.';
+  save(state);
+}
+
+let frame = 0;
+const schedule = () => {
+  cancelAnimationFrame(frame);
+  frame = requestAnimationFrame(render);
+};
+
+input.addEventListener('input', () => {
+  state.input = input.value;
+  schedule();
+});
+for (const radio of document.querySelectorAll<HTMLInputElement>('#mode input')) {
+  radio.addEventListener('change', () => {
+    state.mode = radio.value as Mode;
+    schedule();
+  });
+}
+for (const tab of document.querySelectorAll<HTMLButtonElement>('.tabs button')) {
+  tab.addEventListener('click', () => {
+    state.view = tab.dataset.view as View;
+    schedule();
+  });
+}
+langSelect.addEventListener('change', () => {
+  state.lang = langSelect.value as Lang;
+  schedule();
+});
+registerSelect.addEventListener('change', () => {
+  state.register = registerSelect.value as Register;
+  schedule();
+});
+nbspSelect.addEventListener('change', () => {
+  state.nbsp = nbspSelect.value === 'char' ? 'char' : 'entity';
+  schedule();
+});
+mark.addEventListener('change', () => {
+  state.mark = mark.checked;
+  schedule();
+});
+el('example').addEventListener('click', () => {
+  state.input = example(state.mode, state.lang);
+  schedule();
+});
+el('clear').addEventListener('click', () => {
+  state.input = '';
+  schedule();
+  input.focus();
+});
+copy.addEventListener('click', async () => {
+  try {
+    await navigator.clipboard.writeText(convert().output);
+    copy.textContent = 'Copied';
+  } catch {
+    // Without clipboard access, select the text so it can be copied by hand.
+    state.view = 'result';
+    render();
+    result.select();
+    copy.textContent = 'Select and copy';
+  }
+  setTimeout(() => {
+    copy.textContent = 'Copy';
+  }, 1500);
+});
+
+render();

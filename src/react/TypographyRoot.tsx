@@ -1,0 +1,80 @@
+import {
+  type ReactNode,
+  type RefObject,
+  useContext,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useSyncExternalStore,
+} from 'react';
+import type { Lang, Register } from '../core';
+import { hangPunctuation, hangScript } from '../dom';
+import { TypographyContext } from './context';
+
+/**
+ * Sends the hanging pass inline, to run on the parent of this element as the page is
+ * parsed (see `hangScript`). Put it last inside the element that holds the text. On the
+ * server and while the page hydrates it renders the script; on any later client render
+ * it renders nothing, because scripts rendered by React are never run.
+ */
+export function HangScript() {
+  const prerendering = useServerRender();
+  if (!prerendering) return null;
+  // biome-ignore lint/security/noDangerouslySetInnerHtml: the source is this package's own function, not user input
+  return <script dangerouslySetInnerHTML={{ __html: hangScript() }} />;
+}
+
+/** Runs the hanging pass over everything under `root`, for as long as it is mounted. */
+export function useHangingPunctuation(root: RefObject<HTMLElement | null>) {
+  useLayoutEffect(() => {
+    const el = root.current;
+    return el ? hangPunctuation(el) : undefined;
+  }, [root]);
+}
+
+const subscribe = () => () => {};
+
+/** True on the server and while the page hydrates; false on any client render after that. */
+const useServerRender = () =>
+  useSyncExternalStore(
+    subscribe,
+    () => false,
+    () => true,
+  );
+
+/**
+ * Wraps a page so its text is typeset: sets the language and register every
+ * `Typeset` under it falls back to, and hangs opening punctuation wherever a line
+ * starts with it. A value left out is inherited from an outer root.
+ *
+ * On a prerendered page it also sends the hanging pass inline (`hangScript`), so the
+ * marks hang as the page is parsed and do not move when the bundle has loaded. Turn
+ * that off with `early={false}`, for a page with a content security policy that
+ * forbids inline scripts.
+ */
+export function TypographyRoot({
+  children,
+  lang,
+  register,
+  early = true,
+}: {
+  children: ReactNode;
+  lang?: Lang | undefined;
+  register?: Register | undefined;
+  early?: boolean;
+}) {
+  const root = useRef<HTMLDivElement>(null);
+  const inherited = useContext(TypographyContext);
+  const language = lang ?? inherited.lang;
+  const setting = register ?? inherited.register;
+  const value = useMemo(() => ({ lang: language, register: setting }), [language, setting]);
+  useHangingPunctuation(root);
+  return (
+    <TypographyContext.Provider value={value}>
+      <div ref={root}>
+        {children}
+        {early ? <HangScript /> : null}
+      </div>
+    </TypographyContext.Provider>
+  );
+}

@@ -1,0 +1,100 @@
+# Changelog
+
+Versions follow semver while the package is below 1.0.0: a **minor** release may change the output of the engine or the API (every entry says whether it can change output you already have), a **patch** release fixes a bug without changing output you rely on. If you depend on exact output, pin a tag and read this file before you move it.
+
+## 0.1.0 (2026-10-20)
+
+The first release as a project of its own. The engine was developed inside another repository; everything under "Before 0.1.0" is that history, by date. Nothing about the output changed in the move.
+
+## Before 0.1.0
+
+## 2026-10-20
+
+### German quotations in a row are stable
+
+German output (`»a« und »b«`) is now read the same way on a second run. Before, the `«` that ends one quotation and the `»` that opens the next were taken for a pair, so running the engine again (for example `typo --check` after `typo --write`) changed the text. In German the pairs are now `»…«` and `›…‹`, each read by where the marks stand, and a text written `«…»` is read by position too. First-run output on ordinary text is unchanged (checked on 57,024 combinations of text, language and register); the difference is only in text that was already typeset, or that holds two quotations in a row. Can change existing output: yes, for German text with two adjacent quotations that had been run through the engine twice.
+
+### Hanging punctuation is sent inline, so it runs as the page is parsed
+
+New: `hangScript()` (from `./dom`), `<HangScript />` and `useHangingPunctuation` (from `./react`), and an `early` prop on `TypographyRoot` (default `true`). `hangPunctuation` was rewritten to be self-contained so its source can be sent to the page.
+
+Can change existing output: yes, for React pages. `TypographyRoot` now renders an inline `<script>` (the length of `hangScript()`, about 2.4 kB) on the server and while hydrating, so a prerendered page changes. Pass `early={false}` to keep the old output, and do that on any page whose content security policy forbids inline scripts. The marks that start a wrapped line now hang at first paint instead of moving by their own width once the bundle has loaded.
+
+### A rehype plugin
+
+New entry `./rehype`: the default export `rehypeTypography` and `typesetHast(tree, options)`. It reads an element's `lang`, skips code and `data-typography="off"`, and typesets a block at a time so a quotation pairs across a link. Existing output: unchanged (new entry; the sets of block and raw elements are now shared with the HTML mode, with no change).
+
+### German nested quotations are `»outer ›inner‹ outer«`
+
+Before, a German quotation inside a quotation was set `»outer „inner“ outer«`, a mix no style guide uses. Now the inner level is `›…‹`.
+
+Can change existing output: yes, for German text with a nested quotation. Plain German quotations are unchanged.
+
+### Edge cases found by seeded property tests
+
+So that a second run (`typo --check` after `--write`) reports nothing:
+
+- A lone quotation mark is read by where it stands, whatever its shape, so a `«` or `»` that a first pass set is read the same way again; a French `«` with its no-break space too.
+- A stack of opening marks is read until none is left.
+- A web address no longer swallows a closing `‘`, `’` or `„`.
+- A leading curly `’` on a year is an apostrophe even before a closing `’`.
+- A double hyphen between numbers is a range.
+- A chain of en dashes, or a time, is not a range.
+
+Can change existing output: yes, for the inputs named, which are unusual. A comparison with the previous commit over 64,980 combinations of real text, language, register and block start found no difference.
+
+### Dash profiles, abbreviations, `%` and `€`, minus, multiplication, lone quotes
+
+- German and literary British English set a break in the sentence with a spaced en dash; other languages keep the em dash.
+- New rules, each switchable by id: `space.abbreviation` (`z. B.`, `Nr. 5`, `вул. Хрещатик`, `ul. Marszałkowska`, `Fig. 2`; short lists, not read by a native speaker), `space.percent` (German and French: `5 %`, `49 €`), `symbol.minus` (`-5` becomes `−5`) and `symbol.multiply` (`1920x1080` becomes `1920×1080`; not `0x1F`, not identifiers).
+- The rule `symbol` is now `symbol.legal`. The group name `symbol` still switches it off, but a change reported by `explain` or `onChange` now carries `symbol.legal` as its rule, so code that compared the id to `'symbol'` must change.
+- A straight `"` with no partner is now set as an opening or a closing mark, so a quotation that runs over several paragraphs no longer keeps straight quotes. An inch mark (`5'10"`) is left alone.
+
+Can change existing output: yes. A comparison on real text found only the intended differences (the German dash, lone quotes, `%` in French, minus, abbreviations).
+
+### Rules have ids; `disable`, `explain` and `onChange`
+
+The engine is split into `quotes`, `dashes`, `spaces`, `marks` and `zones` and run from the `RULES` table in order. New API: `RULES`, `RULE_IDS`, the `disable` option (ids or groups; an unknown name throws), `explain(text, lang, options)` returning `{ output, changes }`, the `onChange` option and the `Change` type. The text, HTML and Markdown modes and the command line (`--disable`, `--rules`, `--explain`, `--json`) take them too. Apostrophes now belong to their own rule, `apostrophe`.
+
+Can change existing output: no. The split output was compared with the previous engine over 114,816 combinations of real text, language, register and block start, with no difference.
+
+### Plain-text mode and the `typo` command
+
+New: `typesetText` (a paragraph at a time, keeping line breaks, indentation and blank lines) and the `typo` command (needs Bun): standard input or files, text, HTML or Markdown picked from the extension, `--write`, and `--check` (exit 1 if a file would change). Existing output: unchanged (new).
+
+### Addresses and code are protected; HTML and Markdown modes
+
+- Web addresses, emails and `` `code spans` `` are set aside while the rules run and come back exactly as written, so `12-15` in a path or `->` in a command survives.
+- A leading apostrophe on a year (`'90s`) no longer stops a quotation from pairing.
+- An arrow keeps a no-break space against its word (`Read more →`, `← Back`).
+- New entries `./html` (`typesetHtml`) and `./markdown` (`typesetMarkdown`): they typeset the text and leave tags, attributes, code and structure as they were; a block that needs no change comes back byte for byte.
+
+Can change existing output: yes, for text that holds an address, an email or a code span, a year with a leading apostrophe, or an arrow with a plain space.
+
+### The engine becomes its own package
+
+The code, which first lived inside the app's internationalisation package, moved into a package of its own, with entries `.` (the rules), `./dom` (the framework-free hanging measurer) and `./react`. A boundary test fails if anything in the package imports from outside it. No behaviour change; the import path changed.
+
+## 2026-10-18
+
+### A number binds only to a short word
+
+`space.number` now binds a number to the word after it only when that word has at most nine letters (`21 September`, `15 people`, `5 km`), and no longer binds a month to its year (`September 2026`). A chain of bound words could outgrow a narrow column on a phone. Can change existing output: yes, wherever a number was followed by a longer word, or a month by a year, which now wrap freely.
+
+### The literary register
+
+New: a second axis next to language, the `register` option (`display` or `literary`) and the `Register` type. `display` is the default and is unchanged. `literary` sets British English quotes (`‘outer “inner” outer’`) and a Ukrainian dialogue line, opened by a dash, with an em dash and a no-break space; other languages keep their display rules. In React, `<TypographyRoot register="literary">` or `<Typeset register=…>`.
+
+Can change existing output: no, unless you opt in.
+
+## 2026-10-17
+
+### Ranges and hanging
+
+- Number ranges, spaced or not (`10:00 – 12:00`, `21 – 26 September`), become en dashes instead of sentence breaks; identifiers, partial dates and phone numbers keep their hyphen. Can change existing output: yes, for a spaced range, which was set as a sentence dash.
+- Hanging marks are measured once and kept rather than reset on every page change, and are skipped in centred, right-aligned and indented text. Can change existing output: yes, for such text, where a mark no longer hangs.
+- The documentation of `typographic` no longer claimed that German output is safe to run twice; at that date it was not. It is now: see 2026-10-20.
+
+### The first rules
+
+New: `typographic(text, lang)` and `splitHangs(text, atStart)`. Quotation by language and nesting level (`«outer „inner“»` for English and Ukrainian; `»outer „inner“«` for German, changed later, see 2026-10-20; and Polish, French and Swiss), dashes (a spaced hyphen is an em dash, a numeric range an en dash), the typographic apostrophe, the ellipsis, arrows and `©` `®` `™`, and no-break spaces after titles and initials, between a number and its unit or month, and after one-letter words per language. Plain TypeScript with no dependencies.
