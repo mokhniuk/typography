@@ -1,6 +1,21 @@
-/** A straight apostrophe after a letter, or before a year's two digits, becomes ’. */
+import { before, isLetter } from './scan';
+
+const SPACE_OR_OPENER = /[\s([]/;
+
+/**
+ * A straight apostrophe after a letter, or before a year's two digits (after the start, a space or an
+ * opening bracket), becomes ’. One pass that opens with the literal `'`; it was two regexes that opened
+ * with a lookbehind, `(?<=\p{L})'` and `(?<=^|[\s([])'(?=\d)`. The two cases cannot overlap (the
+ * character before is a letter in one, a space or bracket in the other), so the second reading the
+ * output of the first made no difference.
+ */
 export const apostrophe = (text: string): string =>
-  text.replace(/(?<=\p{L})'/gu, '’').replace(/(?<=^|[\s([])'(?=\d)/g, '’');
+  text.replace(/'/g, (mark, offset: number, whole: string) => {
+    if (isLetter(before(whole, offset))) return '’';
+    const next = whole.charCodeAt(offset + 1);
+    if (!(next >= 0x30 && next <= 0x39)) return mark;
+    return offset === 0 || SPACE_OR_OPENER.test(whole.charAt(offset - 1)) ? '’' : mark;
+  });
 
 export const ellipsis = (text: string): string => text.replace(/\.{3}/g, '…');
 
