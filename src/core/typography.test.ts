@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'bun:test';
-import { explain, NBSP, RULE_IDS, RULES, splitHangs, typographic } from './index';
+import { explain, LANGS, NBSP, PACK, RULE_IDS, RULES, splitHangs, typographic } from './index';
+import { LITERARY } from './profiles';
 
 /** The rules output (and expect) non-breaking spaces, which look like spaces: show them as ~. */
 const t = (
@@ -258,7 +259,10 @@ describe('literary register', () => {
 
   test('a language with no literary profile keeps its display rules', () => {
     const sample = '“x ‘y’ z” - and 21-26 September';
-    for (const lang of ['de', 'pl', 'fr', 'ch'] as const) {
+    // Every language whose literary register has no marks or dialogue dash of its own.
+    const plain = LANGS.filter((lang) => !LITERARY[lang] && !PACK[lang].dialogueDash);
+    expect(plain).toEqual(['de', 'pl', 'fr', 'ch']);
+    for (const lang of plain) {
       expect(t(sample, lang, literary)).toBe(t(sample, lang));
     }
   });
@@ -283,7 +287,7 @@ describe('literary register', () => {
 test('typographic is idempotent', () => {
   const sample =
     "“a ‘b’ c” — and 21-26 September 2026, Prof. Dr. K. Słoboda... don't (c) 2026 -> x";
-  for (const lang of ['en', 'uk', 'de', 'pl', 'fr', 'ch'] as const) {
+  for (const lang of LANGS) {
     const once = typographic(sample, lang);
     expect(typographic(once, lang)).toBe(once);
   }

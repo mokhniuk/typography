@@ -1,3 +1,4 @@
+import { PACK } from './lang';
 import { ABBREVIATIONS, type Abbreviations, ORPHANS } from './profiles';
 import { type Lang, NBSP } from './types';
 
@@ -71,9 +72,9 @@ export const abbreviations = (text: string, lang: Lang): string => {
   return out;
 };
 
-/** In German and French a percent or euro sign stands apart from its number by a no-break space: 5 %, 49 €. */
+/** In a language with `percentSpace` (German, French) a percent or euro sign stands apart from its number by a no-break space: 5 %, 49 €. */
 export const unitSymbol = (text: string, lang: Lang): string =>
-  lang === 'de' || lang === 'fr' ? text.replace(/(?<=\d)(?=[%€])/g, NBSP) : text;
+  PACK[lang].percentSpace ? text.replace(/(?<=\d)(?=[%€])/g, NBSP) : text;
 
 /** An arrow stays with the word it points from or to: «Read more →», «← Back». */
 export const arrowSpace = (text: string): string =>

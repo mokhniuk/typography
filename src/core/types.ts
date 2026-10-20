@@ -1,7 +1,10 @@
+import type { Lang } from './lang';
+
 /** A no-break space. */
 export const NBSP = '\u00A0';
 
-export type Lang = 'en' | 'uk' | 'de' | 'pl' | 'fr' | 'ch';
+/** The language codes; derived from the packs in `lang/index.ts`, never listed by hand. */
+export type { Lang };
 
 /**
  * The setting a text is for. `display` is the default: marketing and event pages,

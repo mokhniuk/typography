@@ -4,6 +4,7 @@ import {
   diff,
   type Lang,
   LANGS,
+  PACKS,
   type Register,
   REGISTERS,
   RULES,
@@ -29,23 +30,15 @@ type State = {
   input: string;
 };
 
-const LANG_NAMES: Record<Lang, string> = {
-  en: 'English',
-  uk: 'Ukrainian (українська)',
-  de: 'German (Deutsch)',
-  pl: 'Polish (polski)',
-  fr: 'French (français)',
-  ch: 'Swiss (Schweiz)',
-};
+const LANG_NAMES = Object.fromEntries(PACKS.map((pack) => [pack.code, pack.name])) as Record<
+  Lang,
+  string
+>;
 
-const SAMPLE: Record<Lang, string> = {
-  en: 'He said "we\'re here" - and left... The lab runs 21-26 September, 10:00-12:00. Read more ->',
-  uk: 'Він сказав: "ми тут" - і пішов... Лабораторія триває 21-26 вересня, 10:00-12:00. Докладніше ->',
-  de: 'Er sagte "wir sind da" - und ging... Das Labor läuft 21-26 September, 10:00-12:00. Mehr lesen ->',
-  pl: 'Powiedział "jesteśmy tu" - i wyszedł... Laboratorium trwa 21-26 września, 10:00-12:00. Czytaj więcej ->',
-  fr: 'Il a dit "nous voilà" - et il est parti... Le labo dure 21-26 septembre, 10:00-12:00. Lire la suite ->',
-  ch: 'Er sagte "wir sind da" - und ging... Das Labor läuft 21-26 September, 10:00-12:00. Mehr lesen ->',
-};
+const SAMPLE = Object.fromEntries(PACKS.map((pack) => [pack.code, pack.sample])) as Record<
+  Lang,
+  string
+>;
 
 function example(mode: Mode, lang: Lang): string {
   const base = SAMPLE[lang];

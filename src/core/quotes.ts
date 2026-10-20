@@ -1,3 +1,4 @@
+import { PACK } from './lang';
 import { LITERARY, PROFILES } from './profiles';
 import type { Lang, Register } from './types';
 
@@ -18,32 +19,18 @@ const PAIRS = [
   SINGLE_GUILLEMETS,
   new RegExp(`"(${BODY})"`, 'g'),
 ];
-// German sets »…« and ›…‹, turned the other way. Read as «…», the « that ends one quotation and the »
-// that opens the next would pair (»a« und »b«), and so would ‹ › between two inner ones, so in German
-// the pairs are »…« and ›…‹, and a text written «…» is read by where each mark stands, like any mark
-// with no partner. The opening mark must stand where a quotation opens and the closing one where it
-// closes, so a text written «a» und «b» is not read as » und «.
-const turned = (open: string, close: string) =>
-  new RegExp(`(?<=^|[\\s(\\[${OPEN}])${open}(?=\\S)(${BODY})(?<=\\S)${close}`, 'g');
-const GERMAN_PAIRS = [
-  turned('»', '«'),
-  turned('›', '‹'),
-  ...PAIRS.filter((pair) => pair !== GUILLEMETS && pair !== SINGLE_GUILLEMETS),
-];
-/** A quoted 'word': the opening one follows a space or a bracket, so an apostrophe inside a word never pairs. */
-const SINGLE = new RegExp(`(^|[\\s(\\[${OPEN}])'([^']+)'(?=[\\s).,;:!?\\]${CLOSE}]|$)`, 'g');
-
+// A language may set pairs turned the other way round (German »…« and ›…‹, `turnedPairs` on its pack).
+// Read as «…», the « that ends one quotation and the » that opens the next would pair (»a« und »b«),
+// and so would ‹ › between two inner ones, so those pairs are matched only where the opening mark
+// stands where a quotation opens and the closing one where it closes, and a text written «a» und «b»
+// is read by where each mark stands, like any mark with no partner.
+const turned = (open: string, close: string, before: string) =>
+  new RegExp(`(?<=${before})${open}(?=\\S)(${BODY})(?<=\\S)${close}`, 'g');
 /** Marks that are never an apostrophe; ’ is left out because it ends a possessive (dogs’). */
 const LONE = '"„“”‚«»‹›‘';
 const SPACED = '«‹';
 const SPACED_CLOSING = '»›';
 const NBSP = '\u00A0';
-// An opening mark may follow another (»„ at the start of a nested quotation), so it is read until
-// none is left. French sets a no-break space inside « », which belongs to the mark.
-const LONE_OPENING = new RegExp(
-  `(?<=^|[\\s(\\[${OPEN}])(?:[${LONE.replace(/[«‹]/g, '')}]|[${SPACED}]${NBSP}?)(?=\\S)`,
-  'g',
-);
 // After a digit only a curly or guillemet mark closes: the straight " is an inch (5'10").
 const LONE_CLOSING = new RegExp(
   `(?<=[^\\s\\d(\\[])[${LONE}]|(?<=\\d)[${LONE.replace('"', '')}]|(?<=\\S)${NBSP}[${SPACED_CLOSING}]`,
@@ -55,43 +42,102 @@ const trimInner = (s: string) => s.replace(/^[\s\u00A0]+|[\s\u00A0]+$/g, '');
 // An apostrophe inside a word (don't, don’t, Maria’s) must not be taken for a quote mark, or
 // the quotation around it would not pair. It is set aside as a placeholder and put back.
 const APOSTROPHE = '\uE002';
-// Words that start with an apostrophe for dropped letters ('til, 'em, 'cause), and 'n' as in rock 'n' roll.
-// Each alternative holds the apostrophe in a group so the replacer can tell it from the others. A word
-// that goes on (the 'emergency' exit) or is closed by another ' (the 'til' button) stays a quotation.
+// Words that start with an apostrophe for dropped letters ('til, 'em, 'cause), and 'n' as in rock 'n' roll,
+// listed in `elisions` on the language pack. Each alternative holds the apostrophe in a group so the
+// replacer can tell it from the others. A word that goes on (the 'emergency' exit) or is closed by
+// another ' (the 'til' button) stays a quotation.
 const EDGE = '(?<=^|[\\s([])';
-const ELISION = [
-  `${EDGE}(')(?=(?:[Ee]m|[Tt]ill?|[Cc]ause|[Bb]out|[Rr]ound|[Tt]is|[Tt]was|[Cc]os)(?![\\p{L}'’]))`,
-  `${EDGE}(')(?=[Nn]'(?=$|[\\s).,;:!?\\]]))`,
-  `(?<=${EDGE}'[Nn])(')(?=$|[\\s).,;:!?\\]])`,
-].join('|');
-const ELISION_GROUPS = 3;
+const escapeRegex = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const caseless = (word: string) => {
+  const [first = ''] = word;
+  return `${first.toLowerCase() === first.toUpperCase() ? escapeRegex(first) : `[${first.toUpperCase()}${first.toLowerCase()}]`}${escapeRegex(word.slice(first.length))}`;
+};
+function elisionOf(words: readonly string[]): { source: string; groups: number } {
+  const plain = words.filter((word) => word !== 'n');
+  const alternatives: string[] = [];
+  if (plain.length) {
+    alternatives.push(`${EDGE}(')(?=(?:${plain.map(caseless).join('|')})(?![\\p{L}'’]))`);
+  }
+  if (words.includes('n')) {
+    alternatives.push(
+      `${EDGE}(')(?=[Nn]'(?=$|[\\s).,;:!?\\]]))`,
+      `(?<=${EDGE}'[Nn])(')(?=$|[\\s).,;:!?\\]])`,
+    );
+  }
+  return { source: alternatives.join('|'), groups: alternatives.length };
+}
+
+/** What is read from a language's pack, built once per language. */
+type Setup = {
+  pairs: readonly RegExp[];
+  single: RegExp;
+  /** An opening mark may follow another (»„ at the start of a nested quotation), so it is read until none is left. French sets a no-break space inside « », which belongs to the mark. */
+  loneOpening: RegExp;
+  /** A mark that stands for an apostrophe: inside a word, on a year, or an elision. */
+  apostrophe: RegExp;
+  elisionGroups: number;
+};
+const setups = new Map<Lang, Setup>();
+
+function setupFor(lang: Lang): Setup {
+  const cached = setups.get(lang);
+  if (cached) return cached;
+  const pack = PACK[lang];
+  // What may stand before an opening mark: the start, a space, a bracket, another opening mark, and the
+  // pack's `openers` (Spanish ¿ ¡).
+  const extra = (pack.openers ?? '').replace(/[\\\]^-]/g, '\\$&');
+  const before = `^|[\\s(\\[${OPEN}${extra}]`;
+  const turnedPairs = pack.turnedPairs ?? [];
+  const turnedMarks = turnedPairs.flat();
+  const pairs = [
+    ...turnedPairs.map(([open, close]) => turned(open, close, before)),
+    ...PAIRS.filter(
+      (pair) =>
+        !(
+          (pair === GUILLEMETS && turnedMarks.some((mark) => mark === '«' || mark === '»')) ||
+          (pair === SINGLE_GUILLEMETS && turnedMarks.some((mark) => mark === '‹' || mark === '›'))
+        ),
+    ),
+  ];
+  const elision = elisionOf(pack.elisions ?? []);
+  const made: Setup = {
+    pairs,
+    single: new RegExp(`(${before})'([^']+)'(?=[\\s).,;:!?\\]${CLOSE}]|$)`, 'g'),
+    loneOpening: new RegExp(
+      `(?<=${before})(?:[${LONE.replace(/[«‹]/g, '')}]|[${SPACED}]${NBSP}?)(?=\\S)`,
+      'g',
+    ),
+    // Inside a word, or a leading apostrophe on a year (the ’90s: two digits). A straight ' there may open
+    // a quoted number ('12'), a curly ’ cannot, so only the straight one is told apart by what follows.
+    // The last alternatives are an apostrophe for dropped letters, rock 'n' roll and 'til: it is set curly
+    // here, since the `apostrophe` rule only turns a straight ' after a letter or before a digit.
+    apostrophe: new RegExp(
+      `(?<=\\p{L})['’](?=\\p{L})|(?<=^|[\\s([])’(?=\\d{2}s?(?![\\d\\p{L}]))|(?<=^|[\\s([])'(?=\\d{2}s?(?![\\d'’\\p{L}]))${elision.source ? `|${elision.source}` : ''}`,
+      'gu',
+    ),
+    elisionGroups: elision.groups,
+  };
+  setups.set(lang, made);
+  return made;
+}
 
 /** Sets the quotation marks of the language, register and nesting level; source quotes may be of any style. */
 export function quotes(text: string, lang: Lang, register: Register): string {
+  const { pairs, single, loneOpening, apostrophe, elisionGroups } = setupFor(lang);
   // The apostrophes are put back as they were; the `apostrophe` rule sets them.
   const kept: string[] = [];
-  let out = text.replace(
-    // Inside a word, or a leading apostrophe on a year (the ’90s: two digits). A straight ' there may open
-    // a quoted number ('12'), a curly ’ cannot, so only the straight one is told apart by what follows.
-    // The second group is an apostrophe for dropped letters, rock 'n' roll and 'til: it is set curly here,
-    // since the `apostrophe` rule only turns a straight ' after a letter or before a digit.
-    new RegExp(
-      `(?<=\\p{L})['’](?=\\p{L})|(?<=^|[\\s([])’(?=\\d{2}s?(?![\\d\\p{L}]))|(?<=^|[\\s([])'(?=\\d{2}s?(?![\\d'’\\p{L}]))|${ELISION}`,
-      'gu',
-    ),
-    (mark: string, ...groups: (string | undefined)[]) => {
-      kept.push(groups.slice(0, ELISION_GROUPS).some(Boolean) ? '’' : mark);
-      return APOSTROPHE;
-    },
-  );
+  let out = text.replace(apostrophe, (mark: string, ...groups: (string | undefined)[]) => {
+    kept.push(groups.slice(0, elisionGroups).some(Boolean) ? '’' : mark);
+    return APOSTROPHE;
+  });
   // Innermost pairs first, so a quotation inside a quotation resolves before its outer one.
   for (let changed = true; changed; ) {
     const before = out;
-    for (const pair of lang === 'de' ? GERMAN_PAIRS : PAIRS) {
+    for (const pair of pairs) {
       out = out.replace(pair, (_, inner: string) => `${OPEN}${trimInner(inner)}${CLOSE}`);
     }
     out = out.replace(
-      SINGLE,
+      single,
       (_, lead: string, inner: string) => `${lead}${OPEN}${trimInner(inner)}${CLOSE}`,
     );
     changed = out !== before;
@@ -103,7 +149,7 @@ export function quotes(text: string, lang: Lang, register: Register): string {
   // result stable: set once, a lone « or » is read the same way when it is typeset again.
   for (let before = ''; before !== out; ) {
     before = out;
-    out = out.replace(LONE_OPENING, OPEN);
+    out = out.replace(loneOpening, OPEN);
   }
   out = out.replace(LONE_CLOSING, CLOSE);
   const levels = (register === 'literary' && LITERARY[lang]) || PROFILES[lang];

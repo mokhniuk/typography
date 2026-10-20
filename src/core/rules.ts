@@ -1,5 +1,6 @@
 import { dashRange, dashSentence, dialogue } from './dashes';
 import { apostrophe, arrows, ellipsis, legal, minus, multiply } from './marks';
+import { PACK, PACKS } from './lang';
 import { SENTENCE_DASH, SENTENCE_DASH_LITERARY } from './profiles';
 import { quotes } from './quotes';
 import {
@@ -24,6 +25,12 @@ export type Rule = {
   apply: (text: string, context: Context) => string;
 };
 
+/** Short English names of some packs, joined for a description: `German and French`. */
+function names(packs: readonly { name: string }[]): string {
+  const list = packs.map((pack) => pack.name.split(' (')[0] ?? pack.name);
+  return list.length > 1 ? `${list.slice(0, -1).join(', ')} and ${list.at(-1)}` : (list[0] ?? '');
+}
+
 /** The rules, in the order they run. */
 export const RULES: readonly Rule[] = [
   {
@@ -44,7 +51,7 @@ export const RULES: readonly Rule[] = [
     about:
       'A Ukrainian dialogue line (literary register) opens with an em dash and a no-break space',
     apply: (text, { lang, register, blockStart }) =>
-      register === 'literary' && lang === 'uk' && blockStart ? dialogue(text) : text,
+      register === 'literary' && PACK[lang].dialogueDash && blockStart ? dialogue(text) : text,
   },
   {
     id: 'dash.range',
@@ -90,7 +97,7 @@ export const RULES: readonly Rule[] = [
   },
   {
     id: 'space.percent',
-    about: 'German and French: a no-break space between a number and % or € (5 %, 49 €)',
+    about: `${names(PACKS.filter((pack) => 'percentSpace' in pack && pack.percentSpace))}: a no-break space between a number and % or € (5 %, 49 €)`,
     apply: (text, { lang }) => unitSymbol(text, lang),
   },
   { id: 'space.association', about: 'No-break space before e.V.', apply: association },
