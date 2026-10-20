@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'bun:test';
-import { type Io, run } from './run';
+import { addRule, RULES, type Rule } from '../core';
+import { formatRules, type Io, run } from './run';
 
 function fake(files: Record<string, string> = {}, stdin = '') {
   const out: string[] = [];
@@ -135,5 +136,39 @@ describe('typo', () => {
   test('--json and --explain are used together, and --explain only reports', async () => {
     expect(await run(['--json'], fake({}, 'x').io)).toBe(2);
     expect(await run(['--explain', '-w', 'a.txt'], fake({ 'a.txt': 'x' }).io)).toBe(2);
+  });
+
+  test('--enable takes rule ids and groups; a typo, or a rule also in --disable, is a usage error', async () => {
+    // No built-in rule is off by default yet: enabling one that is already on changes nothing.
+    const t = fake({}, 'wait... "x"\n');
+    expect(await run(['--enable', 'ellipsis,space'], t.io)).toBe(0);
+    expect(t.out()).toBe('wait… «x»\n');
+    const u = fake({}, 'x');
+    expect(await run(['--enable', 'ellipsi'], u.io)).toBe(2);
+    expect(u.err()).toContain('Unknown typography rule "ellipsi"');
+    const v = fake({}, 'x');
+    expect(await run(['--enable', 'ellipsis', '--disable', 'ellipsis'], v.io)).toBe(2);
+    expect(v.err()).toContain('both');
+  });
+
+  test('--help mentions --enable', async () => {
+    const t = fake();
+    await run(['--help'], t.io);
+    expect(t.out()).toContain('--enable');
+  });
+});
+
+describe('formatRules', () => {
+  const shout: Rule = { id: 'extra.shout', about: 'Upper case', defaultOn: false, apply: (x) => x };
+
+  test('lists every rule with its description, and says which are off by default', () => {
+    const lines = formatRules(addRule(RULES, shout, { last: true })).split('\n');
+    expect(lines.at(-1)).toMatch(/^extra\.shout +Upper case \(off by default; --enable extra\.shout\)$/);
+    expect(lines[0]).not.toContain('off by default');
+    expect(lines.length).toBe(RULES.length + 1);
+  });
+
+  test('is unchanged for the built-in list', () => {
+    expect(formatRules(RULES)).not.toContain('off by default');
   });
 });

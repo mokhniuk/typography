@@ -8,13 +8,13 @@ import {
   type Register,
   REGISTERS,
   RULES,
-  RULE_IDS,
   splitHangs,
 } from '../src/core';
 import { hangPunctuation } from '../src/dom';
 import { typesetHtml } from '../src/html';
 import { typesetMarkdown } from '../src/markdown';
 import { typesetText } from '../src/text';
+import { isOn, readSaved, reset, ruleBadge, setRule } from './rules-state';
 
 type Mode = 'text' | 'html' | 'markdown';
 type View = 'result' | 'changes' | 'preview';
@@ -25,8 +25,10 @@ type State = {
   nbsp: 'entity' | 'char';
   view: View;
   mark: boolean;
-  /** Rules switched off. */
+  /** Rules that are on by default and were switched off. */
   disable: string[];
+  /** Rules that are off by default and were switched on. */
+  enable: string[];
   input: string;
 };
 
@@ -61,7 +63,7 @@ function load(): State {
     nbsp: 'entity',
     view: 'result',
     mark: false,
-    disable: [],
+    ...reset(),
     input: example('text', 'en'),
   };
   try {
@@ -74,11 +76,7 @@ function load(): State {
       nbsp: saved.nbsp === 'char' ? 'char' : 'entity',
       view: saved.view === 'changes' || saved.view === 'preview' ? saved.view : 'result',
       mark: saved.mark === true,
-      disable: Array.isArray(saved.disable)
-        ? saved.disable.filter(
-            (id): id is string => typeof id === 'string' && RULE_IDS.includes(id),
-          )
-        : [],
+      ...readSaved(saved, RULES),
       input: typeof saved.input === 'string' ? saved.input : fallback.input,
     };
   } catch {
@@ -131,18 +129,16 @@ for (const rule of RULES) {
   const name = document.createElement('code');
   name.textContent = rule.id;
   const about = document.createElement('small');
-  about.textContent = rule.about;
+  about.textContent = rule.defaultOn === false ? `${rule.about} (off by default)` : rule.about;
   label.append(box, name, about);
   ruleList.append(label);
   box.addEventListener('change', () => {
-    state.disable = box.checked
-      ? state.disable.filter((id) => id !== rule.id)
-      : [...state.disable, rule.id];
+    Object.assign(state, setRule(state, rule, box.checked));
     schedule();
   });
 }
 el('rulesAll').addEventListener('click', () => {
-  state.disable = [];
+  Object.assign(state, reset());
   schedule();
 });
 
@@ -151,9 +147,9 @@ const escapeHtml = (text: string) =>
 const visible = (text: string) => text.replaceAll(' ', '⍽');
 
 function convert(): { output: string; changes: Change[] } {
-  const { lang, register, disable } = state;
+  const { lang, register, disable, enable } = state;
   const changes: Change[] = [];
-  const options = { lang, register, disable, onChange: (change: Change) => changes.push(change) };
+  const options = { lang, register, disable, enable, onChange: (change: Change) => changes.push(change) };
   const output =
     state.mode === 'html'
       ? typesetHtml(state.input, { ...options, nbsp: state.nbsp })
@@ -223,10 +219,11 @@ function render() {
   mark.checked = state.mark;
   nbspField.hidden = state.mode !== 'html';
   for (const box of ruleList.querySelectorAll<HTMLInputElement>('input')) {
-    box.checked = !state.disable.includes(box.dataset.id ?? '');
+    const rule = RULES.find((r) => r.id === box.dataset.id);
+    if (rule) box.checked = isOn(state, rule);
   }
-  ruleCount.textContent = state.disable.length ? `${state.disable.length} off` : '';
-  ruleCount.hidden = !state.disable.length;
+  ruleCount.textContent = ruleBadge(state);
+  ruleCount.hidden = !ruleCount.textContent;
   if (input.value !== state.input) input.value = state.input;
 
   const { output, changes: made } = convert();

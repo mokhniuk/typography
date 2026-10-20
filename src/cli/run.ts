@@ -7,6 +7,7 @@ import {
   REGISTERS,
   type Register,
   RULES,
+  type Rule,
   typographic,
 } from '../core';
 import { typesetHtml } from '../html';
@@ -37,6 +38,8 @@ Options
                                       file extension (.html, .md), else text
   -d, --disable <rules>           switch rules off: ids or groups, comma separated
                                   (e.g. dash.range,space); see --rules
+  -e, --enable <rules>            switch on rules that are off by default, same form
+                                  (--rules marks them); a rule in both is an error
       --rules                     list the rules and exit
       --explain                   list every change and the rule that made it, instead
                                   of the typeset text; with --json as a JSON array
@@ -51,6 +54,17 @@ With several files, use --write or --check. Exit status: 0 ok, 1 a file would
 change (--check), 2 a usage or read error.`;
 
 const VERSION = pkg.version;
+
+/** One line per rule: id, description, and a note on a rule that is off unless enabled. */
+export function formatRules(rules: readonly Rule[]): string {
+  const width = Math.max(...rules.map((r) => r.id.length));
+  return rules
+    .map(
+      (r) =>
+        `${r.id.padEnd(width)}  ${r.about}${r.defaultOn === false ? ` (off by default; --enable ${r.id})` : ''}`,
+    )
+    .join('\n');
+}
 
 function formatOf(path: string | null, given: string | undefined): Format | null {
   if (given) {
@@ -89,20 +103,22 @@ export async function run(argv: string[], io: Io): Promise<number> {
   }
   if (values.write && values.check) return usage(io, '--write and --check cannot be used together');
   if (values.rules) {
-    const width = Math.max(...RULES.map((r) => r.id.length));
-    io.out(`${RULES.map((r) => `${r.id.padEnd(width)}  ${r.about}`).join('\n')}\n`);
+    io.out(`${formatRules(RULES)}\n`);
     return 0;
   }
   if (values.json && !values.explain) return usage(io, '--json goes with --explain');
   if (values.explain && (values.write || values.check)) {
     return usage(io, '--explain only reports; it cannot be used with --write or --check');
   }
-  const disable = (values.disable ?? [])
-    .flatMap((d) => d.split(','))
-    .map((d) => d.trim())
-    .filter(Boolean);
+  const names = (given: string[] | undefined) =>
+    (given ?? [])
+      .flatMap((d) => d.split(','))
+      .map((d) => d.trim())
+      .filter(Boolean);
+  const disable = names(values.disable);
+  const enable = names(values.enable);
   try {
-    typographic('', lang, { disable });
+    typographic('', lang, { disable, enable });
   } catch (error) {
     return usage(io, error instanceof Error ? error.message : String(error));
   }
@@ -113,6 +129,7 @@ export async function run(argv: string[], io: Io): Promise<number> {
       lang,
       register,
       disable,
+      enable,
       onChange: values.explain ? (change: Change) => found.push({ file, ...change }) : undefined,
     };
     return format === 'html'
@@ -200,6 +217,7 @@ function parse(argv: string[]) {
       format: { type: 'string', short: 'f' },
       nbsp: { type: 'string' },
       disable: { type: 'string', short: 'd', multiple: true },
+      enable: { type: 'string', short: 'e', multiple: true },
       rules: { type: 'boolean' },
       explain: { type: 'boolean' },
       json: { type: 'boolean' },

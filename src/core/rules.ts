@@ -22,6 +22,8 @@ export type Rule = {
   /** `group.name`, or a single word for a rule that stands alone. */
   id: string;
   about: string;
+  /** Whether the rule runs unless it is switched off. `false`: it runs only when named in `enable`. Default `true`. */
+  defaultOn?: boolean;
   apply: (text: string, context: Context) => string;
 };
 
@@ -112,20 +114,85 @@ export const RULES: readonly Rule[] = [
 
 export const RULE_IDS: readonly string[] = RULES.map((rule) => rule.id);
 
+/** The rules that run when nothing is switched on or off: every rule that is not `defaultOn: false`. */
+export const DEFAULT_RULES: readonly Rule[] = RULES.filter((rule) => rule.defaultOn !== false);
+
+/** The ids of `list` that an entry names: an id, or a group (`space`, or `space.*`). An entry that names nothing is an error. */
+function named(list: readonly Rule[], entries: readonly string[]): Set<string> {
+  const ids = new Set<string>();
+  for (const entry of entries) {
+    const name = entry.replace(/\.\*$/, '');
+    const matches = list.filter((rule) => rule.id === name || rule.id.startsWith(`${name}.`));
+    if (!matches.length) {
+      throw new Error(
+        `Unknown typography rule "${entry}". Rules: ${list.map((rule) => rule.id).join(', ')}`,
+      );
+    }
+    for (const rule of matches) ids.add(rule.id);
+  }
+  return ids;
+}
+
 /**
- * The rules that remain when `disable` is applied. An entry is a rule id (`dash.range`)
- * or a group (`space`, or `space.*`), which switches off every rule in it. An entry
- * that names nothing is an error: a typo must not pass for "everything stays on".
+ * The rules that run, in order. `rules` is the list in use (the built-in `RULES` unless given).
+ * An entry of `disable` or `enable` is a rule id (`dash.range`) or a group (`space`, or `space.*`),
+ * checked against that list, not the built-in one; an entry that names nothing is an error, so a
+ * typo cannot pass for "everything stays on". A rule with `defaultOn: false` runs only if `enable`
+ * names it. A rule named by both `disable` and `enable` is an error: there is no silent winner.
+ */
+export function selectRules({
+  rules = RULES,
+  disable = [],
+  enable = [],
+}: {
+  rules?: readonly Rule[] | undefined;
+  disable?: readonly string[] | undefined;
+  enable?: readonly string[] | undefined;
+} = {}): readonly Rule[] {
+  const off = named(rules, disable);
+  const on = named(rules, enable);
+  for (const id of on) {
+    if (off.has(id)) throw new Error(`Typography rule "${id}" is in both disable and enable`);
+  }
+  return rules.filter((rule) => !off.has(rule.id) && (rule.defaultOn !== false || on.has(rule.id)));
+}
+
+/**
+ * The rules that remain when `disable` is applied to the built-in list: an entry is a rule id
+ * (`dash.range`) or a group (`space`, or `space.*`). An entry that names nothing is an error.
  */
 export function without(disable: readonly string[]): readonly Rule[] {
-  const off = new Set<string>();
-  for (const entry of disable) {
-    const name = entry.replace(/\.\*$/, '');
-    const matches = RULE_IDS.filter((id) => id === name || id.startsWith(`${name}.`));
-    if (!matches.length) {
-      throw new Error(`Unknown typography rule "${entry}". Rules: ${RULE_IDS.join(', ')}`);
-    }
-    for (const id of matches) off.add(id);
+  return selectRules({ disable });
+}
+
+/** Where `addRule` puts a rule: next to another one, or at an end of the list. */
+export type RulePosition =
+  | { before: string }
+  | { after: string }
+  | { first: true }
+  | { last: true };
+
+/**
+ * A new list with `rule` added at `position`; `list` is not changed, and neither is `RULES`.
+ * An anchor that is not in the list, or a rule whose id is already there, is an error.
+ */
+export function addRule(
+  list: readonly Rule[],
+  rule: Rule,
+  position: RulePosition,
+): readonly Rule[] {
+  if (list.some((other) => other.id === rule.id)) {
+    throw new Error(`Typography rule "${rule.id}" is already in the list`);
   }
-  return RULES.filter((rule) => !off.has(rule.id));
+  if ('first' in position) return [rule, ...list];
+  if ('last' in position) return [...list, rule];
+  const anchor = 'before' in position ? position.before : position.after;
+  const at = list.findIndex((other) => other.id === anchor);
+  if (at < 0) {
+    throw new Error(
+      `Unknown typography rule "${anchor}". Rules: ${list.map((other) => other.id).join(', ')}`,
+    );
+  }
+  const index = 'before' in position ? at : at + 1;
+  return [...list.slice(0, index), rule, ...list.slice(index)];
 }
