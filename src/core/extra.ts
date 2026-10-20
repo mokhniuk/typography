@@ -50,8 +50,31 @@ export const afterComma = (text: string): string => text.replace(/,(?=\p{L})/gu,
 export const doubleMarks = (text: string): string =>
   text.replace(/(?<=[^\s(\[{!?])([!?])\1+(?!\1)(?![\p{L}\p{N}_])/gu, '$1');
 
-/** Trims spaces and tabs at the end of each line; a line break and a no-break space stay. */
-export const trailingSpace = (text: string): string => text.replace(/[ \t]+$/gm, '');
+const LINE_END = /[\n\r\u2028\u2029]/g;
+
+/**
+ * Trims spaces and tabs at the end of each line; a line break and a no-break space stay. Was
+ * `text.replace(/[ \t]+$/gm, '')`, which is tried from every space of a long run and scans to the end of
+ * it each time (quadratic on tens of thousands of spaces before a letter). The line ends (`$` in
+ * multiline mode: a line feed, a carriage return, U+2028, U+2029, or the end of the text) are found
+ * first, and the spaces and tabs before each are read back by hand, so each space is read once.
+ */
+export function trailingSpace(text: string): string {
+  let out = '';
+  let from = 0;
+  const trim = (end: number) => {
+    let start = end;
+    for (let c = text.charCodeAt(start - 1); start > from && (c === 0x20 || c === 0x09); c = text.charCodeAt(start - 1)) start--;
+    if (start < end) {
+      out += text.slice(from, start);
+      from = end;
+    }
+  };
+  LINE_END.lastIndex = 0;
+  for (let m = LINE_END.exec(text); m; m = LINE_END.exec(text)) trim(m.index);
+  trim(text.length);
+  return from === 0 ? text : out + text.slice(from);
+}
 
 /**
  * `+-` before a digit is ±. Not after a letter, a digit or another `+` (`a+-b`, `1+-5`). Was

@@ -86,10 +86,41 @@ export function dashRange(text: string): string {
   return numberRanges(text.replace(TIME_RANGE, '$1–'));
 }
 
+const DASH_CHAR = /[-–—]/g;
+const isGap = (code: number): boolean => code === 0x20 || code === 0xa0;
+
+/**
+ * Replaces each `[ \u00A0]+(?:--|[-–—])[ \u00A0]+` by `replacement`. The regex is tried from every space of
+ * a long run and scans to the end of it each time (quadratic on tens of thousands of spaces before a
+ * hyphen with no space after it). The dash is found first: `--` if two hyphens stand there (the engine
+ * tries it first, and the single hyphen after it has a hyphen, not a space, next), else one dash
+ * character; spaces must follow it, and the spaces before it are read back by hand, not past the end
+ * of the last replacement (a match never reuses a space an earlier match took).
+ */
+function spacedDashes(text: string, replacement: string): string {
+  let out = '';
+  let from = 0;
+  DASH_CHAR.lastIndex = 0;
+  for (let m = DASH_CHAR.exec(text); m; m = DASH_CHAR.exec(text)) {
+    const at = m.index;
+    const after = at + (text.charCodeAt(at) === 0x2d && text.charCodeAt(at + 1) === 0x2d ? 2 : 1);
+    if (!isGap(text.charCodeAt(after))) continue;
+    let start = at;
+    while (start > from && isGap(text.charCodeAt(start - 1))) start--;
+    if (start === at) continue;
+    let end = after;
+    while (isGap(text.charCodeAt(end))) end++;
+    out += text.slice(from, start) + replacement;
+    from = end;
+    DASH_CHAR.lastIndex = end;
+  }
+  DASH_CHAR.lastIndex = 0;
+  return from === 0 ? text : out + text.slice(from);
+}
+
 /** A spaced hyphen or dash, or a double hyphen, is a break in the sentence: non-breaking space, `dash`, space. */
 export function dashSentence(text: string, dash = '—'): string {
-  return text
-    .replace(/[ \u00A0]+(?:--|[-–—])[ \u00A0]+/g, `${NBSP}${dash} `)
+  return spacedDashes(text, `${NBSP}${dash} `)
     // Not a double hyphen that is the whole of a quotation («--»): its space would sit inside the marks
     // and a second pass would read it as the space of a French mark.
     // A run of three or more hyphens is no double hyphen (the omission mark [---], a rule): left whole.

@@ -1,5 +1,8 @@
 import { describe, expect, test } from 'bun:test';
 import { corpus, lcg } from '../../scripts/corpus';
+import { dashSentence } from './dashes';
+import { trailingSpace } from './extra';
+import { arrowSpace, association } from './spaces';
 import { shield } from './zones';
 
 /**
@@ -159,4 +162,69 @@ describe('shield (zones.ts)', () => {
   scales('shield on +-', (t) => shield(t), rep('+-'));
   scales('shield on 1x', (t) => shield(t), rep('1x'));
   scales('shield on a run, then an @', (t) => shield(t), (n) => `${'x'.repeat(n)}@`);
+});
+
+describe('space.trailing', () => {
+  const ALPHA = [' ', ' ', ' ', '\t', '\n', '\r', '\r\n', '\u2028', '\u2029', '\u00A0', '\v', '\f', 'a', 'b', '1', '.', '😀', '\uD835', ' \n', '  \n\n'];
+  const samples = [
+    ...base,
+    ...fuzzer(ALPHA)(30000, 21),
+    `${' '.repeat(3000)}a${' '.repeat(3000)}`,
+    `${' \t'.repeat(3000)}x`,
+    `${'a  \n'.repeat(1000)}`,
+  ];
+  same('trailingSpace', samples, trailingSpace, (t) => t.replace(/[ \t]+$/gm, ''));
+  scales('trailingSpace on spaces then a letter', trailingSpace, (n) => `${' '.repeat(n)}a`);
+  scales('trailingSpace on tabs then a letter', trailingSpace, (n) => `${'\t'.repeat(n)}a`);
+  scales('trailingSpace on spaces, a letter, spaces', trailingSpace, (n) => `${' '.repeat(n / 2)}a${' '.repeat(n / 2)}b`);
+});
+
+describe('dash.sentence', () => {
+  const original = (text: string) =>
+    text
+      .replace(/[ \u00A0]+(?:--|[-–—])[ \u00A0]+/g, `\u00A0— `)
+      .replace(/(?<=[^\s\-–—])--(?=[^\s\-–—])/g, (match, offset: number, whole: string) =>
+        /[«„“‘‚‹»›"']/.test(whole.charAt(offset - 1)) && /[»“”’‘«‹›"']/.test(whole.charAt(offset + 2))
+          ? match
+          : `\u00A0— `,
+      );
+  const ALPHA = [' ', ' ', ' ', '  ', '\u00A0', '\t', '\n', '-', '-', '--', '---', '–', '—', '- ', ' -', ' - ', ' -- ', ' --- ', 'a', 'b', '1', '"', "'", '«', '»', '“', '”', '.', '😀', '\uD835', '\uDC9C'];
+  const samples = [
+    ...base,
+    ...fuzzer(ALPHA)(30000, 22),
+    `${' '.repeat(3000)}-x`,
+    `${' '.repeat(3000)}-${' '.repeat(3000)}x`,
+    `${' - '.repeat(3000)}`,
+    `${' -  '.repeat(3000)}-x`,
+    `${'-- '.repeat(3000)}`,
+    `${'a --'.repeat(3000)}b`,
+    `${'a - --'.repeat(2000)}b`,
+    `${'\u00A0'.repeat(2000)}—${' '.repeat(2000)}x`,
+  ];
+  same('dashSentence', samples, (t) => dashSentence(t), original);
+  scales('dashSentence on spaces then a hyphen', (t) => dashSentence(t), (n) => `${' '.repeat(n)}-a`);
+  scales('dashSentence on no-break spaces then a dash', (t) => dashSentence(t), (n) => `${'\u00A0'.repeat(n)}–a`);
+  scales('dashSentence on spaces then --', (t) => dashSentence(t), (n) => `${' '.repeat(n)}--a`);
+});
+
+describe('space.association and space.arrow', () => {
+  const ALPHA = [' ', ' ', ' ', '  ', '\u00A0', '\t', '\n', 'e.V.', 'e.V.', 'e.V', 'e.', 'ee.V.', ' e.V.', '→', '→', '←', '←', ' →', '← ', 'a', 'b', '.', '😀'];
+  const samples = [
+    ...base,
+    ...fuzzer(ALPHA)(30000, 23),
+    `${' '.repeat(3000)}a${' '.repeat(3000)}e.V.`,
+    `${' '.repeat(3000)}→`,
+    `${' '.repeat(3000)}a→${' '.repeat(3000)}←${' '.repeat(3000)}`,
+    `${' e.V.'.repeat(2000)}`,
+    `${' → ← '.repeat(2000)}`,
+  ];
+  same('association', samples, association, (t) => t.replace(/[ ]+(?=e\.V\.)/g, '\u00A0'));
+  same(
+    'arrowSpace',
+    samples,
+    arrowSpace,
+    (t) => t.replace(/ +(?=→)/g, '\u00A0').replace(/(?<=←) +/g, '\u00A0'),
+  );
+  scales('association on spaces, then e.V. elsewhere', association, (n) => `e.V.${' '.repeat(n)}a`);
+  scales('arrowSpace on spaces, then an arrow elsewhere', arrowSpace, (n) => `→${' '.repeat(n)}a`);
 });
