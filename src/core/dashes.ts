@@ -16,6 +16,15 @@ function isNumericRange(a: string, b: string, before: string, gap: string): bool
 }
 
 /**
+ * Whether the digits at `[start, end)` are the tail and head of two grouped numbers (12,100 - 150,000 or
+ * 12\u00A0100 - 150\u00A0000), not two numbers of their own: the first is preceded by a digit and a
+ * group separator, the second is followed by one and three digits.
+ */
+function insideGroups(whole: string, start: number, end: number): boolean {
+  return /\d[,\u00A0]$/.test(whole.slice(Math.max(0, start - 2), start)) || /^[,\u00A0]\d{3}(?!\d)/.test(whole.slice(end));
+}
+
+/**
  * A Ukrainian dialogue line opens with a dash and a non-breaking space:
  * «— Привіт, — сказав він.» A hyphen, en dash or em dash followed by a space at the
  * very start of the text is taken for it. Only the start: a dash after a line
@@ -35,7 +44,10 @@ export function dashRange(text: string): string {
       .replace(
         /(?<![\d:–-])(\d+)([ \u00A0]*(?:--|[-–])[ \u00A0]*)(\d+)(?![\d:–-])/g,
         (match, a: string, gap: string, b: string, offset: number, whole: string) =>
-          isNumericRange(a, b, whole.slice(Math.max(0, offset - 20), offset), gap) ? `${a}–${b}` : match,
+          !insideGroups(whole, offset, offset + match.length) &&
+          isNumericRange(a, b, whole.slice(Math.max(0, offset - 20), offset), gap)
+            ? `${a}–${b}`
+            : match,
       )
   );
 }

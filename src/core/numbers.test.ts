@@ -105,4 +105,42 @@ describe('number.group', () => {
       expect(on(once, lang)).toBe(once);
     }
   });
+
+  test('a spaced dash between two long numbers stays a sentence dash, not a range inside the groups', () => {
+    const show = (text: string, lang?: (typeof LANGS)[number]) => on(text, lang).replaceAll(N, '~');
+    expect(show('12100 - 150000')).toBe('12,100~— 150,000');
+    expect(show('12100 - 150000', 'fr')).toBe('12~100~— 150~000');
+    expect(show('about 12100 - 150000 units', 'uk')).toBe('about 12~100~— 150~000~units');
+    // A real range of short numbers is still a range.
+    expect(show('1914 - 1918')).toBe('1914–1918');
+    expect(show('21 - 26 September')).toBe('21–26~September');
+  });
+
+  test('a five-digit postal code is not an amount', () => {
+    // The other rules still run (a no-break space before a short word), so compare with the rule off.
+    for (const [text, lang] of [
+      ['75001 Paris', 'fr'],
+      ['10115 Berlin', 'de'],
+      ['ZIP 12345', 'en'],
+      ['PLZ 10115', 'de'],
+    ] as const) {
+      expect(on(text, lang)).toBe(typographic(text, lang));
+    }
+    // An amount followed by a lower-case word is still grouped.
+    expect(on('12345 apples')).toBe('12,345~apples'.replace('~', N));
+  });
+
+  test('guarded pieces survive verbatim, in every language', () => {
+    for (const lang of LANGS) {
+      for (const piece of ['007', '00123456', '+380501234567', 'v1000000', '2026-10-20', '0x1F4A2B', '10:12345', '(044) 1234567']) {
+        expect(on(`id ${piece} end`, lang)).toBe(typographic(`id ${piece} end`, lang));
+      }
+    }
+  });
+
+  test('the same text without the rule enabled is untouched, in every language', () => {
+    for (const lang of LANGS) {
+      expect(typographic('1234567', lang)).toBe('1234567');
+    }
+  });
 });

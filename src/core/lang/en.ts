@@ -46,5 +46,5 @@ export const en = {
     'https://style-guide.europa.eu/en/content/-/isg/topic?identifier=6.5-punctuation-in-figures',
   ],
   notes:
-    'Display register uses guillemets by house style; British quotes are the literary register. Digits of a number of five or more are grouped with a comma (opt-in rule number.group): the EU English Style Guide sets a hard space in running text and allows a comma for web writing, promotional material and press releases, which is what this engine is for. Set numbers.group to a no-break space for the EU form.',
+    'Display register uses guillemets by house style; British quotes are the literary register. Digits of a number of five or more are grouped with a comma (opt-in rule number.group): the EU English Style Guide sets a hard space in running text and allows a comma for web writing, promotional material and press releases, which is what this engine is for. The separator is the pack field numbers.group (a no-break space is the EU form).',
 } as const satisfies LangPack;
