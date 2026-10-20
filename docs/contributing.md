@@ -87,6 +87,21 @@ Abbreviation lists and the like come from a style guide, not from memory; say in
 - **The docs tests** (`src/docs.test.ts` for the rules page, `src/lang-docs.test.ts` for the language pages) are described above.
 - **Quote style** (`src/core/quote-style.test.ts`, `src/properties.quotestyle.test.ts`): `quoteStyle: 'us'` goldens and the properties of `properties.test.ts` run for every language. The generators there are copied, not shared, so the seeded streams of `properties.test.ts` do not move.
 
+## Checking a speed change
+
+A change that is meant to make the engine faster must change no output and no `explain`/`onChange` record. Two tools prove it, both fed by one seeded corpus (`scripts/corpus.ts`: a fuzz vocabulary of every mark the rules care about, fixed prose in every language, quote soups).
+
+```sh
+bun run compare                  # this checkout against the git ref `speed-baseline` (the frozen engine)
+bun run compare <ref> --n 20000  # against another ref; --slice N runs all N strings through every combination (slow)
+bun run snapshot                 # ONLY for an intentional output change or a new language: rewrites src/snapshot.digests.json
+cd bench && bun run profile      # where the time goes, rule by rule
+```
+
+- `bun run compare` extracts `src/` of the base ref into a temp directory with `git archive`, then, for every language, register (`display`, `literary`), `quoteStyle` (`language`, `us`), rule set (default; every opt-in rule enabled) and mode (`typographic` with `explain`, text, HTML, Markdown, hast), compares the output and every change record (rule id, `from`, `to`, order), the rule table and a thrown error. It prints the first ten differences with input, mode, language and both results, exits 1 on any difference, and ends with a timing table (best of 3, on a 1 MB paragraph and on 1000 paragraphs of 1 KB). Languages that exist here but not in the base are skipped. Expect `0 differences`.
+- `src/snapshot.test.ts` (part of `bun test src playground`) holds a SHA-256 per language and variant in `src/snapshot.digests.json` and fails on any change. A language without a digest fails with `run: bun run snapshot`. Never run `bun run snapshot` to make a speed change pass: a speed change must pass without it. The same test mutates a temp copy of `src/` to prove that both tools notice a changed regex and a changed rule attribution.
+- What they cannot see: the React hooks and `HangText`, the DOM measuring, the CLI, inputs far outside the corpus (very long runs of one mark, megabyte inputs with changes, lone surrogates, text in scripts the rules do not know), and timing noise on a busy machine. Run the whole suite as well.
+
 ## The benchmark
 
 The benchmark is a separate project in `bench/` with its own `package.json` and dependencies. Git ignores it except `bench/RESULTS.md`, so it lives on one machine (move it to its own repository when it needs to be shared). To run it: `cd bench && bun install && bun run bench`. Its own checks: `cd bench && bun run typecheck`.

@@ -10,6 +10,7 @@ Bun project, TypeScript sources shipped as they are (no build step). Details: `R
 - `bun run docs:rules`: regenerate `docs/rules.md` (generated, never edit by hand; `src/docs.test.ts` fails if stale).
 - `bun run docs:languages`: regenerate `docs/languages/*.md` from the language packs (generated; `src/lang-docs.test.ts` fails if stale).
 - `bun run gen:script`: regenerate `src/dom/script.ts` (generated) after changing `src/dom/hang.ts`.
+- Speed changes must keep output and `explain` records identical: `bun run compare` against `speed-baseline` must report 0 differences; see "Checking a speed change" in `docs/contributing.md`.
 - Benchmark: a separate project in `bench/`, ignored by git except `bench/RESULTS.md`. `cd bench && bun install`, then `bun run bench` (regenerates `RESULTS.md`; commit it if it changes), `latency`, `profile`, `features`. Not part of `bun test` or the root `typecheck`; `bun run typecheck` inside `bench/` checks it.
 
 ## Rules of the codebase

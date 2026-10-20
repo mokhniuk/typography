@@ -24,7 +24,9 @@
     "playground:build": "vite build --config playground/vite.config.ts",
     "docs:rules": "bun scripts/gen-rules-doc.ts",
     "docs:languages": "bun scripts/gen-languages-doc.ts",
-    "gen:script": "bun scripts/gen-hang-script.ts"
+    "gen:script": "bun scripts/gen-hang-script.ts",
+    "compare": "bun scripts/compare-engines.ts",
+    "snapshot": "bun scripts/update-snapshot.ts"
   },
   "peerDependencies": {
     "react": ">=18"
