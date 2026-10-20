@@ -442,7 +442,7 @@ describe('rules', () => {
     expect(RULES.map((r) => r.id)).toEqual(RULE_IDS as string[]);
     expect(new Set(RULE_IDS).size).toBe(RULE_IDS.length);
     for (const rule of RULES) {
-      expect(rule.id).toMatch(/^[a-z]+(?:\.[a-z]+)?$/);
+      expect(rule.id).toMatch(/^[a-z]+(?:\.[a-z-]+)?$/);
       expect(rule.about.length).toBeGreaterThan(10);
     }
   });

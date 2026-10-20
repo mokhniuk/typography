@@ -40,6 +40,18 @@ export const EXAMPLES: Record<string, readonly Example[]> = {
     { input: `The '90s were loud.`, note: 'Before a year.' },
   ],
   ellipsis: [{ input: 'Wait... what?' }],
+  'space.before-punctuation': [
+    { input: 'Hello , world . Is it ready ? (yes )', note: 'Off by default.' },
+    { input: 'Oui : non , bon !', lang: 'fr', note: 'French keeps its space before : ; ! ?, the rest is tidied.' },
+  ],
+  'space.after-comma': [
+    { input: 'apples,pears,plums', note: 'Digits are left alone: 1,5 stays.' },
+    { input: 'Hallo,Welt und 3,14' , lang: 'de' },
+  ],
+  'punctuation.double': [
+    { input: 'Wow!!! Really??' },
+    { input: 'What?!! No!!!? Stop!!!', note: '?! and !? stay as a pair; a run beside one collapses.' },
+  ],
   arrow: [{ input: 'Read more ->' }, { input: '<- Back' }],
   'symbol.legal': [
     { input: '(c) 2026 Studio (R) (TM)', note: '(c) needs a year after it; (C) does not.' },
@@ -88,6 +100,10 @@ export const EXAMPLES: Record<string, readonly Example[]> = {
     { input: 'Idę w las i z nim', lang: 'pl' },
   ],
   'space.arrow': [{ input: 'Read more →' }, { input: '← Back' }],
+  'space.trailing': [
+    { input: 'First line   \nSecond line\t\nThird', note: 'Spaces and tabs at the end of a line; the lines stay.' },
+    { input: 'One trailing space ' },
+  ],
 };
 
 const show = (text: string): string => text.replaceAll(NBSP, '~');

@@ -11,6 +11,9 @@ const ORDER = [
   'quote',
   'apostrophe',
   'ellipsis',
+  'space.before-punctuation',
+  'space.after-comma',
+  'punctuation.double',
   'arrow',
   'symbol.legal',
   'dash.dialogue',
@@ -28,6 +31,7 @@ const ORDER = [
   'space.copyright',
   'space.orphan',
   'space.arrow',
+  'space.trailing',
 ];
 
 const at = (id: string) => RULE_IDS.indexOf(id);

@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { type Rule, RULE_IDS, RULES, addRule, selectRules, typographic, without } from './index';
+import { DEFAULT_RULES, type Rule, RULE_IDS, RULES, addRule, selectRules, typographic, without } from './index';
 
 /** A rule that is off unless asked for, and one that is on, for a list that is not the built-in one. */
 const shout: Rule = { id: 'extra.shout', about: 'Upper case', defaultOn: false, apply: (t) => t.toUpperCase() };
@@ -8,7 +8,7 @@ const ids = (list: readonly Rule[]) => list.map((rule) => rule.id);
 
 describe('selectRules', () => {
   test('with no options it is the built-in list', () => {
-    expect(ids(selectRules({}))).toEqual([...RULE_IDS]);
+    expect(ids(selectRules({}))).toEqual(ids(DEFAULT_RULES));
   });
 
   test('without() is selectRules({ disable })', () => {
@@ -29,7 +29,7 @@ describe('selectRules', () => {
   });
 
   test('enabling a rule that is already on changes nothing', () => {
-    expect(ids(selectRules({ enable: ['space.number'] }))).toEqual([...RULE_IDS]);
+    expect(ids(selectRules({ enable: ['space.number'] }))).toEqual(ids(DEFAULT_RULES));
   });
 
   test('names are checked against the list in use, not the built-in one', () => {

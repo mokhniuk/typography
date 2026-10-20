@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { addRule, RULES, type Rule } from '../core';
+import { addRule, DEFAULT_RULES, RULES, type Rule } from '../core';
 import { formatRules, type Io, run } from './run';
 
 function fake(files: Record<string, string> = {}, stdin = '') {
@@ -191,6 +191,6 @@ describe('formatRules', () => {
   });
 
   test('is unchanged for the built-in list', () => {
-    expect(formatRules(RULES)).not.toContain('off by default');
+    expect(formatRules(DEFAULT_RULES)).not.toContain('off by default');
   });
 });

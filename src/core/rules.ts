@@ -1,5 +1,6 @@
 import { dashRange, dashSentence, dialogue } from './dashes';
 import { apostrophe, arrows, ellipsis, legal, minus, multiply } from './marks';
+import { afterComma, beforePunctuation, doubleMarks, trailingSpace } from './extra';
 import { PACK, PACKS } from './lang';
 import { SENTENCE_DASH, SENTENCE_DASH_LITERARY } from './profiles';
 import { quotes } from './quotes';
@@ -67,6 +68,24 @@ export const RULES: readonly Rule[] = [
     apply: apostrophe,
   },
   { id: 'ellipsis', about: '... becomes …', apply: ellipsis },
+  {
+    id: 'space.before-punctuation',
+    about: 'Removes a space before , . ; : ! ? ) (French keeps the space before : ; ! ?)',
+    defaultOn: false,
+    apply: (text, { lang }) => beforePunctuation(text, lang),
+  },
+  {
+    id: 'space.after-comma',
+    about: 'A comma followed directly by a letter gets a space (a,b becomes a, b)',
+    defaultOn: false,
+    apply: afterComma,
+  },
+  {
+    id: 'punctuation.double',
+    about: 'A run of ! or ? becomes one mark (Wow!!! becomes Wow!); ?! and !? stay',
+    defaultOn: false,
+    apply: doubleMarks,
+  },
   { id: 'arrow', about: '-> and <- become → and ←', apply: arrows },
   { id: 'symbol.legal', about: '(c) before a year, (C), (R) and (TM) become © ® ™', apply: legal },
   {
@@ -131,6 +150,12 @@ export const RULES: readonly Rule[] = [
     apply: (text, { lang }) => orphans(text, lang),
   },
   { id: 'space.arrow', about: 'No-break space before → and after ←', apply: arrowSpace },
+  {
+    id: 'space.trailing',
+    about: 'Spaces and tabs at the end of a line are removed',
+    defaultOn: false,
+    apply: trailingSpace,
+  },
 ];
 
 export const RULE_IDS: readonly string[] = RULES.map((rule) => rule.id);
