@@ -52,6 +52,7 @@ Each is a limit of the pack format or an unverified choice, not a crash:
 
 - **Sentence dash unverified** for nl, sv, hu, sk, ro: the pack uses the spaced em dash; usage there often prefers a spaced en dash.
 - **Italian and Maltese truncation apostrophe** (`po'`, `va'`, `da'`, `di'`) inside straight single quotes closes the quotation early. The pack format has no field for trailing apostrophes.
+- **Dialogue dash only in Ukrainian.** `dialogueDash` is set for `uk` alone, so a paragraph that opens with `- ` stays a hyphen in every other language (seen in the playground). [languages.md](languages.md) already names Polish; many European languages open a dialogue line with a dash (likely Spanish, French, Italian, Portuguese, Bulgarian, Croatian, Slovenian, Romanian, Hungarian, Greek, and Finnish and Swedish with an en dash). All unverified: read a style guide per language before setting the field, and decide which dash and which register each gets. English and German do not use one.
 - **Spanish and Greek paired dash** (`—inciso—`, attached inside) cannot be expressed: `sentenceDash` is one symmetric spaced dash.
 - **`percentSpace` is one flag** for `%` and for currency, but the sources treat them differently.
 - **Abbreviations without a full stop** (Estonian `nr`, `lk`; Finnish `klo`, `nro`) are not matched; the abbreviation rule needs the stop.

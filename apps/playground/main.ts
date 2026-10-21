@@ -32,6 +32,8 @@ type State = {
   /** Rules that are off by default and were switched on. */
   enable: string[];
   input: string;
+  /** The example in the input while it is unedited, so a new format or language swaps it. */
+  example: Size | null;
 };
 
 const LANG_NAMES = Object.fromEntries(PACKS.map((pack) => [pack.code, pack.name])) as Record<
@@ -52,6 +54,7 @@ function load(): State {
     mark: false,
     ...reset(),
     input: example('text', 'en', 'long'),
+    example: 'long',
   };
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE) ?? 'null') as Partial<State> | null;
@@ -66,6 +69,7 @@ function load(): State {
       mark: saved.mark === true,
       ...readSaved(saved, RULES),
       input: typeof saved.input === 'string' ? saved.input : fallback.input,
+      example: saved.example === 'short' || saved.example === 'long' ? saved.example : null,
     };
   } catch {
     return fallback;
@@ -264,13 +268,20 @@ const schedule = () => {
   frame = requestAnimationFrame(render);
 };
 
+/** An unedited example follows the format and the language. */
+function swapExample() {
+  if (state.example) state.input = example(state.mode, state.lang, state.example);
+}
+
 input.addEventListener('input', () => {
   state.input = input.value;
+  state.example = null;
   schedule();
 });
 for (const radio of document.querySelectorAll<HTMLInputElement>('#mode input')) {
   radio.addEventListener('change', () => {
     state.mode = radio.value as Mode;
+    swapExample();
     schedule();
   });
 }
@@ -282,6 +293,7 @@ for (const tab of document.querySelectorAll<HTMLButtonElement>('[role="tab"]')) 
 }
 langSelect.addEventListener('change', () => {
   state.lang = langSelect.value as Lang;
+  swapExample();
   schedule();
 });
 registerSelect.addEventListener('change', () => {
@@ -302,12 +314,14 @@ mark.addEventListener('change', () => {
 });
 for (const button of document.querySelectorAll<HTMLButtonElement>('[data-size]')) {
   button.addEventListener('click', () => {
-    state.input = example(state.mode, state.lang, button.dataset.size as Size);
+    state.example = button.dataset.size as Size;
+    swapExample();
     schedule();
   });
 }
 el('clear').addEventListener('click', () => {
   state.input = '';
+  state.example = null;
   schedule();
   input.focus();
 });

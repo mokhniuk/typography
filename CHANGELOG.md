@@ -4,7 +4,7 @@ Versions follow semver while the package is below 1.0.0: a **minor** release may
 
 ## Unreleased
 
-- Playground: a short and a long example in each of the 26 languages, with the HTML and Markdown examples written in the language too (they were English around the sample sentence); the list of what each rule did is a `dl`; markup is semantic and every theme value is a CSS variable, with a `data-theme` switch ready ([docs/ui.md](docs/ui.md)). Playground and docs only, cannot change existing output.
+- Playground: a short and a long example in each of the 26 languages, with the HTML and Markdown examples written in the language too (they were English around the sample sentence); an inserted example that has not been edited follows a change of format or language (plain text no longer lands in HTML mode); the list of what each rule did is a `dl`; markup is semantic and every theme value is a CSS variable, with a `data-theme` switch ready ([docs/ui.md](docs/ui.md)). Playground and docs only, cannot change existing output.
 
 ## 0.3.0 (2026-10-21)
 
