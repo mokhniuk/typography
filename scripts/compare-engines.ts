@@ -15,8 +15,8 @@ import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import {
-  type Engine,
   corpus,
+  type Engine,
   hastOf,
   htmlOf,
   loadEngine,
@@ -50,15 +50,24 @@ const headSrc = resolve(flag('--head') ?? join(repo, 'src'));
 const scratch = mkdtempSync(join(tmpdir(), 'typography-base-'));
 const baseSrc = flag('--base-dir') ? resolve(flag('--base-dir') as string) : join(scratch, 'src');
 if (!flag('--base-dir')) {
-  const tar = execFileSync('git', ['-C', repo, 'archive', baseRef, 'src']);
-  execFileSync('tar', ['-x', '-C', scratch], { input: tar });
+  // Written to a file, not piped: `src/` of a ref is bigger than execFileSync's buffer (ENOBUFS).
+  const archive = join(scratch, 'base.tar');
+  execFileSync('git', ['-C', repo, 'archive', '-o', archive, baseRef, 'src']);
+  execFileSync('tar', ['-x', '-C', scratch, '-f', archive]);
 }
 process.on('exit', () => rmSync(scratch, { recursive: true, force: true }));
 
 const base = await loadEngine(baseSrc);
 const head = await loadEngine(headSrc);
 
-type Diff = { input: string; mode: string; lang: string; options: string; base: string; head: string };
+type Diff = {
+  input: string;
+  mode: string;
+  lang: string;
+  options: string;
+  base: string;
+  head: string;
+};
 const diffs: Diff[] = [];
 let total = 0;
 let different = 0;
@@ -81,7 +90,8 @@ function attempt(fn: () => unknown): string {
   const a = ruleTable(base).join(',');
   const b = ruleTable(head).join(',');
   total++;
-  if (a !== b) note({ input: '(RULES)', mode: 'rule table', lang: '-', options: '-', base: a, head: b });
+  if (a !== b)
+    note({ input: '(RULES)', mode: 'rule table', lang: '-', options: '-', base: a, head: b });
 }
 
 const baseLangs: readonly string[] = base.core.LANGS;
@@ -90,12 +100,21 @@ const skipped = headLangs.filter((l) => !baseLangs.includes(l));
 const langs = headLangs.filter((l) => baseLangs.includes(l));
 for (const l of baseLangs.filter((x) => !headLangs.includes(x))) {
   total++;
-  note({ input: '(LANGS)', mode: 'languages', lang: l, options: '-', base: 'present', head: 'missing' });
+  note({
+    input: '(LANGS)',
+    mode: 'languages',
+    lang: l,
+    options: '-',
+    base: 'present',
+    head: 'missing',
+  });
 }
 
 // Opt-in rules known to both engines (enable throws on an id it does not know).
 const headIds = new Set(head.core.RULES.map((r) => r.id));
-const optIn = base.core.RULES.filter((r) => r.defaultOn === false && headIds.has(r.id)).map((r) => r.id);
+const optIn = base.core.RULES.filter((r) => r.defaultOn === false && headIds.has(r.id)).map(
+  (r) => r.id,
+);
 
 const pool = corpus(N, 1);
 const registers = ['display', 'literary'] as const;
@@ -105,7 +124,13 @@ const ruleSets: [string, string[] | undefined][] = [
   ['all-optin', optIn],
 ];
 
-function compareOne(mode: string, lang: string, options: string, input: string, run: (e: Engine) => unknown) {
+function compareOne(
+  mode: string,
+  lang: string,
+  options: string,
+  input: string,
+  run: (e: Engine) => unknown,
+) {
   total++;
   const a = attempt(() => run(base));
   const b = attempt(() => run(head));
@@ -128,7 +153,9 @@ for (const lang of langs) {
         const l = lang as never;
         for (const [s, i] of window(start, SLICE)) {
           // blockStart false on every fourth string: a dialogue dash only counts at a block start.
-          compareOne('typographic', lang, label, s, (e) => e.core.explain(s, l, { ...o, blockStart: i % 4 !== 3 }));
+          compareOne('typographic', lang, label, s, (e) =>
+            e.core.explain(s, l, { ...o, blockStart: i % 4 !== 3 }),
+          );
         }
         const next = (i: number, k: number) => pool[(i + k) % pool.length] ?? '';
         for (const [s, i] of window(start, MODE_SLICE)) {
@@ -140,11 +167,29 @@ for (const lang of langs) {
           const onChange = (changes: unknown[]) => (c: unknown) => void changes.push(c);
           const opts = (changes: unknown[]) => ({ lang: l, ...o, onChange: onChange(changes) });
           const text = `${s}\n${next(i, 1)}\n\n${next(i, 2)}`;
-          compareOne('typesetText', lang, label, text, run((e, c) => e.text.typesetText(text, opts(c))));
+          compareOne(
+            'typesetText',
+            lang,
+            label,
+            text,
+            run((e, c) => e.text.typesetText(text, opts(c))),
+          );
           const html = htmlOf(s, i);
-          compareOne('typesetHtml', lang, label, html, run((e, c) => e.html.typesetHtml(html, opts(c))));
+          compareOne(
+            'typesetHtml',
+            lang,
+            label,
+            html,
+            run((e, c) => e.html.typesetHtml(html, opts(c))),
+          );
           const md = markdownOf(s, i, next(i, 1));
-          compareOne('typesetMarkdown', lang, label, md, run((e, c) => e.markdown.typesetMarkdown(md, opts(c))));
+          compareOne(
+            'typesetMarkdown',
+            lang,
+            label,
+            md,
+            run((e, c) => e.markdown.typesetMarkdown(md, opts(c))),
+          );
           compareOne('typesetHast', lang, label, show(hastOf(s, i)), (e) => {
             const changes: unknown[] = [];
             const tree = hastOf(s, i);
@@ -157,9 +202,15 @@ for (const lang of langs) {
   }
 }
 
-console.log(`base ${baseRef} (${baseSrc.startsWith(scratch) ? 'git archive' : baseSrc})  head ${headSrc}`);
-console.log(`languages compared: ${langs.length}${skipped.length ? ` (skipped, not in base: ${skipped.join(', ')})` : ''}`);
-console.log(`corpus: ${pool.length} strings, ${SLICE} per combination for typographic and ${MODE_SLICE} for each other mode, ${total} comparisons`);
+console.log(
+  `base ${baseRef} (${baseSrc.startsWith(scratch) ? 'git archive' : baseSrc})  head ${headSrc}`,
+);
+console.log(
+  `languages compared: ${langs.length}${skipped.length ? ` (skipped, not in base: ${skipped.join(', ')})` : ''}`,
+);
+console.log(
+  `corpus: ${pool.length} strings, ${SLICE} per combination for typographic and ${MODE_SLICE} for each other mode, ${total} comparisons`,
+);
 console.log(`opt-in rules enabled in the all-optin set: ${optIn.join(', ')}`);
 
 for (const d of diffs) {
@@ -194,10 +245,15 @@ const best = (fn: () => unknown): number => {
   return ms;
 };
 console.log('\nTiming, best of 3 (ms)');
-console.log(`${'mode'.padEnd(22)}${'input'.padEnd(12)}${'base'.padStart(10)}${'head'.padStart(10)}${'head/base'.padStart(11)}`);
+console.log(
+  `${'mode'.padEnd(22)}${'input'.padEnd(12)}${'base'.padStart(10)}${'head'.padStart(10)}${'head/base'.padStart(11)}`,
+);
 let sizeMismatch = 0;
 for (const [name, job] of jobs) {
-  for (const [label, texts] of [['1 MB', [MB]], ['1000 x 1 KB', KB]] as const) {
+  for (const [label, texts] of [
+    ['1 MB', [MB]],
+    ['1000 x 1 KB', KB],
+  ] as const) {
     // Explain on a megabyte is a diff per rule: far slower, and not what the 1 MB row is for.
     if (name === 'typographic+explain' && label === '1 MB') continue;
     const used = name === 'typographic+explain' ? texts.slice(0, 100) : texts;
@@ -207,7 +263,9 @@ for (const [name, job] of jobs) {
     const b = best(run(head));
     // The timed runs must agree too.
     if (show(used.map((s) => job(base, s))) !== show(used.map((s) => job(head, s)))) sizeMismatch++;
-    console.log(`${name.padEnd(22)}${shown.padEnd(12)}${a.toFixed(1).padStart(10)}${b.toFixed(1).padStart(10)}${(b / a).toFixed(2).padStart(11)}`);
+    console.log(
+      `${name.padEnd(22)}${shown.padEnd(12)}${a.toFixed(1).padStart(10)}${b.toFixed(1).padStart(10)}${(b / a).toFixed(2).padStart(11)}`,
+    );
   }
 }
 if (sizeMismatch) console.log(`\nTIMED INPUTS DIFFER in ${sizeMismatch} runs`);
