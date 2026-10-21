@@ -2,8 +2,8 @@ import { describe, expect, test } from 'bun:test';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { RULE_IDS } from '../src/core';
-import { render, RULE_SOURCES, SOURCES } from './sources';
 import { renderBibliographyHtml } from './bibliography-html';
+import { RULE_SOURCES, render, SOURCES } from './sources';
 import { renderHtml } from './sources-html';
 
 const known = new Set(SOURCES.map((source) => source.id));

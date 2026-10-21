@@ -22,7 +22,10 @@ function isNumericRange(a: string, b: string, before: string, gap: string): bool
  * group separator, the second is followed by one and three digits.
  */
 function insideGroups(whole: string, start: number, end: number): boolean {
-  return /\d[,\u00A0]$/.test(whole.slice(Math.max(0, start - 2), start)) || /^[,\u00A0]\d{3}(?!\d)/.test(whole.slice(end));
+  return (
+    /\d[,\u00A0]$/.test(whole.slice(Math.max(0, start - 2), start)) ||
+    /^[,\u00A0]\d{3}(?!\d)/.test(whole.slice(end))
+  );
 }
 
 const DIALOGUE = /^[-–—][ \u00A0]+(?=[\p{L}\p{N}«„“"‘'(¿¡])/u;
@@ -127,17 +130,20 @@ function spacedDashes(text: string, replacement: string): string {
 
 /** A spaced hyphen or dash, or a double hyphen, is a break in the sentence: non-breaking space, `dash`, space. */
 export function dashSentence(text: string, dash = '—'): string {
-  return spacedDashes(text, `${NBSP}${dash} `)
-    // Not a double hyphen that is the whole of a quotation («--»): its space would sit inside the marks
-    // and a second pass would read it as the space of a French mark.
-    // A run of three or more hyphens is no double hyphen (the omission mark [---], a rule): left whole.
-    // Written as `(?<=[^\s\-–—])--(?=[^\s\-–—])`; the lookbehind, tried at every position, is read here
-    // after the `--` is found. A refused `--` is left whole: its second hyphen has a hyphen before it.
-    .replace(/--(?=[^\s\-–—])/g, (match, offset: number, whole: string) =>
-      offset === 0 ||
-      /[\s\-–—]/.test(whole.charAt(offset - 1)) ||
-      (/[«„“‘‚‹»›"']/.test(whole.charAt(offset - 1)) && /[»“”’‘«‹›"']/.test(whole.charAt(offset + 2)))
-        ? match
-        : `${NBSP}${dash} `,
-    );
+  return (
+    spacedDashes(text, `${NBSP}${dash} `)
+      // Not a double hyphen that is the whole of a quotation («--»): its space would sit inside the marks
+      // and a second pass would read it as the space of a French mark.
+      // A run of three or more hyphens is no double hyphen (the omission mark [---], a rule): left whole.
+      // Written as `(?<=[^\s\-–—])--(?=[^\s\-–—])`; the lookbehind, tried at every position, is read here
+      // after the `--` is found. A refused `--` is left whole: its second hyphen has a hyphen before it.
+      .replace(/--(?=[^\s\-–—])/g, (match, offset: number, whole: string) =>
+        offset === 0 ||
+        /[\s\-–—]/.test(whole.charAt(offset - 1)) ||
+        (/[«„“‘‚‹»›"']/.test(whole.charAt(offset - 1)) &&
+          /[»“”’‘«‹›"']/.test(whole.charAt(offset + 2)))
+          ? match
+          : `${NBSP}${dash} `,
+      )
+  );
 }

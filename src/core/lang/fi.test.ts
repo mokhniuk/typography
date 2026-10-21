@@ -35,9 +35,12 @@ describe('Finnish quotation: the same mark opens and closes (ISG 4.2.3, 6.4, 10.
   });
 
   test('Kotus: an inner quotation is ’…’, the example of the article', () => {
-    const ready = '”Sanoit ehtineesi vain ’pää kolmantena jalkana’ eiliseen kokoukseen”, muistutin hänelle.';
+    const ready =
+      '”Sanoit ehtineesi vain ’pää kolmantena jalkana’ eiliseen kokoukseen”, muistutin hänelle.';
     expect(
-      t('"Sanoit ehtineesi vain \'pää kolmantena jalkana\' eiliseen kokoukseen", muistutin hänelle.'),
+      t(
+        '"Sanoit ehtineesi vain \'pää kolmantena jalkana\' eiliseen kokoukseen", muistutin hänelle.',
+      ),
     ).toBe(ready);
     expect(
       t('“Sanoit ehtineesi vain ‘pää kolmantena jalkana’ eiliseen kokoukseen”, muistutin hänelle.'),
@@ -106,6 +109,8 @@ describe('Finnish letters ä ö å are never touched', () => {
 
   test('a paragraph that opens with a dash is a line of dialogue, in both registers', () => {
     expect(t('- Odotetaanko? kysyi hän.')).toBe('–~Odotetaanko? kysyi hän.');
-    expect(t('- Odotetaanko? kysyi hän.', { register: 'literary' })).toBe('–~Odotetaanko? kysyi hän.');
+    expect(t('- Odotetaanko? kysyi hän.', { register: 'literary' })).toBe(
+      '–~Odotetaanko? kysyi hän.',
+    );
   });
 });

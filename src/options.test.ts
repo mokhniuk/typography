@@ -70,7 +70,7 @@ describe('enable and rules reach every mode', () => {
   });
 });
 
-describe("quoteStyle reaches every mode", () => {
+describe('quoteStyle reaches every mode', () => {
   const us = { quoteStyle: 'us' } as const;
   const run = (html: string, options: object = {}) =>
     plain(
@@ -114,4 +114,3 @@ describe("quoteStyle reaches every mode", () => {
     );
   });
 });
-

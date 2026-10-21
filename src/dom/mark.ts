@@ -13,19 +13,29 @@ const rough = (text: string) => `${ROUGH_EM * text.replace(/\s+$/, '').length}em
  * hangs from the first paint and `hangPunctuation` only refines the widths. `next` is the piece
  * after this one: a space or a closing span before an opening run carries that run's width.
  */
-export function hangStyle(piece: HangPiece, next: HangPiece | undefined): { attr: string; style: Record<string, string> } {
+export function hangStyle(
+  piece: HangPiece,
+  next: HangPiece | undefined,
+): { attr: string; style: Record<string, string> } {
   const open = next?.kind === 'open' ? { '--hang-open': rough(next.text) } : {};
-  if (piece.kind === 'open') return { attr: 'data-hang', style: { '--hang-w': rough(piece.text), 'margin-left': PULL } };
+  if (piece.kind === 'open')
+    return { attr: 'data-hang', style: { '--hang-w': rough(piece.text), 'margin-left': PULL } };
   if (piece.kind === 'close')
     return {
       attr: 'data-hang-close',
-      style: { '--hang-w': rough(piece.text), ...open, 'margin-right': PULL, 'word-spacing': CLOSE_SPACE },
+      style: {
+        '--hang-w': rough(piece.text),
+        ...open,
+        'margin-right': PULL,
+        'word-spacing': CLOSE_SPACE,
+      },
     };
   return { attr: 'data-hang-space', style: { ...open, 'word-spacing': SPACE } };
 }
 
 /** Text that is never typeset, so its marks never hang. */
-const SKIP = 'pre, code, kbd, samp, script, style, textarea, [data-hang], [data-hang-close], [data-hang-space]';
+const SKIP =
+  'pre, code, kbd, samp, script, style, textarea, [data-hang], [data-hang-close], [data-hang-space]';
 
 /**
  * Wraps the punctuation under `root` that should hang in the spans `hangPunctuation` reads, for
@@ -40,7 +50,8 @@ export function markHangs(root: HTMLElement): void {
   if (!view) return;
   const blockOf = (node: Node): Element => {
     let box = node.parentElement;
-    while (box && box !== root && view.getComputedStyle(box).display === 'inline') box = box.parentElement;
+    while (box && box !== root && view.getComputedStyle(box).display === 'inline')
+      box = box.parentElement;
     return box ?? root;
   };
   const walker = doc.createTreeWalker(root, view.NodeFilter.SHOW_TEXT);

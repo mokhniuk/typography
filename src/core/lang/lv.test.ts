@@ -26,7 +26,9 @@ describe('Latvian quotation (ISG 4.2.3, 6.4, 10.1.6: “…” at every level)',
   });
 
   test('ISG 10.1.6 example: grozījumi likumā “Par valsts pensijām”', () => {
-    expect(t('grozījumi likumā "Par valsts pensijām"')).toBe('grozījumi likumā “Par valsts pensijām”');
+    expect(t('grozījumi likumā "Par valsts pensijām"')).toBe(
+      'grozījumi likumā “Par valsts pensijām”',
+    );
     expect(t('laikraksts "Diena", fabrika "Laima"')).toBe('laikraksts “Diena”, fabrika “Laima”');
     const ready = 'laikraksts “Diena”, fabrika “Laima”, šokolāde “Laima”';
     expect(t(ready)).toBe(ready);
@@ -37,9 +39,9 @@ describe('Latvian quotation (ISG 4.2.3, 6.4, 10.1.6: “…” at every level)',
   });
 
   test('ISG 10.1.6: the full stop of a whole sentence stands inside the quotation', () => {
-    expect(t('Uz iepakojuma ir teksts: "Ražojumu pareizi dozējot, tiek samazinātas izmaksas."')).toBe(
-      'Uz iepakojuma ir teksts: “Ražojumu pareizi dozējot, tiek samazinātas izmaksas.”',
-    );
+    expect(
+      t('Uz iepakojuma ir teksts: "Ražojumu pareizi dozējot, tiek samazinātas izmaksas."'),
+    ).toBe('Uz iepakojuma ir teksts: “Ražojumu pareizi dozējot, tiek samazinātas izmaksas.”');
   });
 
   test('Latvian letters inside and next to quotes survive', () => {
@@ -65,7 +67,9 @@ describe('Latvian spaces and dashes', () => {
   });
 
   test('ISG 10.7: the parts of an abbreviation are not split across lines', () => {
-    expect(t('u. c., u. tml., t. i., š. g., v. i., z. v.')).toBe('u.~c., u.~tml., t.~i., š.~g., v.~i., z.~v.');
+    expect(t('u. c., u. tml., t. i., š. g., v. i., z. v.')).toBe(
+      'u.~c., u.~tml., t.~i., š.~g., v.~i., z.~v.',
+    );
   });
 
   test('ISG 4.2.3: Nr. stays with the number after it', () => {

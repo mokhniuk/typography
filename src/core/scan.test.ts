@@ -27,7 +27,8 @@ describe('lookbehind stand-ins', () => {
       seen++;
       if (seesLetter) letters++;
       if (isLetter(before(text, ch.length)) !== seesLetter) wrong.push(`L U+${cp.toString(16)}`);
-      if (isLetterOrNumber(before(text, ch.length)) === seesNeither) wrong.push(`LN U+${cp.toString(16)}`);
+      if (isLetterOrNumber(before(text, ch.length)) === seesNeither)
+        wrong.push(`LN U+${cp.toString(16)}`);
       if (wrong.length > 5) break;
     }
     expect(wrong).toEqual([]);

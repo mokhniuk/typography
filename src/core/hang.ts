@@ -88,7 +88,11 @@ export function hangPieces(text: string, atStart = true): HangPiece[] {
     const endsWord = i === 0 ? !atStart : !space(text.charAt(i - 1));
     if (CLOSERS.includes(ch) && endsWord) {
       let end = i;
-      while (end < text.length && (CLOSERS.includes(text.charAt(end)) || TRAILING.includes(text.charAt(end)))) end++;
+      while (
+        end < text.length &&
+        (CLOSERS.includes(text.charAt(end)) || TRAILING.includes(text.charAt(end)))
+      )
+        end++;
       if (end === text.length || space(text.charAt(end))) {
         let after = end;
         while (after < text.length && space(text.charAt(after))) after++;

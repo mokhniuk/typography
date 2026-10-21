@@ -11,7 +11,12 @@ const all = args.includes('--all');
 const dir = resolve(args.find((a) => !a.startsWith('--')) ?? 'src');
 const only = args.find((a) => a.startsWith('--rule='))?.slice(7);
 const mod = (await import(`${dir}/core/rules.ts`)) as typeof import('../src/core/rules');
-const context = { lang: 'en', register: 'display', quoteStyle: 'language', blockStart: false } as const;
+const context = {
+  lang: 'en',
+  register: 'display',
+  quoteStyle: 'language',
+  blockStart: false,
+} as const;
 
 export const classes: Record<string, string> = {
   spaces: ' ',
@@ -66,7 +71,7 @@ export const classes: Record<string, string> = {
   '1–': '1–',
   '1:00-': '1:00-',
   '1.5': '1.5',
-  '$': '$',
+  $: '$',
   '€': '€',
   '%': '%',
   'a.': 'a.',
@@ -76,7 +81,7 @@ export const classes: Record<string, string> = {
   '//': '/',
   '`': '`',
   '@': '@',
-  'http': 'http://',
+  http: 'http://',
   'www.': 'www.',
   ')': ')',
 };

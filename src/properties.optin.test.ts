@@ -17,9 +17,44 @@ function random(seed: number) {
 
 /** Pieces every rule's vocabulary shares: words, spaces, breaks, quotes, other punctuation. */
 const COMMON = [
-  'a', 'I', 'word', 'Dr.', 'K.', 'km', 'и', 'Haus', '5', '21', '2026', '10:00',
-  ' ', ' ', ' ', '  ', '\n', '"', "'", '’', '“', '”', '«', '»', '-', '--', '—', '->', '...', '%',
-  '(', ')', ',', '.', ':', ';', '!', '?',
+  'a',
+  'I',
+  'word',
+  'Dr.',
+  'K.',
+  'km',
+  'и',
+  'Haus',
+  '5',
+  '21',
+  '2026',
+  '10:00',
+  ' ',
+  ' ',
+  ' ',
+  '  ',
+  '\n',
+  '"',
+  "'",
+  '’',
+  '“',
+  '”',
+  '«',
+  '»',
+  '-',
+  '--',
+  '—',
+  '->',
+  '...',
+  '%',
+  '(',
+  ')',
+  ',',
+  '.',
+  ':',
+  ';',
+  '!',
+  '?',
 ];
 
 /**
@@ -31,30 +66,99 @@ const CALM = COMMON.filter((piece) => !/["'’“”«»—-]/.test(piece));
 
 const OWN: Record<string, readonly string[]> = {
   'space.before-punctuation': [
-    ' ,', ' .', ' ;', ' :', ' !', ' ?', ' )', ' :)', ' ;-)', ' ...', ' …', ' .5', ' !=', ' ??',
-    '10 :', '10 : 30', '\n ,', ',', '.', 'Oui',
+    ' ,',
+    ' .',
+    ' ;',
+    ' :',
+    ' !',
+    ' ?',
+    ' )',
+    ' :)',
+    ' ;-)',
+    ' ...',
+    ' …',
+    ' .5',
+    ' !=',
+    ' ??',
+    '10 :',
+    '10 : 30',
+    '\n ,',
+    ',',
+    '.',
+    'Oui',
   ],
-  'space.after-comma': ['a,b', ',x', '1,5', '1,000', '3,14', ',', ',,', 'b,', ',\n', 'ça,va', ',"x"', ',)'],
-  'punctuation.double': ['!!', '!!!', '??', '???', '?!', '!?', '!!?', 'x!!', 'w??', '!!x', '(!!y)', '?!!'],
+  'space.after-comma': [
+    'a,b',
+    ',x',
+    '1,5',
+    '1,000',
+    '3,14',
+    ',',
+    ',,',
+    'b,',
+    ',\n',
+    'ça,va',
+    ',"x"',
+    ',)',
+  ],
+  'punctuation.double': [
+    '!!',
+    '!!!',
+    '??',
+    '???',
+    '?!',
+    '!?',
+    '!!?',
+    'x!!',
+    'w??',
+    '!!x',
+    '(!!y)',
+    '?!!',
+  ],
   'space.trailing': ['  \n', ' \n', '\t\n', '\t', ' \r\n', ' \n', '\n\n'],
   'symbol.plusminus': ['+-5', '+-', '+-0.2', 'a+-b', '1+-5', '(+-3)', '+-x', '+'],
   'symbol.fraction': [
-    '1/2', '1/4', '3/4', '11/2', '1/20', 'a1/2', '1/2/2026', '2/3', '2 1/2', '1/2 cup', '3/4 of', '1/', '/2', '0.1/2',
-    '½', '¼', '¾',
+    '1/2',
+    '1/4',
+    '3/4',
+    '11/2',
+    '1/20',
+    'a1/2',
+    '1/2/2026',
+    '2/3',
+    '2 1/2',
+    '1/2 cup',
+    '3/4 of',
+    '1/',
+    '/2',
+    '0.1/2',
+    '½',
+    '¼',
+    '¾',
   ],
   'symbol.degree': [
-    '20°C', '20 °C', '20 C', '20 F', '20° C', '68 F', '-5 C', '20 °C', '20C', '20 Cat', '5 C.E.',
-    'Vitamin C 5 C', 'Type 2 F', 'C', 'F', '°',
+    '20°C',
+    '20 °C',
+    '20 C',
+    '20 F',
+    '20° C',
+    '68 F',
+    '-5 C',
+    '20 °C',
+    '20C',
+    '20 Cat',
+    '5 C.E.',
+    'Vitamin C 5 C',
+    'Type 2 F',
+    'C',
+    'F',
+    '°',
   ],
   'symbol.implies': ['=>', '==>', '=>>', '=>=', '<=>', 'x=>y', ' => ', '=', '>', '<'],
 };
 
 /** Text inside which no rule may change anything. */
-const ZONES = [
-  'https://a.b/1/2?x=1,y=>z',
-  'info@a-b.org',
-  '`1/2 20 C +-5 => a,b !! a ,`',
-];
+const ZONES = ['https://a.b/1/2?x=1,y=>z', 'info@a-b.org', '`1/2 20 C +-5 => a,b !! a ,`'];
 
 function sample(
   rand: () => number,
@@ -94,7 +198,11 @@ for (const id of Object.keys(OWN)) {
   describe(`properties of ${id}`, () => {
     for (const lang of LANGS) {
       for (const quoteStyle of STYLES) {
-        const seed = 1 + Object.keys(OWN).indexOf(id) * 101 + LANGS.indexOf(lang) * 7 + STYLES.indexOf(quoteStyle);
+        const seed =
+          1 +
+          Object.keys(OWN).indexOf(id) * 101 +
+          LANGS.indexOf(lang) * 7 +
+          STYLES.indexOf(quoteStyle);
         const label = `${lang}/${quoteStyle}`;
 
         test(`${label}: a second pass changes nothing`, () => {

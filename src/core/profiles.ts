@@ -35,7 +35,9 @@ export const ORPHANS: Partial<Record<Lang, RegExp>> = table((p) => p.orphans);
  * literary register.
  */
 export const SENTENCE_DASH: Partial<Record<Lang, string>> = table((p) => p.sentenceDash);
-export const SENTENCE_DASH_LITERARY: Partial<Record<Lang, string>> = table((p) => p.sentenceDashLiterary);
+export const SENTENCE_DASH_LITERARY: Partial<Record<Lang, string>> = table(
+  (p) => p.sentenceDashLiterary,
+);
 
 /** Abbreviations whose parts must not be split by a line break (see `Abbreviations`). */
 export const ABBREVIATIONS: Partial<Record<Lang, Abbreviations>> = table((p) => p.abbreviations);

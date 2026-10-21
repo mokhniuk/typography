@@ -55,7 +55,7 @@ describe('Italian apostrophe (ISG 4: the typographic ’; Treccani: elision l’
     expect(t('Disse "dammi un po\'" e uscì.')).toBe('Disse «dammi un po’» e uscì.');
   });
 
-  test("a year with its first digits dropped: ’48, nel ’64", () => {
+  test('a year with its first digits dropped: ’48, nel ’64', () => {
     expect(t("Nel '64, nel '48.")).toBe('Nel ’64, nel ’48.');
     expect(t('Disse "nel \'64, era qui" ieri.')).toBe('Disse «nel ’64, era qui» ieri.');
   });
@@ -76,7 +76,7 @@ describe('Italian idempotence', () => {
   test('a second pass over the golden strings changes nothing', () => {
     for (const input of [
       'Disse "ciao" e uscì.',
-      "Disse \"l'amico\" e un po' di pane.",
+      'Disse "l\'amico" e un po\' di pane.',
       '“x ‘y “z” y’ x”',
       "Nel '64 il 5% a pag. 12.",
     ]) {

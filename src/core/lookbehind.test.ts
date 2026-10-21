@@ -4,15 +4,8 @@ import { dashRange, dashSentence } from './dashes';
 import { fractions, implies, plusMinus } from './extra';
 import { apostrophe, minus, multiply } from './marks';
 import { ABBREVIATIONS, LANGS, ORPHANS } from './profiles';
-import {
-  abbreviations,
-  arrowSpace,
-  initials,
-  orphans,
-  titles,
-  unitSymbol,
-} from './spaces';
-import { NBSP, type Lang } from './types';
+import { abbreviations, arrowSpace, initials, orphans, titles, unitSymbol } from './spaces';
+import { type Lang, NBSP } from './types';
 
 /**
  * The rules below were rewritten so that no regex opens with a lookbehind (tried at every position, 20+ ms
@@ -45,13 +38,13 @@ const reference = {
   },
   abbreviations: (text: string, lang: Lang) => {
     const list = ABBREVIATIONS[lang] ?? {};
-    const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const escapeRegex = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const names = (words: readonly string[] | undefined) =>
-      words?.length ? words.map(escape).join('|') : null;
+      words?.length ? words.map(escapeRegex).join('|') : null;
     let out = text;
     if (list.together?.length) {
       const together = new RegExp(
-        `(?<![\\p{L}\\p{N}])(?:${list.together.map((a) => escape(a).replace(/ /g, '[ ]+')).join('|')})(?![\\p{L}])`,
+        `(?<![\\p{L}\\p{N}])(?:${list.together.map((a) => escapeRegex(a).replace(/ /g, '[ ]+')).join('|')})(?![\\p{L}])`,
         'gu',
       );
       out = out.replace(together, (m) => m.replace(/[ ]+/g, NBSP));
@@ -84,7 +77,8 @@ const reference = {
     text
       .replace(/[ \u00A0]+(?:--|[-–—])[ \u00A0]+/g, `${NBSP}— `)
       .replace(/(?<=[^\s\-–—])--(?=[^\s\-–—])/g, (match, offset: number, whole: string) =>
-        /[«„“‘‚‹»›"']/.test(whole.charAt(offset - 1)) && /[»“”’‘«‹›"']/.test(whole.charAt(offset + 2))
+        /[«„“‘‚‹»›"']/.test(whole.charAt(offset - 1)) &&
+        /[»“”’‘«‹›"']/.test(whole.charAt(offset + 2))
           ? match
           : `${NBSP}— `,
       ),
@@ -99,7 +93,14 @@ const reference = {
 };
 
 /** The unchanged helpers of the original `dashRange`, copied (they were not rewritten). */
-function rangeVerdict(match: string, a: string, gap: string, b: string, offset: number, whole: string): string {
+function rangeVerdict(
+  match: string,
+  a: string,
+  gap: string,
+  b: string,
+  offset: number,
+  whole: string,
+): string {
   const numeric = (x: string, y: string, before: string, g: string): boolean => {
     if (x.length > 4 || y.length > 4) return false;
     if (x.length === 3 && y.length === 4 && !/\s| /.test(g)) return false;
@@ -109,22 +110,139 @@ function rangeVerdict(match: string, a: string, gap: string, b: string, offset: 
     return !/\+[\d\s()./-]*$/.test(before);
   };
   const inside = (start: number, end: number): boolean =>
-    /\d[, ]$/.test(whole.slice(Math.max(0, start - 2), start)) || /^[, ]\d{3}(?!\d)/.test(whole.slice(end));
-  return !inside(offset, offset + match.length) && numeric(a, b, whole.slice(Math.max(0, offset - 20), offset), gap)
+    /\d[, ]$/.test(whole.slice(Math.max(0, start - 2), start)) ||
+    /^[, ]\d{3}(?!\d)/.test(whole.slice(end));
+  return !inside(offset, offset + match.length) &&
+    numeric(a, b, whole.slice(Math.max(0, offset - 20), offset), gap)
     ? `${a}–${b}`
     : match;
 }
 
 const ALPHA = [
-  'a', 'b', 'e', 'I', 'A', 'K', 'D', 'r', 'o', 'f', 'x', 'X', 'z', 'S', 'P', 'é', 'Ł', 'ż', 'и', 'Я', 'ї', 'α', 'Ω', '中', '𝒜', '𝔞', '😀', '٣', '²', '½', 'Ⅳ',
-  '0', '1', '2', '5', '9', '10', '12', '00', '2026', '12:00',
-  ' ', ' ', ' ', ' ', '  ', ' ', '\t', '\n', ' ',
-  '.', '.', '..', '...', ',', ';', ':', '!', '?', '-', '--', '---', '–', '—', '+', '+-', '=>', '->', '→', '←', '(', ')', '[', '/', '%', '€', '°',
-  "'", "'", "''", '’', '"', '“', '”', '«', '»', '`', '', '_', '#',
-  'Prof', 'Dr', 'Mr', 'Mrs', 'Ms', 'Mx', 'St', 'Hon', 'Rev', 'Sr', 'Jr', 'Nr', 'Abb', 'S', 'p', 'pp', 'No', 'Fig', 'z. B.', 'd. h.', 'i. d. R.', 'e. p.', 'l. e. p.', 'EE. UU.', 'ul',
-  'x', '1x', '0x1F', '3 x 4', 'v2x3', 'km',
+  'a',
+  'b',
+  'e',
+  'I',
+  'A',
+  'K',
+  'D',
+  'r',
+  'o',
+  'f',
+  'x',
+  'X',
+  'z',
+  'S',
+  'P',
+  'é',
+  'Ł',
+  'ż',
+  'и',
+  'Я',
+  'ї',
+  'α',
+  'Ω',
+  '中',
+  '𝒜',
+  '𝔞',
+  '😀',
+  '٣',
+  '²',
+  '½',
+  'Ⅳ',
+  '0',
+  '1',
+  '2',
+  '5',
+  '9',
+  '10',
+  '12',
+  '00',
+  '2026',
+  '12:00',
+  ' ',
+  ' ',
+  ' ',
+  ' ',
+  '  ',
+  ' ',
+  '\t',
+  '\n',
+  ' ',
+  '.',
+  '.',
+  '..',
+  '...',
+  ',',
+  ';',
+  ':',
+  '!',
+  '?',
+  '-',
+  '--',
+  '---',
+  '–',
+  '—',
+  '+',
+  '+-',
+  '=>',
+  '->',
+  '→',
+  '←',
+  '(',
+  ')',
+  '[',
+  '/',
+  '%',
+  '€',
+  '°',
+  "'",
+  "'",
+  "''",
+  '’',
+  '"',
+  '“',
+  '”',
+  '«',
+  '»',
+  '`',
+  '',
+  '_',
+  '#',
+  'Prof',
+  'Dr',
+  'Mr',
+  'Mrs',
+  'Ms',
+  'Mx',
+  'St',
+  'Hon',
+  'Rev',
+  'Sr',
+  'Jr',
+  'Nr',
+  'Abb',
+  'S',
+  'p',
+  'pp',
+  'No',
+  'Fig',
+  'z. B.',
+  'd. h.',
+  'i. d. R.',
+  'e. p.',
+  'l. e. p.',
+  'EE. UU.',
+  'ul',
+  'x',
+  '1x',
+  '0x1F',
+  '3 x 4',
+  'v2x3',
+  'km',
   // Lone surrogates, to see that a half pair is read as itself.
-  '\uD835', '\uDC9C',
+  '\uD835',
+  '\uDC9C',
 ];
 
 /**
@@ -139,7 +257,8 @@ function fuzz(count: number, seed: number): string[] {
   const out: string[] = [];
   for (let i = 0; i < count; i++) {
     let text = '';
-    for (let n = 1 + Math.floor(rand() * 16); n > 0; n--) text += ALPHA[Math.floor(rand() * ALPHA.length)];
+    for (let n = 1 + Math.floor(rand() * 16); n > 0; n--)
+      text += ALPHA[Math.floor(rand() * ALPHA.length)];
     out.push(text);
   }
   return out;
@@ -165,7 +284,9 @@ const longRuns = [
   `${'1'.repeat(47)}x2 ${'1'.repeat(48)}x2 ${'1'.repeat(49)}x2`,
 ];
 
-const samples = [...corpus(2500, 11), ...fuzz(25000, 99), ...longRuns].filter((t) => !ILL_FORMED.test(t));
+const samples = [...corpus(2500, 11), ...fuzz(25000, 99), ...longRuns].filter(
+  (t) => !ILL_FORMED.test(t),
+);
 
 describe('rewritten rules equal their lookbehind originals', () => {
   const same = (name: string, run: (text: string) => string, ref: (text: string) => string) =>

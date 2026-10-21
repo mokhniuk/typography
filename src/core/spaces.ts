@@ -84,9 +84,13 @@ const forwardOrphans = new WeakMap<RegExp, RegExp | null>();
 function forward(pattern: RegExp): RegExp | null {
   const known = forwardOrphans.get(pattern);
   if (known !== undefined) return known;
-  const rest = pattern.source.startsWith(FREE_BEFORE) ? pattern.source.slice(FREE_BEFORE.length) : null;
+  const rest = pattern.source.startsWith(FREE_BEFORE)
+    ? pattern.source.slice(FREE_BEFORE.length)
+    : null;
   const made =
-    rest !== null && !rest.includes('(?<') && !rest.includes('|') && pattern.flags === 'gu' ? new RegExp(rest, pattern.flags) : null;
+    rest !== null && !rest.includes('(?<') && !rest.includes('|') && pattern.flags === 'gu'
+      ? new RegExp(rest, pattern.flags)
+      : null;
   forwardOrphans.set(pattern, made);
   return made;
 }
@@ -144,7 +148,9 @@ export const mayAbbreviate = (text: string, lang: Lang): boolean => {
   const { together, bind, page } = patternsFor(lang);
   if (!together && !bind && !page) return false;
   const list: Abbreviations = ABBREVIATIONS[lang] ?? {};
-  return !together || (list.together ?? []).every((a) => a.includes('.')) ? text.includes('.') : true;
+  return !together || (list.together ?? []).every((a) => a.includes('.'))
+    ? text.includes('.')
+    : true;
 };
 
 /** The parts of an abbreviation stay together, and a short one stays with what it introduces. */

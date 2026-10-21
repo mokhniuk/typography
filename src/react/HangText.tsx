@@ -18,7 +18,9 @@ export function HangText({ text, atStart = true }: { text: string; atStart?: boo
         const { attr, style } = hangStyle(piece, pieces[i + 1]);
         const css = Object.fromEntries(
           Object.entries(style).map(([name, value]) => [
-            name.startsWith('--') ? name : name.replace(/-(\w)/g, (_, c: string) => c.toUpperCase()),
+            name.startsWith('--')
+              ? name
+              : name.replace(/-(\w)/g, (_, c: string) => c.toUpperCase()),
             value,
           ]),
         ) as CSSProperties;

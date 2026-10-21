@@ -34,7 +34,7 @@ describe('Croatian quotation (ISG 10.1.8: „…” then ‚…’, the second a
   });
 
   test('an apostrophe inside a word does not break a quotation', () => {
-    expect(t("Rekao je \"o'Brien\" jučer.")).toBe('Rekao je „o’Brien” jučer.');
+    expect(t('Rekao je "o\'Brien" jučer.')).toBe('Rekao je „o’Brien” jučer.');
   });
 
   test('quoteStyle us gives “…” with ‘…’ inside', () => {
@@ -74,6 +74,8 @@ describe('Croatian idempotence', () => {
 
   test('a paragraph that opens with a dash is a line of dialogue, in both registers', () => {
     expect(t('- Čekamo li? - upitao je.')).toBe('–~Čekamo li?~– upitao je.');
-    expect(t('- Čekamo li? - upitao je.', { register: 'literary' })).toBe('–~Čekamo li?~– upitao je.');
+    expect(t('- Čekamo li? - upitao je.', { register: 'literary' })).toBe(
+      '–~Čekamo li?~– upitao je.',
+    );
   });
 });

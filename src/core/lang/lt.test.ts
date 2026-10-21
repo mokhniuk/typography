@@ -37,7 +37,9 @@ describe('Lithuanian quotation (ISG 4.2.3, 10.1.7: „…“ at every level)', (
   });
 
   test('ISG 10.1.7: punctuation after the closing mark, a whole sentence before it', () => {
-    expect(t('Komisijos narys pažymėjo: "Kilo ginčų."')).toBe('Komisijos narys pažymėjo: „Kilo ginčų.“');
+    expect(t('Komisijos narys pažymėjo: "Kilo ginčų."')).toBe(
+      'Komisijos narys pažymėjo: „Kilo ginčų.“',
+    );
   });
 
   test('Lithuanian letters inside and next to quotes survive', () => {
@@ -102,6 +104,8 @@ describe('Lithuanian idempotence', () => {
 
   test('a paragraph that opens with a dash is a line of dialogue, in both registers', () => {
     expect(t('- Palauksime? - paklausė.')).toBe('–~Palauksime?~– paklausė.');
-    expect(t('- Palauksime? - paklausė.', { register: 'literary' })).toBe('–~Palauksime?~– paklausė.');
+    expect(t('- Palauksime? - paklausė.', { register: 'literary' })).toBe(
+      '–~Palauksime?~– paklausė.',
+    );
   });
 });

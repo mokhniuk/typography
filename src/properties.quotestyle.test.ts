@@ -15,10 +15,50 @@ function random(seed: number) {
 }
 
 const PIECES = [
-  'a', 'I', 'x', 'word', 'don’t', "'tis", 'dogs’', 'Dr.', '5', '21', '10:00', '1920x1080',
-  ' ', ' ', ' ', '  ', '\n', ' ',
-  '"', '"', "'", '’', '“', '”', '„', '«', '»', '‹', '›', '‘', '‚',
-  '-', '--', '—', '->', '...', '(c)', '%', ',', '.', '(', ')', 'https://a.b/1-2', '`x -> y`',
+  'a',
+  'I',
+  'x',
+  'word',
+  'don’t',
+  "'tis",
+  'dogs’',
+  'Dr.',
+  '5',
+  '21',
+  '10:00',
+  '1920x1080',
+  ' ',
+  ' ',
+  ' ',
+  '  ',
+  '\n',
+  ' ',
+  '"',
+  '"',
+  "'",
+  '’',
+  '“',
+  '”',
+  '„',
+  '«',
+  '»',
+  '‹',
+  '›',
+  '‘',
+  '‚',
+  '-',
+  '--',
+  '—',
+  '->',
+  '...',
+  '(c)',
+  '%',
+  ',',
+  '.',
+  '(',
+  ')',
+  'https://a.b/1-2',
+  '`x -> y`',
 ];
 
 function sample(rand: () => number, length: number): string {
@@ -30,7 +70,19 @@ function sample(rand: () => number, length: number): string {
   return out;
 }
 
-const TOKENS = ['stone', 'memory', "don't", 'the ’90s', '5 km', '`x -> y`', 'a', 'I', '...', '-', '5%'];
+const TOKENS = [
+  'stone',
+  'memory',
+  "don't",
+  'the ’90s',
+  '5 km',
+  '`x -> y`',
+  'a',
+  'I',
+  '...',
+  '-',
+  '5%',
+];
 const WRAPS: [string, string][] = [
   ['"', '"'],
   ['“', '”'],

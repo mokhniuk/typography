@@ -25,9 +25,9 @@ describe('Estonian quotation (ISG 4.2.3, 5.10, 10.1.6: „…“ at every level)
   });
 
   test('ISG 5.10 example: „Nõukogu tahtis võtta meetmeid, kuid loobus.“', () => {
-    expect(t('"Nõukogu tahtis võtta asjakohaseid meetmeid, kuid lõpuks loobus sellest kavast."')).toBe(
-      '„Nõukogu tahtis võtta asjakohaseid meetmeid, kuid lõpuks loobus sellest kavast.“',
-    );
+    expect(
+      t('"Nõukogu tahtis võtta asjakohaseid meetmeid, kuid lõpuks loobus sellest kavast."'),
+    ).toBe('„Nõukogu tahtis võtta asjakohaseid meetmeid, kuid lõpuks loobus sellest kavast.“');
     const ready = 'Vallet, G., „La nature juridique de l’Union européenne“, Le droit de l’Union';
     expect(t(ready)).toBe(ready);
   });

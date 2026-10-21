@@ -9,8 +9,8 @@
  */
 import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { type Lang, NBSP, type Register, RULES, type Rule, typographic } from '../src';
 import { RULE_SOURCES } from '../resources/sources';
+import { type Lang, NBSP, type Register, RULES, type Rule, typographic } from '../src';
 
 export type Example = {
   input: string;
@@ -24,13 +24,20 @@ export type Example = {
 /** The hand-written part: a few examples for every rule id. */
 export const EXAMPLES: Record<string, readonly Example[]> = {
   'number.group': [
-    { input: 'We sold 1234567 copies in 2026.', note: 'A run of five or more digits; years are left.' },
+    {
+      input: 'We sold 1234567 copies in 2026.',
+      note: 'A run of five or more digits; years are left.',
+    },
     {
       input: 'Wir verkauften 1234567 Exemplare, Pi ist 3,14159265.',
       lang: 'de',
       note: 'A no-break space; the fraction is left alone.',
     },
-    { input: 'Продано 12345 примірників, код v1000000.', lang: 'uk', note: 'A name glued to digits is left.' },
+    {
+      input: 'Продано 12345 примірників, код v1000000.',
+      lang: 'uk',
+      note: 'A name glued to digits is left.',
+    },
   ],
   quote: [
     { input: 'He said "stone" and left.', note: 'Display register, the default.' },
@@ -52,15 +59,22 @@ export const EXAMPLES: Record<string, readonly Example[]> = {
   ellipsis: [{ input: 'Wait... what?' }],
   'space.before-punctuation': [
     { input: 'Hello , world . Is it ready ? (yes )', note: 'Off by default.' },
-    { input: 'Oui : non , bon !', lang: 'fr', note: 'French keeps its space before : ; ! ?, the rest is tidied.' },
+    {
+      input: 'Oui : non , bon !',
+      lang: 'fr',
+      note: 'French keeps its space before : ; ! ?, the rest is tidied.',
+    },
   ],
   'space.after-comma': [
     { input: 'apples,pears,plums', note: 'Digits are left alone: 1,5 stays.' },
-    { input: 'Hallo,Welt und 3,14' , lang: 'de' },
+    { input: 'Hallo,Welt und 3,14', lang: 'de' },
   ],
   'punctuation.double': [
     { input: 'Wow!!! Really??' },
-    { input: 'What?!! No!!!? Stop!!!', note: '?! and !? stay as a pair; a run beside one collapses.' },
+    {
+      input: 'What?!! No!!!? Stop!!!',
+      note: '?! and !? stay as a pair; a run beside one collapses.',
+    },
   ],
   arrow: [{ input: 'Read more ->' }, { input: '<- Back' }],
   'symbol.legal': [
@@ -72,7 +86,11 @@ export const EXAMPLES: Record<string, readonly Example[]> = {
       lang: 'uk',
       note: 'Only the dash that opens the paragraph; the second one belongs to dash.sentence. Both registers.',
     },
-    { input: '- ¿Esperamos? - preguntó.', lang: 'es', note: 'Spanish writes the raya attached to the turn.' },
+    {
+      input: '- ¿Esperamos? - preguntó.',
+      lang: 'es',
+      note: 'Spanish writes the raya attached to the turn.',
+    },
     {
       input: '- Odotetaanko? kysyi hän.',
       lang: 'fi',
@@ -92,15 +110,30 @@ export const EXAMPLES: Record<string, readonly Example[]> = {
       note: 'A spaced en dash in British English, literary register.',
     },
   ],
-  'symbol.implies': [{ input: 'A => B' }, { input: 'if x=>y then z', note: 'Not =>>, ==>, =>= or <=>.' }],
-  'symbol.plusminus': [{ input: 'Tolerance +-5 mm' }, { input: '(+-0.2) and +-10%', note: 'Not a+-b or 1+-5.' }],
+  'symbol.implies': [
+    { input: 'A => B' },
+    { input: 'if x=>y then z', note: 'Not =>>, ==>, =>= or <=>.' },
+  ],
+  'symbol.plusminus': [
+    { input: 'Tolerance +-5 mm' },
+    { input: '(+-0.2) and +-10%', note: 'Not a+-b or 1+-5.' },
+  ],
   'symbol.fraction': [
-    { input: 'Add 1/2 cup and 3/4 of the milk, then 1/4.', note: 'Only whole numbers: 11/2, 1/20, a1/2 and a date such as 1/2/2026 stay. A short word after the fraction gets the no-break space.' },
+    {
+      input: 'Add 1/2 cup and 3/4 of the milk, then 1/4.',
+      note: 'Only whole numbers: 11/2, 1/20, a1/2 and a date such as 1/2/2026 stay. A short word after the fraction gets the no-break space.',
+    },
     { input: 'Take 2 1/2 hours', note: 'A mixed number keeps its integer: 2 ½.' },
   ],
   'symbol.degree': [
-    { input: 'It was 20°C, then 68 F and 20 C.', note: 'Every spelling becomes number, no-break space, °C or °F.' },
-    { input: 'Vitamin C 5 C and 5 °C', note: 'A bare C or F after a label or a single letter is not a temperature.' },
+    {
+      input: 'It was 20°C, then 68 F and 20 C.',
+      note: 'Every spelling becomes number, no-break space, °C or °F.',
+    },
+    {
+      input: 'Vitamin C 5 C and 5 °C',
+      note: 'A bare C or F after a label or a single letter is not a temperature.',
+    },
   ],
   'symbol.minus': [{ input: 'It was -5 degrees (-3 inside).' }],
   'symbol.multiply': [{ input: 'A 1920x1080 screen, a 3 x 4 grid.' }],
@@ -126,7 +159,10 @@ export const EXAMPLES: Record<string, readonly Example[]> = {
   ],
   'space.arrow': [{ input: 'Read more →' }, { input: '← Back' }],
   'space.trailing': [
-    { input: 'First line   \nSecond line\t\nThird', note: 'Spaces and tabs at the end of a line; the lines stay.' },
+    {
+      input: 'First line   \nSecond line\t\nThird',
+      note: 'Spaces and tabs at the end of a line; the lines stay.',
+    },
     { input: 'One trailing space ' },
   ],
 };
@@ -175,7 +211,10 @@ export function render(rules: readonly Rule[] = RULES): string {
   for (const rule of rules) {
     const confidence = RULE_SOURCES[rule.id]?.confidence ?? 'general-knowledge';
     out.push('', `## \`${rule.id}\``, '', rule.about, '');
-    out.push(`Why: [sources.md](../resources/sources.md#${rule.id.replaceAll('.', '')}), \`${confidence}\`.`, '');
+    out.push(
+      `Why: [sources.md](../resources/sources.md#${rule.id.replaceAll('.', '')}), \`${confidence}\`.`,
+      '',
+    );
     if (rule.defaultOn === false) {
       out.push('Off by default: switch it on with `enable` (`--enable` on the command line).', '');
     }

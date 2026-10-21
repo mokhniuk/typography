@@ -32,7 +32,7 @@ describe('Danish quotation (ISG 4.2.3 and 10.1: »…« at every level)', () => 
 
   test('two inner quotations inside one outer one', () => {
     expect(t('»x »y« og »z« w«')).toBe('»x »y« og »z« w«');
-    expect(t('"x \'y\' og \'z\' w"')).toBe('»x »y« og »z« w«');
+    expect(t("\"x 'y' og 'z' w\"")).toBe('»x »y« og »z« w«');
   });
 
   test('two quotations in a row are not read as one', () => {
@@ -93,6 +93,8 @@ describe('Danish idempotence', () => {
 
   test('a paragraph that opens with a dash is a line of dialogue, in both registers', () => {
     expect(t('- Venter vi? spurgte han.')).toBe('—~Venter vi? spurgte han.');
-    expect(t('- Venter vi? spurgte han.', { register: 'literary' })).toBe('—~Venter vi? spurgte han.');
+    expect(t('- Venter vi? spurgte han.', { register: 'literary' })).toBe(
+      '—~Venter vi? spurgte han.',
+    );
   });
 });

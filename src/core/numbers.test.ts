@@ -79,7 +79,14 @@ describe('number.group', () => {
   });
 
   test('leaves dates, times and versions', () => {
-    for (const s of ['2026-10-20', '10:00:00', '1.2.30000', '1.2.30000.5', '12345:67', '12345/67890']) {
+    for (const s of [
+      '2026-10-20',
+      '10:00:00',
+      '1.2.30000',
+      '1.2.30000.5',
+      '12345:67',
+      '12345/67890',
+    ]) {
       expect(on(s)).toBe(s);
     }
   });
@@ -132,7 +139,16 @@ describe('number.group', () => {
 
   test('guarded pieces survive verbatim, in every language', () => {
     for (const lang of LANGS) {
-      for (const piece of ['007', '00123456', '+380501234567', 'v1000000', '2026-10-20', '0x1F4A2B', '10:12345', '(044) 1234567']) {
+      for (const piece of [
+        '007',
+        '00123456',
+        '+380501234567',
+        'v1000000',
+        '2026-10-20',
+        '0x1F4A2B',
+        '10:12345',
+        '(044) 1234567',
+      ]) {
         expect(on(`id ${piece} end`, lang)).toBe(typographic(`id ${piece} end`, lang));
       }
     }

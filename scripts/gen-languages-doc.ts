@@ -66,7 +66,10 @@ export function renderPack(pack: LangPack): string {
   if (pack.elisions?.length) {
     out.push(
       '',
-      `An apostrophe before a dropped-letter word is not a quotation mark: ${pack.elisions.map((w) => (w === 'n' ? "'n'" : `'${w}`)).map(code).join(', ')}.`,
+      `An apostrophe before a dropped-letter word is not a quotation mark: ${pack.elisions
+        .map((w) => (w === 'n' ? "'n'" : `'${w}`))
+        .map(code)
+        .join(', ')}.`,
     );
   }
 

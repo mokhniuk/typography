@@ -4,7 +4,7 @@
  * changes on purpose, or a language is added (`bun run snapshot`), and commit the diff.
  */
 import { resolve } from 'node:path';
-import { SNAPSHOT_N, loadEngine, snapshotDigests } from './corpus';
+import { loadEngine, SNAPSHOT_N, snapshotDigests } from './corpus';
 
 const root = resolve(import.meta.dir, '..');
 const engine = await loadEngine(resolve(root, 'src'));

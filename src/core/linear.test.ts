@@ -30,6 +30,7 @@ const ILL_FORMED = /[\ud800-\udbff](?![\udc00-\udfff])[-￿]/;
  * instead of `www.😀)😀`). The rewrite finds the correct address. Texts that can trigger it are left out
  * of the comparison (a deliberate over-approximation: a word character before `www.`, an astral after).
  */
+// biome-ignore lint/correctness/noEmptyCharacterClassInRegex: [^] is any character, line breaks included
 const ZONE_ENGINE_BUG = /[\w.+-]www\.[^]*[\ud800-\udbff][\udc00-\udfff]/;
 
 /** Fastest of three runs, with a floor so that a sub-millisecond timing cannot make the ratio noisy. */
@@ -95,14 +96,17 @@ const base = corpus(2500, 11);
 const prose = longText(400_000);
 
 /** On ordinary prose the rewrite takes under 70% of the time of the original that opened with a lookbehind. */
-function fasterThanOriginal(name: string, run: (text: string) => unknown, original: (text: string) => unknown) {
+function fasterThanOriginal(
+  name: string,
+  run: (text: string) => unknown,
+  original: (text: string) => unknown,
+) {
   test(`${name} is faster than its lookbehind original on prose`, () => {
     run(prose);
     original(prose);
     expect(best(run, prose)).toBeLessThan(best(original, prose) * 0.7);
   }, 30_000);
 }
-
 
 describe('shield (zones.ts)', () => {
   const ZONE = '';
@@ -138,9 +142,58 @@ describe('shield (zones.ts)', () => {
   }
 
   const ALPHA = [
-    'a', 'b', 'Z', '0', '9', '_', '.', '.', '+', '-', '--', '@', '@', '@', ',', ';', '!', '?', "'", '’', '…',
-    '(', ')', '[', ']', ' ', ' ', '\n', '\t', '`', '`', '"', '“', '»', '<', '>', '/', ':', '://',
-    'http', 'https://', 'www.', 'a@b.co', 'x@y', 'foo.bar@baz.org', '.com', '.co.uk', 'é', 'я', '😀', '𝒜', ZONE.replace(ZONE, ''),
+    'a',
+    'b',
+    'Z',
+    '0',
+    '9',
+    '_',
+    '.',
+    '.',
+    '+',
+    '-',
+    '--',
+    '@',
+    '@',
+    '@',
+    ',',
+    ';',
+    '!',
+    '?',
+    "'",
+    '’',
+    '…',
+    '(',
+    ')',
+    '[',
+    ']',
+    ' ',
+    ' ',
+    '\n',
+    '\t',
+    '`',
+    '`',
+    '"',
+    '“',
+    '»',
+    '<',
+    '>',
+    '/',
+    ':',
+    '://',
+    'http',
+    'https://',
+    'www.',
+    'a@b.co',
+    'x@y',
+    'foo.bar@baz.org',
+    '.com',
+    '.co.uk',
+    'é',
+    'я',
+    '😀',
+    '𝒜',
+    ZONE.replace(ZONE, ''),
   ];
   const samples = [
     ...base,
@@ -175,14 +228,51 @@ describe('shield (zones.ts)', () => {
   scales('shield on dots', (t) => shield(t), rep('.'));
   scales('shield on +-', (t) => shield(t), rep('+-'));
   scales('shield on 1x', (t) => shield(t), rep('1x'));
-  scales('shield on a run, then an @', (t) => shield(t), (n) => `${'x'.repeat(n)}@`);
-  scales('shield on an address ending in many )', (t) => shield(t), (n) => `http://a${')'.repeat(n)}`);
-  scales('shield on an address ending in many ]', (t) => shield(t), (n) => `http://a${']'.repeat(n)}`);
-  scales('shield on an address ending in many )) and .', (t) => shield(t), (n) => `www.a(${'.)'.repeat(n / 2)}`);
+  scales(
+    'shield on a run, then an @',
+    (t) => shield(t),
+    (n) => `${'x'.repeat(n)}@`,
+  );
+  scales(
+    'shield on an address ending in many )',
+    (t) => shield(t),
+    (n) => `http://a${')'.repeat(n)}`,
+  );
+  scales(
+    'shield on an address ending in many ]',
+    (t) => shield(t),
+    (n) => `http://a${']'.repeat(n)}`,
+  );
+  scales(
+    'shield on an address ending in many )) and .',
+    (t) => shield(t),
+    (n) => `www.a(${'.)'.repeat(n / 2)}`,
+  );
 });
 
 describe('space.trailing', () => {
-  const ALPHA = [' ', ' ', ' ', '\t', '\n', '\r', '\r\n', '\u2028', '\u2029', '\u00A0', '\v', '\f', 'a', 'b', '1', '.', '😀', '\uD835', ' \n', '  \n\n'];
+  const ALPHA = [
+    ' ',
+    ' ',
+    ' ',
+    '\t',
+    '\n',
+    '\r',
+    '\r\n',
+    '\u2028',
+    '\u2029',
+    '\u00A0',
+    '\v',
+    '\f',
+    'a',
+    'b',
+    '1',
+    '.',
+    '😀',
+    '\uD835',
+    ' \n',
+    '  \n\n',
+  ];
   const samples = [
     ...base,
     ...fuzzer(ALPHA)(30000, 21),
@@ -193,7 +283,11 @@ describe('space.trailing', () => {
   same('trailingSpace', samples, trailingSpace, (t) => t.replace(/[ \t]+$/gm, ''));
   scales('trailingSpace on spaces then a letter', trailingSpace, (n) => `${' '.repeat(n)}a`);
   scales('trailingSpace on tabs then a letter', trailingSpace, (n) => `${'\t'.repeat(n)}a`);
-  scales('trailingSpace on spaces, a letter, spaces', trailingSpace, (n) => `${' '.repeat(n / 2)}a${' '.repeat(n / 2)}b`);
+  scales(
+    'trailingSpace on spaces, a letter, spaces',
+    trailingSpace,
+    (n) => `${' '.repeat(n / 2)}a${' '.repeat(n / 2)}b`,
+  );
 });
 
 describe('dash.sentence', () => {
@@ -201,11 +295,44 @@ describe('dash.sentence', () => {
     text
       .replace(/[ \u00A0]+(?:--|[-–—])[ \u00A0]+/g, `\u00A0— `)
       .replace(/(?<=[^\s\-–—])--(?=[^\s\-–—])/g, (match, offset: number, whole: string) =>
-        /[«„“‘‚‹»›"']/.test(whole.charAt(offset - 1)) && /[»“”’‘«‹›"']/.test(whole.charAt(offset + 2))
+        /[«„“‘‚‹»›"']/.test(whole.charAt(offset - 1)) &&
+        /[»“”’‘«‹›"']/.test(whole.charAt(offset + 2))
           ? match
           : `\u00A0— `,
       );
-  const ALPHA = [' ', ' ', ' ', '  ', '\u00A0', '\t', '\n', '-', '-', '--', '---', '–', '—', '- ', ' -', ' - ', ' -- ', ' --- ', 'a', 'b', '1', '"', "'", '«', '»', '“', '”', '.', '😀', '\uD835', '\uDC9C'];
+  const ALPHA = [
+    ' ',
+    ' ',
+    ' ',
+    '  ',
+    '\u00A0',
+    '\t',
+    '\n',
+    '-',
+    '-',
+    '--',
+    '---',
+    '–',
+    '—',
+    '- ',
+    ' -',
+    ' - ',
+    ' -- ',
+    ' --- ',
+    'a',
+    'b',
+    '1',
+    '"',
+    "'",
+    '«',
+    '»',
+    '“',
+    '”',
+    '.',
+    '😀',
+    '\uD835',
+    '\uDC9C',
+  ];
   const samples = [
     ...base,
     ...fuzzer(ALPHA)(30000, 22),
@@ -219,13 +346,49 @@ describe('dash.sentence', () => {
     `${'\u00A0'.repeat(2000)}—${' '.repeat(2000)}x`,
   ];
   same('dashSentence', samples, (t) => dashSentence(t), original);
-  scales('dashSentence on spaces then a hyphen', (t) => dashSentence(t), (n) => `${' '.repeat(n)}-a`);
-  scales('dashSentence on no-break spaces then a dash', (t) => dashSentence(t), (n) => `${'\u00A0'.repeat(n)}–a`);
-  scales('dashSentence on spaces then --', (t) => dashSentence(t), (n) => `${' '.repeat(n)}--a`);
+  scales(
+    'dashSentence on spaces then a hyphen',
+    (t) => dashSentence(t),
+    (n) => `${' '.repeat(n)}-a`,
+  );
+  scales(
+    'dashSentence on no-break spaces then a dash',
+    (t) => dashSentence(t),
+    (n) => `${'\u00A0'.repeat(n)}–a`,
+  );
+  scales(
+    'dashSentence on spaces then --',
+    (t) => dashSentence(t),
+    (n) => `${' '.repeat(n)}--a`,
+  );
 });
 
 describe('space.association and space.arrow', () => {
-  const ALPHA = [' ', ' ', ' ', '  ', '\u00A0', '\t', '\n', 'e.V.', 'e.V.', 'e.V', 'e.', 'ee.V.', ' e.V.', '→', '→', '←', '←', ' →', '← ', 'a', 'b', '.', '😀'];
+  const ALPHA = [
+    ' ',
+    ' ',
+    ' ',
+    '  ',
+    '\u00A0',
+    '\t',
+    '\n',
+    'e.V.',
+    'e.V.',
+    'e.V',
+    'e.',
+    'ee.V.',
+    ' e.V.',
+    '→',
+    '→',
+    '←',
+    '←',
+    ' →',
+    '← ',
+    'a',
+    'b',
+    '.',
+    '😀',
+  ];
   const samples = [
     ...base,
     ...fuzzer(ALPHA)(30000, 23),
@@ -236,11 +399,8 @@ describe('space.association and space.arrow', () => {
     `${' → ← '.repeat(2000)}`,
   ];
   same('association', samples, association, (t) => t.replace(/[ ]+(?=e\.V\.)/g, '\u00A0'));
-  same(
-    'arrowSpace',
-    samples,
-    arrowSpace,
-    (t) => t.replace(/ +(?=→)/g, '\u00A0').replace(/(?<=←) +/g, '\u00A0'),
+  same('arrowSpace', samples, arrowSpace, (t) =>
+    t.replace(/ +(?=→)/g, '\u00A0').replace(/(?<=←) +/g, '\u00A0'),
   );
   scales('association on spaces, then e.V. elsewhere', association, (n) => `e.V.${' '.repeat(n)}a`);
   scales('arrowSpace on spaces, then an arrow elsewhere', arrowSpace, (n) => `→${' '.repeat(n)}a`);
@@ -256,15 +416,27 @@ describe('number.group', () => {
     }
   });
   scales('groupNumbers on one very long run of digits', (t) => groupNumbers(t, 'en'), rep('1'));
-  scales('groupNumbers on a long run of digits then a hyphen', (t) => groupNumbers(t, 'de'), (n) => `${'9'.repeat(n)}-`);
+  scales(
+    'groupNumbers on a long run of digits then a hyphen',
+    (t) => groupNumbers(t, 'de'),
+    (n) => `${'9'.repeat(n)}-`,
+  );
 });
 
 describe('symbol.degree', () => {
-  const LABEL = /(?:^|[\s(])(?:\p{L}|Type|Class|Section|Plan|Grade|Level|Group|Vitamin|Gate|Row|Part|Option|Item|Line|Page|Room|Tier|Step|Unit|Table|Figure|Fig\.|No\.|Nr\.)[ \u00A0]+$/iu;
+  const LABEL =
+    /(?:^|[\s(])(?:\p{L}|Type|Class|Section|Plan|Grade|Level|Group|Vitamin|Gate|Row|Part|Option|Item|Line|Page|Room|Tier|Step|Unit|Table|Figure|Fig\.|No\.|Nr\.)[ \u00A0]+$/iu;
   const original = (text: string, lang: Lang = 'en'): string =>
     text.replace(
       /(?<![\p{L}\p{N}])([\u2212+\u00B1-]?\d+(?:[.,]\d+)?)(?:[ \u00A0]*(°)[ \u00A0]*|[ \u00A0]+)([CF])(?![\p{L}\p{N}]|\.\p{L})/gu,
-      (match: string, number: string, sign: string | undefined, unit: string, offset: number, whole: string) => {
+      (
+        match: string,
+        number: string,
+        sign: string | undefined,
+        unit: string,
+        offset: number,
+        whole: string,
+      ) => {
         const before = whole.slice(0, offset);
         const afterUnit = /(?:\d[ \u00A0]+|°[ \u00A0]*)[CF][ \u00A0]+$/.test(before);
         if (!sign && lang !== 'en') return match;
@@ -273,8 +445,63 @@ describe('symbol.degree', () => {
       },
     );
   const ALPHA = [
-    '1', '2', '20', '5.5', '3,5', '.', ',', '1.5.7', '-', '+', '\u2212', '±', ' ', ' ', ' ', '\u00A0', '°', '° ', ' °', 'C', 'F', 'C', 'F', ' C', ' F', '°C', '°F', 'Celsius',
-    'a', 'x', 'K', 'Type', 'Class ', 'Section ', 'Vitamin ', 'Fig. ', 'No. ', 'Nr. ', 'Step ', 'Option ', 'T', 'ſ', 'K', 'Ⅳ', '٣', '²', '😀', '𝒜', '𝔞', '(', ')', '\n', ' 20 C', ' 20 F ', 'F1', 'C.E.', '.a',
+    '1',
+    '2',
+    '20',
+    '5.5',
+    '3,5',
+    '.',
+    ',',
+    '1.5.7',
+    '-',
+    '+',
+    '\u2212',
+    '±',
+    ' ',
+    ' ',
+    ' ',
+    '\u00A0',
+    '°',
+    '° ',
+    ' °',
+    'C',
+    'F',
+    'C',
+    'F',
+    ' C',
+    ' F',
+    '°C',
+    '°F',
+    'Celsius',
+    'a',
+    'x',
+    'K',
+    'Type',
+    'Class ',
+    'Section ',
+    'Vitamin ',
+    'Fig. ',
+    'No. ',
+    'Nr. ',
+    'Step ',
+    'Option ',
+    'T',
+    'ſ',
+    'K',
+    'Ⅳ',
+    '٣',
+    '²',
+    '😀',
+    '𝒜',
+    '𝔞',
+    '(',
+    ')',
+    '\n',
+    ' 20 C',
+    ' 20 F ',
+    'F1',
+    'C.E.',
+    '.a',
   ];
   const samples = [
     ...base,
@@ -291,22 +518,53 @@ describe('symbol.degree', () => {
     `${'-1 C'.repeat(2000)}`,
     `${'5°C-3°C'.repeat(1000)}`,
   ];
-  same('degrees (en)', samples, (t) => degrees(t, 'en'), (t) => original(t, 'en'));
-  same('degrees (de)', samples, (t) => degrees(t, 'de'), (t) => original(t, 'de'), 20);
-  fasterThanOriginal('degrees', (t) => degrees(t), (t) => original(t, 'en'));
+  same(
+    'degrees (en)',
+    samples,
+    (t) => degrees(t, 'en'),
+    (t) => original(t, 'en'),
+  );
+  same(
+    'degrees (de)',
+    samples,
+    (t) => degrees(t, 'de'),
+    (t) => original(t, 'de'),
+    20,
+  );
+  fasterThanOriginal(
+    'degrees',
+    (t) => degrees(t),
+    (t) => original(t, 'en'),
+  );
   scales('degrees on "1 C 1 C "', (t) => degrees(t), rep('1 C '));
   scales('degrees on "20 C 20 F "', (t) => degrees(t), rep('20 C 20 F '));
-  scales('degrees on a long run of digits then " C"', (t) => degrees(t), (n) => `${'9'.repeat(n)} C`);
-  scales('degrees on a long run of digits then " X"', (t) => degrees(t, 'en'), (n) => `${'9'.repeat(n)} X C`);
-  scales('degrees on "1." then 5 C', (t) => degrees(t), (n) => `${'1.'.repeat(n / 2)}5 C`);
-  scales('degrees on spaces before a number', (t) => degrees(t), (n) => `Vitamin${' '.repeat(n)}5 C`);
+  scales(
+    'degrees on a long run of digits then " C"',
+    (t) => degrees(t),
+    (n) => `${'9'.repeat(n)} C`,
+  );
+  scales(
+    'degrees on a long run of digits then " X"',
+    (t) => degrees(t, 'en'),
+    (n) => `${'9'.repeat(n)} X C`,
+  );
+  scales(
+    'degrees on "1." then 5 C',
+    (t) => degrees(t),
+    (n) => `${'1.'.repeat(n / 2)}5 C`,
+  );
+  scales(
+    'degrees on spaces before a number',
+    (t) => degrees(t),
+    (n) => `Vitamin${' '.repeat(n)}5 C`,
+  );
 });
 
 describe('space.before-punctuation', () => {
   const SPACE_BEFORE_HIGH = new Set<Lang>(['fr']);
   const original = (text: string, lang: Lang): string =>
     text.replace(
-      /(?<=[^\s(\[{“"«‘„])[ \t]+([,.;:!?)])/gu,
+      /(?<=[^\s([{“"«‘„])[ \t]+([,.;:!?)])/gu,
       (match: string, mark: string, offset: number, whole: string) => {
         const next = whole.charAt(offset + match.length);
         if (/[\p{L}\p{N}]/u.test(next) && !(mark === ',' && /\p{L}/u.test(next))) return match;
@@ -314,7 +572,11 @@ describe('space.before-punctuation', () => {
         if (mark === '.' && /^[ \t]*\./.test(whole.slice(offset + match.length))) return match;
         if (mark === '.' && (next === '.' || whole.charAt(offset - 1) === '.')) return match;
         if ((mark === ':' || mark === ';') && /[-)(/|\\'*]/.test(next)) return match;
-        if (mark === ':' && /\d/.test(whole.charAt(offset - 1)) && /^[ \t]*\d/.test(whole.slice(offset + match.length))) {
+        if (
+          mark === ':' &&
+          /\d/.test(whole.charAt(offset - 1)) &&
+          /^[ \t]*\d/.test(whole.slice(offset + match.length))
+        ) {
           return match;
         }
         if ((mark === '!' || mark === '?') && next === '=') return match;
@@ -324,8 +586,64 @@ describe('space.before-punctuation', () => {
       },
     );
   const ALPHA = [
-    ' ', ' ', ' ', '  ', '\t', ' \t', ' ', '\n', '\r\n', ',', '.', ';', ':', '!', '?', ')', '(', '[', '{', '“', '"', '«', '‘', '„', "'", '-', '/', '|', '\\', '*', '=', '..', '...',
-    'a', 'b', 'é', 'я', '1', '5', '10', '😀', '𝒜', '\uD835', '\uDC9C', ' ,', ' .', ' ;', ' :', ' !', ' ?', ' )', ' . .', ' :)', ' ;-)', ' !=', ' ??', '![', '10 : 30',
+    ' ',
+    ' ',
+    ' ',
+    '  ',
+    '\t',
+    ' \t',
+    ' ',
+    '\n',
+    '\r\n',
+    ',',
+    '.',
+    ';',
+    ':',
+    '!',
+    '?',
+    ')',
+    '(',
+    '[',
+    '{',
+    '“',
+    '"',
+    '«',
+    '‘',
+    '„',
+    "'",
+    '-',
+    '/',
+    '|',
+    '\\',
+    '*',
+    '=',
+    '..',
+    '...',
+    'a',
+    'b',
+    'é',
+    'я',
+    '1',
+    '5',
+    '10',
+    '😀',
+    '𝒜',
+    '\uD835',
+    '\uDC9C',
+    ' ,',
+    ' .',
+    ' ;',
+    ' :',
+    ' !',
+    ' ?',
+    ' )',
+    ' . .',
+    ' :)',
+    ' ;-)',
+    ' !=',
+    ' ??',
+    '![',
+    '10 : 30',
   ];
   const samples = [
     ...base,
@@ -340,21 +658,86 @@ describe('space.before-punctuation', () => {
     `${'1 :'.repeat(2000)} 5`,
     `a${' \t'.repeat(3000)}!`,
   ];
-  same('beforePunctuation (en)', samples, (t) => beforePunctuation(t, 'en'), (t) => original(t, 'en'));
-  same('beforePunctuation (fr)', samples, (t) => beforePunctuation(t, 'fr'), (t) => original(t, 'fr'), 50);
-  fasterThanOriginal('beforePunctuation', (t) => beforePunctuation(t, 'en'), (t) => original(t, 'en'));
-  scales('beforePunctuation on spaces then a comma', (t) => beforePunctuation(t, 'en'), (n) => `a${' '.repeat(n)},`);
-  scales('beforePunctuation on spaces then a letter', (t) => beforePunctuation(t, 'en'), (n) => `a${' '.repeat(n)}x`);
-  scales('beforePunctuation on spaces and tabs', (t) => beforePunctuation(t, 'en'), (n) => `a${' \t'.repeat(n / 2)}!`);
+  same(
+    'beforePunctuation (en)',
+    samples,
+    (t) => beforePunctuation(t, 'en'),
+    (t) => original(t, 'en'),
+  );
+  same(
+    'beforePunctuation (fr)',
+    samples,
+    (t) => beforePunctuation(t, 'fr'),
+    (t) => original(t, 'fr'),
+    50,
+  );
+  fasterThanOriginal(
+    'beforePunctuation',
+    (t) => beforePunctuation(t, 'en'),
+    (t) => original(t, 'en'),
+  );
+  scales(
+    'beforePunctuation on spaces then a comma',
+    (t) => beforePunctuation(t, 'en'),
+    (n) => `a${' '.repeat(n)},`,
+  );
+  scales(
+    'beforePunctuation on spaces then a letter',
+    (t) => beforePunctuation(t, 'en'),
+    (n) => `a${' '.repeat(n)}x`,
+  );
+  scales(
+    'beforePunctuation on spaces and tabs',
+    (t) => beforePunctuation(t, 'en'),
+    (n) => `a${' \t'.repeat(n / 2)}!`,
+  );
   scales('beforePunctuation on " ,"', (t) => beforePunctuation(t, 'en'), rep('a ,'));
   scales('beforePunctuation on " . "', (t) => beforePunctuation(t, 'en'), rep('a . '));
 });
 
 describe('punctuation.double', () => {
   const original = (text: string): string =>
-    text.replace(/(?<=[^\s(\[{!?])([!?])\1+(?!\1)(?![\p{L}\p{N}_])/gu, '$1');
+    text.replace(/(?<=[^\s([{!?])([!?])\1+(?!\1)(?![\p{L}\p{N}_])/gu, '$1');
   const ALPHA = [
-    '!', '!', '?', '?', '!!', '??', '!!!', '???', '!?', '?!', '!?!', '?!?', ' ', ' ', '\t', '\n', ' ', '(', '[', '{', ')', 'a', 'b', 'Z', '1', '9', '_', '-', '.', ',', 'é', 'я', '😀', '𝒜', '𝔞', '\uD835', '\uDC9C', '’', '"',
+    '!',
+    '!',
+    '?',
+    '?',
+    '!!',
+    '??',
+    '!!!',
+    '???',
+    '!?',
+    '?!',
+    '!?!',
+    '?!?',
+    ' ',
+    ' ',
+    '\t',
+    '\n',
+    ' ',
+    '(',
+    '[',
+    '{',
+    ')',
+    'a',
+    'b',
+    'Z',
+    '1',
+    '9',
+    '_',
+    '-',
+    '.',
+    ',',
+    'é',
+    'я',
+    '😀',
+    '𝒜',
+    '𝔞',
+    '\uD835',
+    '\uDC9C',
+    '’',
+    '"',
   ];
   const samples = [
     ...base,

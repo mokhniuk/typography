@@ -84,6 +84,8 @@ describe('Portuguese pack data', () => {
 
   test('a paragraph that opens with a dash is a line of dialogue, in both registers', () => {
     expect(t('- Esperamos? - perguntou.')).toBe('—~Esperamos?~— perguntou.');
-    expect(t('- Esperamos? - perguntou.', { register: 'literary' })).toBe('—~Esperamos?~— perguntou.');
+    expect(t('- Esperamos? - perguntou.', { register: 'literary' })).toBe(
+      '—~Esperamos?~— perguntou.',
+    );
   });
 });

@@ -2,8 +2,8 @@ import { parseArgs } from 'node:util';
 import pkg from '../../package.json';
 import {
   type Change,
-  type Lang,
   LANGS,
+  type Lang,
   type QuoteStyle,
   REGISTERS,
   type Register,

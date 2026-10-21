@@ -148,9 +148,7 @@ describe('symbol.degree', () => {
     expect(run('68 F and -5 C and 3,5 °C')).toBe('68\u00A0°F and -5\u00A0°C and 3,5\u00A0°C');
   });
   test('two temperatures in a row are both read, in one pass', () => {
-    expect(run('20 C 20 F and 20° C 68 F')).toBe(
-      '20\u00A0°C 20\u00A0°F and 20\u00A0°C 68\u00A0°F',
-    );
+    expect(run('20 C 20 F and 20° C 68 F')).toBe('20\u00A0°C 20\u00A0°F and 20\u00A0°C 68\u00A0°F');
   });
   test('is idempotent on its own output and after space.number', () => {
     expect(run(out)).toBe(out);
@@ -239,8 +237,12 @@ describe('review findings', () => {
 
   test('a bare number and C or F is a temperature only in English', () => {
     expect(only('symbol.degree', 'It was 20 C today')).toBe(`It was 20${'\u00A0'}°C today`);
-    expect(only('symbol.degree', 'Abschnitt 3 C und Punkt 2 F', 'de')).toBe('Abschnitt 3 C und Punkt 2 F');
-    expect(only('symbol.degree', 'Pytanie 3 C, wariant 2 F', 'pl')).toBe('Pytanie 3 C, wariant 2 F');
+    expect(only('symbol.degree', 'Abschnitt 3 C und Punkt 2 F', 'de')).toBe(
+      'Abschnitt 3 C und Punkt 2 F',
+    );
+    expect(only('symbol.degree', 'Pytanie 3 C, wariant 2 F', 'pl')).toBe(
+      'Pytanie 3 C, wariant 2 F',
+    );
     // With the degree sign it is read in every language.
     expect(only('symbol.degree', 'Heute 20°C', 'de')).toBe(`Heute 20${'\u00A0'}°C`);
   });

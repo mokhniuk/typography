@@ -19,23 +19,157 @@ export const COUNT = 3000;
 export const REGISTERS = ['display', 'literary'] as const;
 export const STYLES = ['language', 'us'] as const;
 
-const MARKS = ['"', "'", '’', '‘', '“', '”', '„', '‟', '«', '»', '‹', '›', '‚', '′', '″', '`', '‛', '❝', '❞'];
+const MARKS = [
+  '"',
+  "'",
+  '’',
+  '‘',
+  '“',
+  '”',
+  '„',
+  '‟',
+  '«',
+  '»',
+  '‹',
+  '›',
+  '‚',
+  '′',
+  '″',
+  '`',
+  '‛',
+  '❝',
+  '❞',
+];
 const WRAPS: readonly (readonly [string, string])[] = [
-  ['"', '"'], ['“', '”'], ['„', '“'], ['„', '”'], ['«', '»'], ['»', '«'], ['‘', '’'], ['‚', '‘'], ['‚', '’'],
-  ['‹', '›'], ['›', '‹'], ["'", "'"], ['”', '”'], ['’', '’'], ['« ', ' »'], ['« ', ' »'], ['‹ ', ' ›'],
+  ['"', '"'],
+  ['“', '”'],
+  ['„', '“'],
+  ['„', '”'],
+  ['«', '»'],
+  ['»', '«'],
+  ['‘', '’'],
+  ['‚', '‘'],
+  ['‚', '’'],
+  ['‹', '›'],
+  ['›', '‹'],
+  ["'", "'"],
+  ['”', '”'],
+  ['’', '’'],
+  ['« ', ' »'],
+  ['« ', ' »'],
+  ['‹ ', ' ›'],
 ];
 const WORDS = [
-  'a', 'I', 'x', 'word', 'stone', "don't", 'don’t', 'dogs’', "dogs'", "Maria's", 'Maria’s', "l'amour", "d'un", "dell'arte",
-  "o'clock", "ma'am", "rock 'n' roll", 'rock’n’roll', "'til", "'em", "'cause", "'tis", '’tis', "'n'", "'N'", "'s avonds", "'t", "'k",
-  "'90s", '’90s', "'12'", "'1999'", "'123'", '’12', "'ab", "ab'", '5\'10"', "5'", '10"', '3″', '5′10″', '12"', '1999',
-  'Привіт', 'слово', "п'ять", 'м’ясо', 'λόγος', 'γειά', 'Ωμέγα', 'été', 'Straße', 'ünd', 'cień', 'є', 'ґ', 'ÿ', 'Ø', 'ß', 'ǅ',
-  '×', '÷', 'a×b', '¿Qué?', '¡Hola!', '¿', '¡', '(', ')', '[', ']', '{', '}', '.', ',', ';', ':', '!', '?', '...', '…', '-', '–', '—',
-  '', '', '', '\u{1F600}', '\uD800', '\uDC00', '́', 'é', '​', ' ',
-  '1', '5', '10', '2026', '3.14', '€', '$', '%', '`code`', 'https://a.b/c', 'a@b.c',
+  'a',
+  'I',
+  'x',
+  'word',
+  'stone',
+  "don't",
+  'don’t',
+  'dogs’',
+  "dogs'",
+  "Maria's",
+  'Maria’s',
+  "l'amour",
+  "d'un",
+  "dell'arte",
+  "o'clock",
+  "ma'am",
+  "rock 'n' roll",
+  'rock’n’roll',
+  "'til",
+  "'em",
+  "'cause",
+  "'tis",
+  '’tis',
+  "'n'",
+  "'N'",
+  "'s avonds",
+  "'t",
+  "'k",
+  "'90s",
+  '’90s',
+  "'12'",
+  "'1999'",
+  "'123'",
+  '’12',
+  "'ab",
+  "ab'",
+  '5\'10"',
+  "5'",
+  '10"',
+  '3″',
+  '5′10″',
+  '12"',
+  '1999',
+  'Привіт',
+  'слово',
+  "п'ять",
+  'м’ясо',
+  'λόγος',
+  'γειά',
+  'Ωμέγα',
+  'été',
+  'Straße',
+  'ünd',
+  'cień',
+  'є',
+  'ґ',
+  'ÿ',
+  'Ø',
+  'ß',
+  'ǅ',
+  '×',
+  '÷',
+  'a×b',
+  '¿Qué?',
+  '¡Hola!',
+  '¿',
+  '¡',
+  '(',
+  ')',
+  '[',
+  ']',
+  '{',
+  '}',
+  '.',
+  ',',
+  ';',
+  ':',
+  '!',
+  '?',
+  '...',
+  '…',
+  '-',
+  '–',
+  '—',
+  '',
+  '',
+  '',
+  '\u{1F600}',
+  '\uD800',
+  '\uDC00',
+  '́',
+  'é',
+  '​',
+  ' ',
+  '1',
+  '5',
+  '10',
+  '2026',
+  '3.14',
+  '€',
+  '$',
+  '%',
+  '`code`',
+  'https://a.b/c',
+  'a@b.c',
 ];
 const SPACES = [' ', ' ', ' ', '  ', ' ', '\t', '\n', '\r\n', ' ', ' ', '　'];
 
-const pick = <T>(rand: () => number, list: readonly T[]): T => list[Math.floor(rand() * list.length)] as T;
+const pick = <T>(rand: () => number, list: readonly T[]): T =>
+  list[Math.floor(rand() * list.length)] as T;
 
 function soup(rand: () => number): string {
   const n = 1 + Math.floor(rand() * 24);
@@ -85,17 +219,37 @@ function runs(rand: () => number): string {
 export function inputs(elisions: readonly string[]): string[] {
   const rand = lcg(20261020);
   const out: string[] = [];
-  for (const w of elisions) out.push(`'${w} ok`, `"'${w}" ok`, `“'${w}”`, `the '${w}' button`, `'${w}'`, `x '${w}x`);
+  for (const w of elisions)
+    out.push(`'${w} ok`, `"'${w}" ok`, `“'${w}”`, `the '${w}' button`, `'${w}'`, `x '${w}x`);
   // every mark alone and in several positions, every wrap around every mark
   for (const m of MARKS) {
-    out.push(m, ` ${m}`, `${m} `, `a${m}`, `${m}a`, `a ${m}`, `${m}${m}`, `a${m}b`, `5${m}`, `${m}5`, `(${m}a`, `¿${m}a`, `a ${m}`);
+    out.push(
+      m,
+      ` ${m}`,
+      `${m} `,
+      `a${m}`,
+      `${m}a`,
+      `a ${m}`,
+      `${m}${m}`,
+      `a${m}b`,
+      `5${m}`,
+      `${m}5`,
+      `(${m}a`,
+      `¿${m}a`,
+      `a ${m}`,
+    );
   }
-  for (const [o, c] of WRAPS) for (const m of MARKS) out.push(`${o}a ${m}b${c}`, `${m}${o}a${c}${m}`, `${o}${m}a${m}${c} ${o}b${c}`);
+  for (const [o, c] of WRAPS)
+    for (const m of MARKS)
+      out.push(`${o}a ${m}b${c}`, `${m}${o}a${c}${m}`, `${o}${m}a${m}${c} ${o}b${c}`);
   while (out.length < COUNT) {
     const r = out.length % 6;
     if (r === 0 || r === 1) out.push(soup(rand));
     else if (r === 2) out.push(nested(rand, 1 + Math.floor(rand() * 5)));
-    else if (r === 3) out.push(`${nested(rand, 1 + Math.floor(rand() * 3))} ${nested(rand, 1 + Math.floor(rand() * 3))}`);
+    else if (r === 3)
+      out.push(
+        `${nested(rand, 1 + Math.floor(rand() * 3))} ${nested(rand, 1 + Math.floor(rand() * 3))}`,
+      );
     else if (r === 4) out.push(runs(rand));
     else out.push(`${soup(rand)}\n${nested(rand, 2 + Math.floor(rand() * 4))} ${soup(rand)}`);
   }
@@ -115,7 +269,18 @@ export function loneInputs(): string[] {
   for (const m of LONES) {
     for (const n of [1, 2, 3, 5, 17, 60]) {
       const r = m.repeat(n);
-      out.push(r, `${r} x`, `x ${r}`, `x ${r}y`, `${r}x`, `${r} `, `(${r}x`, `5${r}x`, `x${r}`, `${r}${NB}x`);
+      out.push(
+        r,
+        `${r} x`,
+        `x ${r}`,
+        `x ${r}y`,
+        `${r}x`,
+        `${r} `,
+        `(${r}x`,
+        `5${r}x`,
+        `x${r}`,
+        `${r}${NB}x`,
+      );
     }
     const big = m.repeat(300);
     out.push(`x ${big}y`, `${big} x`, big);
@@ -123,25 +288,44 @@ export function loneInputs(): string[] {
   }
   for (const m of ['«', '‹', '»', '›']) {
     for (const n of [2, 6, 30, 250]) {
-      out.push(`${m}${NB}`.repeat(n) + 'x', `x ${m}${NB}`.repeat(n), `${m}${NB}${m}`.repeat(n), `a${NB}${m}`.repeat(n) + ' b', `${m}${NB} `.repeat(n), `${m} ${NB}${m}x`.repeat(n));
+      out.push(
+        `${`${m}${NB}`.repeat(n)}x`,
+        `x ${m}${NB}`.repeat(n),
+        `${m}${NB}${m}`.repeat(n),
+        `${`a${NB}${m}`.repeat(n)} b`,
+        `${m}${NB} `.repeat(n),
+        `${m} ${NB}${m}x`.repeat(n),
+      );
     }
   }
   // mixed runs of different marks, with and without spaces
   for (let i = 0; i < 120; i++) {
-    const a = pick(rand, LONES), b = pick(rand, LONES), c = pick(rand, [...LONES, NB, ' ', '1']);
+    const a = pick(rand, LONES),
+      b = pick(rand, LONES),
+      c = pick(rand, [...LONES, NB, ' ', '1']);
     const n = 1 + Math.floor(rand() * (i % 10 === 0 ? 250 : 40));
     const unit = [a, b, c].slice(0, 1 + Math.floor(rand() * 3)).join('');
     out.push(unit.repeat(n), `w ${unit.repeat(n)} w`, `${unit.repeat(n)}x ${unit.repeat(n)}`);
   }
   // dialogue and unbalanced prose
-  const SENT = ['He said it.', 'Well, ok', "It's fine", 'Привіт', 'Nein, danke', 'a 5" pipe', "the '90s", 'Ça va'];
+  const SENT = [
+    'He said it.',
+    'Well, ok',
+    "It's fine",
+    'Привіт',
+    'Nein, danke',
+    'a 5" pipe',
+    "the '90s",
+    'Ça va',
+  ];
   const OPENS = ['“', '"', '„', '«', '‘', '‚', '»', '”', '’', '‹', "'"];
   for (let i = 0; i < 700; i++) {
     let s = '';
     const lines = 1 + Math.floor(rand() * 30);
     for (let l = 0; l < lines; l++) {
       const r = rand();
-      const o = pick(rand, OPENS), cl = pick(rand, OPENS);
+      const o = pick(rand, OPENS),
+        cl = pick(rand, OPENS);
       if (r < 0.4) s += `${o}${pick(rand, SENT)}${rand() < 0.5 ? cl : ''}`;
       else if (r < 0.6) s += `${pick(rand, SENT)} ${o}${o}${pick(rand, SENT)}`;
       else if (r < 0.75) s += `${pick(rand, SENT)}${cl}`;
@@ -169,7 +353,8 @@ export function digest(
   list: readonly string[],
 ): Omit<Fixture, 'inputs'> {
   const combos: string[] = [];
-  for (const code of codes) for (const reg of REGISTERS) for (const st of STYLES) combos.push(`${code}/${reg}/${st}`);
+  for (const code of codes)
+    for (const reg of REGISTERS) for (const st of STYLES) combos.push(`${code}/${reg}/${st}`);
   const comboHash = combos.map(() => createHash('sha256'));
   const inputHash = list.map(() => createHash('sha256'));
   const sample: string[] = [];
@@ -192,12 +377,24 @@ export function digest(
 
 if (import.meta.main) {
   const srcDir = process.argv[2] ?? new URL('../src', import.meta.url).pathname;
-  const outFile = process.argv[3] ?? new URL('../src/core/quotes.fixture.json', import.meta.url).pathname;
+  const outFile =
+    process.argv[3] ?? new URL('../src/core/quotes.fixture.json', import.meta.url).pathname;
   const { quotes } = await import(pathToFileURL(`${srcDir}/core/quotes.ts`).href);
   const { PACKS } = await import(pathToFileURL(`${srcDir}/core/lang/index.ts`).href);
-  const elisions = [...new Set<string>(PACKS.flatMap((p: { elisions?: string[] }) => p.elisions ?? []))];
+  const elisions = [
+    ...new Set<string>(PACKS.flatMap((p: { elisions?: string[] }) => p.elisions ?? [])),
+  ];
   const list = process.argv[4] === 'lone' ? loneInputs() : inputs(elisions);
-  const fixture: Fixture = { inputs: list, ...digest(quotes, PACKS.map((p: { code: string }) => p.code), list) };
+  const fixture: Fixture = {
+    inputs: list,
+    ...digest(
+      quotes,
+      PACKS.map((p: { code: string }) => p.code),
+      list,
+    ),
+  };
   writeFileSync(outFile, `${JSON.stringify(fixture)}\n`);
-  console.log(`${fixture.inputs.length} inputs x ${fixture.combos.length} combinations -> ${outFile}`);
+  console.log(
+    `${fixture.inputs.length} inputs x ${fixture.combos.length} combinations -> ${outFile}`,
+  );
 }

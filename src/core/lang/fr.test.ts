@@ -24,6 +24,8 @@ describe('French', () => {
 
   test('a paragraph that opens with a dash is a line of dialogue, in both registers', () => {
     expect(t('- On attend ? - a-t-il demandé.')).toBe('—~On attend ?~— a-t-il demandé.');
-    expect(t('- On attend ? - a-t-il demandé.', { register: 'literary' })).toBe('—~On attend ?~— a-t-il demandé.');
+    expect(t('- On attend ? - a-t-il demandé.', { register: 'literary' })).toBe(
+      '—~On attend ?~— a-t-il demandé.',
+    );
   });
 });

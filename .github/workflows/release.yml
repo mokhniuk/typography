@@ -3,19 +3,30 @@ name: release
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
 
 permissions:
   contents: write
 
 jobs:
-  tag:
+  check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
       - run: bun install --frozen-lockfile
+      - run: bunx biome ci .
       - run: bun test src apps/playground resources
       - run: bun run typecheck
+      - run: bun run playground:build
+
+  tag:
+    needs: check
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
       - name: Tag the version in package.json
         run: |
           version="v$(jq -r .version package.json)"

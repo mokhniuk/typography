@@ -48,7 +48,9 @@ describe('Dutch', () => {
   });
 
   test('apostrophes inside a quotation, at its start and in the middle', () => {
-    expect(t('Hij zei: "ik zie \'t huis en zo\'n boom"')).toBe('Hij zei: “ik zie ’t huis en zo’n boom”');
+    expect(t('Hij zei: "ik zie \'t huis en zo\'n boom"')).toBe(
+      'Hij zei: “ik zie ’t huis en zo’n boom”',
+    );
     expect(t('Hij zei: "kom \'s avonds"')).toBe('Hij zei: “kom ’s avonds”');
   });
 

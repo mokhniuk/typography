@@ -4,8 +4,7 @@ import type { LangPack } from './pack';
 export const sv = {
   code: 'sv',
   name: 'Swedish (svenska)',
-  sample:
-    'Han sa "vi är här" - och gick... Kursen pågår 21-26 september, 10:00-12:00. Läs mer ->',
+  sample: 'Han sa "vi är här" - och gick... Kursen pågår 21-26 september, 10:00-12:00. Läs mer ->',
   // ”outer ’inner’ outer”: the same mark opens and closes, at both levels.
   quotes: [
     ['”', '”'],

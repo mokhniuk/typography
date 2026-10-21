@@ -15,9 +15,17 @@ export async function buildHangScript(): Promise<string> {
   const dir = mkdtempSync(join(tmpdir(), 'hang-'));
   const entry = join(dir, 'entry.js');
   // `hangPunctuation` is self-contained, so its source stands on its own.
-  writeFileSync(entry, `globalThis.__hang = (${hangPunctuation.toString()})(document.currentScript.parentElement);`);
+  writeFileSync(
+    entry,
+    `globalThis.__hang = (${hangPunctuation.toString()})(document.currentScript.parentElement);`,
+  );
   try {
-    const result = await Bun.build({ entrypoints: [entry], minify: true, target: 'browser', format: 'iife' });
+    const result = await Bun.build({
+      entrypoints: [entry],
+      minify: true,
+      target: 'browser',
+      format: 'iife',
+    });
     if (!result.success) throw new Error(result.logs.map(String).join('\n'));
     const code = (await result.outputs[0]?.text()) ?? '';
     // The bundle is `(function(s){...})(document.currentScript.parentElement)` minified to

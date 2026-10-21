@@ -44,12 +44,15 @@ describe('playground examples', () => {
     expect(RULES.map((rule) => rule.id).filter((id) => !all.has(id))).toEqual([]);
   });
 
-  test.each([...LANGS])('an %s example is recognised in any format, written text is not', (lang) => {
-    for (const size of ['short', 'long'] as const) {
-      for (const mode of MODES) expect(exampleIn(example(mode, lang, size), lang)).toBe(size);
-    }
-    expect(exampleIn('My own text - here.', lang)).toBeNull();
-  });
+  test.each([...LANGS])(
+    'an %s example is recognised in any format, written text is not',
+    (lang) => {
+      for (const size of ['short', 'long'] as const) {
+        for (const mode of MODES) expect(exampleIn(example(mode, lang, size), lang)).toBe(size);
+      }
+      expect(exampleIn('My own text - here.', lang)).toBeNull();
+    },
+  );
 
   test.each([...LANGS])('every %s example is in the language, not English, and changes', (lang) => {
     for (const size of ['short', 'long'] as const) {

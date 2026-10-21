@@ -42,7 +42,7 @@ describe('Slovak', () => {
   });
 
   test('the goldens are idempotent', () => {
-    for (const text of ['“x ‘y’ z”', 'Povedal: "idem domov."', "O'Brien povedal \"áno\""]) {
+    for (const text of ['“x ‘y’ z”', 'Povedal: "idem domov."', 'O\'Brien povedal "áno"']) {
       const once = typographic(text, 'sk');
       expect(typographic(once, 'sk')).toBe(once);
     }

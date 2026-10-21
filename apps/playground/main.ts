@@ -2,12 +2,12 @@ import './style.css';
 import {
   type Change,
   diff,
-  type Lang,
   LANGS,
+  type Lang,
   PACKS,
   type QuoteStyle,
-  type Register,
   REGISTERS,
+  type Register,
   RULES,
 } from '../../src/core';
 import { hangPunctuation, markHangs } from '../../src/dom';
@@ -25,7 +25,8 @@ const NAMED_HANGS: Record<string, number> = { off: 0, light: 0.3, medium: 0.5, f
 /** The stop nearest to an amount. */
 const stopOf = (amount: number): number =>
   HANG_STOPS.reduce(
-    (best, stop, i) => (Math.abs(stop - amount) < Math.abs((HANG_STOPS[best] ?? 1) - amount) ? i : best),
+    (best, stop, i) =>
+      Math.abs(stop - amount) < Math.abs((HANG_STOPS[best] ?? 1) - amount) ? i : best,
     0,
   );
 type State = {
@@ -55,7 +56,8 @@ const LANG_NAMES = Object.fromEntries(PACKS.map((pack) => [pack.code, pack.name]
 const STORAGE = 'typeset-playground';
 
 function readHang(value: unknown): number {
-  const amount = typeof value === 'number' ? value : typeof value === 'string' ? (NAMED_HANGS[value] ?? 1) : 1;
+  const amount =
+    typeof value === 'number' ? value : typeof value === 'string' ? (NAMED_HANGS[value] ?? 1) : 1;
   return HANG_STOPS[stopOf(amount)] ?? 1;
 }
 
@@ -174,7 +176,14 @@ const visible = (text: string) => text.replaceAll(' ', '⍽');
 function convert(): { output: string; changes: Change[] } {
   const { lang, register, quoteStyle, disable, enable } = state;
   const changes: Change[] = [];
-  const options = { lang, register, quoteStyle, disable, enable, onChange: (change: Change) => changes.push(change) };
+  const options = {
+    lang,
+    register,
+    quoteStyle,
+    disable,
+    enable,
+    onChange: (change: Change) => changes.push(change),
+  };
   const output =
     state.mode === 'html'
       ? typesetHtml(state.input, { ...options, nbsp: state.nbsp })

@@ -1,5 +1,4 @@
 import { dashRange, dashSentence, dialogue } from './dashes';
-import { apostrophe, arrows, ellipsis, legal, minus, multiply } from './marks';
 import {
   afterComma,
   beforePunctuation,
@@ -11,8 +10,9 @@ import {
   trailingSpace,
 } from './extra';
 import { PACK, PACKS } from './lang';
-import { ORPHANS, SENTENCE_DASH, SENTENCE_DASH_LITERARY } from './profiles';
+import { apostrophe, arrows, ellipsis, legal, minus, multiply } from './marks';
 import { groupNumbers } from './numbers';
+import { ORPHANS, SENTENCE_DASH, SENTENCE_DASH_LITERARY } from './profiles';
 import { quotes } from './quotes';
 import {
   abbreviations,
@@ -315,7 +315,10 @@ export function selectRules({
   const literally = (list: readonly string[], id: string) => list.some((name) => name === id);
   for (const rule of rules) {
     const turnedOn = rule.defaultOn === false && on.has(rule.id);
-    if (off.has(rule.id) && (turnedOn || (literally(enable, rule.id) && literally(disable, rule.id)))) {
+    if (
+      off.has(rule.id) &&
+      (turnedOn || (literally(enable, rule.id) && literally(disable, rule.id)))
+    ) {
       throw new Error(`Typography rule "${rule.id}" is in both disable and enable`);
     }
   }

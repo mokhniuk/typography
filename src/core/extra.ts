@@ -3,8 +3,8 @@
  * Their guards err towards leaving text alone; the known limits are in docs/limits.md.
  */
 import { before, isLetterOrNumber } from './scan';
-import { NBSP } from './types';
 import type { Lang } from './types';
+import { NBSP } from './types';
 
 /** Languages that set a space before `: ; ! ?` (French): the space is correct there, not a fault. */
 const SPACE_BEFORE_HIGH = new Set<Lang>(['fr']);
@@ -12,7 +12,7 @@ const SPACE_BEFORE_HIGH = new Set<Lang>(['fr']);
 /** A space or tab straight before one of the marks `beforePunctuation` pulls back. */
 const SPACE_THEN_MARK = /[ \t][,.;:!?)]/g;
 /** What may not stand before the spaces: a space of any kind, or an opening bracket or quote. */
-const NOT_BEFORE_SPACES = /[\s(\[{“"«‘„]/;
+const NOT_BEFORE_SPACES = /[\s([{“"«‘„]/;
 
 /**
  * Removes a space before , . ; : ! ? ). Not at a line start, not before an ellipsis, a decimal
@@ -32,7 +32,11 @@ export function beforePunctuation(text: string, lang: Lang): string {
   SPACE_THEN_MARK.lastIndex = 0;
   for (let m = SPACE_THEN_MARK.exec(text); m; m = SPACE_THEN_MARK.exec(text)) {
     let offset = m.index;
-    while (offset > from && (text.charCodeAt(offset - 1) === 0x20 || text.charCodeAt(offset - 1) === 0x09)) offset--;
+    while (
+      offset > from &&
+      (text.charCodeAt(offset - 1) === 0x20 || text.charCodeAt(offset - 1) === 0x09)
+    )
+      offset--;
     if (offset === 0 || NOT_BEFORE_SPACES.test(text.charAt(offset - 1))) continue;
     const mark = text.charAt(m.index + 1);
     const match = text.slice(offset, m.index + 2);
@@ -45,7 +49,13 @@ export function beforePunctuation(text: string, lang: Lang): string {
 }
 
 /** Whether the space(s) before `mark` stay (`match` is the spaces and the mark, at `offset` of `whole`). */
-function keepSpace(match: string, mark: string, lang: Lang, offset: number, whole: string): boolean {
+function keepSpace(
+  match: string,
+  mark: string,
+  lang: Lang,
+  offset: number,
+  whole: string,
+): boolean {
   const next = whole.charAt(offset + match.length);
   // A mark that a letter or digit follows is the start of a word or number (.5, .gitignore, 3 ,5), except
   // a comma before a letter (`Hello ,world`), which `space.after-comma` spaces right after.
@@ -57,7 +67,11 @@ function keepSpace(match: string, mark: string, lang: Lang, offset: number, whol
   // A dot is not pulled against a dot on either side: that would make a ... after `ellipsis` ran.
   if (mark === '.' && (next === '.' || whole.charAt(offset - 1) === '.')) return true;
   if ((mark === ':' || mark === ';') && /[-)(/|\\'*]/.test(next)) return true;
-  if (mark === ':' && /\d/.test(whole.charAt(offset - 1)) && /^[ \t]*\d/.test(whole.slice(offset + match.length))) {
+  if (
+    mark === ':' &&
+    /\d/.test(whole.charAt(offset - 1)) &&
+    /^[ \t]*\d/.test(whole.slice(offset + match.length))
+  ) {
     return true;
   }
   if ((mark === '!' || mark === '?') && next === '=') return true;
@@ -69,7 +83,7 @@ function keepSpace(match: string, mark: string, lang: Lang, offset: number, whol
 export const afterComma = (text: string): string => text.replace(/,(?=\p{L})/gu, ', ');
 
 const MARK_RUN = /!{2,}|\?{2,}/g;
-const NOT_BEFORE_MARKS = /[\s(\[{!?]/;
+const NOT_BEFORE_MARKS = /[\s([{!?]/;
 const WORD_AFTER = /[\p{L}\p{N}_]/uy;
 
 /**
@@ -114,7 +128,12 @@ export function trailingSpace(text: string): string {
   let from = 0;
   const trim = (end: number) => {
     let start = end;
-    for (let c = text.charCodeAt(start - 1); start > from && (c === 0x20 || c === 0x09); c = text.charCodeAt(start - 1)) start--;
+    for (
+      let c = text.charCodeAt(start - 1);
+      start > from && (c === 0x20 || c === 0x09);
+      c = text.charCodeAt(start - 1)
+    )
+      start--;
     if (start < end) {
       out += text.slice(from, start);
       from = end;
@@ -158,17 +177,18 @@ export const fractions = (text: string): string =>
   );
 
 /** A bare C or F is no temperature after a label: `Type 2 F`, `Vitamin C 5 C`. The label ends the text it is tested on. */
-const LABEL = /(?:^|[\s(])(?:\p{L}|Type|Class|Section|Plan|Grade|Level|Group|Vitamin|Gate|Row|Part|Option|Item|Line|Page|Room|Tier|Step|Unit|Table|Figure|Fig\.|No\.|Nr\.)$/iu;
+const LABEL =
+  /(?:^|[\s(])(?:\p{L}|Type|Class|Section|Plan|Grade|Level|Group|Vitamin|Gate|Row|Part|Option|Item|Line|Page|Room|Tier|Step|Unit|Table|Figure|Fig\.|No\.|Nr\.)$/iu;
 /** How much text before the spaces `LABEL` needs: the longest label (`Section`, `Vitamin`: 7) and the character before it. */
 const LABEL_REACH = 10;
 
 /** The number and its unit, as the original pattern without its leading `(?<![\p{L}\p{N}])` (read by hand, see `degrees`). */
-const DEGREE =
-  /([−+±-]?\d+(?:[.,]\d+)?)(?:[  ]*(°)[  ]*|[  ]+)([CF])(?![\p{L}\p{N}]|\.\p{L})/yu;
+const DEGREE = /([−+±-]?\d+(?:[.,]\d+)?)(?:[  ]*(°)[  ]*|[  ]+)([CF])(?![\p{L}\p{N}]|\.\p{L})/uy;
 const DIGITS = /\d+/g;
 
 const isGap = (code: number): boolean => code === 0x20 || code === 0xa0;
-const isSign = (code: number): boolean => code === 0x2212 || code === 0x2b || code === 0xb1 || code === 0x2d;
+const isSign = (code: number): boolean =>
+  code === 0x2212 || code === 0x2b || code === 0xb1 || code === 0x2d;
 
 /** Index of the first space (U+0020, U+00A0) of the run that ends just before `at`. */
 function gapStart(text: string, at: number): number {

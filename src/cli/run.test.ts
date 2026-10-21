@@ -185,7 +185,9 @@ describe('formatRules', () => {
 
   test('lists every rule with its description, and says which are off by default', () => {
     const lines = formatRules(addRule(RULES, shout, { last: true })).split('\n');
-    expect(lines.at(-1)).toMatch(/^extra\.shout +Upper case \(off by default; --enable extra\.shout\)$/);
+    expect(lines.at(-1)).toMatch(
+      /^extra\.shout +Upper case \(off by default; --enable extra\.shout\)$/,
+    );
     expect(lines[0]).not.toContain('off by default');
     expect(lines.length).toBe(RULES.length + 1);
   });

@@ -33,7 +33,12 @@ function groupable(text: string, start: number, end: number, decimal: string): b
   if (/[-:/]/.test(next) && digit.test(after)) return false;
   // A five-digit postal code: before a capitalised word (75001 Paris) or after ZIP, PLZ and the like.
   if (end - start === 5 && /^[ \u00A0]+\p{Lu}/u.test(text.slice(end))) return false;
-  if (/(?:^|[^\p{L}])(?:ZIP|zip|PLZ|CAP|CP|PIN)[ \u00A0]*$/u.test(text.slice(Math.max(0, start - 8), start))) return false;
+  if (
+    /(?:^|[^\p{L}])(?:ZIP|zip|PLZ|CAP|CP|PIN)[ \u00A0]*$/u.test(
+      text.slice(Math.max(0, start - 8), start),
+    )
+  )
+    return false;
   // Before a space and a three-digit group (a number grouped by hand), or a closing bracket and a digit.
   if (SPACE.test(next) && /^\d{3}(?!\d)/.test(text.slice(end + 1))) return false;
   if (next === ')' && /^\s?\d/.test(text.slice(end + 1))) return false;

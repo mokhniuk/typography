@@ -26,6 +26,6 @@ export const bg = {
     'Percent and euro: ISG 6.4 shows "00●%" with a fixed space; 7.3.3 puts a fixed space between the amount and ISO code or the euro sign.',
     'Numbers: ISG 4.2.3 and 6.5 prescribe a fixed space between groups of three digits (300 000), a comma as decimal mark; numbers that number things (years, pages) are written without a space (1961 г., стр. 2064). The grouping is the opt-in rule number.group.',
     'Abbreviations: only стр. followed by a number is bound (ISG 4.2.3 lists "стр.•ОВ C" among fixed-space cases). Other abbreviations in 10.4.2 (вж., т.е., и т.н., г-н, д-р) are given without a no-break rule, so none is invented.',
-    'Not implemented, not verified: one-letter prepositions (в, с, к, у, о) are not kept off the end of a line, because the ISG states no such rule and the Institute for Bulgarian Language rules were not read; the sentence dash is the engine\'s default em dash, which matches the spaced em dash of ISG 10.1.8; the dialogue dash is set from the Institute page above.',
+    "Not implemented, not verified: one-letter prepositions (в, с, к, у, о) are not kept off the end of a line, because the ISG states no such rule and the Institute for Bulgarian Language rules were not read; the sentence dash is the engine's default em dash, which matches the spaced em dash of ISG 10.1.8; the dialogue dash is set from the Institute page above.",
   ].join(' '),
 } as const satisfies LangPack;

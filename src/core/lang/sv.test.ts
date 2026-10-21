@@ -66,6 +66,8 @@ describe('Swedish numbers', () => {
 
   test('a paragraph that opens with a dash is a line of dialogue, in both registers', () => {
     expect(t('- Ska vi vänta? frågade han.')).toBe('–~Ska vi vänta? frågade han.');
-    expect(t('- Ska vi vänta? frågade han.', { register: 'literary' })).toBe('–~Ska vi vänta? frågade han.');
+    expect(t('- Ska vi vänta? frågade han.', { register: 'literary' })).toBe(
+      '–~Ska vi vänta? frågade han.',
+    );
   });
 });

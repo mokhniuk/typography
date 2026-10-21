@@ -1,5 +1,5 @@
 export { type DiffRun, diff } from './diff';
-export { type HangPiece, hangPieces, type TextPart, splitHangs } from './hang';
+export { type HangPiece, hangPieces, splitHangs, type TextPart } from './hang';
 export { type LangPack, type Level, PACK, PACKS } from './lang';
 export { LANGS, REGISTERS } from './profiles';
 export {
@@ -12,6 +12,7 @@ export {
   selectRules,
   without,
 } from './rules';
+export { type Context, type Lang, NBSP, type QuoteStyle, type Register } from './types';
 export {
   type Change,
   explain,
@@ -20,4 +21,3 @@ export {
   typesetBlock,
   typographic,
 } from './typography';
-export { type Context, type Lang, NBSP, type QuoteStyle, type Register } from './types';

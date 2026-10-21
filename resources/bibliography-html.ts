@@ -4,11 +4,15 @@
  * `bun run docs:sources`; `resources/sources.test.ts` fails when it is out of date.
  */
 import { RULES } from '../src';
-import { CSS } from './sources-html';
 import { RULE_SOURCES, SOURCES, type Source } from './sources';
+import { CSS } from './sources-html';
 
 const esc = (text: string): string =>
-  text.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
+  text
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;');
 
 const KIND = {
   standard: 'Standard',
@@ -53,7 +57,9 @@ function row(source: Source): string {
 }
 
 export function renderBibliographyHtml(): string {
-  const sorted = [...SOURCES].sort((a, b) => a.kind.localeCompare(b.kind) || a.id.localeCompare(b.id));
+  const sorted = [...SOURCES].sort(
+    (a, b) => a.kind.localeCompare(b.kind) || a.id.localeCompare(b.id),
+  );
   return `<!doctype html>
 <html lang="en">
 <head>
