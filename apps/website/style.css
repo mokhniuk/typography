@@ -974,36 +974,6 @@ main[data-layout="index"] > .container > header p {
   text-transform: uppercase;
   color: var(--color-accent);
 }
-ul[data-cards] {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
-  gap: var(--space-5);
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-ul[data-cards] a {
-  display: grid;
-  gap: var(--space-2);
-  align-content: start;
-  height: 100%;
-  padding: var(--space-5) var(--space-6);
-  background: var(--color-surface);
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-lg);
-  color: var(--color-text);
-  text-decoration: none;
-}
-ul[data-cards] a:hover {
-  border-color: var(--color-accent);
-}
-ul[data-cards] strong {
-  font: 600 var(--size-lg) var(--font-text);
-}
-ul[data-cards] span {
-  font-size: var(--size-sm);
-  color: var(--color-muted);
-}
 ol[data-articles] {
   list-style: none;
   margin: 0;

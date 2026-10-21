@@ -9,12 +9,13 @@ export const rootOf = (path: string): string => {
 export function header(path: string): string {
   const root = rootOf(path);
   // The longest item the path starts with is the current one: the changelog, not Docs, on its page.
-  const here = NAV.map((item) => item.href)
+  const here = NAV.map((item) => ('match' in item ? item.match : item.href))
     .filter((href) => path.startsWith(href))
     .sort((a, b) => b.length - a.length)[0];
   const current = (href: string) => (href === here ? ' aria-current="page"' : '');
   const links = NAV.map(
-    (item) => `<li><a href="${root}${item.href}"${current(item.href)}>${item.label}</a></li>`,
+    (item) =>
+      `<li><a href="${root}${item.href}"${current('match' in item ? item.match : item.href)}>${item.label}</a></li>`,
   ).join('');
   return `<header>
   <nav aria-label="Main">

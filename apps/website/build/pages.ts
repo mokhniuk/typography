@@ -69,7 +69,7 @@ const report = (what: string, path: string): string => {
 
 function docPage(all: Doc[], doc: Doc): string {
   const root = rootOf(doc.path);
-  const here = `<p data-crumbs><a href="${root}docs/">Docs</a> <span aria-hidden="true">/</span> ${esc(doc.group)}</p>`;
+  const here = `<p data-crumbs><a href="${root}docs/getting-started/">Docs</a> <span aria-hidden="true">/</span> ${esc(doc.group)}</p>`;
   return page({
     path: doc.path,
     title: doc.title,
@@ -86,29 +86,16 @@ ${contents(doc)}`,
   });
 }
 
-function docsIndex(all: Doc[]): string {
-  const root = rootOf('docs/');
-  const cards = all
-    .filter((doc) => doc.group !== 'Languages' || doc.path === 'docs/languages/all/')
-    .map(
-      (doc) =>
-        `<li><a href="${root}${doc.path}"><small>${esc(doc.group)}</small><strong>${esc(doc.label)}</strong><span>${esc(doc.lead.slice(0, 130))}${doc.lead.length > 130 ? '…' : ''}</span></a></li>`,
-    )
-    .join('\n');
+/** `docs/` has no page of its own: the documentation opens on Getting started. */
+function docsIndex(): string {
   return page({
     path: 'docs/',
     title: 'Documentation',
-    description:
-      'Install, use and look up every option, rule and language of the typography engine.',
+    description: 'The documentation starts at Getting started.',
+    head: '<meta http-equiv="refresh" content="0; url=getting-started/" />\n<meta name="robots" content="noindex" />',
     mainAttrs: 'data-layout="index"',
     body: `<div class="container">
-<header>
-  <h1>Documentation</h1>
-  <p>Everything the engine does, with the reasons for it. The reference pages are generated from the code, so they say what the engine does today.</p>
-</header>
-<ul data-cards>
-${cards}
-</ul>
+<p>The documentation starts at <a href="getting-started/">Getting started</a>.</p>
 </div>`,
   });
 }
@@ -176,7 +163,7 @@ export function generatedPages(): Map<string, string> {
   const all = docs();
   const posts = articles();
   const pages = new Map<string, string>();
-  pages.set('docs/', docsIndex(all));
+  pages.set('docs/', docsIndex());
   for (const doc of all) pages.set(doc.path, docPage(all, doc));
   pages.set('articles/', articlesIndex(posts));
   for (const post of posts) pages.set(post.path, articlePage(posts, post));
