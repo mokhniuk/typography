@@ -19,9 +19,8 @@ import { example, exampleIn, type Mode, type Size } from './examples';
 import { isOn, readSaved, reset, ruleBadge, setRule } from './rules-state';
 
 type View = 'result' | 'changes' | 'preview';
-/** How far an opening mark hangs in the preview, as `--hang-amount`. */
-const HANGS = { off: 0, light: 0.3, medium: 0.5, full: 1 } as const;
-type Hang = keyof typeof HANGS;
+/** The named amounts an earlier version saved, read as their share. */
+const NAMED_HANGS: Record<string, number> = { off: 0, light: 0.3, medium: 0.5, full: 1 };
 type State = {
   mode: Mode;
   lang: Lang;
@@ -30,7 +29,8 @@ type State = {
   nbsp: 'entity' | 'char';
   view: View;
   mark: boolean;
-  hang: Hang;
+  /** How far an opening mark hangs in the preview, from 0 to 1, as `--hang-amount`. */
+  hang: number;
   /** Rules that are on by default and were switched off. */
   disable: string[];
   /** Rules that are off by default and were switched on. */
@@ -47,6 +47,11 @@ const LANG_NAMES = Object.fromEntries(PACKS.map((pack) => [pack.code, pack.name]
 
 const STORAGE = 'typeset-playground';
 
+function readHang(value: unknown): number {
+  if (typeof value === 'number' && value >= 0 && value <= 1) return value;
+  return typeof value === 'string' ? (NAMED_HANGS[value] ?? 1) : 1;
+}
+
 function load(): State {
   const fallback: State = {
     mode: 'text',
@@ -56,7 +61,7 @@ function load(): State {
     nbsp: 'entity',
     view: 'result',
     mark: false,
-    hang: 'full',
+    hang: 1,
     ...reset(),
     input: example('text', 'en', 'long'),
     example: 'long',
@@ -83,7 +88,7 @@ function load(): State {
       nbsp: saved.nbsp === 'char' ? 'char' : 'entity',
       view: saved.view === 'changes' || saved.view === 'preview' ? saved.view : 'result',
       mark: saved.mark === true,
-      hang: saved.hang && saved.hang in HANGS ? saved.hang : 'full',
+      hang: readHang(saved.hang),
       ...readSaved(saved, RULES),
       input: known ? example(mode, lang, known) : input,
       example: known,
@@ -119,7 +124,8 @@ const quoteStyleSelect = el<HTMLSelectElement>('quoteStyle');
 const nbspSelect = el<HTMLSelectElement>('nbsp');
 const nbspField = el<HTMLLabelElement>('nbspField');
 const mark = el<HTMLInputElement>('mark');
-const hangSelect = el<HTMLSelectElement>('hang');
+const hangInput = el<HTMLInputElement>('hang');
+const hangValue = el<HTMLOutputElement>('hangValue');
 const hangField = el<HTMLLabelElement>('hangField');
 const markField = el<HTMLLabelElement>('markField');
 const copy = el<HTMLButtonElement>('copy');
@@ -212,12 +218,23 @@ function markHangs(body: HTMLElement) {
 }
 
 let stopHanging: (() => void) | null = null;
+/** The element the hanging pass runs on: the preview, or the body of the HTML preview frame. */
+let hangRoot: HTMLElement | null = null;
+
+/** Sets the amount on the preview and hangs its marks again, without rebuilding it. */
+function applyHang() {
+  stopHanging?.();
+  stopHanging = null;
+  if (!hangRoot) return;
+  hangRoot.style.setProperty('--hang-amount', String(state.hang));
+  stopHanging = hangPunctuation(hangRoot);
+}
 
 function renderPreview(output: string) {
   stopHanging?.();
   stopHanging = null;
+  hangRoot = null;
   preview.replaceChildren();
-  preview.style.setProperty('--hang-amount', String(HANGS[state.hang]));
   if (state.mode === 'html') {
     const frame = document.createElement('iframe');
     // No scripts run inside: pasted HTML is shown, never run. Same origin only so this page can
@@ -227,9 +244,9 @@ function renderPreview(output: string) {
     frame.addEventListener('load', () => {
       const body = frame.contentDocument?.body;
       if (!body) return;
-      body.style.setProperty('--hang-amount', String(HANGS[state.hang]));
       markHangs(body);
-      stopHanging = hangPunctuation(body);
+      hangRoot = body;
+      applyHang();
     });
     frame.srcdoc = `<!doctype html><meta charset="utf-8"><style>body{font:19px/1.55 Georgia,serif;max-width:34em;margin:1em;color:#1b1b1a}code,pre{font-size:.85em}</style>${output}`;
     preview.append(frame);
@@ -242,7 +259,7 @@ function renderPreview(output: string) {
       if (part.hang) {
         const span = document.createElement('span');
         span.dataset.hang = '';
-        if (part.lead) span.style.marginLeft = `${-0.5 * HANGS[state.hang]}em`;
+        if (part.lead) span.style.marginLeft = `${-0.5 * state.hang}em`;
         span.textContent = part.text;
         p.append(span);
       } else {
@@ -251,7 +268,8 @@ function renderPreview(output: string) {
     }
     preview.append(p);
   }
-  stopHanging = hangPunctuation(preview);
+  hangRoot = preview;
+  applyHang();
 }
 
 function groups(runs: ReturnType<typeof diff>): number {
@@ -279,7 +297,8 @@ function render() {
   quoteStyleSelect.value = state.quoteStyle;
   nbspSelect.value = state.nbsp;
   mark.checked = state.mark;
-  hangSelect.value = state.hang;
+  hangInput.value = String(Math.round(state.hang * 100));
+  hangValue.value = `${hangInput.value}%`;
   nbspField.hidden = state.mode !== 'html';
   for (const box of ruleList.querySelectorAll<HTMLInputElement>('input')) {
     const rule = RULES.find((r) => r.id === box.dataset.id);
@@ -379,9 +398,12 @@ nbspSelect.addEventListener('change', () => {
   state.nbsp = nbspSelect.value === 'char' ? 'char' : 'entity';
   schedule();
 });
-hangSelect.addEventListener('change', () => {
-  state.hang = hangSelect.value in HANGS ? (hangSelect.value as Hang) : 'full';
-  schedule();
+// Live while dragging: only the hanging pass runs again, the preview is not rebuilt.
+hangInput.addEventListener('input', () => {
+  state.hang = Number(hangInput.value) / 100;
+  hangValue.value = `${hangInput.value}%`;
+  applyHang();
+  save(state);
 });
 mark.addEventListener('change', () => {
   state.mark = mark.checked;

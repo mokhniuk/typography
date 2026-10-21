@@ -166,6 +166,16 @@ output {
   padding: 0 var(--space-3);
   margin-inline-start: var(--space-1);
 }
+input[type="range"] {
+  width: 8rem;
+  margin: 0;
+  accent-color: var(--color-accent);
+}
+output[for] {
+  min-width: 3.5em;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
 output:empty {
   display: none;
 }
