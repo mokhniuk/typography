@@ -45,6 +45,11 @@ describe('German dash and spaces', () => {
     expect(t('5% und 49€')).toBe('5~% und 49~€');
   });
 
+  test('currencySpace: a € typed against the number gets a no-break space, a € before it is left alone', () => {
+    expect(t('30€')).toBe('30~€');
+    expect(t('€30')).toBe('€30');
+  });
+
   test('abbreviations stay together or with what follows', () => {
     expect(t('z. B. das und d. h. dies')).toBe('z.~B. das und d.~h. dies');
     expect(t('Nr. 5, Abb. 2 und Tel. 030')).toBe('Nr.~5, Abb.~2~und Tel.~030');

@@ -24,7 +24,8 @@ A quotation nested deeper than the levels listed starts over from the first.
 ## Spaces
 
 - One-letter words kept with the next word: k K s S v V z Z o O u U a A i I.
-- A no-break space between a number and % or €: yes.
+- A no-break space between a number and %: yes.
+- A no-break space between a number and € after it: yes.
 - Abbreviations: no list.
 
 ## Numbers

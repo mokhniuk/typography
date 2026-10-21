@@ -44,8 +44,10 @@ export type LangPack = {
   sentenceDash?: string;
   /** The same in the literary register. */
   sentenceDashLiterary?: string;
-  /** A no-break space between a number and % or € (5 %, 49 €). */
+  /** A no-break space between a number and a % typed against it (5% becomes 5 %). */
   percentSpace?: boolean;
+  /** A no-break space between a number and a € typed after it (49€ becomes 49 €). A € before the number (€49) is never touched. */
+  currencySpace?: boolean;
   /**
    * How a line of dialogue opens, where the language writes dialogue with a dash rather than in quotes:
    * the dash (`mark`) and, unless `attached` (Spanish), a no-break space after it. A paragraph that opens

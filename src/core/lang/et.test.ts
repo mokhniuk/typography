@@ -57,6 +57,12 @@ describe('Estonian spaces and dashes', () => {
     expect(t('käibemaks 22% ja 100 %')).toBe('käibemaks 22~% ja 100~%');
   });
 
+  test('ISG 6.4 (money only as the code EUR): currencySpace is off, so no space is added before € (percentSpace still spaces %)', () => {
+    expect(t('30€')).toBe('30€');
+    expect(t('5%')).toBe('5~%');
+    expect(t('€30')).toBe('€30');
+  });
+
   test('ISG 10.1.7: the dash is the en dash', () => {
     expect(t('tähtaeg - ajavahemik')).toBe('tähtaeg~– ajavahemik');
     expect(t('tähtaeg — ajavahemik')).toBe('tähtaeg~– ajavahemik');

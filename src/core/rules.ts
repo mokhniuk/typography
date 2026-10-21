@@ -265,8 +265,10 @@ export const RULES: readonly Rule[] = [
   {
     id: 'space.percent',
     category: 'data',
-    about: `${names(PACKS.filter((pack) => 'percentSpace' in pack && pack.percentSpace))}: a no-break space between a number and % or € (5 %, 49 €)`,
-    when: (text, { lang }) => !!PACK[lang].percentSpace && hasAny('%', '€')(text),
+    about: `${names(PACKS.filter((pack) => 'percentSpace' in pack && pack.percentSpace))}: a no-break space between a number and % (5 %); ${names(PACKS.filter((pack) => 'currencySpace' in pack && pack.currencySpace))}: also before € after the number (49 €)`,
+    when: (text, { lang }) =>
+      (!!PACK[lang].percentSpace && text.includes('%')) ||
+      (!!PACK[lang].currencySpace && text.includes('€')),
     apply: (text, { lang }) => unitSymbol(text, lang),
   },
   {

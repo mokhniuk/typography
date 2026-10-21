@@ -54,6 +54,12 @@ describe('Lithuanian spaces and dashes', () => {
     expect(t('PVM 21% ir 100 %')).toBe('PVM 21~% ir 100~%');
   });
 
+  test('ISG 6.4 (money only as the code EUR): currencySpace is off, so no space is added before € (percentSpace still spaces %)', () => {
+    expect(t('30€')).toBe('30€');
+    expect(t('5%')).toBe('5~%');
+    expect(t('€30')).toBe('€30');
+  });
+
   test('ISG 10.1.4: the sentence dash is a spaced en dash, not an em dash', () => {
     expect(t('Kitas žingsnis - sumažinti išlaidas')).toBe('Kitas žingsnis~– sumažinti išlaidas');
     expect(t('Kitas žingsnis — sumažinti išlaidas')).toBe('Kitas žingsnis~– sumažinti išlaidas');

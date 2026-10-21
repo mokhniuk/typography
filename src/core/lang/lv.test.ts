@@ -56,6 +56,12 @@ describe('Latvian spaces and dashes', () => {
     expect(t('PVN 21% un 100 %')).toBe('PVN 21~% un 100~%');
   });
 
+  test('ISG 6.4 (money only as the code EUR): currencySpace is off, so no space is added before € (percentSpace still spaces %)', () => {
+    expect(t('30€')).toBe('30€');
+    expect(t('5%')).toBe('5~%');
+    expect(t('€30')).toBe('€30');
+  });
+
   test('ISG 10.1.7: the sentence dash is a spaced en dash', () => {
     expect(t('Zīme - kas brīdina par briesmām')).toBe('Zīme~– kas brīdina par briesmām');
     expect(t('Zīme — kas brīdina par briesmām')).toBe('Zīme~– kas brīdina par briesmām');

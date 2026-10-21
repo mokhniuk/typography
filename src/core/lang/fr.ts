@@ -13,6 +13,7 @@ export const fr = {
     ['“', '”'],
   ],
   percentSpace: true,
+  currencySpace: true,
   elisions: ELISIONS_EN,
   numbers: { group: NBSP, decimal: ',' },
   dialogueDash: { mark: '—' },

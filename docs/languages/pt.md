@@ -24,7 +24,8 @@ A quotation nested deeper than the levels listed starts over from the first.
 ## Spaces
 
 - One-letter words kept with the next word: none.
-- A no-break space between a number and % or €: yes.
+- A no-break space between a number and %: yes.
+- A no-break space between a number and € after it: no.
 
 ### Abbreviations
 
@@ -48,4 +49,4 @@ Groups of three are separated by `~`, the decimal mark is `,`.
 
 ## Notes
 
-Dialogue: the travessão opens each turn and sets off the narrator, spaced in the examples (Ciberdúvidas, "Travessão no discurso directo"); no rule on spacing was found. European Portuguese is chosen because the audience is the EU: «…» then “…” then ‘…’, as in the Código de Redação Interinstitucional and at Ciberdúvidas (whose answer describes its own house style, the one used here). Brazilian Portuguese writes “…” with ‘…’ inside (Wikipedia, cross-check), which quoteStyle: 'us' gives; no Brazilian style guide was read, and the Brazilian number format and abbreviations were not looked at. Not implemented, not verified: no source read gives a list of one-letter words (a, e, o) to keep off the end of a line, so there are no orphans; the travessão of 10.4.8 is the em dash, which is the default, and the dialogue dash is the same em dash, set from Ciberdúvidas above; the ordinals n.º and the forms Dr.ª, Sr.ª of annex A3 are not covered; elisions: a Portuguese apostrophe inside a word (d’Ouro) is already read as an apostrophe by the engine and no word starting with an apostrophe was found in a source; the space before € comes with the single percentSpace flag; the ISG table read shows the space before % only.
+Dialogue: the travessão opens each turn and sets off the narrator, spaced in the examples (Ciberdúvidas, "Travessão no discurso directo"); no rule on spacing was found. European Portuguese is chosen because the audience is the EU: «…» then “…” then ‘…’, as in the Código de Redação Interinstitucional and at Ciberdúvidas (whose answer describes its own house style, the one used here). Brazilian Portuguese writes “…” with ‘…’ inside (Wikipedia, cross-check), which quoteStyle: 'us' gives; no Brazilian style guide was read, and the Brazilian number format and abbreviations were not looked at. Not implemented, not verified: no source read gives a list of one-letter words (a, e, o) to keep off the end of a line, so there are no orphans; the travessão of 10.4.8 is the em dash, which is the default, and the dialogue dash is the same em dash, set from Ciberdúvidas above; the ordinals n.º and the forms Dr.ª, Sr.ª of annex A3 are not covered; elisions: a Portuguese apostrophe inside a word (d’Ouro) is already read as an apostrophe by the engine and no word starting with an apostrophe was found in a source; the ISG table read shows the space before % only, so the pack sets percentSpace and not currencySpace (49€ stays 49€).

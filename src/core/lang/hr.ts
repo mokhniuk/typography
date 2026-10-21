@@ -16,6 +16,7 @@ export const hr = {
   abbreviations: { page: ['br', 'str'] },
   // ISG 6.4 and 10.1.12: a fixed space before %; ISG 7.3.3: a fixed space between amount and EUR / the euro sign.
   percentSpace: true,
+  currencySpace: true,
   // ISG 6.5 and 10.1.12: a comma for decimals, a fixed space inside numbers of several digits.
   numbers: { group: NBSP, decimal: ',' },
   dialogueDash: { mark: '–' },

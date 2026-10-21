@@ -72,6 +72,12 @@ describe('Irish spaces (ISG 6.4, common to all languages)', () => {
   test('ISG 7 (Maltese edition, stated for Irish): the euro sign stands before the amount, no space', () => {
     expect(t('suim €30')).toBe('suim €30');
   });
+
+  test('ISG 7 (Maltese edition, stated for Irish): currencySpace is off, so no space is added before € (percentSpace still spaces %)', () => {
+    expect(t('30€')).toBe('30€');
+    expect(t('5%')).toBe('5~%');
+    expect(t('€30')).toBe('€30');
+  });
 });
 
 describe('Irish numbers (ISG 6.5, read in the Maltese ISG: a point for decimals, a space between groups)', () => {

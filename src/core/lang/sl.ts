@@ -19,6 +19,7 @@ export const sl = {
   abbreviations: { page: ['št', 'str'] },
   // ISG 6.4 and 10.8: a fixed space between the number and %; ISG 7.3.3: between amount and EUR / the euro sign.
   percentSpace: true,
+  currencySpace: true,
   // ISG 4.2.3 and 6.5: a comma for decimals, a fixed space between groups of three digits.
   numbers: { group: NBSP, decimal: ',' },
   dialogueDash: { mark: '–' },
