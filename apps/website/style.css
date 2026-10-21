@@ -1932,7 +1932,12 @@ table[data-samples] small {
   max-width: var(--measure);
   color: var(--color-text);
 }
+/* The frame's page has its own inset, wide enough for an opening mark to hang into: a frame clips. */
+[data-panel="preview"]:has(iframe) {
+  padding: 0;
+}
 [data-panel="preview"] iframe {
+  display: block;
   width: 100%;
   min-height: var(--pane-height);
   border: 0;
@@ -1987,8 +1992,15 @@ ol[data-articles] > li {
   main[data-layout="docs"] > aside {
     grid-column: 10 / -1;
   }
+  /* The settings stay beside the panes and scroll on their own (the rule list is long). */
   [data-page="playground"] [data-wide] > [data-settings] {
     grid-column: 1 / 3;
+    position: sticky;
+    top: calc(var(--header-height) + var(--space-5));
+    max-height: calc(100vh - var(--header-height) - 2 * var(--space-5));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
   }
   /* Two columns are narrow for the format switch: its three on one row, closer together. */
   [data-page="playground"] #mode {

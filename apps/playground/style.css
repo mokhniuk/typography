@@ -433,7 +433,12 @@ main > section > section > p {
   max-width: var(--measure);
   color: var(--color-text);
 }
+/* The frame's page has its own inset, wide enough for an opening mark to hang into: a frame clips. */
+[data-panel="preview"]:has(iframe) {
+  padding: 0;
+}
 [data-panel="preview"] iframe {
+  display: block;
   width: 100%;
   min-height: var(--pane-height);
   border: 0;

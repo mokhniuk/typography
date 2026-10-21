@@ -26,6 +26,12 @@ export function setRule(state: RuleState, rule: Rule, on: boolean): RuleState {
 /** Every rule back at its default. */
 export const reset = (): RuleState => ({ disable: [], enable: [] });
 
+/** Every rule on, the opt-in ones too: what the playground starts with. */
+export const allOn = (rules: readonly Rule[]): RuleState => ({
+  disable: [],
+  enable: rules.filter(optIn).map((rule) => rule.id),
+});
+
 /** The note beside "Rules": what differs from the defaults. */
 export function ruleBadge(state: RuleState): string {
   return [

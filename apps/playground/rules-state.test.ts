@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
 import type { Rule } from '../../src/core';
-import { groupRules, isOn, readSaved, reset, ruleBadge, setRule } from './rules-state';
+import { allOn, groupRules, isOn, readSaved, reset, ruleBadge, setRule } from './rules-state';
 
 const noop = (t: string) => t;
 const rules: readonly Rule[] = [
@@ -46,6 +46,12 @@ describe('playground rule state', () => {
     expect(ruleBadge({ disable: ['a.one'], enable: [] })).toBe('1 off');
     expect(ruleBadge({ disable: [], enable: ['opt.in'] })).toBe('1 on');
     expect(ruleBadge({ disable: ['a.one', 'a.two'], enable: ['opt.in'] })).toBe('2 off, 1 on');
+  });
+
+  test('all on switches on every opt-in rule and no default one is off', () => {
+    const state = allOn(rules);
+    expect(state).toEqual({ disable: [], enable: ['opt.in'] });
+    expect(rules.every((rule) => isOn(state, rule))).toBe(true);
   });
 
   test('saved state from before opt-in rules (only a disable list) still loads', () => {

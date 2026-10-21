@@ -17,11 +17,11 @@ import { typesetText } from '../../src/text';
 import { configText, fromConfig } from './config-io';
 import { example, exampleIn, type Mode, type Size } from './examples';
 import {
+  allOn,
   groupRules,
   isOn,
   type RuleGroup,
   readSaved,
-  reset,
   ruleBadge,
   setRule,
 } from './rules-state';
@@ -55,6 +55,8 @@ type State = {
   input: string;
   /** The example in the input while it is unedited, so a new format or language swaps it. */
   example: Size | null;
+  /** 2 since the playground starts with every rule on; state saved before it starts that way too. */
+  rulesVersion?: number;
 };
 
 const LANG_NAMES = Object.fromEntries(PACKS.map((pack) => [pack.code, pack.name])) as Record<
@@ -80,9 +82,10 @@ function load(): State {
     view: 'result',
     mark: false,
     hang: 1,
-    ...reset(),
+    ...allOn(RULES),
     input: example('text', 'en', 'long'),
     example: 'long',
+    rulesVersion: 2,
   };
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE) ?? 'null') as Partial<State> | null;
@@ -107,9 +110,10 @@ function load(): State {
       view: saved.view === 'changes' || saved.view === 'preview' ? saved.view : 'result',
       mark: saved.mark === true,
       hang: readHang(saved.hang),
-      ...readSaved(saved, RULES),
+      ...(saved.rulesVersion === 2 ? readSaved(saved, RULES) : allOn(RULES)),
       input: known ? example(mode, lang, known) : input,
       example: known,
+      rulesVersion: 2,
     };
   } catch {
     return fallback;
@@ -202,7 +206,7 @@ function addRuleBox(set: HTMLFieldSetElement, rule: Rule) {
   });
 }
 el('rulesAll').addEventListener('click', () => {
-  Object.assign(state, reset());
+  Object.assign(state, allOn(RULES));
   schedule();
 });
 
@@ -268,7 +272,7 @@ function renderPreview(output: string) {
       hangRoot = body;
       applyHang();
     });
-    frame.srcdoc = `<!doctype html><meta charset="utf-8"><style>body{font:19px/1.55 Georgia,serif;max-width:34em;margin:0;color:#1b1b1a}body>:first-child{margin-top:0}code,pre{font-size:.85em}</style>${output}`;
+    frame.srcdoc = `<!doctype html><meta charset="utf-8"><style>body{font:19px/1.55 Georgia,serif;max-width:34em;margin:0;padding:1rem 1.25rem 1rem 2rem;color:#1b1b1a}body>:first-child{margin-top:0}code,pre{font-size:.85em}</style>${output}`;
     preview.append(frame);
     return;
   }
