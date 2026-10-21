@@ -113,11 +113,11 @@ The pack exists but is thin, because the Irish edition of the Interinstitutional
 
 Today `space.orphan` binds a one-letter word in a language's list to the next word (`a~long`, `в~місті`), `space.number` binds a number to a short word, and `space.title`, `space.initial` and `space.abbreviation` bind their cases. Not covered, checked on 0.2.1:
 
-- Short words of two or three letters (`to`, `of`, `the`; `на`, `до`; `der`, `die`) are bound only where a pack lists them as one-letter orphans.
+- Short words of two or three letters (`to`, `of`, `the`; `на`, `до`; `der`, `die`) are not bound by any pack.
 - **The last words of a paragraph (widows and runts)** are decided: not a string rule, CSS `text-wrap: pretty` on the page (written down in [limits.md](limits.md)).
 - **How to bind, not only what:** a no-break space is a character and travels with the text (copy, search, screen readers read it as a space), a `<span style="white-space: nowrap">` is markup and stays on the page. The HTML, rehype and React modes could offer `bind: 'nbsp' | 'nowrap'` (the text mode and the CLI on plain text have only the character). Research what the two do to search, copy, hyphenation and `text-wrap: pretty` before choosing a default; the string engine keeps the no-break space.
-- **A good-practices page** (`docs/practices.md`, later the website): what to bind (one-letter words, a number and its unit, a title and a name, an operator between words, a short tail), what to leave to CSS (`text-wrap: pretty`, `balance` for headings, `hyphens`), how a column width changes the answer, and what never to do (bind a whole line, bind inside a link text that wraps). Written from the sources registry, with before/after examples rendered at two widths.
-- Done when each rule has golden tests per language that has the pattern, no rule can bind a whole line, and the practices page exists with an example per rule.
+- **Short words in other languages:** `ga`, `es`, `it`, `pt`, `et`, `lv`, `lt` have no `orphans` list, because no source read gives one; Polish and Ukrainian lists are unverified. Add a list only from a style guide.
+- Done when each rule has golden tests per language that has the pattern, no rule can bind a whole line, and the `bind: nowrap` question is answered.
 
 ### Speed: what is left
 

@@ -1,0 +1,82 @@
+# Good practices
+
+What to bind with a no-break space, what to leave to the browser, and what never to do. In the examples `~` stands for a no-break space (U+00A0), as in [rules.md](rules.md). Where a decision has a source read, the claim links to its record in [sources.md](../resources/sources.md); where it says "general knowledge" no source was read, and the advice is a judgement.
+
+## What to bind
+
+A no-break space keeps two words on one line. Bind a pair when a line that ends or starts between them reads as a mistake. Each rule below does it, and each can be switched off by its id in `disable`.
+
+- **A one-letter word and the word after it** (`space.orphan`). A line should not end on a lone `a`, `i` or `в`.
+
+  ```text
+  (en)  before  A cat and I      after  A~cat and I
+  (uk)  before  Він і я в домі   after  Він і~я в~домі
+  ```
+
+  Each pack carries its own list: English `a` and `I`, Czech `k s v z o u a i`, Polish `a i o u w z`, Ukrainian `а в і ї й з у о`. Only the Czech list is backed by a source read (the language handbook of the Czech Language Institute, [space.orphan](../resources/sources.md#spaceorphan)). The Polish list is stated by a Wikipedia article that cites sources not read here, and the Ukrainian list is general knowledge. A language with no list binds nothing; see [languages.md](languages.md). No pack binds two-letter words (`to`, `of`, `na`, `do`): no source read gives a list of them.
+
+- **A number and its unit or month** (`space.number`, `space.percent`). A figure should not be left alone at the end of a line.
+
+  ```text
+  (en)  before  On 21 September, 15 people paid 5 %.
+        after   On 21~September, 15~people paid 5~%.
+  (de)  before  5% and 49€      after  5~% and 49~€
+  ```
+
+  The space between a value and its unit is backed by [space.number](../resources/sources.md#spacenumber); that the space is a no-break one, and the month case, are our choice. `%` and `€` get the space only in the languages whose pack says so ([space.percent](../resources/sources.md#spacepercent)).
+
+- **A title and the name after it, an initial and the surname, an abbreviation and what it qualifies** (`space.title`, `space.initial`, `space.abbreviation`).
+
+  ```text
+  (en)  before  Prof. Dr. Oksana opens.   after  Prof.~Dr.~Oksana opens.
+  (en)  before  Written by K. Słoboda.    after  Written by K.~Słoboda.
+  (en)  before  See Fig. 2 and p. 14.     after  See Fig.~2 and p.~14.
+  ```
+
+  Titles and the English abbreviation case are backed by a source read ([space.title](../resources/sources.md#spacetitle), [space.abbreviation](../resources/sources.md#spaceabbreviation)). The German, Ukrainian and Polish abbreviation lists, and the initial rule ([space.initial](../resources/sources.md#spaceinitial)), are general knowledge.
+
+- **An operator between two words** (`space.operator`). A line should neither end on `&` nor start with it.
+
+  ```text
+  (en)  before  Tom & Jerry, rock + roll
+        after   Tom~&~Jerry, rock~+~roll
+  ```
+
+  General knowledge: no style guide that speaks of operators between words was found ([space.operator](../resources/sources.md#spaceoperator)). Numbers (`2 + 2`) and unspaced forms (`R&D`) are left alone.
+
+- **A section mark and its number** (`space.section`).
+
+  ```text
+  (en)  before  See § 5 and ¶¶ 3, 4      after  See §~5 and ¶¶~3, 4
+  ```
+
+  Backed by a source read: Butterick says the mark is always followed by a nonbreaking space ([space.section](../resources/sources.md#spacesection)).
+
+## What to leave to CSS
+
+Some problems depend on where the line breaks, and a string rule cannot see that. Set them on the page.
+
+- **`text-wrap: pretty` for body text.** It keeps the last line of a paragraph from being one short word (a widow or runt). A no-break space cannot do this reliably: the right choice depends on the column width. The engine does not try; see [limits.md](limits.md). Support and exact behaviour differ between browsers, so look at the result in the ones you target.
+- **`text-wrap: balance` for headings.** It evens out the lines of a short block, so a heading does not end on one word.
+- **`hyphens: auto` with the right `lang`.** A narrow justified column has loose lines without it. It needs the `lang` attribute of the text, and it is the browser's dictionary that decides where a word splits, not the engine.
+
+All three are general knowledge here: no source in the registry covers them.
+
+## Column width
+
+- A narrow column (a phone, a sidebar) punishes every binding: each bound pair is a longer unbreakable unit, and the lines around it come out short or loose.
+- A wide column (over about 75 characters a line) hides the problem, because a line seldom ends on a short word, but bindings cost nothing there either.
+- With justified text a long bound unit makes the spaces on its line stretch, so check the result in the narrowest column you ship.
+- A chain of bindings (`Tom & Jerry & Co`, `Prof. Dr. K. Słoboda`) is one unit as long as the whole chain, so in a narrow column it moves to the next line as a block.
+- Judge the page at two widths, the narrowest and the widest, not at one.
+
+## What never to do
+
+- **Do not bind a whole line.** A run of no-break spaces leaves the browser no place to break, and the text overflows its column. The rules bind pairs; a chain of operators (`one + two + three + four + five`) is the known case that can grow long ([limits.md](limits.md)). Do not add a no-break space between every word by hand.
+- **Do not bind inside link text that wraps.** A long link or button label with no-break spaces cannot wrap and may overflow on a phone. Keep the link text short, or leave it unbound.
+- **Do not use no-break spaces to fix a widow.** Use `text-wrap: pretty`.
+- **Do not bind for a layout you have not looked at.** A binding that reads well in one column can be worst in another.
+
+## A no-break space is a character
+
+The engine writes U+00A0 into the text. It travels with the text: it is copied out, found by search in some tools and not in others, and screen readers read it as a space. It also stays where the text goes, which suits plain text, Markdown and email. A `<span style="white-space: nowrap">` is markup instead: it stays on the page, and copying gives ordinary spaces. Which is better for search, copy, hyphenation and `text-wrap: pretty` has not been researched; the string engine keeps the no-break space, and the backlog holds the question. Nothing here promises a `nowrap` mode.
