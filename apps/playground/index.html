@@ -76,14 +76,14 @@
             </div>
             <label id="markField"><input type="checkbox" id="mark" /> Mark no-break spaces</label>
             <label id="hangField" hidden>Hanging
-              <input type="range" id="hang" min="0" max="100" step="5" list="hangMarks" />
+              <input type="range" id="hang" min="0" max="3" step="1" list="hangMarks" aria-valuetext="100%" />
               <output id="hangValue" for="hang">100%</output>
             </label>
             <datalist id="hangMarks">
               <option value="0"></option>
-              <option value="30"></option>
-              <option value="50"></option>
-              <option value="100"></option>
+              <option value="1"></option>
+              <option value="2"></option>
+              <option value="3"></option>
             </datalist>
             <button type="button" id="copy" class="primary">Copy</button>
           </header>

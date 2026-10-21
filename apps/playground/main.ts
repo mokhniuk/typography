@@ -19,8 +19,16 @@ import { example, exampleIn, type Mode, type Size } from './examples';
 import { isOn, readSaved, reset, ruleBadge, setRule } from './rules-state';
 
 type View = 'result' | 'changes' | 'preview';
+/** The amounts the hanging slider stops at; its value is the index. */
+const HANG_STOPS: readonly number[] = [0, 0.3, 0.5, 1];
 /** The named amounts an earlier version saved, read as their share. */
 const NAMED_HANGS: Record<string, number> = { off: 0, light: 0.3, medium: 0.5, full: 1 };
+/** The stop nearest to an amount. */
+const stopOf = (amount: number): number =>
+  HANG_STOPS.reduce(
+    (best, stop, i) => (Math.abs(stop - amount) < Math.abs((HANG_STOPS[best] ?? 1) - amount) ? i : best),
+    0,
+  );
 type State = {
   mode: Mode;
   lang: Lang;
@@ -48,8 +56,8 @@ const LANG_NAMES = Object.fromEntries(PACKS.map((pack) => [pack.code, pack.name]
 const STORAGE = 'typeset-playground';
 
 function readHang(value: unknown): number {
-  if (typeof value === 'number' && value >= 0 && value <= 1) return value;
-  return typeof value === 'string' ? (NAMED_HANGS[value] ?? 1) : 1;
+  const amount = typeof value === 'number' ? value : typeof value === 'string' ? (NAMED_HANGS[value] ?? 1) : 1;
+  return HANG_STOPS[stopOf(amount)] ?? 1;
 }
 
 function load(): State {
@@ -221,6 +229,13 @@ let stopHanging: (() => void) | null = null;
 /** The element the hanging pass runs on: the preview, or the body of the HTML preview frame. */
 let hangRoot: HTMLElement | null = null;
 
+/** The amount beside the slider, also read out for it (its own value is the index of a stop). */
+function showHang() {
+  const text = `${Math.round(state.hang * 100)}%`;
+  hangValue.value = text;
+  hangInput.setAttribute('aria-valuetext', text);
+}
+
 /** Sets the amount on the preview and hangs its marks again, without rebuilding it. */
 function applyHang() {
   stopHanging?.();
@@ -297,8 +312,8 @@ function render() {
   quoteStyleSelect.value = state.quoteStyle;
   nbspSelect.value = state.nbsp;
   mark.checked = state.mark;
-  hangInput.value = String(Math.round(state.hang * 100));
-  hangValue.value = `${hangInput.value}%`;
+  hangInput.value = String(stopOf(state.hang));
+  showHang();
   nbspField.hidden = state.mode !== 'html';
   for (const box of ruleList.querySelectorAll<HTMLInputElement>('input')) {
     const rule = RULES.find((r) => r.id === box.dataset.id);
@@ -400,8 +415,8 @@ nbspSelect.addEventListener('change', () => {
 });
 // Live while dragging: only the hanging pass runs again, the preview is not rebuilt.
 hangInput.addEventListener('input', () => {
-  state.hang = Number(hangInput.value) / 100;
-  hangValue.value = `${hangInput.value}%`;
+  state.hang = HANG_STOPS[Number(hangInput.value)] ?? 1;
+  showHang();
   applyHang();
   save(state);
 });
