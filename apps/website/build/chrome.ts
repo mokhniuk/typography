@@ -36,12 +36,17 @@ export function footer(path: string): string {
       <p><strong>${NAME}</strong> sets running text the way a typesetter would: quotation marks by language, dashes, no-break spaces, hanging punctuation. This site is typeset by it.</p>
       <p data-credit>Project by <a href="https://oleg.berlin" rel="author">Oleg Mokhniuk</a></p>
     </div>
-    <nav aria-label="Footer">
+    <nav aria-labelledby="footer-docs">
+      <h2 id="footer-docs">Documentation</h2>
       <ul>
         <li><a href="${root}docs/getting-started/">Getting started</a></li>
         <li><a href="${root}docs/api/">API</a></li>
         <li><a href="${root}docs/rules/">Rules</a></li>
-        <li><a href="${root}docs/languages/">Languages</a></li>
+      </ul>
+    </nav>
+    <nav aria-labelledby="footer-project">
+      <h2 id="footer-project">Project</h2>
+      <ul>
         <li><a href="${root}docs/changelog/">Changelog</a></li>
         <li><a href="${GITHUB}" rel="noopener">GitHub</a></li>
         <li><a href="${ISSUES}" rel="noopener">Report an issue</a></li>

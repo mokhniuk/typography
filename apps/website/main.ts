@@ -10,6 +10,29 @@ const save = (key: string, value: string) => {
   } catch {}
 };
 
+// The design grid (an experiment): pink columns over the page, on until G hides them (remembered).
+const GRID = 'typography-grid';
+const showGrid = (on: boolean) => {
+  if (on) document.documentElement.dataset.grid = '';
+  else delete document.documentElement.dataset.grid;
+  save(GRID, on ? 'on' : 'off');
+};
+try {
+  showGrid(
+    localStorage.getItem(GRID) !== 'off' || new URLSearchParams(location.search).has('grid'),
+  );
+} catch {
+  showGrid(true);
+}
+document.addEventListener('keydown', (event) => {
+  if (event.key !== 'g' && event.key !== 'G') return;
+  if (event.metaKey || event.ctrlKey || event.altKey) return;
+  const target = event.target;
+  if (target instanceof Element && target.closest('input, textarea, select, [contenteditable]'))
+    return;
+  showGrid(document.documentElement.dataset.grid === undefined);
+});
+
 // Theme: the switch sets `data-theme` on <html>; with none set, the system preference rules.
 for (const toggle of document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]')) {
   toggle.addEventListener('click', () => {
