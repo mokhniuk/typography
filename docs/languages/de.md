@@ -49,4 +49,4 @@ Groups of three are separated by `~`, the decimal mark is `,`.
 
 ## Notes
 
-The other German style, „outer ‚inner‘ outer“, is a literary profile that does not exist yet. Digits are grouped with a no-break space (number.group), as the Interinstitutional Style Guide sets for all languages; a point is not used for thousands. The decimal mark is a comma.
+The other German style, `„outer ‚inner‘ outer“`, is a literary profile that does not exist yet. Digits are grouped with a no-break space (number.group), as the Interinstitutional Style Guide sets for all languages; a point is not used for thousands. The decimal mark is a comma.

@@ -19,6 +19,26 @@ const code = (text: string): string => `\`${show(text)}\``;
 const levelOf = ([open, close]: Level): string => code(`${open}…${close}`);
 const levels = (list: readonly Level[]): string => list.map(levelOf).join(', ');
 
+/** Typographic quotation marks; straight ones are left out, as they also quote the prose around. */
+const MARK = '„‚«»‹›“”‘’';
+/** A pattern of marks around an ellipsis, `„…“` or `«…“…‘…’…”…»`, as one word. */
+const PATTERN = new RegExp(`(?<![\\p{L}\\d])[${MARK}…]*…[${MARK}…]*(?![\\p{L}\\d])`, 'gu');
+/**
+ * Prose that names quotation marks (a pack's notes and sources) puts each pattern of them in a code
+ * span, so a page typesetting its text (the website's, in English) cannot turn them into its own.
+ */
+const marks = (text: string): string =>
+  text
+    .split(/(`[^`]*`)/)
+    .map((part, i) =>
+      i % 2
+        ? part
+        : part.replace(PATTERN, (found) =>
+            [...found].some((ch) => MARK.includes(ch)) ? `\`${found}\`` : found,
+          ),
+    )
+    .join('');
+
 /** The letters of a one-letter-word pattern, `([aAI])` → `a A I`; the pattern itself if it is not that shape. */
 function dialogueSetting(pack: LangPack): string {
   const style = pack.dialogueDash;
@@ -116,9 +136,11 @@ export function renderPack(pack: LangPack): string {
   );
 
   out.push('', '## Sources', '');
-  out.push(...(pack.sources.length ? pack.sources.map((s) => `- ${s}`) : ['None cited yet.']));
+  out.push(
+    ...(pack.sources.length ? pack.sources.map((s) => `- ${marks(s)}`) : ['None cited yet.']),
+  );
 
-  out.push('', '## Notes', '', pack.notes);
+  out.push('', '## Notes', '', marks(pack.notes));
   return `${out.join('\n')}\n`;
 }
 

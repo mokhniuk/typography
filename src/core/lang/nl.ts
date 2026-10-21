@@ -24,7 +24,7 @@ export const nl = {
   notes:
     'Quotes: Taaladvies.net (Taalunie) says there is no fixed rule: double marks were traditional, single are common now, one system consistently; for a quotation inside a quotation it gives double for the outer and single for the inner "of andersom". ' +
     'The pack sets “…” with ‘…’ inside, the pair the Wikipedia table gives as primary and secondary. ' +
-    'The other system, ‘outer “inner” outer’, and the traditional „…” with ‚…’ (nl.wikipedia calls „…” the Dutch double mark for speech) are read from the source but not set. ' +
+    'The other system, `‘outer “inner” outer’`, and the traditional „…” with ‚…’ (nl.wikipedia calls „…” the Dutch double mark for speech) are read from the source but not set. ' +
     'Apostrophes: nl.wikipedia warns that a single quotation mark must not be confused with the apostrophe (’s morgens is not an opening quote). ' +
     '’s and ’m are listed there and ’s and ’n on the Flemish Team Taaladvies page; ’t is not on any page read, it is added as the same kind of dropped-letter form (’t huis), not verified. ' +
     "’n (’n feestje) is not set: the engine reads the elision n only as rock 'n' roll, so a lone ’n before a word is not protected. " +
