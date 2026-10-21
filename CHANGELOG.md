@@ -4,6 +4,7 @@ Versions follow semver while the package is below 1.0.0: a **minor** release may
 
 ### Fixes
 
+- A lone quotation mark reads the text past a tag beside it: in the HTML, Markdown and rehype modes `said; <ins>“</ins>now` kept its `“` (it was turned to `”`, the tag read as a letter before the mark), and `</a>»n't«` is `«n’t»`. A page whose changed marks are wrapped in tags is now stable when typeset again. Can change existing output: yes, for HTML and Markdown with a lone mark next to a tag.
 - `markHangs` hangs a mark that markup cuts off from its word (`<ins>“</ins>Curiouser`, `“<em>Alice</em>`): it reads the next text in the block, so the opening mark hangs, and an apostrophe in its own element (`I<ins>’</ins>m`) is no longer wrapped as a closing mark. `hangPieces` takes the character after the text as a third argument, `after`. Can change existing output: no for text; yes for the DOM `markHangs` builds.
 
 ## 0.6.0 (2026-10-21)

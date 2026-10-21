@@ -16,6 +16,19 @@ describe('typesetHtml', () => {
     );
   });
 
+  test('a lone mark reads the text past a tag beside it', () => {
+    // A page whose changed marks are wrapped (`<ins>“</ins>`) is set again by the site build.
+    expect(h('<p>said; <ins>“</ins>now</p>', { lang: 'en', quoteStyle: 'us' })).toBe(
+      '<p>said; <ins>“</ins>now</p>',
+    );
+    expect(h('<p>said; <ins>"</ins>now</p>', { lang: 'en', quoteStyle: 'us' })).toBe(
+      '<p>said; <ins>“</ins>now</p>',
+    );
+    expect(h('<p><em>now</em>" said</p>', { lang: 'en', quoteStyle: 'us' })).toBe(
+      '<p><em>now</em>” said</p>',
+    );
+  });
+
   test('leaves code, pre, script and style exactly as they were', () => {
     const html =
       '<p>wait... <code>a -> b</code></p><pre>"x" - y</pre>' +

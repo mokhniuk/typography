@@ -78,6 +78,14 @@ const SPACE = /\s/;
 const NON_SPACE = /\S/;
 const DIGIT = /\d/;
 const BEFORE_CLOSING_BLOCKED = /[\s([]/;
+/** The HTML, Markdown and rehype modes put this where a tag stands; a lone mark reads past it. */
+const TAG = '\uFFFC';
+/** The character before `at`, past any tags; `undefined` at the start of the text. */
+const charBefore = (text: string, at: number): string | undefined => {
+  let i = at - 1;
+  while (text[i] === TAG) i--;
+  return text[i];
+};
 
 /**
  * Every opening mark that stands where a quotation opens (`openerBefore` tells which characters may
@@ -91,7 +99,8 @@ function openLone(text: string, openerBefore: RegExp): string {
   LONE_MARK.lastIndex = 0;
   for (let found = LONE_MARK.exec(text); found; found = LONE_MARK.exec(text)) {
     const at = found.index;
-    if (at > 0 && !openerBefore.test(text[at - 1] as string)) continue;
+    const before = charBefore(text, at);
+    if (before !== undefined && !openerBefore.test(before)) continue;
     let count = 0;
     let end = at;
     for (;;) {
@@ -114,7 +123,7 @@ function openLone(text: string, openerBefore: RegExp): string {
 /** After a digit only a curly or guillemet mark closes: the straight " is an inch (5'10"). */
 function closeLone(text: string): string {
   return text.replace(LONE_CLOSING, (found: string, at: number) => {
-    const before = text[at - 1];
+    const before = charBefore(text, at);
     if (before === undefined) return found;
     if (found.length === 2) return NON_SPACE.test(before) ? CLOSE : found;
     if (DIGIT.test(before)) return found === '"' ? found : CLOSE;
