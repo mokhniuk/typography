@@ -508,8 +508,21 @@ describe('a quote with no partner', () => {
     for (const text of ['5"a"', '5"ab cd"']) expect(t(t(text))).toBe(t(text));
     expect(t('He said, "stop and left.')).toBe('He said, «stop and left.');
     expect(t('and so said he" to all')).toBe('and so said he» to all');
-    expect(t(t('a 2" pipe, said he"'))).toBe(t('a 2" pipe, said he"'));
-    expect(t('Tallinn"ä"')).not.toContain('"');
+    expect(t('Tallinn"ä"')).toBe('Tallinn«ä»');
+  });
+
+  test('an inch mark that cannot have opened anything does not hold a later closer', () => {
+    expect(t('a 2" pipe, said he"')).toBe('a~2" pipe, said he»');
+    expect(t('He was 6\' 2" tall. She said “hello" to him.')).toContain('«hello»');
+    expect(t('Use a 2" pipe. He said “stop now" and left.')).toContain('«stop now»');
+    expect(t('A 2" pipe. Then: «stop now" ok')).toContain('«stop now»');
+    expect(t('5"a b “c" d')).toContain('«c»');
+  });
+
+  test('tags and surrogate digits do not hide the refused mark', () => {
+    expect(t('5\uFFFC"a"')).toBe('5\uFFFC"a"');
+    expect(t('𝟓"a"')).toBe('𝟓"a"');
+    expect(t(t('𝟓"a"'))).toBe('𝟓"a"');
   });
 
   test('a quotation that ends in a digit still closes, and one opens after a dash or a colon', () => {

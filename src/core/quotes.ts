@@ -127,14 +127,16 @@ function openLone(text: string, openerBefore: RegExp): string {
   return last ? out + text.slice(last) : text;
 }
 
-/** Whether a quotation is open at `at`: more OPENs than CLOSEs before it (an inch mark in it is not a refused opener). */
-function insideQuotation(text: string, at: number): boolean {
-  let depth = 0;
-  for (let i = 0; i < at; i++) {
-    if (text[i] === OPEN) depth++;
-    else if (text[i] === CLOSE) depth--;
-  }
-  return depth > 0;
+/**
+ * Whether the straight " at `partner` was refused as an inch mark that could have opened a quotation
+ * (a digit before it, a non-space after it: `5"a"`) and no placeholder stands between it and `at`.
+ * The nearest earlier " is found by one backward search, so the scans between marks do not overlap.
+ */
+function refusedOpener(text: string, partner: number, at: number): boolean {
+  if (partner === -1 || !NON_SPACE.test(text[partner + 1] ?? '')) return false;
+  if (!DIGIT.test(codePointBefore(text, partner) ?? '')) return false;
+  for (let i = partner + 1; i < at; i++) if (text[i] === OPEN || text[i] === CLOSE) return false;
+  return true;
 }
 
 /** After a digit only a curly or guillemet mark closes: the straight " is an inch (5'10"). */
@@ -143,19 +145,10 @@ function closeLone(text: string): string {
     const before = charBefore(text, at);
     if (before === undefined) return found;
     if (found.length === 2) return NON_SPACE.test(before) ? CLOSE : found;
-    if (DIGIT.test(codePointBefore(text, at) as string)) return found === '"' ? found : CLOSE;
+    if (DIGIT.test(codePointBefore(text, at) ?? '')) return found === '"' ? found : CLOSE;
     // The nearest straight " before this one did not pair: if it was refused as an inch mark (5"a"),
     // this one is its quotation's closer and stays as written too.
-    if (found === '"') {
-      const partner = text.lastIndexOf('"', at - 1);
-      if (
-        partner !== -1 &&
-        DIGIT.test(codePointBefore(text, partner) ?? '') &&
-        !insideQuotation(text, partner)
-      ) {
-        return found;
-      }
-    }
+    if (found === '"' && refusedOpener(text, text.lastIndexOf('"', at - 1), at)) return found;
     return BEFORE_CLOSING_BLOCKED.test(before) ? found : CLOSE;
   });
 }
