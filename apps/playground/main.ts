@@ -274,7 +274,6 @@ function renderPreview(output: string) {
       if (part.hang) {
         const span = document.createElement('span');
         span.dataset.hang = '';
-        if (part.lead) span.style.marginLeft = `${-0.5 * state.hang}em`;
         span.textContent = part.text;
         p.append(span);
       } else {

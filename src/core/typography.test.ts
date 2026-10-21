@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { explain, LANGS, NBSP, PACK, RULE_IDS, RULES, splitHangs, typographic } from './index';
+import { explain, hangPieces, LANGS, NBSP, PACK, RULE_IDS, RULES, splitHangs, typographic } from './index';
 import { LITERARY } from './profiles';
 
 /** The rules output (and expect) non-breaking spaces, which look like spaces: show them as ~. */
@@ -565,5 +565,23 @@ describe('explain', () => {
     const dash = changes.find((c) => c.rule === 'dash.sentence');
     expect(dash?.to).toContain('—');
     expect(dash?.to.includes(NBSP)).toBe(true);
+  });
+});
+
+describe('hangPieces', () => {
+  const show = (text: string, atStart = true) =>
+    hangPieces(text, atStart)
+      .map((p) => (p.kind === 'push' ? '<push>' : p.kind === 'mark' ? `[${p.text}]` : p.text))
+      .join('');
+
+  test('a mark after a space gets a push before that space; one that opens the paragraph does not', () => {
+    expect(show('«a» then (b)')).toBe('[«]a» then<push> [(]b)');
+    expect(hangPieces('«a»')[0]).toEqual({ kind: 'mark', text: '«', lead: true });
+  });
+
+  test('the text round-trips, and a continuation that opens with a space pushes before it', () => {
+    const text = 'Grass (Camden House, 2027) and «x»';
+    expect(hangPieces(text).map((p) => p.text).join('')).toBe(text);
+    expect(show(' (x', false)).toBe('<push> [(]x');
   });
 });

@@ -3,13 +3,20 @@ import { HANG_SCRIPT } from './script';
 /**
  * Hangs the opening punctuation marked with `data-hang` (see `HangText` in the
  * react entry, or wrap marks yourself) under `root`, wherever a line happens to
- * start with it: the first line of a paragraph and any line the text wraps onto.
- * A mark that starts a line is pulled left by its own width (in em, so it follows
- * the text size), or by the share of it set in the CSS custom property
- * `--hang-amount` (0 to 1, inherited; 0 hangs nothing, unset is 1); one in the
- * middle of a line is left alone. Hanging a
- * mark gives its line a little more room, which can move a later break, so the
- * pass repeats until no mark changes.
+ * start with it, at any width and in any alignment.
+ *
+ * Push and pull: each mark is pulled left by its own width (`margin-left`), and a
+ * push, an empty span just before the space ahead of the mark, holds the same
+ * width open (`margin-right`). In the middle of a line the two cancel, so the
+ * line breaks are the ones the text would have anyway; where a line breaks at that
+ * space, the push stays at the end of the line above and the mark hangs. Nothing
+ * depends on where lines break, so nothing is re-measured when they move: only
+ * each mark's own width is measured, once, in em (so it follows the text size), and
+ * again when web fonts load. A mark with no push before it opens its paragraph and
+ * always hangs; one glued to the text before it is left alone.
+ *
+ * How far a mark hangs is the CSS custom property `--hang-amount` (0 to 1,
+ * inherited; unset is 1), read by CSS, so changing it needs no new pass.
  *
  * This is measured rather than `hanging-punctuation: first`: that property is
  * Safari-only and covers only a paragraph's first line, and using both would
@@ -20,84 +27,73 @@ import { HANG_SCRIPT } from './script';
 
 export function hangPunctuation(el: HTMLElement): () => void {
   // Self-contained on purpose: `hangScript` sends this function's source to the page as it is.
-  /** The block whose left edge a line starts from: the nearest ancestor that is not inline. */
-  const lineBox = (mark: HTMLElement): HTMLElement => {
-    let box = mark.parentElement;
-    while (box?.parentElement && getComputedStyle(box).display === 'inline')
-      box = box.parentElement;
-    return box ?? mark;
-  };
-  /** The share of its width a mark hangs by: `--hang-amount` from 0 to 1, or 1 when unset. */
-  const amountOf = (style: CSSStyleDeclaration): number => {
-    const value = Number.parseFloat(style.getPropertyValue('--hang-amount'));
-    return Number.isFinite(value) ? Math.min(1, Math.max(0, value)) : 1;
+  const PULL = 'calc(var(--hang-w) * var(--hang-amount, 1) * -1)';
+  const PUSH = 'calc(var(--hang-w) * var(--hang-amount, 1))';
+  const isPush = (node: Node | null): node is HTMLElement =>
+    !!node && node.nodeType === 1 && (node as HTMLElement).dataset.hangPush !== undefined;
+  /**
+   * The push of a mark: found before the space ahead of it, or made there when the page
+   * wrapped the mark itself. `null` when the mark opens its paragraph; `false` when it is
+   * glued to the text before it and must not hang.
+   */
+  const pushOf = (mark: HTMLElement): HTMLElement | null | false => {
+    // A mark that opens an inline element (<em>«x</em>) looks for the space before the element.
+    let node: Node = mark;
+    while (
+      !node.previousSibling &&
+      node.parentElement &&
+      node.parentElement !== el &&
+      getComputedStyle(node.parentElement).display === 'inline'
+    )
+      node = node.parentElement;
+    const before = node.previousSibling;
+    if (!before) return null;
+    if (isPush(before)) return before;
+    if (before.nodeType !== 3) return false;
+    const text = before.textContent ?? '';
+    const space = /\s+$/.exec(text)?.[0];
+    if (!space) return false;
+    if (space.length === text.length && isPush(before.previousSibling)) return before.previousSibling;
+    const push = document.createElement('span');
+    push.dataset.hangPush = '';
+    (before as Text).splitText(text.length - space.length);
+    before.parentNode?.insertBefore(push, before.nextSibling);
+    return push;
   };
   let frame = 0;
   let alive = true;
 
-  const settle = () => {
-    const marks = [...el.querySelectorAll<HTMLElement>('[data-hang]')];
-    // A mark not seen before may carry the rough first-paint offset: measure it from zero.
-    for (const mark of marks) {
-      if (mark.dataset.measured !== undefined) continue;
+  /** Measures the marks not measured yet (all of them once web fonts have loaded). */
+  const settle = (all = false) => {
+    for (const mark of el.querySelectorAll<HTMLElement>('[data-hang]')) {
+      if (!all && mark.dataset.measured !== undefined) continue;
+      const width = mark.getBoundingClientRect().width;
+      const size = Number.parseFloat(getComputedStyle(mark).fontSize);
+      // A mark with no width is not on screen (a closed dialog): leave it for when it is.
+      if (!width || !size) continue;
+      const push = pushOf(mark);
       mark.dataset.measured = '';
-      mark.style.marginLeft = '0';
-    }
-    for (let pass = 0; pass < 4; pass++) {
-      let changed = false;
-      const reads = marks.map((mark) => {
-        const rect = mark.getBoundingClientRect();
-        const box = lineBox(mark);
-        const style = getComputedStyle(box);
-        const edge =
-          box.getBoundingClientRect().left +
-          Number.parseFloat(style.paddingLeft) +
-          Number.parseFloat(style.borderLeftWidth);
-        // A hung mark carries the share it was hung by, so a new amount is noticed.
-        const hung = mark.dataset.hung !== undefined;
-        const applied = hung ? Number.parseFloat(mark.dataset.hung ?? '') || 1 : 0;
-        // Centred, right-aligned and indented text has no left edge for a line to start from.
-        const leftAligned =
-          !['center', 'right', 'end', 'justify-all'].includes(style.textAlign) &&
-          Number.parseFloat(style.textIndent) === 0 &&
-          style.direction === 'ltr';
-        // A hung mark sits that share of its width left of the edge.
-        const atStart = leftAligned && Math.abs(rect.left - (edge - rect.width * applied)) < 1.5;
-        const own = getComputedStyle(mark);
-        return {
-          mark,
-          rect,
-          atStart,
-          hung,
-          applied,
-          amount: amountOf(own),
-          size: Number.parseFloat(own.fontSize),
-        };
-      });
-      for (const { mark, rect, atStart, hung, applied, amount, size } of reads) {
-        const hang = atStart && amount > 0;
-        // A mark with no width is not on screen (a closed dialog): leave it for when it is.
-        if ((hang === hung && (!hung || applied === amount)) || !size || !rect.width) continue;
-        changed = true;
-        if (hang) {
-          mark.dataset.hung = String(amount);
-          mark.style.marginLeft = `${(-rect.width * amount) / size}em`;
-        } else {
-          delete mark.dataset.hung;
-          mark.style.marginLeft = '0';
-        }
+      if (push === false) {
+        mark.style.marginLeft = '0';
+        continue;
       }
-      if (!changed) break;
+      const w = `${width / size}em`;
+      mark.style.setProperty('--hang-w', w);
+      mark.style.marginLeft = PULL;
+      if (push) {
+        push.style.setProperty('--hang-w', w);
+        push.style.marginRight = PUSH;
+      }
     }
   };
 
   const schedule = () => {
     cancelAnimationFrame(frame);
-    frame = requestAnimationFrame(settle);
+    frame = requestAnimationFrame(() => settle());
   };
 
   settle();
-  document.fonts?.ready.then(() => alive && settle());
+  document.fonts?.ready.then(() => alive && settle(true));
   // A dialog's text is measured only once the dialog is open, which is when it gets a size.
   const resizes = new ResizeObserver(schedule);
   const watch = () => {

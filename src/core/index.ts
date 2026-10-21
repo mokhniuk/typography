@@ -1,5 +1,5 @@
 export { type DiffRun, diff } from './diff';
-export { type TextPart, splitHangs } from './hang';
+export { type HangPiece, hangPieces, type TextPart, splitHangs } from './hang';
 export { type LangPack, type Level, PACK, PACKS } from './lang';
 export { LANGS, REGISTERS } from './profiles';
 export {

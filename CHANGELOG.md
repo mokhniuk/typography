@@ -2,6 +2,10 @@
 
 Versions follow semver while the package is below 1.0.0: a **minor** release may change the output of the engine or the API (every entry says whether it can change output you already have), a **patch** release fixes a bug without changing output you rely on. If you depend on exact output, pin a tag and read this file before you move it.
 
+## Unreleased
+
+- Hanging punctuation is right at every width and in every alignment. It used to find the marks that start a line and hang only those, but hanging a mark makes its word narrower, which can move it up to the line before; the pass then un-hung it, and after four rounds left whatever state it reached (seen in a bio dialog: `(Camden` at a line start not hung, `(AGS)` in mid-line hung over the space before it). It is now push and pull: each mark is pulled left by its width and an empty `<span data-hang-push>` before the space ahead of it holds that width open, so mid-line the two cancel and line breaks never depend on hanging. Only each mark's width is measured (once, in em, as `--hang-w`); nothing is re-measured when lines move. `HangText` renders the push, `hangPunctuation` inserts it for marks a page wraps itself, every mark hangs at first paint by a rough 0.4em, and `--hang-amount` is read by CSS, so it applies live. Centred, right-aligned and indented text now hangs too (it was skipped). `data-hung` is gone. New in the core entry: `hangPieces` and `HangPiece`. Can change existing output: no for text; yes for the DOM: the markup of `HangText` has push spans and inline `--hang-w` styles, and a push at the end of a line can move a word to the next line.
+
 ## 0.4.0 (2026-10-21)
 
 - `hangPunctuation` (and so `hangScript` and `TypographyRoot`) reads the CSS custom property `--hang-amount`: how far an opening mark hangs, as a share of its width from 0 to 1 (0 turns hanging off). Unset, it is 1, as before. `data-hung` now holds the share a mark was hung by instead of being empty. Can change existing output: no (the engine's text output is unchanged; hanging is unchanged unless the property is set).
