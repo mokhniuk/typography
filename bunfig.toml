@@ -1,0 +1,3 @@
+[test]
+# The property tests run every language through thousands of strings; more languages, longer run.
+timeout = 60000

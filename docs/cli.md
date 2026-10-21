@@ -15,8 +15,10 @@ It typesets text, HTML or Markdown with the same engine as the library functions
 | `--lang` | `-l` | `en`, `uk`, `de`, `pl`, `fr`, `ch` | `en` | Language of the text. |
 | `--register` | `-r` | `display`, `literary` | `display` | Register. |
 | `--format` | `-f` | `text`, `html`, `markdown` (`md` is accepted) | by extension | How to read the input. |
+| `--quotes` | | `language`, `us` | `language` | `language`: the quote marks of the language. `us`: `“…”` and `‘…’` in any language and register. |
 | `--disable` | `-d` | rule ids or groups, comma separated | none | Switch rules off, for example `dash.range,space`. The flag may be given more than once. |
-| `--rules` | | | | List the rules with their descriptions and exit 0. |
+| `--enable` | `-e` | rule ids or groups, comma separated | none | Switch on rules that are off by default (`--rules` marks them). A rule named in both `--enable` and `--disable` is a usage error. |
+| `--rules` | | | | List the rules with their descriptions and exit 0. A rule that is off by default is marked `(off by default; --enable <id>)`. |
 | `--explain` | | | | Print every change and the rule behind it, instead of the typeset text. |
 | `--json` | | | | JSON output for `--explain`. An error without `--explain`. |
 | `--write` | `-w` | | | Rewrite the files in place. |
@@ -102,4 +104,4 @@ Exit 1 means "would change", exit 2 means the command was misused or a file is m
 
 ## Rules and groups
 
-`--disable` and `--rules` use the ids in [rules.md](rules.md). A name that matches no rule is a usage error (exit 2) and the message lists the ids.
+`--disable`, `--enable` and `--rules` use the ids in [rules.md](rules.md). A name that matches no rule is a usage error (exit 2) and the message lists the ids.

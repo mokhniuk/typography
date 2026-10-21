@@ -7,7 +7,7 @@ import {
   useRef,
   useSyncExternalStore,
 } from 'react';
-import type { Lang, Register } from '../core';
+import type { Lang, QuoteStyle, Register, Rule } from '../core';
 import { hangPunctuation, hangScript } from '../dom';
 import { TypographyContext } from './context';
 
@@ -58,18 +58,33 @@ export function TypographyRoot({
   children,
   lang,
   register,
+  quoteStyle,
+  enable,
+  rules,
   early = true,
 }: {
   children: ReactNode;
   lang?: Lang | undefined;
   register?: Register | undefined;
+  /** `language` (the default) or `us`: “…” and ‘…’ in any language. */
+  quoteStyle?: QuoteStyle | undefined;
+  /** Rules to switch on that are off by default; pass a constant, not an inline array. */
+  enable?: readonly string[] | undefined;
+  /** The list of rules to run instead of the built-in one; pass a constant. */
+  rules?: readonly Rule[] | undefined;
   early?: boolean;
 }) {
   const root = useRef<HTMLDivElement>(null);
   const inherited = useContext(TypographyContext);
   const language = lang ?? inherited.lang;
   const setting = register ?? inherited.register;
-  const value = useMemo(() => ({ lang: language, register: setting }), [language, setting]);
+  const style = quoteStyle ?? inherited.quoteStyle;
+  const switchedOn = enable ?? inherited.enable;
+  const list = rules ?? inherited.rules;
+  const value = useMemo(
+    () => ({ lang: language, register: setting, quoteStyle: style, enable: switchedOn, rules: list }),
+    [language, setting, style, switchedOn, list],
+  );
   useHangingPunctuation(root);
   return (
     <TypographyContext.Provider value={value}>

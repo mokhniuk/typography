@@ -2,7 +2,7 @@
 
 A typography engine for running text. Plain strings in, typeset strings out; nothing is marked up in the source. It sets quotation marks by language, nesting level and register, dashes and number ranges, apostrophes, ellipses, arrows and symbols, and no-break spaces. It also has modes that typeset HTML, Markdown and hast trees without touching markup or code, a command line, and a way to hang opening punctuation in the margin.
 
-There are 20 rules (see [docs/rules.md](docs/rules.md)) and six languages: `en` (the default), `uk`, `de`, `pl`, `fr` and `ch`. Two registers: `display` (the default, for marketing and interface text) and `literary` (book-like text; it has its own rules for English and Ukrainian only).
+There are 29 rules, 20 on by default and 9 you switch on (see [docs/rules.md](docs/rules.md)), and 26 languages: the 24 official languages of the EU, `uk` and `ch`; `en` is the default (see [docs/languages.md](docs/languages.md); no language has been read by a native speaker yet). American quotes are an option, `quoteStyle: 'us'`. Two registers: `display` (the default, for marketing and interface text) and `literary` (book-like text; it has its own rules for English and Ukrainian only).
 
 ## Status
 
@@ -36,7 +36,7 @@ Nothing in the package imports anything outside the folder except `react` (the `
 | `@podiia/typography/react` | React pages | `Typeset`, `TypographyRoot`, `HangText`, `HangScript`, `useHangingPunctuation`, `TypographyContext` |
 | `typo` (bin) | The command line; needs Bun | see [docs/cli.md](docs/cli.md) |
 
-Every function that typesets takes `lang`, `register`, `disable` and `onChange`; the full table of options and the signatures are in [docs/api.md](docs/api.md).
+Every function that typesets takes `lang`, `register`, `quoteStyle`, `disable`, `enable`, `rules` and `onChange`; the full table of options and the signatures are in [docs/api.md](docs/api.md).
 
 ### Main entry
 
@@ -50,6 +50,10 @@ typographic('He said "we\'re here"', 'en', { register: 'literary' });
 // He said ‘we’re here’
 
 typographic('21-26 - x', 'en', { disable: ['dash.range'] }); // a rule, or a group such as 'space', off
+
+typographic('He said "hi"', 'de', { quoteStyle: 'us' }); // “hi” in any language (default: the language's own marks)
+typographic('Call 1000000 , now', 'en', { enable: ['number.group', 'space.before-punctuation'] });
+// nine rules are off until named in `enable`; docs/rules.md lists them
 
 explain('He said "hi"... 21-26');
 // { output: 'He said «hi»… 21–26',

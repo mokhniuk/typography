@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'bun:test';
-import { explain, NBSP, RULE_IDS, RULES, splitHangs, typographic } from './index';
+import { explain, LANGS, NBSP, PACK, RULE_IDS, RULES, splitHangs, typographic } from './index';
+import { LITERARY } from './profiles';
 
 /** The rules output (and expect) non-breaking spaces, which look like spaces: show them as ~. */
 const t = (
@@ -89,6 +90,27 @@ describe('dashes', () => {
     expect(t('one-week, value-based, 20th- and 21st-century')).toBe(
       'one-week, value-based, 20th- and 21st-century',
     );
+  });
+
+  test('a run of three or more hyphens is not a double hyphen: the omission mark [---] stays', () => {
+    expect(t('meetmeid [---], kuid')).toBe('meetmeid [---], kuid');
+    expect(t('a [---] b')).toBe('a~[---] b');
+    expect(t('x ---- y')).toBe('x ---- y');
+    expect(t('a---b')).toBe('a---b');
+    for (const text of ['meetmeid [---], kuid', 'a---b']) expect(t(t(text))).toBe(t(text));
+    // Two hyphens are still a sentence dash.
+    expect(t('a--b')).toBe('a~— b');
+  });
+
+  test('a double hyphen that is the whole of a quotation is left, and stays stable', () => {
+    for (const lang of ['en', 'uk', 'de', 'fr', 'es', 'it'] as const) {
+      const once = typographic('say „--“ and “--” ok', lang);
+      expect(typographic(once, lang)).toBe(once);
+      // French pads its marks with no-break spaces, so there the dash is spaced (and stable).
+      if (lang !== 'fr') expect(once).toContain('--');
+    }
+    // A dash before or after a quotation is still a sentence dash.
+    expect(t('yes--"no"')).toBe('yes~— «no»');
   });
 
   test('keeps a list marker at a line start', () => {
@@ -201,6 +223,23 @@ describe('an apostrophe that stands for dropped letters', () => {
   });
 });
 
+describe('an apostrophe that opens a quotation is still an apostrophe', () => {
+  test('an elision right after an opening quote mark', () => {
+    expect(t('He said "\'tis fine" today')).toBe('He said «’tis fine» today');
+    expect(t('He said “\'tis fine” today')).toBe('He said «’tis fine» today');
+    expect(t('He said "\'til dawn" today')).toBe('He said «’til dawn» today');
+  });
+
+  test('Dutch \'s and \'t after a quote mark', () => {
+    expect(t('Hij zei "\'s avonds gaan we" en ging.', 'nl')).toBe('Hij zei “’s avonds gaan we” en ging.');
+    expect(t('Hij zei "\'t is mooi" en ging.', 'nl')).toBe('Hij zei “’t is mooi” en ging.');
+  });
+
+  test('a quoted word that merely starts with one of them is still a quotation', () => {
+    expect(t('He said "\'emergency\' exit" today')).toBe('He said «„emergency“ exit» today');
+  });
+});
+
 describe('a leading apostrophe on a year', () => {
   test('does not stop a quotation from pairing', () => {
     expect(t('“the ’90s were loud”')).toBe('«the ’90s were loud»');
@@ -258,7 +297,13 @@ describe('literary register', () => {
 
   test('a language with no literary profile keeps its display rules', () => {
     const sample = '“x ‘y’ z” - and 21-26 September';
-    for (const lang of ['de', 'pl', 'fr', 'ch'] as const) {
+    // Every language whose literary register has no marks or dialogue dash of its own.
+    const plain = LANGS.filter((lang) => !LITERARY[lang] && !PACK[lang].dialogueDash);
+    // English and Ukrainian have a literary profile; the rest of the registry grows without this list.
+    expect(plain).toEqual(expect.arrayContaining(['de', 'pl', 'fr', 'ch']));
+    expect(plain).not.toContain('en');
+    expect(plain).not.toContain('uk');
+    for (const lang of plain) {
       expect(t(sample, lang, literary)).toBe(t(sample, lang));
     }
   });
@@ -283,7 +328,7 @@ describe('literary register', () => {
 test('typographic is idempotent', () => {
   const sample =
     "“a ‘b’ c” — and 21-26 September 2026, Prof. Dr. K. Słoboda... don't (c) 2026 -> x";
-  for (const lang of ['en', 'uk', 'de', 'pl', 'fr', 'ch'] as const) {
+  for (const lang of LANGS) {
     const once = typographic(sample, lang);
     expect(typographic(once, lang)).toBe(once);
   }
@@ -342,25 +387,6 @@ describe('splitHangs', () => {
     expect(splitHangs('nothing to hang', true)).toEqual([
       { text: 'nothing to hang', hang: false, lead: false },
     ]);
-  });
-});
-
-describe('German quotations in a row', () => {
-  test('two quotations are not read as one », und «', () => {
-    expect(t('Er sagte "Haus" und "Tür".', 'de')).toBe('Er sagte »Haus« und »Tür«.');
-    expect(t('Er sagte »Haus« und »Tür«.', 'de')).toBe('Er sagte »Haus« und »Tür«.');
-    expect(t('Sie las „Das Haus“ und »die Tür« laut.', 'de')).toBe(
-      'Sie las »Das Haus« und »die Tür« laut.',
-    );
-  });
-
-  test('a text written «…» is read by where each mark stands', () => {
-    expect(t('Er sagte «Haus» und «Tür».', 'de')).toBe('Er sagte »Haus« und »Tür«.');
-  });
-
-  test('a second pass over German output changes nothing', () => {
-    const once = typographic('Sie las „Das Haus“ und „die „Tür“ im Haus“ laut.', 'de');
-    expect(typographic(once, 'de')).toBe(once);
   });
 });
 
@@ -469,7 +495,7 @@ describe('rules', () => {
     expect(RULES.map((r) => r.id)).toEqual(RULE_IDS as string[]);
     expect(new Set(RULE_IDS).size).toBe(RULE_IDS.length);
     for (const rule of RULES) {
-      expect(rule.id).toMatch(/^[a-z]+(?:\.[a-z]+)?$/);
+      expect(rule.id).toMatch(/^[a-z]+(?:\.[a-z-]+)?$/);
       expect(rule.about.length).toBeGreaterThan(10);
     }
   });

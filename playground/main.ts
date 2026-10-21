@@ -4,16 +4,18 @@ import {
   diff,
   type Lang,
   LANGS,
+  PACKS,
+  type QuoteStyle,
   type Register,
   REGISTERS,
   RULES,
-  RULE_IDS,
   splitHangs,
 } from '../src/core';
 import { hangPunctuation } from '../src/dom';
 import { typesetHtml } from '../src/html';
 import { typesetMarkdown } from '../src/markdown';
 import { typesetText } from '../src/text';
+import { isOn, readSaved, reset, ruleBadge, setRule } from './rules-state';
 
 type Mode = 'text' | 'html' | 'markdown';
 type View = 'result' | 'changes' | 'preview';
@@ -21,31 +23,26 @@ type State = {
   mode: Mode;
   lang: Lang;
   register: Register;
+  quoteStyle: QuoteStyle;
   nbsp: 'entity' | 'char';
   view: View;
   mark: boolean;
-  /** Rules switched off. */
+  /** Rules that are on by default and were switched off. */
   disable: string[];
+  /** Rules that are off by default and were switched on. */
+  enable: string[];
   input: string;
 };
 
-const LANG_NAMES: Record<Lang, string> = {
-  en: 'English',
-  uk: 'Ukrainian (українська)',
-  de: 'German (Deutsch)',
-  pl: 'Polish (polski)',
-  fr: 'French (français)',
-  ch: 'Swiss (Schweiz)',
-};
+const LANG_NAMES = Object.fromEntries(PACKS.map((pack) => [pack.code, pack.name])) as Record<
+  Lang,
+  string
+>;
 
-const SAMPLE: Record<Lang, string> = {
-  en: 'He said "we\'re here" - and left... The lab runs 21-26 September, 10:00-12:00. Read more ->',
-  uk: 'Він сказав: "ми тут" - і пішов... Лабораторія триває 21-26 вересня, 10:00-12:00. Докладніше ->',
-  de: 'Er sagte "wir sind da" - und ging... Das Labor läuft 21-26 September, 10:00-12:00. Mehr lesen ->',
-  pl: 'Powiedział "jesteśmy tu" - i wyszedł... Laboratorium trwa 21-26 września, 10:00-12:00. Czytaj więcej ->',
-  fr: 'Il a dit "nous voilà" - et il est parti... Le labo dure 21-26 septembre, 10:00-12:00. Lire la suite ->',
-  ch: 'Er sagte "wir sind da" - und ging... Das Labor läuft 21-26 September, 10:00-12:00. Mehr lesen ->',
-};
+const SAMPLE = Object.fromEntries(PACKS.map((pack) => [pack.code, pack.sample])) as Record<
+  Lang,
+  string
+>;
 
 function example(mode: Mode, lang: Lang): string {
   const base = SAMPLE[lang];
@@ -65,10 +62,11 @@ function load(): State {
     mode: 'text',
     lang: 'en',
     register: 'display',
+    quoteStyle: 'language',
     nbsp: 'entity',
     view: 'result',
     mark: false,
-    disable: [],
+    ...reset(),
     input: example('text', 'en'),
   };
   try {
@@ -78,14 +76,11 @@ function load(): State {
       mode: saved.mode === 'html' || saved.mode === 'markdown' ? saved.mode : 'text',
       lang: LANGS.includes(saved.lang as Lang) ? (saved.lang as Lang) : 'en',
       register: saved.register === 'literary' ? 'literary' : 'display',
+      quoteStyle: saved.quoteStyle === 'us' ? 'us' : 'language',
       nbsp: saved.nbsp === 'char' ? 'char' : 'entity',
       view: saved.view === 'changes' || saved.view === 'preview' ? saved.view : 'result',
       mark: saved.mark === true,
-      disable: Array.isArray(saved.disable)
-        ? saved.disable.filter(
-            (id): id is string => typeof id === 'string' && RULE_IDS.includes(id),
-          )
-        : [],
+      ...readSaved(saved, RULES),
       input: typeof saved.input === 'string' ? saved.input : fallback.input,
     };
   } catch {
@@ -115,6 +110,7 @@ const note = el<HTMLParagraphElement>('note');
 const count = el<HTMLSpanElement>('count');
 const langSelect = el<HTMLSelectElement>('lang');
 const registerSelect = el<HTMLSelectElement>('register');
+const quoteStyleSelect = el<HTMLSelectElement>('quoteStyle');
 const nbspSelect = el<HTMLSelectElement>('nbsp');
 const nbspField = el<HTMLLabelElement>('nbspField');
 const mark = el<HTMLInputElement>('mark');
@@ -138,18 +134,16 @@ for (const rule of RULES) {
   const name = document.createElement('code');
   name.textContent = rule.id;
   const about = document.createElement('small');
-  about.textContent = rule.about;
+  about.textContent = rule.defaultOn === false ? `${rule.about} (off by default)` : rule.about;
   label.append(box, name, about);
   ruleList.append(label);
   box.addEventListener('change', () => {
-    state.disable = box.checked
-      ? state.disable.filter((id) => id !== rule.id)
-      : [...state.disable, rule.id];
+    Object.assign(state, setRule(state, rule, box.checked));
     schedule();
   });
 }
 el('rulesAll').addEventListener('click', () => {
-  state.disable = [];
+  Object.assign(state, reset());
   schedule();
 });
 
@@ -158,9 +152,9 @@ const escapeHtml = (text: string) =>
 const visible = (text: string) => text.replaceAll(' ', '⍽');
 
 function convert(): { output: string; changes: Change[] } {
-  const { lang, register, disable } = state;
+  const { lang, register, quoteStyle, disable, enable } = state;
   const changes: Change[] = [];
-  const options = { lang, register, disable, onChange: (change: Change) => changes.push(change) };
+  const options = { lang, register, quoteStyle, disable, enable, onChange: (change: Change) => changes.push(change) };
   const output =
     state.mode === 'html'
       ? typesetHtml(state.input, { ...options, nbsp: state.nbsp })
@@ -226,14 +220,16 @@ function render() {
   }
   langSelect.value = state.lang;
   registerSelect.value = state.register;
+  quoteStyleSelect.value = state.quoteStyle;
   nbspSelect.value = state.nbsp;
   mark.checked = state.mark;
   nbspField.hidden = state.mode !== 'html';
   for (const box of ruleList.querySelectorAll<HTMLInputElement>('input')) {
-    box.checked = !state.disable.includes(box.dataset.id ?? '');
+    const rule = RULES.find((r) => r.id === box.dataset.id);
+    if (rule) box.checked = isOn(state, rule);
   }
-  ruleCount.textContent = state.disable.length ? `${state.disable.length} off` : '';
-  ruleCount.hidden = !state.disable.length;
+  ruleCount.textContent = ruleBadge(state);
+  ruleCount.hidden = !ruleCount.textContent;
   if (input.value !== state.input) input.value = state.input;
 
   const { output, changes: made } = convert();
@@ -306,6 +302,10 @@ langSelect.addEventListener('change', () => {
 });
 registerSelect.addEventListener('change', () => {
   state.register = registerSelect.value as Register;
+  schedule();
+});
+quoteStyleSelect.addEventListener('change', () => {
+  state.quoteStyle = quoteStyleSelect.value === 'us' ? 'us' : 'language';
   schedule();
 });
 nbspSelect.addEventListener('change', () => {

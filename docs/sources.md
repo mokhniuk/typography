@@ -51,6 +51,30 @@ Sources: [butterick-ellipsis](#src-butterick-ellipsis), [uax14](#src-uax14)
 
 - `en`: [butterick-ellipsis](#src-butterick-ellipsis)
 
+### `space.before-punctuation`
+
+Confidence: `general-knowledge`.
+
+Why: A space before , . ; : ! ? ) is a typing slip in English and most languages; French keeps it before : ; ! ?, so the rule leaves those alone there.
+
+Alternative: Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge. typograf and typopo do the same.
+
+### `space.after-comma`
+
+Confidence: `general-knowledge`.
+
+Why: A comma is followed by a space; a,b is a typing slip.
+
+Alternative: Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge. It can touch non-prose such as decimals written with a comma (1,5) and lists in code, which is why it is opt-in.
+
+### `punctuation.double`
+
+Confidence: `general-knowledge`.
+
+Why: A run of ! or ? is shortened to one mark; ?! and !? are kept because they are deliberate.
+
+Alternative: Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge. Butterick treats repeated exclamation marks as a style question, not a typesetting one (see the backlog).
+
 ### `arrow`
 
 Confidence: `general-knowledge`.
@@ -58,6 +82,14 @@ Confidence: `general-knowledge`.
 Why: Typed ASCII arrows have a proper character.
 
 Alternative: Not yet researched.
+
+### `symbol.implies`
+
+Confidence: `general-knowledge`.
+
+Why: => is read as an arrow in plain text and set as ⇒.
+
+Alternative: Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge. Taste and font coverage: the glyph may be missing (see the backlog item on keeping the original when the font lacks it). No other tool in the benchmark does it.
 
 ### `symbol.legal`
 
@@ -79,6 +111,14 @@ Why: Ukrainian dialogue opens a paragraph with a dash.
 
 Alternative: Not researched to a primary source: the Pravopys 2019 PDF (mon.gov.ua) refused the fetch (HTTP 403). A secondary page names Український правопис 2019, § 161 "Тире" (pp. 230–241) as the dash section; read that section before marking this verified.
 
+### `number.group`
+
+Confidence: `general-knowledge`.
+
+Why: Integers of five or more digits are grouped in threes with the language separator (comma, no-break space, dot) so a long number can be read.
+
+Alternative: Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge. Separators per language come from the packs and are unverified; Swiss usage differs (the pack follows the Federal Chancellery, not read here).
+
 ### `dash.range`
 
 Confidence: `general-knowledge`.
@@ -98,6 +138,14 @@ Alternative: The source sets the em dash flush against the words and calls space
 Sources: [butterick-dashes](#src-butterick-dashes), [uax14](#src-uax14)
 
 - `en`: [butterick-dashes](#src-butterick-dashes)
+
+### `symbol.plusminus`
+
+Confidence: `general-knowledge`.
+
+Why: +- before a digit is the plus-minus sign ±.
+
+Alternative: Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge.
 
 ### `symbol.minus`
 
@@ -120,6 +168,14 @@ Alternative: Butterick says to use × instead of the letter x, dimensions includ
 Sources: [butterick-math](#src-butterick-math), [unicode-names](#src-unicode-names)
 
 - `en`: [butterick-math](#src-butterick-math)
+
+### `symbol.fraction`
+
+Confidence: `general-knowledge`.
+
+Why: 1/2, 1/4 and 3/4 written as whole numbers become the single-glyph fractions ½ ¼ ¾.
+
+Alternative: Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge. Dates and longer fractions (11/2, 1/20) are left alone; fonts without these glyphs show a fallback.
 
 ### `space.collapse`
 
@@ -186,6 +242,14 @@ Sources: [cldr-numbers](#src-cldr-numbers), [oqlf-espacement](#src-oqlf-espaceme
 - `de`: [cldr-numbers](#src-cldr-numbers)
 - `fr`: [cldr-numbers](#src-cldr-numbers), [oqlf-espacement](#src-oqlf-espacement)
 
+### `symbol.degree`
+
+Confidence: `general-knowledge`.
+
+Why: A temperature or angle unit gets a no-break space before it (20 °C), and the degree sign is added where the unit letter stands alone.
+
+Alternative: Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge. The SI brochure rule on the space before a unit and its plane-angle exception are in the backlog reading list, not read.
+
 ### `space.association`
 
 Confidence: `general-knowledge`.
@@ -219,6 +283,14 @@ Confidence: `general-knowledge`.
 Why: An arrow stays on the line of the word it points from or to.
 
 Alternative: Not yet researched.
+
+### `space.trailing`
+
+Confidence: `general-knowledge`.
+
+Why: Spaces and tabs at the end of a line are removed.
+
+Alternative: Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge. Off by default because text mode keeps them on purpose.
 
 ## Bibliography
 

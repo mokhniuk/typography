@@ -9,7 +9,7 @@
  */
 import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { type Lang, NBSP, type Register, RULE_IDS, RULES, typographic } from '../src';
+import { type Lang, NBSP, type Register, RULES, type Rule, typographic } from '../src';
 import { RULE_SOURCES } from './sources';
 
 export type Example = {
@@ -23,6 +23,15 @@ export type Example = {
 
 /** The hand-written part: a few examples for every rule id. */
 export const EXAMPLES: Record<string, readonly Example[]> = {
+  'number.group': [
+    { input: 'We sold 1234567 copies in 2026.', note: 'A run of five or more digits; years are left.' },
+    {
+      input: 'Wir verkauften 1234567 Exemplare, Pi ist 3,14159265.',
+      lang: 'de',
+      note: 'A no-break space; the fraction is left alone.',
+    },
+    { input: 'Продано 12345 примірників, код v1000000.', lang: 'uk', note: 'A name glued to digits is left.' },
+  ],
   quote: [
     { input: 'He said "stone" and left.', note: 'Display register, the default.' },
     {
@@ -41,6 +50,18 @@ export const EXAMPLES: Record<string, readonly Example[]> = {
     { input: `The '90s were loud.`, note: 'Before a year.' },
   ],
   ellipsis: [{ input: 'Wait... what?' }],
+  'space.before-punctuation': [
+    { input: 'Hello , world . Is it ready ? (yes )', note: 'Off by default.' },
+    { input: 'Oui : non , bon !', lang: 'fr', note: 'French keeps its space before : ; ! ?, the rest is tidied.' },
+  ],
+  'space.after-comma': [
+    { input: 'apples,pears,plums', note: 'Digits are left alone: 1,5 stays.' },
+    { input: 'Hallo,Welt und 3,14' , lang: 'de' },
+  ],
+  'punctuation.double': [
+    { input: 'Wow!!! Really??' },
+    { input: 'What?!! No!!!? Stop!!!', note: '?! and !? stay as a pair; a run beside one collapses.' },
+  ],
   arrow: [{ input: 'Read more ->' }, { input: '<- Back' }],
   'symbol.legal': [
     { input: '(c) 2026 Studio (R) (TM)', note: '(c) needs a year after it; (C) does not.' },
@@ -66,6 +87,16 @@ export const EXAMPLES: Record<string, readonly Example[]> = {
       note: 'A spaced en dash in British English, literary register.',
     },
   ],
+  'symbol.implies': [{ input: 'A => B' }, { input: 'if x=>y then z', note: 'Not =>>, ==>, =>= or <=>.' }],
+  'symbol.plusminus': [{ input: 'Tolerance +-5 mm' }, { input: '(+-0.2) and +-10%', note: 'Not a+-b or 1+-5.' }],
+  'symbol.fraction': [
+    { input: 'Add 1/2 cup and 3/4 of the milk, then 1/4.', note: 'Only whole numbers: 11/2, 1/20, a1/2 and a date such as 1/2/2026 stay. A short word after the fraction gets the no-break space.' },
+    { input: 'Take 2 1/2 hours', note: 'A mixed number keeps its integer: 2 ½.' },
+  ],
+  'symbol.degree': [
+    { input: 'It was 20°C, then 68 F and 20 C.', note: 'Every spelling becomes number, no-break space, °C or °F.' },
+    { input: 'Vitamin C 5 C and 5 °C', note: 'A bare C or F after a label or a single letter is not a temperature.' },
+  ],
   'symbol.minus': [{ input: 'It was -5 degrees (-3 inside).' }],
   'symbol.multiply': [{ input: 'A 1920x1080 screen, a 3 x 4 grid.' }],
   'space.collapse': [{ input: 'Two   spaces,    four.' }],
@@ -89,16 +120,22 @@ export const EXAMPLES: Record<string, readonly Example[]> = {
     { input: 'Idę w las i z nim', lang: 'pl' },
   ],
   'space.arrow': [{ input: 'Read more →' }, { input: '← Back' }],
+  'space.trailing': [
+    { input: 'First line   \nSecond line\t\nThird', note: 'Spaces and tabs at the end of a line; the lines stay.' },
+    { input: 'One trailing space ' },
+  ],
 };
 
 const show = (text: string): string => text.replaceAll(NBSP, '~');
 
-/** The engine's output with only `id` switched on. */
-export function runOnly(id: string, example: Example): string {
+/** The engine's output with only `id` switched on (a rule that is off by default is enabled). */
+export function runOnly(id: string, example: Example, rules: readonly Rule[] = RULES): string {
   return typographic(example.input, example.lang ?? 'en', {
     register: example.register ?? 'display',
     blockStart: example.blockStart ?? true,
-    disable: RULE_IDS.filter((other) => other !== id),
+    rules,
+    disable: rules.map((rule) => rule.id).filter((other) => other !== id),
+    enable: rules.find((rule) => rule.id === id)?.defaultOn === false ? [id] : [],
   });
 }
 
@@ -109,11 +146,16 @@ function setting(example: Example): string {
   return parts.join(', ');
 }
 
-export function render(): string {
+export function render(rules: readonly Rule[] = RULES): string {
+  const optIn = rules.filter((rule) => rule.defaultOn === false).length;
+  const count =
+    optIn === 0
+      ? `${rules.length} rules`
+      : `${rules.length} rules, ${rules.length - optIn} on by default (the rest are off until named in \`enable\`)`;
   const out: string[] = [
     '# Rules',
     '',
-    `The engine has ${RULES.length} rules. \`typographic\` runs them in the order below, each on the output of the one before. An id can be switched off with \`disable\` (see [api.md](api.md)); a group name switches off every rule that starts with it (\`space\` is every \`space.*\` rule, \`dash\` every \`dash.*\`, \`symbol\` every \`symbol.*\`).`,
+    `The engine has ${count}. \`typographic\` runs them in the order below, each on the output of the one before. An id can be switched off with \`disable\` (see [api.md](api.md)); a group name switches off every rule that starts with it (\`space\` is every \`space.*\` rule, \`dash\` every \`dash.*\`, \`symbol\` every \`symbol.*\`).`,
     '',
     'This file is generated by `bun run docs:rules` from `RULES` in `src/core/rules.ts` and from the examples in `scripts/gen-rules-doc.ts`. Do not edit it by hand: `src/docs.test.ts` fails when it is out of date.',
     '',
@@ -121,18 +163,23 @@ export function render(): string {
     '',
     '## Order',
     '',
-    ...RULES.map((rule, i) => `${i + 1}. \`${rule.id}\``),
+    ...rules.map(
+      (rule, i) => `${i + 1}. \`${rule.id}\`${rule.defaultOn === false ? ' (off by default)' : ''}`,
+    ),
   ];
-  for (const rule of RULES) {
+  for (const rule of rules) {
     const confidence = RULE_SOURCES[rule.id]?.confidence ?? 'general-knowledge';
     out.push('', `## \`${rule.id}\``, '', rule.about, '');
     out.push(`Why: [sources.md](sources.md#${rule.id.replaceAll('.', '')}), \`${confidence}\`.`, '');
+    if (rule.defaultOn === false) {
+      out.push('Off by default: switch it on with `enable` (`--enable` on the command line).', '');
+    }
     for (const example of EXAMPLES[rule.id] ?? []) {
       out.push(
         '```text',
         `(${setting(example)})`,
         `before  ${show(example.input)}`,
-        `after   ${show(runOnly(rule.id, example))}`,
+        `after   ${show(runOnly(rule.id, example, rules))}`,
         '```',
         '',
       );

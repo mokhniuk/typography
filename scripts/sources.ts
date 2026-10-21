@@ -369,6 +369,69 @@ export const RULE_SOURCES: Record<string, Decision> = {
       'No authoritative source found. Only secondary pages (a WebKit bug thread, a Czech nbsp generator, plugin pages) state the Polish and Czech practice; none is a style guide, so none is cited. A Polish or Ukrainian typography guide is needed, and the English a/I rule has no source at all.',
   },
   'space.arrow': general('An arrow stays on the line of the word it points from or to.'),
+  'space.before-punctuation': {
+    sources: [],
+    why: 'A space before , . ; : ! ? ) is a typing slip in English and most languages; French keeps it before : ; ! ?, so the rule leaves those alone there.',
+    alternative:
+      'Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge. typograf and typopo do the same.',
+    confidence: 'general-knowledge',
+  },
+  'space.after-comma': {
+    sources: [],
+    why: 'A comma is followed by a space; a,b is a typing slip.',
+    alternative:
+      'Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge. It can touch non-prose such as decimals written with a comma (1,5) and lists in code, which is why it is opt-in.',
+    confidence: 'general-knowledge',
+  },
+  'punctuation.double': {
+    sources: [],
+    why: 'A run of ! or ? is shortened to one mark; ?! and !? are kept because they are deliberate.',
+    alternative:
+      'Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge. Butterick treats repeated exclamation marks as a style question, not a typesetting one (see the backlog).',
+    confidence: 'general-knowledge',
+  },
+  'symbol.implies': {
+    sources: [],
+    why: '=> is read as an arrow in plain text and set as ⇒.',
+    alternative:
+      'Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge. Taste and font coverage: the glyph may be missing (see the backlog item on keeping the original when the font lacks it). No other tool in the benchmark does it.',
+    confidence: 'general-knowledge',
+  },
+  'number.group': {
+    sources: [],
+    why: 'Integers of five or more digits are grouped in threes with the language separator (comma, no-break space, dot) so a long number can be read.',
+    alternative:
+      'Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge. Separators per language come from the packs and are unverified; Swiss usage differs (the pack follows the Federal Chancellery, not read here).',
+    confidence: 'general-knowledge',
+  },
+  'symbol.plusminus': {
+    sources: [],
+    why: '+- before a digit is the plus-minus sign ±.',
+    alternative:
+      'Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge.',
+    confidence: 'general-knowledge',
+  },
+  'symbol.fraction': {
+    sources: [],
+    why: '1/2, 1/4 and 3/4 written as whole numbers become the single-glyph fractions ½ ¼ ¾.',
+    alternative:
+      'Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge. Dates and longer fractions (11/2, 1/20) are left alone; fonts without these glyphs show a fallback.',
+    confidence: 'general-knowledge',
+  },
+  'symbol.degree': {
+    sources: [],
+    why: 'A temperature or angle unit gets a no-break space before it (20 °C), and the degree sign is added where the unit letter stands alone.',
+    alternative:
+      'Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge. The SI brochure rule on the space before a unit and its plane-angle exception are in the backlog reading list, not read.',
+    confidence: 'general-knowledge',
+  },
+  'space.trailing': {
+    sources: [],
+    why: 'Spaces and tabs at the end of a line are removed.',
+    alternative:
+      'Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge. Off by default because text mode keeps them on purpose.',
+    confidence: 'general-knowledge',
+  },
 };
 
 const KINDS: readonly Source['kind'][] = ['standard', 'style-guide', 'orthography', 'research', 'tool'];

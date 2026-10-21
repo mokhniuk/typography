@@ -8,12 +8,16 @@ Bun project, TypeScript sources shipped as they are (no build step). Details: `R
 
 - `bun test src playground`: all tests. `bun run typecheck`: `tsc`, covers src, playground, scripts.
 - `bun run docs:rules`: regenerate `docs/rules.md` (generated, never edit by hand; `src/docs.test.ts` fails if stale).
+- `bun run docs:languages`: regenerate `docs/languages/*.md` from the language packs (generated; `src/lang-docs.test.ts` fails if stale).
 - `bun run gen:script`: regenerate `src/dom/script.ts` (generated) after changing `src/dom/hang.ts`.
+- Speed changes must keep output and `explain` records identical: `bun run compare` against a git ref of the previous engine (tag it `speed-baseline`) must report 0 differences, and `src/snapshot.test.ts` must pass without `bun run snapshot` (run that only for an intentional output change); see "Checking a speed change" in `docs/contributing.md`. A rule may carry `when` (a cheap trigger; false means `apply` returns the text unchanged, proved by `src/core/rules.when.test.ts`); prefer a forward regex plus `src/core/scan.ts` to a regex that opens with a lookbehind.
 - Benchmark: a separate project in `bench/`, ignored by git except `bench/RESULTS.md`. `cd bench && bun install`, then `bun run bench` (regenerates `RESULTS.md`; commit it if it changes), `latency`, `profile`, `features`. Not part of `bun test` or the root `typecheck`; `bun run typecheck` inside `bench/` checks it.
 
 ## Rules of the codebase
 
-- Rules live in the `RULES` table in `src/core/rules.ts`; never add a step inside `typographic()`. Order matters. Adding a rule or language: follow `docs/contributing.md`.
+- Rules live in the `RULES` table in `src/core/rules.ts`; never add a step inside `typographic()`. Order matters (places for planned rules are reserved in the comment above `RULES`, pinned by `src/core/rules-order.test.ts`). A rule with `defaultOn: false` runs only when named in `enable`. Adding a rule or language: follow `docs/contributing.md`.
+- A language is one pack, `src/core/lang/<code>.ts`, listed in `src/core/lang/index.ts`; `Lang`, `LANGS` and the tables in `profiles.ts` are derived from it, and no rule names a language (it reads a pack field: `percentSpace`, `dialogueDash`, `turnedPairs`, `elisions`, `openers`, `sameMarkQuotes`, `numbers`, ...). Golden tests for a language live in `src/core/lang/<code>.test.ts`. The contract is in `docs/contributing.md`.
+- Options are `register`, `quoteStyle` (`'language'` or `'us'`), `disable`, `enable` and `rules` (a custom list, see `addRule`/`selectRules`). A new option must be threaded through every site: `typographic`, `typesetBlock` (it destructures by name), the text, HTML, Markdown and rehype modes, `src/react` (`Typeset`, `TypographyRoot`, context), the CLI, the playground and `scripts/gen-rules-doc.ts`.
 - Nothing in `src/` or `playground/` may import from outside the package except `react` (`src/boundary.test.ts`).
 - Every change to engine output or API gets a `CHANGELOG.md` entry saying whether it can change existing output.
 - Every rule has a decision record in `scripts/sources.ts` (`RULE_SOURCES`); `bun run docs:sources` regenerates `docs/sources.md`, `docs/sources.html` and `docs/bibliography.html` (generated, never edit; `src/sources.test.ts` checks all three; open the HTML pages to browse the decisions and the sources). A new `Source` needs `author`, `title`, `about`, `cite`, `claim`, `readVia`. Read a source before you cite it; no source read means `general-knowledge`.

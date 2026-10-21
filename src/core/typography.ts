@@ -52,8 +52,8 @@
  */
 
 import { type DiffRun, diff } from './diff';
-import { RULES, without } from './rules';
-import type { Context, Lang, Register } from './types';
+import { DEFAULT_RULES, type Rule, selectRules } from './rules';
+import type { Context, Lang, QuoteStyle, Register } from './types';
 import { shield } from './zones';
 
 export type Change = {
@@ -66,10 +66,16 @@ export type Change = {
 export type TypographicOptions = {
   /** What the text is for; `display` unless a page says it is book-like text. */
   register?: Register | undefined;
+  /** `language` (the default): the language's quote marks. `us`: “…” and ‘…’ in any language and register. */
+  quoteStyle?: QuoteStyle | undefined;
   /** Whether `text` opens its paragraph. Only then can its first dash be a dialogue dash. */
   blockStart?: boolean | undefined;
   /** Rules to switch off: ids (`dash.range`) or groups (`space`). An unknown name throws. */
   disable?: readonly string[] | undefined;
+  /** Rules to switch on that are off by default (`defaultOn: false`): ids or groups. An unknown name throws; so does one also in `disable`. */
+  enable?: readonly string[] | undefined;
+  /** The list of rules to run, in order, instead of the built-in `RULES` (see `addRule`). `disable` and `enable` are checked against it. */
+  rules?: readonly Rule[] | undefined;
   /** Called with each change a rule makes, in the order the rules ran. Costs a diff per rule that changed anything. */
   onChange?: ((change: Change) => void) | undefined;
 };
@@ -101,13 +107,25 @@ function changesOf(rule: string, runs: readonly DiffRun[]): Change[] {
 export function typographic(
   text: string,
   lang: Lang = 'en',
-  { register = 'display', blockStart = true, disable, onChange }: TypographicOptions = {},
+  {
+    register = 'display',
+    quoteStyle = 'language',
+    blockStart = true,
+    disable,
+    enable,
+    rules: custom,
+    onChange,
+  }: TypographicOptions = {},
 ): string {
-  const rules = disable?.length ? without(disable) : RULES;
-  const context: Context = { lang, register, blockStart };
+  const rules =
+    disable?.length || enable?.length || custom
+      ? selectRules({ rules: custom, disable, enable })
+      : DEFAULT_RULES;
+  const context: Context = { lang, register, quoteStyle, blockStart };
   const [shielded, restore] = shield(text);
   let out = shielded;
   for (const rule of rules) {
+    if (rule.when && !rule.when(out, context)) continue;
     const next = rule.apply(out, context);
     if (onChange && next !== out) {
       for (const change of changesOf(rule.id, diff(out, next))) onChange(change);
@@ -133,8 +151,14 @@ export type ModeOptions = {
   /** Language of the text; `en` unless given. */
   lang?: Lang | undefined;
   register?: Register | undefined;
+  /** `language` (the default) or `us`; see `TypographicOptions`. */
+  quoteStyle?: QuoteStyle | undefined;
   /** Rules to switch off: ids (`dash.range`) or groups (`space`). An unknown name throws. */
   disable?: readonly string[] | undefined;
+  /** Rules to switch on that are off by default: ids or groups. An unknown name throws. */
+  enable?: readonly string[] | undefined;
+  /** The list of rules to run instead of the built-in `RULES`; see `addRule`. */
+  rules?: readonly Rule[] | undefined;
   /** Called with each change made to the text. A block a mode cannot map back is not reported. */
   onChange?: ((change: Change) => void) | undefined;
 };
@@ -146,13 +170,24 @@ export type ModeOptions = {
  */
 export function typesetBlock(
   joined: string,
-  { lang = 'en', register = 'display', disable, onChange }: ModeOptions,
+  {
+    lang = 'en',
+    register = 'display',
+    quoteStyle,
+    disable,
+    enable,
+    rules,
+    onChange,
+  }: ModeOptions,
 ): { text: string; keep: () => void } {
   const found: Change[] = [];
   const text = typographic(joined, lang, {
     register,
+    quoteStyle,
     blockStart: true,
     disable,
+    enable,
+    rules,
     onChange: onChange ? (change) => found.push(change) : undefined,
   });
   return {

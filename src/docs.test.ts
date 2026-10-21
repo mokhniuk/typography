@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'bun:test';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { RULE_IDS } from './core';
+import { addRule, DEFAULT_RULES, RULE_IDS, RULES, type Rule } from './core';
 import { EXAMPLES, render, runOnly } from '../scripts/gen-rules-doc';
 
 describe('docs/rules.md', () => {
@@ -20,5 +20,33 @@ describe('docs/rules.md', () => {
 
   test('no example belongs to a rule that does not exist', () => {
     expect(Object.keys(EXAMPLES).filter((id) => !RULE_IDS.includes(id))).toEqual([]);
+  });
+});
+
+describe('docs/rules.md with a rule that is off by default', () => {
+  const shout: Rule = {
+    id: 'extra.shout',
+    about: 'Upper case',
+    defaultOn: false,
+    apply: (text) => text.toUpperCase(),
+  };
+  const list = addRule(RULES, shout, { last: true });
+
+  test('an example of an opt-in rule runs it with enable, and nothing else', () => {
+    expect(runOnly('extra.shout', { input: 'loud "x"' }, list)).toBe('LOUD "X"');
+  });
+
+  test('an example of a default-on rule is unchanged by the opt-in rule being there', () => {
+    expect(runOnly('quote', { input: 'a "x"' }, list)).toBe('a «x»');
+  });
+
+  test('the page says how many rules are on by default, and marks the opt-in one', () => {
+    const page = render(list);
+    expect(page).toContain(`The engine has ${RULES.length + 1} rules, ${DEFAULT_RULES.length} on by default`);
+    expect(page).toContain(`${RULES.length + 1}. \`extra.shout\` (off by default)`);
+  });
+
+  test('with every rule on by default the wording is the plain one', () => {
+    expect(render(DEFAULT_RULES)).toContain(`The engine has ${DEFAULT_RULES.length} rules. \`typographic\``);
   });
 });

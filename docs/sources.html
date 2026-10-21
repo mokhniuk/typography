@@ -41,16 +41,16 @@ p{margin:6px 0}
 <body>
 <main>
 <h1>Typography sources</h1>
-<p class="lead">Why each of the 20 rules exists, which source backs it, and what is not checked yet. Generated from <code>scripts/sources.ts</code> by <code>bun run docs:sources</code>; do not edit by hand. All sources in one table, with authors: <a href="bibliography.html">bibliography</a>.</p>
+<p class="lead">Why each of the 29 rules exists, which source backs it, and what is not checked yet. Generated from <code>scripts/sources.ts</code> by <code>bun run docs:sources</code>; do not edit by hand. All sources in one table, with authors: <a href="bibliography.html">bibliography</a>.</p>
 <div class="summary-row">
 <span class="pill verified">11 verified</span>
 <span class="pill disputed">1 disputed</span>
-<span class="pill general-knowledge">8 unchecked</span>
+<span class="pill general-knowledge">17 unchecked</span>
 </div>
 <p>To check a rule, open its sources and confirm the “Relied on” line is in the text. “Verified” means a source read says what the rule does for the cases named; read the gaps in each entry. Sources marked in red were read as summaries and need a look by hand.</p>
 <h2>Rules</h2>
 <div class="filters" role="group" aria-label="Filter rules by confidence">
-<button type="button" data-f="all" aria-pressed="true">All 20</button>
+<button type="button" data-f="all" aria-pressed="true">All 29</button>
 <button type="button" data-f="verified" aria-pressed="false">Verified</button>
 <button type="button" data-f="disputed" aria-pressed="false">Disputed</button>
 <button type="button" data-f="general-knowledge" aria-pressed="false">Unchecked</button>
@@ -76,11 +76,39 @@ p{margin:6px 0}
 <p><b>Others, gaps, unread:</b> Butterick agrees and also asks for a no-break space on a side with no text so the ellipsis stays with its text; the engine does not do that (`... and so` keeps an ordinary space, a gap in the backlog). UAX #14 gives … class IN, so it is never split from another ellipsis. Interrupted speech: Butterick prefers an em dash outside fiction; the engine leaves it.</p>
 <p class="meta">Sources: <a class="chip" href="#src-butterick-ellipsis">butterick-ellipsis</a> <a class="chip" href="#src-uax14">uax14</a><br>By language: <span class="lang"><b>en</b> <a class="chip" href="#src-butterick-ellipsis">butterick-ellipsis</a></span></p>
 </article>
+<article class="rule" id="rule-space-before-punctuation" data-c="general-knowledge">
+<div class="head"><h3>space.before-punctuation</h3><span class="pill general-knowledge">Unchecked</span></div>
+<p class="about">Removes a space before , . ; : ! ? ) (French keeps the space before : ; ! ?)</p>
+<p><b>Why:</b> A space before , . ; : ! ? ) is a typing slip in English and most languages; French keeps it before : ; ! ?, so the rule leaves those alone there.</p>
+<p><b>Others, gaps, unread:</b> Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge. typograf and typopo do the same.</p>
+<p class="meta">Sources: <span class="none">none read</span></p>
+</article>
+<article class="rule" id="rule-space-after-comma" data-c="general-knowledge">
+<div class="head"><h3>space.after-comma</h3><span class="pill general-knowledge">Unchecked</span></div>
+<p class="about">A comma followed directly by a letter gets a space (a,b becomes a, b)</p>
+<p><b>Why:</b> A comma is followed by a space; a,b is a typing slip.</p>
+<p><b>Others, gaps, unread:</b> Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge. It can touch non-prose such as decimals written with a comma (1,5) and lists in code, which is why it is opt-in.</p>
+<p class="meta">Sources: <span class="none">none read</span></p>
+</article>
+<article class="rule" id="rule-punctuation-double" data-c="general-knowledge">
+<div class="head"><h3>punctuation.double</h3><span class="pill general-knowledge">Unchecked</span></div>
+<p class="about">A run of ! or ? becomes one mark (Wow!!! becomes Wow!); ?! and !? stay</p>
+<p><b>Why:</b> A run of ! or ? is shortened to one mark; ?! and !? are kept because they are deliberate.</p>
+<p><b>Others, gaps, unread:</b> Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge. Butterick treats repeated exclamation marks as a style question, not a typesetting one (see the backlog).</p>
+<p class="meta">Sources: <span class="none">none read</span></p>
+</article>
 <article class="rule" id="rule-arrow" data-c="general-knowledge">
 <div class="head"><h3>arrow</h3><span class="pill general-knowledge">Unchecked</span></div>
 <p class="about">-&gt; and &lt;- become → and ←</p>
 <p><b>Why:</b> Typed ASCII arrows have a proper character.</p>
 <p><b>Others, gaps, unread:</b> Not yet researched.</p>
+<p class="meta">Sources: <span class="none">none read</span></p>
+</article>
+<article class="rule" id="rule-symbol-implies" data-c="general-knowledge">
+<div class="head"><h3>symbol.implies</h3><span class="pill general-knowledge">Unchecked</span></div>
+<p class="about">=&gt; becomes ⇒</p>
+<p><b>Why:</b> =&gt; is read as an arrow in plain text and set as ⇒.</p>
+<p><b>Others, gaps, unread:</b> Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge. Taste and font coverage: the glyph may be missing (see the backlog item on keeping the original when the font lacks it). No other tool in the benchmark does it.</p>
 <p class="meta">Sources: <span class="none">none read</span></p>
 </article>
 <article class="rule" id="rule-symbol-legal" data-c="verified">
@@ -97,6 +125,13 @@ p{margin:6px 0}
 <p><b>Others, gaps, unread:</b> Not researched to a primary source: the Pravopys 2019 PDF (mon.gov.ua) refused the fetch (HTTP 403). A secondary page names Український правопис 2019, § 161 &quot;Тире&quot; (pp. 230–241) as the dash section; read that section before marking this verified.</p>
 <p class="meta">Sources: <span class="none">none read</span></p>
 </article>
+<article class="rule" id="rule-number-group" data-c="general-knowledge">
+<div class="head"><h3>number.group</h3><span class="pill general-knowledge">Unchecked</span></div>
+<p class="about">Digits of an integer of five or more are grouped in threes with the language separator (1,000,000; 1 000 000)</p>
+<p><b>Why:</b> Integers of five or more digits are grouped in threes with the language separator (comma, no-break space, dot) so a long number can be read.</p>
+<p><b>Others, gaps, unread:</b> Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge. Separators per language come from the packs and are unverified; Swiss usage differs (the pack follows the Federal Chancellery, not read here).</p>
+<p class="meta">Sources: <span class="none">none read</span></p>
+</article>
 <article class="rule" id="rule-dash-range" data-c="general-knowledge">
 <div class="head"><h3>dash.range</h3><span class="pill general-knowledge">Unchecked</span></div>
 <p class="about">A hyphen between two numbers (21-26, 10:00-12:00) becomes an unspaced en dash</p>
@@ -111,6 +146,13 @@ p{margin:6px 0}
 <p><b>Others, gaps, unread:</b> The source sets the em dash flush against the words and calls spaces acceptable; the engine sets it spaced, with a no-break space before it, which matches neither. A search result quoting Bringhurst (The Elements of Typographic Style, 2nd ed., section 5.2.1, not read here) says he prefers a spaced en dash in English, so the primary guides disagree among themselves. UAX #14 gives the em dash class B2, which allows a break on both sides, hence the no-break space before it. The spaced en dash for German and for British literary English is not backed by any source read yet.</p>
 <p class="meta">Sources: <a class="chip" href="#src-butterick-dashes">butterick-dashes</a> <a class="chip" href="#src-uax14">uax14</a><br>By language: <span class="lang"><b>en</b> <a class="chip" href="#src-butterick-dashes">butterick-dashes</a></span></p>
 </article>
+<article class="rule" id="rule-symbol-plusminus" data-c="general-knowledge">
+<div class="head"><h3>symbol.plusminus</h3><span class="pill general-knowledge">Unchecked</span></div>
+<p class="about">+- before a digit becomes ± (+-5 becomes ±5)</p>
+<p><b>Why:</b> +- before a digit is the plus-minus sign ±.</p>
+<p><b>Others, gaps, unread:</b> Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge.</p>
+<p class="meta">Sources: <span class="none">none read</span></p>
+</article>
 <article class="rule" id="rule-symbol-minus" data-c="general-knowledge">
 <div class="head"><h3>symbol.minus</h3><span class="pill general-knowledge">Unchecked</span></div>
 <p class="about">A hyphen before a digit (-5) becomes a minus sign (−5)</p>
@@ -124,6 +166,13 @@ p{margin:6px 0}
 <p><b>Why:</b> A dimension takes ×, not the letter x.</p>
 <p><b>Others, gaps, unread:</b> Butterick says to use × instead of the letter x, dimensions included. Unicode shows the two are different characters. The NIST SI checklist, as summarised by the fetch tool, does not address ×. English only; no source for other languages was read.</p>
 <p class="meta">Sources: <a class="chip" href="#src-butterick-math">butterick-math</a> <a class="chip" href="#src-unicode-names">unicode-names</a><br>By language: <span class="lang"><b>en</b> <a class="chip" href="#src-butterick-math">butterick-math</a></span></p>
+</article>
+<article class="rule" id="rule-symbol-fraction" data-c="general-knowledge">
+<div class="head"><h3>symbol.fraction</h3><span class="pill general-knowledge">Unchecked</span></div>
+<p class="about">1/2, 1/4 and 3/4 become ½ ¼ ¾, as whole numbers only (not 11/2, 1/20 or a date)</p>
+<p><b>Why:</b> 1/2, 1/4 and 3/4 written as whole numbers become the single-glyph fractions ½ ¼ ¾.</p>
+<p><b>Others, gaps, unread:</b> Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge. Dates and longer fractions (11/2, 1/20) are left alone; fonts without these glyphs show a fallback.</p>
+<p class="meta">Sources: <span class="none">none read</span></p>
 </article>
 <article class="rule" id="rule-space-collapse" data-c="verified">
 <div class="head"><h3>space.collapse</h3><span class="pill verified">Verified</span></div>
@@ -162,10 +211,17 @@ p{margin:6px 0}
 </article>
 <article class="rule" id="rule-space-percent" data-c="verified">
 <div class="head"><h3>space.percent</h3><span class="pill verified">Verified</span></div>
-<p class="about">German and French: a no-break space between a number and % or € (5 %, 49 €)</p>
+<p class="about">German, French, Czech, Spanish, Italian, Portuguese, Irish, Maltese, Bulgarian, Croatian, Slovenian, Lithuanian, Latvian, Estonian, Danish, Finnish and Greek: a no-break space between a number and % or € (5 %, 49 €)</p>
 <p><b>Why:</b> German and French set a no-break space before % and a currency sign. CLDR agrees for % in de and fr, and for the currency sign in de and fr; it sets no space before % in en, uk, pl, de-CH and fr-CH, which is what the engine does. OQLF, a printed-style authority, agrees for French: a no-break space before %, $ and €.</p>
 <p><b>Others, gaps, unread:</b> CLDR also puts a no-break space before the currency sign in uk, pl and fr-CH; the engine leaves 49€ alone there (a gap, in the backlog). OQLF also asks for a no-break space before a French colon, and none or a fine space before ; ! and ?, which the engine does not set (a gap, in the backlog). OQLF is a Quebec source; a France or Swiss guide may differ (a fine space). The German side rests on CLDR only; no Duden page was read.</p>
 <p class="meta">Sources: <a class="chip" href="#src-cldr-numbers">cldr-numbers</a> <a class="chip" href="#src-oqlf-espacement">oqlf-espacement</a> <a class="chip" href="#src-uax14">uax14</a><br>By language: <span class="lang"><b>de</b> <a class="chip" href="#src-cldr-numbers">cldr-numbers</a></span> <span class="lang"><b>fr</b> <a class="chip" href="#src-cldr-numbers">cldr-numbers</a> <a class="chip" href="#src-oqlf-espacement">oqlf-espacement</a></span></p>
+</article>
+<article class="rule" id="rule-symbol-degree" data-c="general-knowledge">
+<div class="head"><h3>symbol.degree</h3><span class="pill general-knowledge">Unchecked</span></div>
+<p class="about">20 C, 20°C and 20 °C become 20 °C, with a no-break space before the unit</p>
+<p><b>Why:</b> A temperature or angle unit gets a no-break space before it (20 °C), and the degree sign is added where the unit letter stands alone.</p>
+<p><b>Others, gaps, unread:</b> Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge. The SI brochure rule on the space before a unit and its plane-angle exception are in the backlog reading list, not read.</p>
+<p class="meta">Sources: <span class="none">none read</span></p>
 </article>
 <article class="rule" id="rule-space-association" data-c="general-knowledge">
 <div class="head"><h3>space.association</h3><span class="pill general-knowledge">Unchecked</span></div>
@@ -193,6 +249,13 @@ p{margin:6px 0}
 <p class="about">No-break space before → and after ←</p>
 <p><b>Why:</b> An arrow stays on the line of the word it points from or to.</p>
 <p><b>Others, gaps, unread:</b> Not yet researched.</p>
+<p class="meta">Sources: <span class="none">none read</span></p>
+</article>
+<article class="rule" id="rule-space-trailing" data-c="general-knowledge">
+<div class="head"><h3>space.trailing</h3><span class="pill general-knowledge">Unchecked</span></div>
+<p class="about">Spaces and tabs at the end of a line are removed</p>
+<p><b>Why:</b> Spaces and tabs at the end of a line are removed.</p>
+<p><b>Others, gaps, unread:</b> Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge. Off by default because text mode keeps them on purpose.</p>
 <p class="meta">Sources: <span class="none">none read</span></p>
 </article>
 <h2>Sources read</h2>

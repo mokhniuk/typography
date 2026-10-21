@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'bun:test';
-import { type Io, run } from './run';
+import { addRule, DEFAULT_RULES, RULES, type Rule } from '../core';
+import { formatRules, type Io, run } from './run';
 
 function fake(files: Record<string, string> = {}, stdin = '') {
   const out: string[] = [];
@@ -135,5 +136,61 @@ describe('typo', () => {
   test('--json and --explain are used together, and --explain only reports', async () => {
     expect(await run(['--json'], fake({}, 'x').io)).toBe(2);
     expect(await run(['--explain', '-w', 'a.txt'], fake({ 'a.txt': 'x' }).io)).toBe(2);
+  });
+
+  test('--enable takes rule ids and groups; a typo, or a rule also in --disable, is a usage error', async () => {
+    // No built-in rule is off by default yet: enabling one that is already on changes nothing.
+    const t = fake({}, 'wait... "x"\n');
+    expect(await run(['--enable', 'ellipsis,space'], t.io)).toBe(0);
+    expect(t.out()).toBe('wait… «x»\n');
+    const u = fake({}, 'x');
+    expect(await run(['--enable', 'ellipsi'], u.io)).toBe(2);
+    expect(u.err()).toContain('Unknown typography rule "ellipsi"');
+    const v = fake({}, 'x');
+    expect(await run(['--enable', 'ellipsis', '--disable', 'ellipsis'], v.io)).toBe(2);
+    expect(v.err()).toContain('both');
+  });
+
+  test('--quotes us sets “…” and ‘…’ in any language; the default is the language', async () => {
+    const t = fake({}, '"x \'y\'"\n');
+    expect(await run(['--quotes', 'us'], t.io)).toBe(0);
+    expect(t.out()).toBe('“x ‘y’”\n');
+    const u = fake({}, '"x"\n');
+    await run(['--quotes', 'us', '-l', 'de', '-r', 'literary'], u.io);
+    expect(u.out()).toBe('“x”\n');
+    const v = fake({}, '"x"\n');
+    await run(['--quotes', 'language', '-l', 'de'], v.io);
+    expect(v.out()).toBe('»x«\n');
+    const w = fake({ 'a.html': '<p>"x"</p>', 'b.md': '"x"\n' });
+    await run(['--quotes', 'us', 'a.html'], w.io);
+    expect(w.out()).toBe('<p>“x”</p>');
+  });
+
+  test('--quotes with anything else is a usage error', async () => {
+    const t = fake({}, 'x');
+    expect(await run(['--quotes', 'uk'], t.io)).toBe(2);
+    expect(t.err()).toContain('--quotes');
+  });
+
+  test('--help mentions --enable and --quotes', async () => {
+    const t = fake();
+    await run(['--help'], t.io);
+    expect(t.out()).toContain('--enable');
+    expect(t.out()).toContain('--quotes');
+  });
+});
+
+describe('formatRules', () => {
+  const shout: Rule = { id: 'extra.shout', about: 'Upper case', defaultOn: false, apply: (x) => x };
+
+  test('lists every rule with its description, and says which are off by default', () => {
+    const lines = formatRules(addRule(RULES, shout, { last: true })).split('\n');
+    expect(lines.at(-1)).toMatch(/^extra\.shout +Upper case \(off by default; --enable extra\.shout\)$/);
+    expect(lines[0]).not.toContain('off by default');
+    expect(lines.length).toBe(RULES.length + 1);
+  });
+
+  test('is unchanged for the built-in list', () => {
+    expect(formatRules(DEFAULT_RULES)).not.toContain('off by default');
   });
 });
