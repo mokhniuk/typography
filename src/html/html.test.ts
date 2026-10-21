@@ -39,7 +39,7 @@ describe('typesetHtml', () => {
 
   test('reads entities as the characters they stand for, and keeps the others', () => {
     expect(h('<p>&quot;x&quot; &mdash; &copy; 2026 AT&amp;T 5 &lt; 6</p>')).toBe(
-      '<p>«x»~— &copy; 2026~AT&amp;T 5 &lt; 6</p>',
+      '<p>«x»~— ©~2026~AT&amp;T 5 &lt; 6</p>',
     );
   });
 
@@ -70,6 +70,12 @@ describe('typesetHtml', () => {
 
   test('addresses in the text are left alone', () => {
     expect(h('<p>see https://a.b/1-2 - ok</p>')).toBe('<p>see https://a.b/1-2~— ok</p>');
+  });
+
+  test('a named entity for a printable sign is read by the rules and written as its character', () => {
+    expect(h('<p>5 &euro; and 10 &deg;C, (c) 2026 &copy; 2026</p>')).toBe(
+      '<p>5~€ and 10~°C, ©~2026 ©~2026</p>',
+    );
   });
 
   test('is idempotent', () => {

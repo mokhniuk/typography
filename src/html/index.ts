@@ -55,6 +55,21 @@ const NAMED: Record<string, string> = {
   sbquo: '‚',
   lsaquo: '‹',
   rsaquo: '›',
+  // Printable signs the rules act on or bind to (5 €, 20 °C, © 2026): read as the character and,
+  // in a block that changes, written as it.
+  euro: '€',
+  copy: '©',
+  reg: '®',
+  trade: '™',
+  deg: '°',
+  times: '×',
+  minus: '−',
+  plusmn: '±',
+  sect: '§',
+  para: '¶',
+  frac12: '½',
+  frac14: '¼',
+  frac34: '¾',
 };
 
 /** A character that is invisible or a control: a numeric reference to one is kept as written. */
