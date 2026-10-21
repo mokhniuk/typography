@@ -178,6 +178,15 @@ describe('spaces', () => {
     expect(t('see §  5')).toBe('see §~5');
   });
 
+  test('§ and ¶ bind a mixed run of spaces and no-break spaces, and a number of any script', () => {
+    expect(t('see §\u00a0 5')).toBe('see §~5');
+    expect(t('see § \u00a05')).toBe('see §~5');
+    expect(t('see §\u00a05')).toBe('see §~5');
+    expect(typographic(typographic('see §\u00a0 5'))).toBe('see §\u00a05');
+    expect(t('see § ٥')).toBe('see §~٥');
+    expect(t('see § 𝟓')).toBe('see §~𝟓');
+  });
+
   test('§ and ¶ are left alone where there is no typed space before a number', () => {
     expect(t('see §5')).toBe('see §5');
     expect(t('the § sign')).toBe('the § sign');

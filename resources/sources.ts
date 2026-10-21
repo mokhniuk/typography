@@ -695,7 +695,15 @@ export const RULE_SOURCES: Record<string, Decision> = {
     alternative:
       "The space before % and the space before € are two pack fields, percentSpace and currencySpace: Irish, Maltese, Portuguese, Latvian, Lithuanian and Estonian set the first and not the second, because their ISG editions write €30 with no space or show money only as the code EUR (see each pack's notes). CLDR also puts a no-break space before the currency sign in uk, pl and fr-CH; the engine leaves 49€ alone there (a gap, in the backlog). OQLF also asks for a no-break space before a French colon, and none or a fine space before ; ! and ?, which the engine does not set (a gap, in the backlog). OQLF is a Quebec source; a France or Swiss guide may differ (a fine space). The German side rests on CLDR only; no Duden page was read. The ISG passage is for the euro only (other currency signs are never spaced by the engine) and, apart from the Finnish edition, does not say the space is nonbreaking; the Czech handbook was read as a fetch-tool summary. The ISG percent rule (6.4) cited in the packs was not re-read here. Of the country guides named in the packs (Kielitoimiston ohjepankki, Retskrivningsordbogen, Treccani), none was read for €.",
     confidence: 'verified',
-    langs: { de: ['cldr-numbers'], fr: ['cldr-numbers', 'oqlf-espacement'] },
+    langs: {
+      de: ['cldr-numbers'],
+      fr: ['cldr-numbers', 'oqlf-espacement'],
+      el: ['isg-2022-euro'],
+      fi: ['isg-2022-euro'],
+      it: ['isg-2022-euro'],
+      da: ['isg-2022-euro'],
+      cs: ['ijp-penezni-castky'],
+    },
   },
   'space.section': {
     sources: ['butterick-section-marks', 'butterick-nbsp'],

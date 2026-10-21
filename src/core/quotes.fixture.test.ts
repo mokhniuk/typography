@@ -76,7 +76,8 @@ describe('quotes on long runs of glued quotations', () => {
   test('480 KB of 5"x"» are read in linear time', () => {
     const text = '5"x"» '.repeat(80000);
     const start = performance.now();
-    expect(quotes(text, 'en', 'display', 'language').length).toBeGreaterThan(0);
+    const out = quotes(text, 'en', 'display', 'language');
+    expect(out === text).toBe(true);
     expect(performance.now() - start).toBeLessThan(1500);
   });
 });

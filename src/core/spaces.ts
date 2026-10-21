@@ -73,9 +73,9 @@ function spacesBefore(text: string, re: RegExp): string {
 
 export const copyright = (text: string): string => text.replace(/©[ ]+(?=\d)/g, `©${NBSP}`);
 
-/** A typed space between § or ¶ (doubled for several) and a number becomes a no-break space; `§5` is left as typed. */
+/** A typed run of spaces and no-break spaces between § or ¶ (doubled for several) and a number (any script) becomes a no-break space; `§5` is left as typed. */
 export const section = (text: string): string =>
-  text.replace(/([§¶]{1,2})[ ]+(?=\d)/g, `$1${NBSP}`);
+  text.replace(/([§¶]{1,2})[ \u00a0]+(?=\p{N})/gu, `$1${NBSP}`);
 
 /**
  * The pack's orphan pattern without its leading `(?<![\p{L}\p{N}])`, when it has exactly that one

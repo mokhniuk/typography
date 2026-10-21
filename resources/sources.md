@@ -268,6 +268,11 @@ Sources: [cldr-numbers](#src-cldr-numbers), [oqlf-espacement](#src-oqlf-espaceme
 
 - `de`: [cldr-numbers](#src-cldr-numbers)
 - `fr`: [cldr-numbers](#src-cldr-numbers), [oqlf-espacement](#src-oqlf-espacement)
+- `el`: [isg-2022-euro](#src-isg-2022-euro)
+- `fi`: [isg-2022-euro](#src-isg-2022-euro)
+- `it`: [isg-2022-euro](#src-isg-2022-euro)
+- `da`: [isg-2022-euro](#src-isg-2022-euro)
+- `cs`: [ijp-penezni-castky](#src-ijp-penezni-castky)
 
 ### `symbol.degree`
 
