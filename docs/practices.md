@@ -65,7 +65,7 @@ All three are general knowledge here: no source in the registry covers them.
 ## Column width
 
 - A narrow column (a phone, a sidebar) punishes every binding: each bound pair is a longer unbreakable unit, and the lines around it come out short or loose.
-- A wide column (over about 75 characters a line; a rule of thumb, general knowledge) hides the problem, because a short word seldom ends a line there; a bound pair rarely straddles a break, so bindings are cheap to keep.
+- A wide column (over about 75 characters a line; a rule of thumb, general knowledge) hides the problem, because it has fewer line ends for a short word to land on; a bound pair rarely straddles a break, so bindings are cheap to keep.
 - With justified text a long bound unit makes the spaces on its line stretch, so check the result in the narrowest column you ship.
 - A chain of bindings (`Tom & Jerry & Co`, `Prof. Dr. K. Słoboda`) is one unit as long as the whole chain, so in a narrow column it moves to the next line as a block.
 - Judge the page at two widths, the narrowest and the widest, not at one.
