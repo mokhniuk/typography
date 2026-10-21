@@ -2,6 +2,28 @@
 
 Versions follow semver while the package is below 1.0.0: a **minor** release may change the output of the engine or the API (every entry says whether it can change output you already have), a **patch** release fixes a bug without changing output you rely on. If you depend on exact output, pin a tag and read this file before you move it.
 
+## Unreleased
+
+### Fixes
+
+- A straight `"` whose next mark opens another quotation is a lone opener: `"a then "b" c` was set `«a then»b» c` (the two were paired one off and the spaces just inside the wrong pair were eaten) and is now `«a then „b“ c`; the same for a quotation left open before a line break (`He said "first line\nThen "x" and "y"`). Can change existing output: yes, for text with an unclosed straight quote before another quotation.
+- A space just inside a quotation mark that is glued to a word on the outside moves out instead of going: `km‘ z and 10’` was `km«z and 10»` and is `km «z and 10»`; `a ‚b c ‘d e` was `a «b c»d e` and is `a «b c» d e`. No two words are glued together any more, and the result is stable on a second run. Can change existing output: yes, for such text. A new property test (`src/properties.test.ts`) holds every language and register to it: a space between two words may change or move past a mark, never go.
+- A private-use character in the input (U+E000 to U+E003, the engine's own placeholders) no longer switches off the protection of addresses, emails and code spans, or reads as a quote mark: each is set aside as a zone of its own. Can change existing output: yes, only for text that held one.
+- `->` and `<-` are no longer arrows at the end of an HTML comment or a long arrow (`-->`), in a double-headed one (`<->`, `<-->`) or in a comparison with a negative number (`x<-1`). Can change existing output: yes, for such text.
+- Markdown: a `pre`, `script`, `style` or `textarea` block runs to its closing tag, blank lines included (its second half used to be typeset); a leading `---` is front matter only when it goes straight on and closes with `---` or `...` (a document opening with a thematic break was left untouched to the end). Can change existing output: yes, for such documents.
+- HTML: the named entities `&euro; &copy; &reg; &trade; &deg; &times; &minus; &plusmn; &sect; &para; &frac12; &frac14; &frac34;` are read as their characters, so `5 &euro;` binds like `5 €` (it kept a breaking space; the rehype mode, which reads a parsed tree, already bound it), and are written as the character in a block that changes. Can change existing output: yes, for HTML with one of them in a block that changes. A new test (`src/modes.test.ts`) holds the HTML and rehype modes to the same text.
+- One hanging pass per element: the inline script's pass is stopped when `useHangingPunctuation` (or a second `hangPunctuation` call) starts on the same root, instead of two sets of observers running on it. No output change.
+
+### React
+
+- `Typeset` and `TypographyRoot` take `disable` and `onChange`, like every other site. No output change.
+
+### Tooling and docs
+
+- `bun run compare` no longer fails with `ENOBUFS` on a large `src/` (the archive is written to a file).
+- Biome (`biome.json`) lints the sources, and CI runs on pull requests and builds the playground.
+- Docs brought up to date: `Lang` is the 26 pack codes (api.md, cli.md, limits.md), the text and React option tables list every option, hanging covers both sides at any alignment (README, `typography.ts`), the backlog counts and the sentence-dash item reflect 0.4.0, widows and runts are a CSS matter (limits.md), the accessibility checker moved to `docs/ideas.md`, and the compare and Gaelic items are gone.
+
 ## 0.4.1 (2026-10-21)
 
 - Hanging punctuation is right at every width and in every alignment, and closing marks hang too. It used to find the marks that start a line and hang only those, but hanging a mark makes its word narrower, which can move it up to the line before; the pass then un-hung it, and after four rounds left whatever state it reached (seen in a bio dialog: `(Camden` at a line start not hung, `(AGS)` in mid-line hung over the space before it). Now each mark has a negative margin of its width and the space beside it carries that width as extra word spacing: mid-line the two cancel and every letter sits where plain text puts it; at a break the browser drops the space and the mark hangs. Line breaks are never measured, so nothing goes stale when they move. Opening runs hang left at a line start; closing runs (`» ) “ ’`…, with `.,;:!?…` after them, so `(AGS).` hangs `).`) hang right at a line end, which shows in right-aligned, centred and justified text (justified: Chrome, not Safari). Centred and indented text now hang too. `HangText` and the new `markHangs(el)` (for HTML, Markdown and rehype output, or any page) wrap the marks in `data-hang`, `data-hang-space` and `data-hang-close` spans with a rough 0.4em width, so text hangs at first paint; `hangPunctuation` measures the exact widths once (`--hang-w`, `--hang-open`). `--hang-amount` is read by CSS, so it applies live. `data-hung` is gone. New: `hangPieces`, `HangPiece` (core); `markHangs`, `hangStyle` (dom). Can change existing output: no for text; yes for the DOM: the markup `HangText` renders is new, and closing marks now hang.

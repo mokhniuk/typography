@@ -24,7 +24,7 @@ Every pack has `reviewed: false`: bg cs da el es et fi ga hr hu it lt lv mt nl p
 
 ### Finish the sources registry
 
-[sources.md](../resources/sources.md) has 17 of 29 decisions still `general-knowledge` (the nine opt-in rules have no source read), one `disputed`, 11 `verified` for the cases and languages named in each entry (mostly English). Read the sources and upgrade them, and have a native speaker check each language. Found while building it (2026-10-20, CLDR 46):
+[sources.md](../resources/sources.md) has 11 of 29 decisions still `general-knowledge` (the nine opt-in rules have no source read), one `disputed`, 17 `verified` for the cases and languages named in each entry (mostly English; `dash.dialogue` since 0.4.0 for 17 languages). Read the sources and upgrade them, and have a native speaker check each language. Found while building it (2026-10-20, CLDR 46):
 
 - `quote` is `disputed`: CLDR has English `“ ” ‘ ’` (see the American quotes item above), German `„ “ ‚ ‘` (the engine sets `» « › ‹`), French `« »` with `« »` inside (the engine uses `“ ”`), and de-CH `„ “ ‚ ‘` (the engine's `ch` profile is the fr-CH one: `« » ‹ ›`). Decide per language whether the engine or CLDR is right, citing a guide.
 - `space.percent` / currency: CLDR sets a no-break space before the currency sign in `uk`, `pl` and `fr-CH`; the engine leaves `49€` alone there.
@@ -50,7 +50,7 @@ Found in the review of the inch-mark fix (2026-10-21). Each is a limit, listed i
 
 Each is a limit of the pack format or an unverified choice, not a crash:
 
-- **Sentence dash unverified** for nl: the pack uses the spaced em dash; usage there often prefers a spaced en dash. (sv, hu, sk, ro now use the spaced en dash of their dialogue sources.)
+- **Sentence dash unverified** for nl: the pack uses the spaced em dash; usage there often prefers a spaced en dash (hr, hu, ro, sk and sv were settled in 0.4.0 from their dialogue sources).
 - **Italian and Maltese truncation apostrophe** (`po'`, `va'`, `da'`, `di'`) inside straight single quotes closes the quotation early. The pack format has no field for trailing apostrophes.
 - **Dialogue dash for Greek and Latvian.** The Triantafyllidis dictionary says a dash marks a change of speaker in Greek, but the character and spacing were not confirmed; no Latvian source was found. Read one before setting `dialogueDash`.
 - **The dash before the words of the narrator** in Spanish is attached inside (`—¿Esperamos? —preguntó—.`), and Finnish, Danish, Slovenian and Swedish use a comma there, not a dash; the engine sets a spaced dash wherever one is typed.
@@ -98,14 +98,7 @@ Partly there: `space.number` binds a number to the symbol or code after it (`49~
 
 ### Rule categories
 
-The rules are a flat list with dotted group names (`dash`, `space`, `symbol`, `number`, ...). Group names describe the mechanism, not why a reader would want a rule. To research, then decide: split them into categories a user can switch on or off as a set, for example
-
-- **Typographic traditions**: quotes, dashes, ellipsis, no-break spaces, hyphenation hints, orphans: what a style guide for the language asks for.
-- **Modern symbols**: `->` to `→`, `(c)` to `©`, `=>` to `⇒`, `(TM)`, emoji-adjacent forms: a taste and a font question (see "Keep the original when the font lacks the glyph").
-- **Math**: minus, multiplication, `±`, fractions, degrees, ranges.
-- **Phone numbers**, **currencies**, **units and dates**: the data-shaped text each with its own locale rules (see the two items below).
-
-Open questions: is a category a prefix of the rule id (a rename, so a breaking change for `disable`), or a separate tag on `Rule` (`category`) with the ids unchanged? Which categories are on by default? How do the categories show in `typo --rules`, `docs/rules.md` and the playground? Research what typograf (its groups), tipograph (its presets) and the style guides call these groups before choosing. Whatever is chosen must keep the old ids working for `disable` and `enable`, and say in the changelog whether output can change.
+The rules are a flat list with dotted group names (`dash`, `space`, `symbol`, `number`, ...) that describe the mechanism, not why a reader would want a rule. Plan: a `category` tag on `Rule` (`tradition`, `symbols`, `math`, `data` for phone numbers, currencies, units and dates), the ids unchanged so `disable` and `enable` keep working; shown as a column in `typo --rules`, `docs/rules.md` and as groups in the playground. Half a day; no output change.
 
 ### Irish (`ga`): make the pack real
 
@@ -118,16 +111,14 @@ The pack exists but is thin, because the Irish edition of the Interinstitutional
 - **`€`:** the pack puts a no-break space before `€` through `percentSpace`, but Irish writes `€30`. Needs the split of `percentSpace` into `percentSpace` and `currencySpace` (see Currencies).
 - **Review:** `reviewed: false`; get an Irish reader to check the page.
 
-Scottish Gaelic (`gd`) and Manx (`gv`) are different languages with no pack and are outside the 26 target languages; add them only if wanted, with the same recipe.
-
 ### Short words, conjunctions and the end of the line
 
 Today `space.orphan` binds a one-letter word in a language's list to the next word (`a~long`, `в~місті`), `space.number` binds a number to a short word, and `space.title`, `space.initial` and `space.abbreviation` bind their cases. Not covered, checked on 0.2.1:
 
 - `&`, `+`, `=` and other operators between words (`Tom & Jerry`, `rock + roll`) get no no-break space: a line can end on `&`, or start with it.
 - Short words of two or three letters (`to`, `of`, `the`; `на`, `до`; `der`, `die`) are bound only where a pack lists them as one-letter orphans.
-- **The last words of a paragraph (widows and runts):** keep the last two or three words together, or at least never leave one short word alone on the last line (`a~short~tail` instead of `short tail`). This is the one with a real cost: a no-break space is a line-break constraint, so binding too much makes ragged lines, and what looks right depends on the width, which the engine does not know. Options to discuss: bind the last two words only; bind the last word to the one before when it is shorter than N letters; do it in the browser (CSS `text-wrap: pretty` or `balance`) and leave the string alone; an opt-in rule with a limit on the length of the bound tail.
-- Discuss before building. Done when the choice is written down in `docs/limits.md`, each rule has golden tests per language that has the pattern, and no rule can bind a whole line.
+- **The last words of a paragraph (widows and runts)** are decided: not a string rule, CSS `text-wrap: pretty` on the page (written down in [limits.md](limits.md)).
+- Done when each rule has golden tests per language that has the pattern, and no rule can bind a whole line.
 
 ### Speed: what is left
 
@@ -144,15 +135,10 @@ Found in the review (2026-10-21), none changes output:
 - `sources.html` prints an empty "Used by:" for a source no decision cites, `bibliography.html` says "unused". Say "unused" in both.
 - `render()` in `sources.ts` and `sources-html.ts` skip a rule with no decision, while `gen-rules-doc.ts` links it as `general-knowledge`. `resources/sources.test.ts` stops that from shipping today; make the generators fail loudly instead of skipping, so a run outside the test cannot write a page that disagrees with its counts.
 - The nine opt-in rules have `general-knowledge` entries with no source (`space.before-punctuation`, `space.after-comma`, `punctuation.double`, `symbol.implies`, `number.group`, `symbol.plusminus`, `symbol.fraction`, `symbol.degree`, `space.trailing`). Read a source for each and upgrade; the SI brochure for `symbol.degree`, a guide for the grouping separator of each language for `number.group`. Counted in "Finish the sources registry" above.
-- `compare-engines.ts` fails with `ENOBUFS` when given a git ref whose `src/` archive is large (`bun run compare main`): the `git archive` output exceeds `execFileSync`'s buffer. Raise `maxBuffer` or extract to a file; `--base-dir` is the workaround.
 
-### Accessibility checker (future)
+### Publish to npm, with a licence and compiled output (1.0.0)
 
-A tool that tells whether text is readable: too small, too little contrast, a line too long or too short, too tight a leading, a font that lacks glyphs (see the glyph item). It is a different kind of tool from the engine (it needs rendered styles, not a string), so decide first where it lives: a separate entry (`@podiia/typography/a11y`), a function over the DOM that reads computed styles, or a lint step in the playground. Starting points to research: WCAG 2.2 contrast (1.4.3, 1.4.6, 1.4.11), text spacing (1.4.12), resize text (1.4.4), and readable line length (about 45 to 90 characters). Open: which checks need only strings and CSS values, and which need a browser; how it reports (a list of findings like `explain`, not a score). Not started.
-
-### Publish to npm, with a licence and compiled output
-
-The package ships `.ts` sources, is private, installs from a git tag, and has no licence. A consumer needs Bun or a TypeScript-aware bundler. Ship JavaScript with `.d.ts` files (ESM) so Node and plain tooling work, publish, and choose a licence. Until then every competitor is easier to adopt. Skipped on purpose in the 0.2.0 run.
+The package ships `.ts` sources, is private, installs from a git tag, and has no licence. A consumer needs Bun or a TypeScript-aware bundler. This is the last step of 1.0.0, after the website, the open bugs and the docs: ship JavaScript with `.d.ts` files (ESM) so Node and plain tooling work, a `LICENSE`, a CI matrix with Node, then publish. Output changes become major releases from 1.0.0 on, so the decisions that change output (the English default quotes, the `ch` code, the `percentSpace` split) land before it.
 
 ### A larger real-text benchmark
 

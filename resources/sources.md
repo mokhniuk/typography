@@ -238,7 +238,7 @@ Confidence: `verified`.
 
 Why: An abbreviation stays on the line of what it qualifies.
 
-Alternative: Only the English case ("Fig." before a number) is backed by a source read. The German, Ukrainian and Polish lists (profiles.ts) are still from general knowledge and have not been read by a native speaker; they stay unchecked even though the decision as a whole reads verified.
+Alternative: Only the English case ("Fig." before a number) is backed by a source read. The German, Ukrainian and Polish lists (in their packs, src/core/lang/) are still from general knowledge and have not been read by a native speaker; they stay unchecked even though the decision as a whole reads verified.
 
 Sources: [butterick-nbsp](#src-butterick-nbsp), [uax14](#src-uax14)
 

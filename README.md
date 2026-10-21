@@ -109,7 +109,7 @@ const stop = hangPunctuation(document.querySelector('article')!); // marks wrapp
 // hangScript() returns the source of an inline script that does the same as the page is parsed.
 ```
 
-Hanging is measured, so it works wherever a line happens to wrap. It handles left-aligned, left-to-right text only.
+Hanging works wherever a line happens to start or end with a mark, at any width and in any alignment (left-to-right text), without measuring where lines break.
 
 ### React
 

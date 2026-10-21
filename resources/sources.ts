@@ -288,7 +288,8 @@ export const SOURCES: readonly Source[] = [
     id: 'oqlf-tiret-dialogues',
     kind: 'style-guide',
     author: 'Office québécois de la langue française',
-    title: 'Vitrine linguistique: Le tiret dans les dialogues; Espacement avant et après les signes de ponctuation',
+    title:
+      'Vitrine linguistique: Le tiret dans les dialogues; Espacement avant et après les signes de ponctuation',
     about:
       'The language advice of the Québec language office (successor of the Banque de dépannage linguistique).',
     cite: 'OQLF, Vitrine linguistique, "Le tiret dans les dialogues" (fiche 23371) and the spacing table (fiche 22039).',
@@ -317,8 +318,7 @@ export const SOURCES: readonly Source[] = [
     kind: 'style-guide',
     author: 'Ciberdúvidas da Língua Portuguesa',
     title: 'Travessão no discurso directo',
-    about:
-      'An answer of the Portuguese language advice service of ISCTE (European norm).',
+    about: 'An answer of the Portuguese language advice service of ISCTE (European norm).',
     cite: 'Ciberdúvidas da Língua Portuguesa, "Travessão no discurso directo" (question of 6.11.2001).',
     url: 'https://ciberduvidas.iscte-iul.pt/consultorio/perguntas/travessao-no-discurso-directo/8747',
     accessed: '2026-10-21',
@@ -330,9 +330,9 @@ export const SOURCES: readonly Source[] = [
     id: 'indreptar-linia-dialog',
     kind: 'orthography',
     author: 'Academia Română, Institutul de Lingvistică (on dexonline)',
-    title: 'Îndreptar ortografic, ortoepic și de punctuație, 5th ed.: Punctuația 09. Linia de dialog și de pauză',
-    about:
-      'The Romanian academy guide to spelling and punctuation, as published on dexonline.',
+    title:
+      'Îndreptar ortografic, ortoepic și de punctuație, 5th ed.: Punctuația 09. Linia de dialog și de pauză',
+    about: 'The Romanian academy guide to spelling and punctuation, as published on dexonline.',
     cite: 'Îndreptar ortografic, ortoepic și de punctuație, ediția a V-a, §§ 275–281.',
     url: 'https://dexonline.ro/article/09._Linia_de_dialog_%C8%99i_de_pauz%C4%83',
     accessed: '2026-10-21',
@@ -359,8 +359,7 @@ export const SOURCES: readonly Source[] = [
     kind: 'orthography',
     author: 'Institut za hrvatski jezik',
     title: 'Hrvatski pravopis, § 8.16.1 Pravopisni znakovi u upravnome govoru',
-    about:
-      'The Croatian orthography of the national language institute, online edition.',
+    about: 'The Croatian orthography of the national language institute, online edition.',
     cite: 'Institut za hrvatski jezik, Hrvatski pravopis, § 8.16.1.',
     url: 'https://pravopis.hr/pravilo/pravopisni-znakovi-u-upravnome-govoru/72/',
     accessed: '2026-10-21',
@@ -373,8 +372,7 @@ export const SOURCES: readonly Source[] = [
     kind: 'orthography',
     author: 'ZRC SAZU, Inštitut za slovenski jezik Frana Ramovša',
     title: 'Slovenski pravopis 2001: Pravila, § 388 and § 473',
-    about:
-      'The Slovenian orthography rules (PDF; read as extracted text with damaged č, š, ž).',
+    about: 'The Slovenian orthography rules (PDF; read as extracted text with damaged č, š, ž).',
     cite: 'Slovenski pravopis (2001), Pravila, § 388 point 6 and § 473.',
     url: 'https://www.fran.si/134/slovenski-pravopis/datoteke/Pravopis_Pravila.pdf',
     accessed: '2026-10-21',
@@ -401,8 +399,7 @@ export const SOURCES: readonly Source[] = [
     kind: 'style-guide',
     author: 'Kotimaisten kielten keskus (Kotus)',
     title: 'Kielitoimiston ohjepankki: Lainausmerkit ja vuorosanaviiva',
-    about:
-      'The language advice bank of the Institute for the Languages of Finland.',
+    about: 'The language advice bank of the Institute for the Languages of Finland.',
     cite: 'Kielitoimiston ohjepankki, "Lainausmerkit ja vuorosanaviiva".',
     url: 'https://kielitoimistonohjepankki.fi/ohje/lainausmerkit-ja-vuorosanaviiva/',
     accessed: '2026-10-21',
@@ -415,8 +412,7 @@ export const SOURCES: readonly Source[] = [
     kind: 'style-guide',
     author: 'Institutet för språk och folkminnen (Språkrådet)',
     title: 'Frågelådan: Kan man markera anföring med tankstreck?',
-    about:
-      'An answer of the Swedish language council advice service.',
+    about: 'An answer of the Swedish language council advice service.',
     cite: 'Isof, Frågelådan, svar 52014.',
     url: 'https://frageladan.isof.se/visasvar.py?svar=52014',
     accessed: '2026-10-21',
@@ -429,8 +425,7 @@ export const SOURCES: readonly Source[] = [
     kind: 'orthography',
     author: 'Ústav pro jazyk český AV ČR',
     title: 'Internetová jazyková příručka: Pomlčka; Uvozovky',
-    about:
-      'The online Czech language handbook of the Czech Academy of Sciences.',
+    about: 'The online Czech language handbook of the Czech Academy of Sciences.',
     cite: 'Internetová jazyková příručka, "Pomlčka" (id 165) and "Uvozovky" (id 162).',
     url: 'https://prirucka.ujc.cas.cz/?id=165',
     accessed: '2026-10-21',
@@ -443,8 +438,7 @@ export const SOURCES: readonly Source[] = [
     kind: 'orthography',
     author: 'Jazykovedný ústav Ľudovíta Štúra SAV',
     title: 'Pravidlá slovenského pravopisu, 3rd ed. (2000)',
-    about:
-      'The Slovak orthography rules (PDF).',
+    about: 'The Slovak orthography rules (PDF).',
     cite: 'Pravidlá slovenského pravopisu, 3. vydanie (2000): úvodzovky; pomlčka, point 10.',
     url: 'https://www.juls.savba.sk/ediela/psp2000/psp.pdf',
     accessed: '2026-10-21',
@@ -457,8 +451,7 @@ export const SOURCES: readonly Source[] = [
     kind: 'orthography',
     author: 'Dansk Sprognævn',
     title: 'Retskrivningsordbogen 5.1, § 59 Replikgengivelse',
-    about:
-      'The Danish official spelling dictionary and its rules.',
+    about: 'The Danish official spelling dictionary and its rules.',
     cite: 'Retskrivningsordbogen 5.1, § 59.',
     url: 'https://ro.dsn.dk/?paragraf=59&type=rulesearch',
     accessed: '2026-10-21',
@@ -500,7 +493,14 @@ export const RULE_SOURCES: Record<string, Decision> = {
     alternative:
       'CLDR gives English “ ” ‘ ’ (the engine default is « » „ “, a gap already in the backlog as P0), German „ “ ‚ ‘ (the engine sets » « › ‹ on display), French « » with « » inside (the engine uses “ ” inside), and de-CH „ “ ‚ ‘ (the engine ch profile is the fr-CH one). The backlog records that every other tool in the benchmark produces “ ” for English by default (apps/bench/RESULTS.md). Not read: the Swiss Federal Chancellery Schreibweisungen (a PDF this work could not extract text from), Pravopys 2019 (server refused the fetch), Imprimerie nationale Lexique.',
     confidence: 'disputed',
-    langs: { en: ['cldr-delimiters', 'butterick-quotes'], uk: ['cldr-delimiters'], de: ['cldr-delimiters'], pl: ['cldr-delimiters'], fr: ['cldr-delimiters', 'oqlf-espacement'], ch: ['cldr-delimiters'] },
+    langs: {
+      en: ['cldr-delimiters', 'butterick-quotes'],
+      uk: ['cldr-delimiters'],
+      de: ['cldr-delimiters'],
+      pl: ['cldr-delimiters'],
+      fr: ['cldr-delimiters', 'oqlf-espacement'],
+      ch: ['cldr-delimiters'],
+    },
   },
   apostrophe: {
     sources: ['butterick-apostrophes', 'butterick-quotes'],
@@ -528,12 +528,48 @@ export const RULE_SOURCES: Record<string, Decision> = {
     langs: { en: ['butterick-legal'] },
   },
   'dash.dialogue': {
-    sources: ['pravopys-125', 'pwn-pauza-dialogowa', 'rae-raya-dialogos', 'oqlf-tiret-dialogues', 'treccani-lineetta', 'ciberduvidas-travessao', 'indreptar-linia-dialog', 'ibl-pryaka-rech', 'hrvatski-pravopis-8-16', 'slovenski-pravopis-388', 'akh12-259', 'kotus-vuorosanaviiva', 'isof-tankstreck', 'ijp-pomlcka', 'psp-2000', 'dsn-59', 'drukteinis-skyryba'],
+    sources: [
+      'pravopys-125',
+      'pwn-pauza-dialogowa',
+      'rae-raya-dialogos',
+      'oqlf-tiret-dialogues',
+      'treccani-lineetta',
+      'ciberduvidas-travessao',
+      'indreptar-linia-dialog',
+      'ibl-pryaka-rech',
+      'hrvatski-pravopis-8-16',
+      'slovenski-pravopis-388',
+      'akh12-259',
+      'kotus-vuorosanaviiva',
+      'isof-tankstreck',
+      'ijp-pomlcka',
+      'psp-2000',
+      'dsn-59',
+      'drukteinis-skyryba',
+    ],
     why: 'In these languages a line of dialogue opens with a dash, not a quotation mark, so a paragraph that opens with a typed hyphen and a space is such a line. The dash is the one the language uses for it, followed by a no-break space (attached with no space in Spanish), in both registers.',
     alternative:
       'Which dash: the sources set the em dash for uk, es and pt; pl uses whatever dash the text uses (the pack uses the em dash); fr accepts both (em set); bg says long dash but renders the en dash and it shows the en dash, and for both the pack keeps the em dash of its ISG sentence dash so that dialogue and the narrator match; ro, hr, hu, sk, lt, cs, sl, fi and sv set the en dash; da says the same form as the tankestreg, the em dash in the pack. Only the OQLF asks for a no-break space after the dash; the engine sets one everywhere but Spanish so that the dash never ends a line alone. Not set: et (quotes are the norm, EKI), lv and el (the dash is not confirmed by a source read), and en, de, ch, nl, mt, ga (dialogue is quoted). A paragraph whose later line also opens with a dash is read as a list and left alone. The 2019 Ukrainian Pravopys (§ 161) could not be read; § 125 of the earlier edition was. In cs, sl and da a dash is one of several allowed forms.',
     confidence: 'verified',
-    langs: { uk: ['pravopys-125'], pl: ['pwn-pauza-dialogowa'], es: ['rae-raya-dialogos'], fr: ['oqlf-tiret-dialogues'], it: ['treccani-lineetta'], pt: ['ciberduvidas-travessao'], ro: ['indreptar-linia-dialog'], bg: ['ibl-pryaka-rech'], hr: ['hrvatski-pravopis-8-16'], sl: ['slovenski-pravopis-388'], hu: ['akh12-259'], fi: ['kotus-vuorosanaviiva'], sv: ['isof-tankstreck'], cs: ['ijp-pomlcka'], sk: ['psp-2000'], da: ['dsn-59'], lt: ['drukteinis-skyryba'] },
+    langs: {
+      uk: ['pravopys-125'],
+      pl: ['pwn-pauza-dialogowa'],
+      es: ['rae-raya-dialogos'],
+      fr: ['oqlf-tiret-dialogues'],
+      it: ['treccani-lineetta'],
+      pt: ['ciberduvidas-travessao'],
+      ro: ['indreptar-linia-dialog'],
+      bg: ['ibl-pryaka-rech'],
+      hr: ['hrvatski-pravopis-8-16'],
+      sl: ['slovenski-pravopis-388'],
+      hu: ['akh12-259'],
+      fi: ['kotus-vuorosanaviiva'],
+      sv: ['isof-tankstreck'],
+      cs: ['ijp-pomlcka'],
+      sk: ['psp-2000'],
+      da: ['dsn-59'],
+      lt: ['drukteinis-skyryba'],
+    },
   },
   'dash.range': general('A range of numbers takes an en dash, not a hyphen.'),
   'dash.sentence': {
@@ -542,7 +578,14 @@ export const RULE_SOURCES: Record<string, Decision> = {
     alternative:
       'The source sets the em dash flush against the words and calls spaces acceptable; the engine sets it spaced, with a no-break space before it, which matches neither. A search result quoting Bringhurst (The Elements of Typographic Style, 2nd ed., section 5.2.1, not read here) says he prefers a spaced en dash in English, so the primary guides disagree among themselves. UAX #14 gives the em dash class B2, which allows a break on both sides, hence the no-break space before it. The spaced en dash for German and for British literary English is not backed by any source read yet. For ro, hr, hu, sk and sv the spaced en dash comes from the dialogue sources: each sets the same spaced en dash before the words of the narrator, and the packs had no verified sentence dash before.',
     confidence: 'verified',
-    langs: { en: ['butterick-dashes'], ro: ['indreptar-linia-dialog'], hr: ['hrvatski-pravopis-8-16'], hu: ['akh12-259'], sk: ['psp-2000'], sv: ['isof-tankstreck'] },
+    langs: {
+      en: ['butterick-dashes'],
+      ro: ['indreptar-linia-dialog'],
+      hr: ['hrvatski-pravopis-8-16'],
+      hu: ['akh12-259'],
+      sk: ['psp-2000'],
+      sv: ['isof-tankstreck'],
+    },
   },
   'symbol.minus': {
     sources: ['unicode-names', 'butterick-dashes', 'butterick-math'],
@@ -578,7 +621,7 @@ export const RULE_SOURCES: Record<string, Decision> = {
     sources: ['butterick-nbsp', 'uax14'],
     why: 'An abbreviation stays on the line of what it qualifies.',
     alternative:
-      'Only the English case ("Fig." before a number) is backed by a source read. The German, Ukrainian and Polish lists (profiles.ts) are still from general knowledge and have not been read by a native speaker; they stay unchecked even though the decision as a whole reads verified.',
+      'Only the English case ("Fig." before a number) is backed by a source read. The German, Ukrainian and Polish lists (in their packs, src/core/lang/) are still from general knowledge and have not been read by a native speaker; they stay unchecked even though the decision as a whole reads verified.',
     confidence: 'verified',
     langs: { en: ['butterick-nbsp'] },
   },
@@ -675,7 +718,13 @@ export const RULE_SOURCES: Record<string, Decision> = {
   },
 };
 
-const KINDS: readonly Source['kind'][] = ['standard', 'style-guide', 'orthography', 'research', 'tool'];
+const KINDS: readonly Source['kind'][] = [
+  'standard',
+  'style-guide',
+  'orthography',
+  'research',
+  'tool',
+];
 
 const KIND_TITLES: Record<Source['kind'], string> = {
   standard: 'Standards',
@@ -722,7 +771,10 @@ export function render(): string {
     out.push(`### ${KIND_TITLES[kind]}`, '');
     for (const source of group) {
       out.push(`<a id="${anchor(source.id)}"></a>`, `**${source.id}**. ${source.cite}`, '');
-      const via = source.readVia === 'raw' ? 'read as raw data' : 'read as a summary by a fetch tool, check it by hand';
+      const via =
+        source.readVia === 'raw'
+          ? 'read as raw data'
+          : 'read as a summary by a fetch tool, check it by hand';
       if (source.url) out.push(`<${source.url}>, ${via} on ${source.accessed}.`, '');
       else out.push(`${via[0]?.toUpperCase()}${via.slice(1)} on ${source.accessed}.`, '');
       out.push(`Relied on: ${source.claim}`, '');

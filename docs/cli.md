@@ -12,7 +12,7 @@ It typesets text, HTML or Markdown with the same engine as the library functions
 
 | Flag | Short | Argument | Default | Meaning |
 |---|---|---|---|---|
-| `--lang` | `-l` | `en`, `uk`, `de`, `pl`, `fr`, `ch` | `en` | Language of the text. |
+| `--lang` | `-l` | a pack code (the 24 EU languages, `uk`, `ch`) | `en` | Language of the text. |
 | `--register` | `-r` | `display`, `literary` | `display` | Register. |
 | `--format` | `-f` | `text`, `html`, `markdown` (`md` is accepted) | by extension | How to read the input. |
 | `--quotes` | | `language`, `us` | `language` | `language`: the quote marks of the language. `us`: `“…”` and `‘…’` in any language and register. |

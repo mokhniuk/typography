@@ -21,7 +21,7 @@ These are the options the functions below take. Which function takes which is in
 
 | Option | Type | Default | Meaning |
 |---|---|---|---|
-| `lang` | `Lang` | `'en'` | Language of the text. `Lang` is `'en' \| 'uk' \| 'de' \| 'pl' \| 'fr' \| 'ch'` (`ch` is Swiss usage), derived from the packs in `src/core/lang/`. See [languages.md](languages.md). |
+| `lang` | `Lang` | `'en'` | Language of the text. `Lang` is the union of the 26 pack codes (the 24 EU languages, `uk`, and `ch` for Swiss usage), derived from the packs in `src/core/lang/`; `LANGS` lists them. See [languages.md](languages.md). |
 | `register` | `Register` | `'display'` | `'display'` (marketing and interface text) or `'literary'` (book-like text). `literary` has its own rules for English (British quotes, spaced en dash); every other language keeps its display rules. The dialogue dash is the same in both registers. |
 | `quoteStyle` | `QuoteStyle` | `'language'` | `'language'` is the language's own quote marks (its literary ones in the literary register). `'us'` is `“…”` with `‘…’` inside for any language, and takes precedence over both the language table and the literary register. The rehype plugin does not read `lang="en-US"` as US quotes: a page's `<html lang="en-US">` must not change its output, so set the option. |
 | `enable` | `readonly string[]` | none | Rules to switch on that are off by default (`Rule.defaultOn: false`): ids or groups, checked like `disable`. Enabling a rule that is already on does nothing; a rule named in both `enable` and `disable` throws. Nine built-in rules are off by default (`space.before-punctuation`, `space.after-comma`, `punctuation.double`, `space.trailing`, `symbol.plusminus`, `symbol.fraction`, `symbol.degree`, `symbol.implies`, `number.group`); see [rules.md](rules.md) and [limits.md](limits.md#opt-in-rules). |
@@ -32,7 +32,7 @@ These are the options the functions below take. Which function takes which is in
 | `nbsp` | `'entity' \| 'char'` | `'entity'` | HTML only (`HtmlOptions`, and `--nbsp` on the command line). How a no-break space is written in a block that changed: as `&nbsp;`, or as the character U+00A0. |
 | `early` | `boolean` | `true` | A prop of `TypographyRoot`, not an engine option. Whether the root sends the hanging pass inline (`HangScript`). Set `false` on a page whose content security policy forbids inline scripts. |
 
-`quoteStyle`, `enable` and `rules` go wherever `register` and `disable` go (every function and component in the table, including `TypographyRoot` and `Typeset`, and `--quotes` and `--enable` on the command line).
+`quoteStyle`, `enable` and `rules` go wherever `register` and `disable` go (every function and component in the table, including `TypographyRoot` and `Typeset`, and `--quotes` and `--enable` on the command line). `TypographyRoot` and `Typeset` also take `disable` and `onChange`.
 
 | Function or component | `lang` | `register` | `disable` | `onChange` | `blockStart` | `nbsp` | `early` |
 |---|---|---|---|---|---|---|---|
@@ -40,8 +40,8 @@ These are the options the functions below take. Which function takes which is in
 | `explain(text, lang, options)` | argument | yes | yes | (it sets it) | yes | | |
 | `typesetText`, `typesetMarkdown`, `typesetHast`, `rehypeTypography` | yes | yes | yes | yes | | | |
 | `typesetHtml` | yes | yes | yes | yes | | yes | |
-| `Typeset` | prop | prop | | | `atStart` prop | | |
-| `TypographyRoot` | prop | prop | | | | | prop |
+| `Typeset` | prop | prop | prop | prop | `atStart` prop | | |
+| `TypographyRoot` | prop | prop | prop | prop | | | prop |
 
 ## The change record
 
@@ -99,7 +99,7 @@ explain('He said "hi"... 21-26');
 
 ### `typesetText(text, options = {}): string`
 
-`TextOptions` is `ModeOptions` (`lang`, `register`, `disable`, `onChange`). Typesets plain text a paragraph at a time: paragraphs are separated by blank lines, and each opens a block, so a dialogue dash is read at the start of every paragraph. Line breaks, indentation, trailing spaces and the blank lines between paragraphs are kept exactly; a paragraph that needs no change comes back byte for byte. A paragraph in which a rule would add or remove a line is kept as it came.
+`TextOptions` is `ModeOptions` (`lang`, `register`, `quoteStyle`, `disable`, `enable`, `rules`, `onChange`). Typesets plain text a paragraph at a time: paragraphs are separated by blank lines, and each opens a block, so a dialogue dash is read at the start of every paragraph. Line breaks, indentation, trailing spaces and the blank lines between paragraphs are kept exactly; a paragraph that needs no change comes back byte for byte. A paragraph in which a rule would add or remove a line is kept as it came.
 
 ### `typesetBlock(joined, options): { text: string; keep: () => void }`
 
@@ -149,7 +149,7 @@ type HtmlOptions = ModeOptions & { nbsp?: 'entity' | 'char' };
 
 Typesets the text of an HTML string. Tags, attributes, comments and the content of `<pre>`, `<code>`, `<script>`, `<style>`, `<kbd>`, `<samp>`, `<textarea>`, `<svg>`, `<math>` and `<template>` are left exactly as they were. Text is typeset a block at a time with each inline element standing in as a placeholder, so a quotation pairs across a link. A block whose text needs no change is returned byte for byte.
 
-Entities: `&quot; &apos; &amp; &lt; &gt; &nbsp;`, the typographic names (`&mdash; &laquo; &hellip;` and so on) and numeric references are read as the characters they stand for. In a block that changes, text is written back as Unicode characters, with `& < >` escaped and, by default, a no-break space as `&nbsp;`; the output needs UTF-8. Any other named entity (`&copy;`, `&euro;`) is kept as it was.
+Entities: `&quot; &apos; &amp; &lt; &gt; &nbsp;`, the typographic names (`&mdash; &laquo; &hellip;` and so on), the printable signs the rules act on (`&euro; &copy; &reg; &trade; &deg; &times; &minus; &plusmn; &sect; &para; &frac12; &frac14; &frac34;`) and numeric references are read as the characters they stand for, so `5 &euro;` binds like `5 €`. In a block that changes, text is written back as Unicode characters, with `& < >` escaped and, by default, a no-break space as `&nbsp;`; the output needs UTF-8. Any other named entity (`&alpha;`, `&shy;`) is kept as it was.
 
 ```ts
 import { typesetHtml } from '@podiia/typography/html';
@@ -263,7 +263,7 @@ hangPieces('Grass (Camden House, 2027). He');
 
 `react` (18 or later) is an optional peer dependency; only this entry needs it.
 
-### `<TypographyRoot lang? register? early?>`
+### `<TypographyRoot lang? register? quoteStyle? disable? enable? rules? onChange? early?>`
 
 Wraps a page so its text is typeset: it sets the language and register every `Typeset` under it falls back to (a value left out is inherited from an outer root, then from `en` and `display`), and hangs opening punctuation wherever a line starts with it. It renders one `<div>` around its children. On a prerendered page it also sends the hanging pass inline with `<HangScript />` as the last child of that div; `early={false}` turns that off.
 
@@ -272,9 +272,13 @@ Wraps a page so its text is typeset: it sets the language and register every `Ty
 | `children` | `ReactNode` | required |
 | `lang` | `Lang` | inherited |
 | `register` | `Register` | inherited |
+| `quoteStyle` | `QuoteStyle` | inherited |
+| `disable`, `enable` | `readonly string[]` | inherited; pass a constant, not an inline array |
+| `rules` | `readonly Rule[]` | inherited; pass a constant |
+| `onChange` | `(change: Change) => void` | inherited; pass a stable function (`useCallback`). Called when a text is typeset, not on every render. |
 | `early` | `boolean` | `true` |
 
-### `<Typeset text atStart? lang? register?>`
+### `<Typeset text atStart? lang? register? quoteStyle? disable? enable? rules? onChange?>`
 
 A plain string, typeset in the language and register of the surrounding root (or those given as props), with its hanging marks wrapped in `data-hang` spans. Memoised on its arguments.
 
@@ -282,7 +286,8 @@ A plain string, typeset in the language and register of the surrounding root (or
 |---|---|---|
 | `text` | `string` | required |
 | `atStart` | `boolean` | `true`; set `false` for a string that continues a paragraph after an element. Also passed as `blockStart`. |
-| `lang`, `register` | `Lang`, `Register` | from `TypographyRoot` |
+| `lang`, `register`, `quoteStyle` | `Lang`, `Register`, `QuoteStyle` | from `TypographyRoot` |
+| `disable`, `enable`, `rules`, `onChange` | as on `TypographyRoot` | from `TypographyRoot`; pass constants |
 
 ```tsx
 import { Typeset, TypographyRoot } from '@podiia/typography/react';

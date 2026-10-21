@@ -14,9 +14,12 @@ What the engine deliberately leaves alone, what it knowingly does not do, and wh
 ## Rule behaviour to know about
 
 - **A quotation is written in double quotes in the source.** A plural possessive inside a single-quoted one (`‘the dogs’ bone’`) is read as the end of the quotation.
+- **A space just inside a quotation mark goes** (`" stone "` is `«stone»`), unless the mark is glued to a word on the outside (`km‘ z`, `c ‘d`, `Nr." %"`): then the space was typed on the wrong side of the mark and moves out (`km «z`, `c» d`), so that no two words are glued together. A straight `"` whose next mark opens another quotation (`"a then "b" c`) is a lone opener, read by where it stands.
+- **`(C)`, `(R)` and `(TM)` always become `© ® ™`**, including an uppercase `(C)` used as a list marker; lowercase `(c)` needs a year after it. `->` and `<-` become arrows except as the end of a comment or long arrow (`-->`), a double-headed one (`<->`), or a comparison with a negative number (`x<-1`).
 - **A quote with no partner is only handled for the straight `"`.** A lone curly mark (`“`, `„`) is left as written, because whether it opens or closes depends on the language.
 - **A quotation that continues across paragraphs** (books reopen the quote at each paragraph start) is not followed. Pairing is per string, so the lone opener is left as it is.
 - **`symbol.minus` reads `-5` as a minus after a space or a parenthesis**, so a command-line flag in prose (`use -9`) becomes `−9`. Switch the rule off for that text, or put the flag in a code span.
+- **The last words of a paragraph are not kept together** (widows and runts): a no-break space is a line-break constraint, and what looks right depends on the column width, which a string rule cannot see. Use CSS `text-wrap: pretty` (or `balance` for headings) on the page instead.
 - **A number range can break after its en dash** (`21–` then `26 September` on the next line). A word joiner after the dash would stop it; it is not done because it changes the characters that are copied out of the text.
 - **`%` and `€` get a no-break space in German and French only** (`space.percent`). Ukrainian and Polish usage was not checked, and English puts the euro sign first.
 - **The abbreviation lists are short and have not been read by a native speaker.** See [languages.md](languages.md).
@@ -42,7 +45,7 @@ Nine rules are off until named in `enable` (`number.group` is described in the r
 
 - The `lang` attribute is not read; pass `lang`. (The rehype plugin does read it.)
 - A tag is told from text by a tokenizer, not by a real HTML parser: malformed markup is left alone rather than repaired.
-- Any named entity other than the ones listed in [api.md](api.md) (`&copy;`, `&euro;`) is kept as it was.
+- Any named entity other than the ones listed in [api.md](api.md) (`&alpha;`, `&shy;`) is kept as it was, and the rules do not see the character it stands for.
 - A block in which a rule would lose or add a placeholder or a line cannot be mapped back onto its markup, so it is kept as it came and reports no changes.
 
 ## Markdown mode
@@ -53,7 +56,7 @@ Nine rules are off until named in `enable` (`number.group` is described in the r
 
 ## Rehype
 
-- Only an element's `lang` (or `xmlLang`) property sets the language of its subtree, and only if its primary subtag is one of `en`, `uk`, `de`, `pl`, `fr`, `ch`; `de-CH` is read as `de`, not `ch`.
+- Only an element's `lang` (or `xmlLang`) property sets the language of its subtree, and only if its primary subtag is a pack code (`LANGS`); `de-CH` is read as `de`, not `ch`.
 
 ## Hanging punctuation
 

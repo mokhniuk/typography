@@ -46,9 +46,8 @@
  *    (so `12-15` in a path and `->` in a command survive), and a leading apostrophe
  *    on a year (’90s) does not stop a quotation from pairing.
  *
- * Hanging only covers opening marks. Closing quotes, commas and full stops hang
- * at the *end* of a line, which shows only in justified text; ours is
- * ragged-right, so hanging them would move nothing.
+ * Hanging covers opening marks at the start of a line and closing marks at its
+ * end (see `hangPieces` and `hangPunctuation` in ../dom).
  */
 
 import { type DiffRun, diff } from './diff';
@@ -102,7 +101,7 @@ function changesOf(rule: string, runs: readonly DiffRun[]): Change[] {
 /**
  * Applies the house rules (see the header) to a plain string. Running it again on
  * its own output changes nothing, in every language (German reads its own »…« and
- * ›…‹ by where each mark stands, see GERMAN_PAIRS in quotes.ts).
+ * ›…‹ by where each mark stands, see `turnedPairs` on the pack and quotes.ts).
  */
 export function typographic(
   text: string,
@@ -170,15 +169,7 @@ export type ModeOptions = {
  */
 export function typesetBlock(
   joined: string,
-  {
-    lang = 'en',
-    register = 'display',
-    quoteStyle,
-    disable,
-    enable,
-    rules,
-    onChange,
-  }: ModeOptions,
+  { lang = 'en', register = 'display', quoteStyle, disable, enable, rules, onChange }: ModeOptions,
 ): { text: string; keep: () => void } {
   const found: Change[] = [];
   const text = typographic(joined, lang, {
