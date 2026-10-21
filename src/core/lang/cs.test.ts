@@ -33,6 +33,10 @@ describe('Czech', () => {
     expect(t('Řekl: "jdu domů".')).toBe('Řekl: „jdu domů“.');
   });
 
+  test('a word that ends in a list letter is not bound; the standalone letter after it is', () => {
+    expect(t('Rusko a on')).toBe('Rusko a~on');
+  });
+
   test('ÚJČ line ends: k, s, v, z, o, u, a, i stay with the next word', () => {
     expect(t('Jdu k lesu s přítelem v noci z města')).toBe('Jdu k~lesu s~přítelem v~noci z~města');
     expect(t('o domě u cesty a on i ona')).toBe('o~domě u~cesty a~on i~ona');
