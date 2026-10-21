@@ -250,7 +250,7 @@ It runs once now, again when web fonts are ready (every mark is re-measured), wh
 
 ### `markHangs(el: HTMLElement): void`
 
-Wraps the punctuation under `el` that should hang in the spans `hangPunctuation` reads, for markup that did not come from `HangText`: the output of the HTML, Markdown or rehype modes, or any page. A text node opens a word where it begins its block or follows text that ended in a space. Text in `pre`, `code`, `kbd`, `samp`, `script`, `style` and `textarea`, and text already wrapped, is left alone. Every span gets a rough width (0.4em per mark) so the text hangs at once; call `hangPunctuation(el)` after it for the exact widths.
+Wraps the punctuation under `el` that should hang in the spans `hangPunctuation` reads, for markup that did not come from `HangText`: the output of the HTML, Markdown or rehype modes, or any page. A text node opens a word where it begins its block or follows text that ended in a space, and a mark at its end is read against the next text in the block, so `<ins>“</ins>Curiouser` hangs. Text in `pre`, `code`, `kbd`, `samp`, `script`, `style` and `textarea`, and text already wrapped, is left alone. Every span gets a rough width (0.4em per mark) so the text hangs at once; call `hangPunctuation(el)` after it for the exact widths.
 
 ### `hangStyle(piece, next)`
 
@@ -290,13 +290,13 @@ splitHangs('«Hello» he said');
 
 `splitHangs` covers opening marks only; `hangPieces` adds closing ones.
 
-### `hangPieces(text, atStart = true): HangPiece[]`
+### `hangPieces(text, atStart = true, after?): HangPiece[]`
 
 ```ts
 type HangPiece = { kind: 'text' | 'space' | 'open' | 'close'; text: string };
 ```
 
-Cuts `text` for hanging on both sides: `open` is an opening run that starts a word and is followed by a letter or digit; `space` is the whitespace before it; `close` is a closing run (`» › « ‹ ” “ ’ ‘ ) ] }`) that ends a word, with any `.,;:!?…` after it, together with the whitespace after it (a closing run and an opening run around one space share it). `atStart` says whether a word starts at the first character (a paragraph start, or text after a space); a text that continues a word starts mid-word. The pieces' texts joined give `text` back. This is what `HangText` renders and `markHangs` wraps.
+Cuts `text` for hanging on both sides: `open` is an opening run that starts a word and is followed by a letter or digit; `space` is the whitespace before it; `close` is a closing run (`» › « ‹ ” “ ’ ‘ ) ] }`) that ends a word, with any `.,;:!?…` after it, together with the whitespace after it (a closing run and an opening run around one space share it). `atStart` says whether a word starts at the first character (a paragraph start, or text after a space); a text that continues a word starts mid-word. `after` is the character that follows `text` when markup cut the two apart (`<ins>“</ins>Curiouser`); unset, `text` ends its paragraph. The pieces' texts joined give `text` back. This is what `HangText` renders and `markHangs` wraps.
 
 ```ts
 hangPieces('Grass (Camden House, 2027). He');

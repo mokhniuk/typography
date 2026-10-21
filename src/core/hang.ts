@@ -58,9 +58,11 @@ export type HangPiece = { kind: 'text' | 'space' | 'open' | 'close'; text: strin
  * margins in the middle of a line and goes away with the space wherever the line breaks there.
  * So the space before an opener is its own `space` piece, and a closer keeps the space after it in
  * its own piece (a closer and an opener around one space share it). `atStart` says whether `text`
- * begins a paragraph; a text that continues another starts mid-word. The texts joined give `text`.
+ * begins a paragraph; a text that continues another starts mid-word. `after` is the character
+ * that follows `text` in its paragraph when markup cut the two apart (`<ins>“</ins>Curiouser`);
+ * unset, `text` ends the paragraph. The texts joined give `text`.
  */
-export function hangPieces(text: string, atStart = true): HangPiece[] {
+export function hangPieces(text: string, atStart = true, after?: string): HangPiece[] {
   const out: HangPiece[] = [];
   const space = (ch: string | undefined) => ch !== undefined && /\s/.test(ch);
   let plain = 0;
@@ -74,7 +76,8 @@ export function hangPieces(text: string, atStart = true): HangPiece[] {
     if (OPENERS.includes(ch) && startsWord) {
       let end = i;
       while (end < text.length && OPENERS.includes(text.charAt(end))) end++;
-      if (end < text.length && !space(text.charAt(end))) {
+      const next = end < text.length ? text.charAt(end) : after;
+      if (next !== undefined && !space(next)) {
         let cut = i;
         while (cut > plain && space(text.charAt(cut - 1))) cut--;
         flush(cut);
@@ -93,7 +96,8 @@ export function hangPieces(text: string, atStart = true): HangPiece[] {
         (CLOSERS.includes(text.charAt(end)) || TRAILING.includes(text.charAt(end)))
       )
         end++;
-      if (end === text.length || space(text.charAt(end))) {
+      const next = end < text.length ? text.charAt(end) : after;
+      if (next === undefined || space(next)) {
         let after = end;
         while (after < text.length && space(text.charAt(after))) after++;
         flush(i);

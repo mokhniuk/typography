@@ -59,13 +59,23 @@ export function markHangs(root: HTMLElement): void {
   for (let node = walker.nextNode(); node; node = walker.nextNode()) nodes.push(node as Text);
   // The last character of text seen in each block: a word starts after none or after a space.
   const last = new Map<Element, string>();
-  for (const node of nodes) {
-    const block = blockOf(node);
+  const blocks = nodes.map(blockOf);
+  // The first character of the text after each node in its block, which a mark at the node's
+  // edge is read against: in `<ins>“</ins>Curiouser` the letter is in the next node.
+  const after: (string | undefined)[] = [];
+  let next: string | undefined;
+  for (let k = nodes.length - 1; k >= 0; k--) {
+    if (blocks[k] !== blocks[k + 1]) next = undefined;
+    after[k] = next;
+    next = nodes[k]?.data.charAt(0) || next;
+  }
+  for (const [k, node] of nodes.entries()) {
+    const block = blocks[k] as Element;
     const before = last.get(block);
     last.set(block, node.data.slice(-1) || (before ?? ''));
     if (!/\S/.test(node.data) || node.parentElement?.closest(SKIP)) continue;
     const atStart = before === undefined || /\s/.test(before);
-    const pieces = hangPieces(node.data, atStart);
+    const pieces = hangPieces(node.data, atStart, after[k]);
     if (!pieces.some((piece) => piece.kind !== 'text')) continue;
     node.replaceWith(
       ...pieces.map((piece, i) => {

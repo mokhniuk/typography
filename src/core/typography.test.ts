@@ -607,6 +607,18 @@ describe('hangPieces', () => {
     expect(show('a«b»c and « x » and ( )')).toBe('a«b»c and « x » and ( )');
   });
 
+  test('a mark cut off from its word by markup reads the text after it', () => {
+    // `<ins>“</ins>Curiouser`, `“<em>Alice</em>`: the letter is in the next text node.
+    expect(hangPieces('“', true, 'C').map((p) => p.kind)).toEqual(['open']);
+    expect(hangPieces('; “', false, 'n').map((p) => p.kind)).toEqual(['text', 'space', 'open']);
+    expect(hangPieces('“', true, ' ').map((p) => p.kind)).toEqual(['text']);
+    expect(hangPieces('“', true).map((p) => p.kind)).toEqual(['text']);
+    // `I<ins>’</ins>m`: an apostrophe inside a word does not close it.
+    expect(hangPieces('’', false, 'm').map((p) => p.kind)).toEqual(['text']);
+    expect(hangPieces('”', false, ' ').map((p) => p.kind)).toEqual(['close']);
+    expect(hangPieces('”', false).map((p) => p.kind)).toEqual(['close']);
+  });
+
   test('a closing run followed by an opening one shares the space', () => {
     expect(show('(a) (b)')).toBe('[(a) ][(b)]');
     expect(hangPieces('(a) (b)').map((p) => p.kind)).toEqual([

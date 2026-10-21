@@ -2,6 +2,10 @@
 
 Versions follow semver while the package is below 1.0.0: a **minor** release may change the output of the engine or the API (every entry says whether it can change output you already have), a **patch** release fixes a bug without changing output you rely on. If you depend on exact output, pin a tag and read this file before you move it.
 
+### Fixes
+
+- `markHangs` hangs a mark that markup cuts off from its word (`<ins>“</ins>Curiouser`, `“<em>Alice</em>`): it reads the next text in the block, so the opening mark hangs, and an apostrophe in its own element (`I<ins>’</ins>m`) is no longer wrapped as a closing mark. `hangPieces` takes the character after the text as a third argument, `after`. Can change existing output: no for text; yes for the DOM `markHangs` builds.
+
 ## 0.6.0 (2026-10-21)
 
 - A configuration per project: `TypographyConfig` gathers `lang`, `register`, `quoteStyle`, `disable`, `enable`, `rules`, `nbsp` and `hangAmount` under the names the functions take, so one object spreads into every call (`typesetHtml(html, site)`, `typographic(text, site.lang, site)`, `use(rehypeTypography, site)`); an option given to a call replaces the config's value, lists are not merged. `defineConfig` returns a config after checking it (unknown key, bad value, unknown rule name) and `checkConfig` checks one read from JSON. `TypographyRoot` and `Typeset` take `config` (their own props beat it, it beats the outer root), and `TypographyRoot` takes `hangAmount`, set as `--hang-amount` on its `div`. `typo --config <file>` reads a module's default export or a JSON file, and without it the `typography` key of `package.json`; flags beat the config. The playground shows its switches as a config and applies a pasted one. `ModeOptions` is now `TypographyConfig` plus `onChange` (so every mode accepts `nbsp` and `hangAmount`; only HTML reads `nbsp`), `HtmlOptions` is `ModeOptions`, and the `Io` of the command line has `importModule`. Can change existing output: no.
