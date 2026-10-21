@@ -137,7 +137,9 @@ Confidence: `general-knowledge`.
 
 Why: Integers of five or more digits are grouped in threes with the language separator (comma, no-break space, dot) so a long number can be read.
 
-Alternative: Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge. Separators per language come from the packs and are unverified; Swiss usage differs (the pack follows the Federal Chancellery, not read here).
+Alternative: Opt-in rule (off unless named in `enable`). The SI brochure (9th ed., 5.4.4) says digits "may be divided into groups of three by a space", that "neither dots nor commas are ever inserted in the spaces between groups", that with only four digits before or after the decimal marker a space is not used to isolate a single digit, and that the practice "is a matter of choice". The engine agrees on groups of three, on starting at five digits, and on the space itself for the languages whose pack uses a no-break space (the brochure does not say nonbreaking). It deliberately differs where the pack groups with a comma (en) or a dot, which the brochure forbids; that is local custom, not SI. The brochure is a metrology standard and does not speak for ordinary prose in any one language, so the choice stays general-knowledge. Separators per language come from the packs and are otherwise unverified; Swiss usage differs (the pack follows the Federal Chancellery, not read here).
+
+Sources: [bipm-si-brochure-9](#src-bipm-si-brochure-9)
 
 ### `dash.range`
 
@@ -170,7 +172,7 @@ Confidence: `general-knowledge`.
 
 Why: +- before a digit is the plus-minus sign ±.
 
-Alternative: Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge.
+Alternative: Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge. The SI brochure, 9th ed. (read in full for task 3), does not address the ± sign in section 5.4 or elsewhere in its text, so it does not back this rule.
 
 ### `symbol.minus`
 
@@ -178,7 +180,7 @@ Confidence: `general-knowledge`.
 
 Why: A minus sign is −, not a hyphen.
 
-Alternative: Unicode only shows that the character exists; it does not say when to use it. Butterick says to use an en dash for the minus sign (the "Math symbols" page also lists the &minus; entity) and calls an en dash acceptable in spreadsheets, so a style guide that prefers − over – was not found. Still unchecked.
+Alternative: The SI brochure, 9th ed. (read in full), has no passage on the minus sign: its section 5.4.4 only shows the leading zero (-0.234 but not -.234) and says nothing of the character to use, so it does not back this rule. Unicode only shows that the character exists; it does not say when to use it. Butterick says to use an en dash for the minus sign (the "Math symbols" page also lists the &minus; entity) and calls an en dash acceptable in spreadsheets, so a style guide that prefers − over – was not found. Still unchecked.
 
 Sources: [unicode-names](#src-unicode-names), [butterick-dashes](#src-butterick-dashes), [butterick-math](#src-butterick-math)
 
@@ -258,22 +260,26 @@ Sources: [nist-si-checklist](#src-nist-si-checklist), [uax14](#src-uax14)
 
 Confidence: `verified`.
 
-Why: German and French set a no-break space before % and a currency sign. CLDR agrees for % in de and fr, and for the currency sign in de and fr; it sets no space before % in en, uk, pl, de-CH and fr-CH, which is what the engine does. OQLF, a printed-style authority, agrees for French: a no-break space before %, $ and €.
+Why: German and French set a no-break space before % and a currency sign. CLDR agrees for % in de and fr, and for the currency sign in de and fr; it sets no space before % in en, uk, pl, de-CH and fr-CH, which is what the engine does. OQLF, a printed-style authority, agrees for French: a no-break space before %, $ and €. For € alone, the Greek, Finnish, Italian and Danish editions of the Interinstitutional Style Guide (part 3, 7) write the symbol after the figure with a space (30 €), as does the Czech handbook (250 €, with a fixed space), so currencySpace stays on in el, fi, it, da and cs.
 
-Alternative: The space before % and the space before € are two pack fields, percentSpace and currencySpace: Irish, Maltese, Portuguese, Latvian, Lithuanian and Estonian set the first and not the second, because their ISG editions write €30 with no space or show money only as the code EUR (see each pack's notes). CLDR also puts a no-break space before the currency sign in uk, pl and fr-CH; the engine leaves 49€ alone there (a gap, in the backlog). OQLF also asks for a no-break space before a French colon, and none or a fine space before ; ! and ?, which the engine does not set (a gap, in the backlog). OQLF is a Quebec source; a France or Swiss guide may differ (a fine space). The German side rests on CLDR only; no Duden page was read.
+Alternative: The space before % and the space before € are two pack fields, percentSpace and currencySpace: Irish, Maltese, Portuguese, Latvian, Lithuanian and Estonian set the first and not the second, because their ISG editions write €30 with no space or show money only as the code EUR (see each pack's notes). CLDR also puts a no-break space before the currency sign in uk, pl and fr-CH; the engine leaves 49€ alone there (a gap, in the backlog). OQLF also asks for a no-break space before a French colon, and none or a fine space before ; ! and ?, which the engine does not set (a gap, in the backlog). OQLF is a Quebec source; a France or Swiss guide may differ (a fine space). The German side rests on CLDR only; no Duden page was read. The ISG passage is for the euro only (other currency signs are never spaced by the engine) and, apart from the Finnish edition, does not say the space is nonbreaking; the Czech handbook was read as a fetch-tool summary. The ISG percent rule (6.4) cited in the packs was not re-read here. Of the country guides named in the packs (Kielitoimiston ohjepankki, Retskrivningsordbogen, Treccani), none was read for €.
 
-Sources: [cldr-numbers](#src-cldr-numbers), [oqlf-espacement](#src-oqlf-espacement), [uax14](#src-uax14)
+Sources: [cldr-numbers](#src-cldr-numbers), [oqlf-espacement](#src-oqlf-espacement), [isg-2022-euro](#src-isg-2022-euro), [ijp-penezni-castky](#src-ijp-penezni-castky), [uax14](#src-uax14)
 
 - `de`: [cldr-numbers](#src-cldr-numbers)
 - `fr`: [cldr-numbers](#src-cldr-numbers), [oqlf-espacement](#src-oqlf-espacement)
 
 ### `symbol.degree`
 
-Confidence: `general-knowledge`.
+Confidence: `verified`.
 
 Why: A temperature or angle unit gets a no-break space before it (20 °C), and the degree sign is added where the unit letter stands alone.
 
-Alternative: Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge. The SI brochure rule on the space before a unit and its plane-angle exception are in the backlog reading list, not read.
+Alternative: Opt-in rule (off unless named in `enable`). The SI brochure, 9th ed., 5.4.3: a space always separates the unit from the number, so "t = 30.2 °C but not t = 30.2°C"; the one exception is the plane-angle degree, minute and second, which take no space (30° 22′ 8″). The engine agrees: it puts a space before ° only when a C or F follows, and leaves a bare angle degree (30°) alone. The brochure does not say the space is nonbreaking (our choice), and it covers the Celsius scale only: the Fahrenheit case (°F) is not SI, so no source was read for it. The label guard (Type 2 F is not a temperature) and the English-only rule for a bare C or F are the engine's own.
+
+Sources: [bipm-si-brochure-9](#src-bipm-si-brochure-9)
+
+- `en`: [bipm-si-brochure-9](#src-bipm-si-brochure-9)
 
 ### `space.section`
 
@@ -347,6 +353,13 @@ Relied on: Per locale: en “ ” and ‘ ’; uk « » and „ “; de „ “ 
 
 Relied on: There is a space between a numerical value and a unit symbol, and between a number and the percent sign ("10 %"); the page does not say the space is nonbreaking.
 
+<a id="src-bipm-si-brochure-9"></a>
+**bipm-si-brochure-9**. BIPM, The International System of Units (SI), 9th edition, 2019 (version of 2022), section 5.4.3 "Formatting the value of a quantity" and 5.4.4 "Formatting numbers, and the decimal marker", pp. 144-145; Appendix 1, 9th CGPM Resolution 7 (1948) and 22nd CGPM Resolution 10 (2003).
+
+<https://www.bipm.org/documents/20126/41483022/SI-Brochure-9-EN.pdf>, read as raw data on 2026-10-22.
+
+Relied on: A space always separates a number from its unit symbol, so "30.2 °C" and not "30.2°C"; the only exception is the plane-angle symbols for degree, minute and second, which take no space. Digits may be grouped in threes by a space, never by commas or dots, and a four-digit number is not split.
+
 <a id="src-unicode-names"></a>
 **unicode-names**. The Unicode Standard 18.0.0, NamesList-18.0.0.txt (generated 2026-08-10), entries U+2212 and U+00D7.
 
@@ -390,6 +403,13 @@ Relied on: Use a nonbreaking space after § and ¶, after abbreviations such as 
 <https://practicaltypography.com/paragraph-and-section-marks.html>, read as a summary by a fetch tool, check it by hand on 2026-10-22.
 
 Relied on: "A paragraph mark or section mark should always be followed by a nonbreaking space", which "acts like glue that keeps the mark joined with the numeric reference that follows"; "In a reference to multiple paragraphs or sections, double the mark (¶¶ or §§)"; at the start of a sentence, spell the word out instead of using the mark.
+
+<a id="src-isg-2022-euro"></a>
+**isg-2022-euro**. Interinstitutional Style Guide, Greek (0016), Finnish (0017), Italian (0021) and Danish (0022) editions, PDF of 19 April 2022, part 3 (conventions common to all languages), 7, "Position of the euro symbol (€) in amounts".
+
+<https://publications.europa.eu/resource/cellar/01ed788a-d266-11ec-a95f-01aa75ed71a1.0021.01/DOC_1>, read as raw data on 2026-10-22.
+
+Relied on: The € symbol follows the figure, separated from it by a space ("una somma di 30 €", "ποσό 30 €", "et beløb på 30 €"; Finnish "30 €", the symbol and code separated from the figure by a fixed space); English, Irish, Maltese and Dutch put it before the figure without a space (€30).
 
 <a id="src-oqlf-espacement"></a>
 **oqlf-espacement**. OQLF, Banque de dépannage linguistique, "Espacement avant et après les signes de ponctuation et les symboles" (web page, updated 2024).
@@ -483,6 +503,13 @@ Relied on: A tankstreck may mark direct speech, common in news and fiction: each
 Relied on: Direct speech shown as dialogue is set off with dashes (brūkšniai), retold direct speech with quotation marks.
 
 ### Orthography
+
+<a id="src-ijp-penezni-castky"></a>
+**ijp-penezni-castky**. Internetová jazyková příručka, "Peněžní částky, značky měn" (id 786) and "Zalomení řádků a nevhodné výrazy na jejich konci" (id 880).
+
+<https://prirucka.ujc.cas.cz/?id=880>, read as a summary by a fetch tool, check it by hand on 2026-10-22.
+
+Relied on: A number and a currency sign are separated by a space ("100 Kč"; without one the compound reads as an adjective), and a line may not break between the number and the sign of a unit or currency ("1 000 000 Kč, 250 €"), for which a fixed space is advised.
 
 <a id="src-pravopys-125"></a>
 **pravopys-125**. Український правопис (1993 rules, labelled the 2015 edition on pravopys.net), § 125, points 1 and 3б.

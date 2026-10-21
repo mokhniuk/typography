@@ -47,7 +47,7 @@ tr:last-child td{border-bottom:0}
 <body>
 <main>
 <h1>Typography bibliography</h1>
-<p class="lead">Every source the rules rest on: 32 read so far. Each row says who wrote it, links to it, what it is, the one thing we rely on, and which rules and languages cite it. Generated from <code>resources/sources.ts</code> by <code>bun run docs:sources</code>; do not edit by hand. The decisions themselves, with their gaps, are on the <a href="sources.html">sources page</a>.</p>
+<p class="lead">Every source the rules rest on: 35 read so far. Each row says who wrote it, links to it, what it is, the one thing we rely on, and which rules and languages cite it. Generated from <code>resources/sources.ts</code> by <code>bun run docs:sources</code>; do not edit by hand. The decisions themselves, with their gaps, are on the <a href="sources.html">sources page</a>.</p>
 <div class="table">
 <table>
 <thead><tr><th>Source</th><th>Author</th><th>Kind</th><th>What it is</th><th>Relied on</th><th>Used in</th><th>Read</th></tr></thead>
@@ -87,6 +87,15 @@ tr:last-child td{border-bottom:0}
 <td>Direct speech may be quoted, but is usually set on a new line with a long dash (дълго тире) and a space after it, with a spaced dash before the attribution.</td>
 <td><a class="chip" href="sources.html#rule-dash-dialogue">dash.dialogue</a> <span class="meta">bg</span></td>
 <td><span class="via summary">Summary only, check by hand</span><br><span class="meta">2026-10-21</span></td>
+</tr>
+<tr id="src-ijp-penezni-castky">
+<td><b><a href="https://prirucka.ujc.cas.cz/?id=880" target="_blank" rel="noopener">Internetová jazyková příručka: Peněžní částky, značky měn; Zalomení řádků ↗</a></b><br><span class="meta">ijp-penezni-castky</span></td>
+<td>Ústav pro jazyk český AV ČR</td>
+<td>Orthography</td>
+<td>The online Czech language handbook of the Czech Academy of Sciences. The money entry covers the koruna sign; the € sign appears there only in a list of symbols, and the line-break entry gives the € example.</td>
+<td>A number and a currency sign are separated by a space (&quot;100 Kč&quot;; without one the compound reads as an adjective), and a line may not break between the number and the sign of a unit or currency (&quot;1 000 000 Kč, 250 €&quot;), for which a fixed space is advised.</td>
+<td><a class="chip" href="sources.html#rule-space-percent">space.percent</a></td>
+<td><span class="via summary">Summary only, check by hand</span><br><span class="meta">2026-10-22</span></td>
 </tr>
 <tr id="src-ijp-pomlcka">
 <td><b><a href="https://prirucka.ujc.cas.cz/?id=165" target="_blank" rel="noopener">Internetová jazyková příručka: Pomlčka; Uvozovky ↗</a></b><br><span class="meta">ijp-pomlcka</span></td>
@@ -150,6 +159,15 @@ tr:last-child td{border-bottom:0}
 <td>Direct speech is normally in double quotation marks; a dash may replace them only at the start of a paragraph with no lead-in clause, and the dash is spaced on both sides.</td>
 <td><a class="chip" href="sources.html#rule-dash-dialogue">dash.dialogue</a> <span class="meta">sl</span></td>
 <td><span class="via summary">Summary only, check by hand</span><br><span class="meta">2026-10-21</span></td>
+</tr>
+<tr id="src-bipm-si-brochure-9">
+<td><b><a href="https://www.bipm.org/documents/20126/41483022/SI-Brochure-9-EN.pdf" target="_blank" rel="noopener">The International System of Units (SI), 9th edition (SI Brochure) ↗</a></b><br><span class="meta">bipm-si-brochure-9</span></td>
+<td>Bureau International des Poids et Mesures (BIPM)</td>
+<td>Standard</td>
+<td>The definitive international reference on the SI, in force since 2019 (2022 text). Section 5.4 sets how the value of a quantity and a number are written. It is a metrology standard: it covers unit symbols and digit grouping, not general prose typography, and it does not say whether a space is nonbreaking.</td>
+<td>A space always separates a number from its unit symbol, so &quot;30.2 °C&quot; and not &quot;30.2°C&quot;; the only exception is the plane-angle symbols for degree, minute and second, which take no space. Digits may be grouped in threes by a space, never by commas or dots, and a four-digit number is not split.</td>
+<td><a class="chip" href="sources.html#rule-number-group">number.group</a><br><a class="chip" href="sources.html#rule-symbol-degree">symbol.degree</a> <span class="meta">en</span></td>
+<td><span class="via raw">Raw data</span><br><span class="meta">2026-10-22</span></td>
 </tr>
 <tr id="src-cldr-delimiters">
 <td><b><a href="https://cdn.jsdelivr.net/npm/cldr-misc-full@46.0.0/main/de-CH/delimiters.json" target="_blank" rel="noopener">CLDR 46 locale data: delimiters (cldr-misc-full 46.0.0) ↗</a></b><br><span class="meta">cldr-delimiters</span></td>
@@ -294,6 +312,15 @@ tr:last-child td{border-bottom:0}
 <td>Direct speech shown as dialogue is set off with dashes (brūkšniai), retold direct speech with quotation marks.</td>
 <td><a class="chip" href="sources.html#rule-dash-dialogue">dash.dialogue</a> <span class="meta">lt</span></td>
 <td><span class="via summary">Summary only, check by hand</span><br><span class="meta">2026-10-21</span></td>
+</tr>
+<tr id="src-isg-2022-euro">
+<td><b><a href="https://publications.europa.eu/resource/cellar/01ed788a-d266-11ec-a95f-01aa75ed71a1.0021.01/DOC_1" target="_blank" rel="noopener">Interinstitutional Style Guide, Greek, Finnish, Italian and Danish editions (PDF of 19 April 2022), part 3, 7: codes of countries, languages and currencies ↗</a></b><br><span class="meta">isg-2022-euro</span></td>
+<td>Publications Office of the European Union (interinstitutional)</td>
+<td>Style guide</td>
+<td>The language editions of the EU institutions' own style guide. The section on currencies sets where the euro code and the euro symbol go beside a figure, in each edition. It binds EU publications, not the national orthographies; it does not say the space is nonbreaking except in the Finnish edition.</td>
+<td>The € symbol follows the figure, separated from it by a space (&quot;una somma di 30 €&quot;, &quot;ποσό 30 €&quot;, &quot;et beløb på 30 €&quot;; Finnish &quot;30 €&quot;, the symbol and code separated from the figure by a fixed space); English, Irish, Maltese and Dutch put it before the figure without a space (€30).</td>
+<td><a class="chip" href="sources.html#rule-space-percent">space.percent</a></td>
+<td><span class="via raw">Raw data</span><br><span class="meta">2026-10-22</span></td>
 </tr>
 <tr id="src-isof-tankstreck">
 <td><b><a href="https://frageladan.isof.se/visasvar.py?svar=52014" target="_blank" rel="noopener">Frågelådan: Kan man markera anföring med tankstreck? ↗</a></b><br><span class="meta">isof-tankstreck</span></td>

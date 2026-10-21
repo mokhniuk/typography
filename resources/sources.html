@@ -43,9 +43,9 @@ p{margin:6px 0}
 <h1>Typography sources</h1>
 <p class="lead">Why each of the 30 rules exists, which source backs it, and what is not checked yet. Generated from <code>resources/sources.ts</code> by <code>bun run docs:sources</code>; do not edit by hand. All sources in one table, with authors: <a href="bibliography.html">bibliography</a>.</p>
 <div class="summary-row">
-<span class="pill verified">13 verified</span>
+<span class="pill verified">14 verified</span>
 <span class="pill disputed">1 disputed</span>
-<span class="pill general-knowledge">16 unchecked</span>
+<span class="pill general-knowledge">15 unchecked</span>
 </div>
 <p>To check a rule, open its sources and confirm the “Relied on” line is in the text. “Verified” means a source read says what the rule does for the cases named; read the gaps in each entry. Sources marked in red were read as summaries and need a look by hand.</p>
 <h2>Rules</h2>
@@ -129,8 +129,8 @@ p{margin:6px 0}
 <div class="head"><h3>number.group</h3><span class="pill general-knowledge">Unchecked</span></div>
 <p class="about">Digits of an integer of five or more are grouped in threes with the language separator (1,000,000; 1 000 000)</p>
 <p><b>Why:</b> Integers of five or more digits are grouped in threes with the language separator (comma, no-break space, dot) so a long number can be read.</p>
-<p><b>Others, gaps, unread:</b> Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge. Separators per language come from the packs and are unverified; Swiss usage differs (the pack follows the Federal Chancellery, not read here).</p>
-<p class="meta">Sources: <span class="none">none read</span></p>
+<p><b>Others, gaps, unread:</b> Opt-in rule (off unless named in `enable`). The SI brochure (9th ed., 5.4.4) says digits &quot;may be divided into groups of three by a space&quot;, that &quot;neither dots nor commas are ever inserted in the spaces between groups&quot;, that with only four digits before or after the decimal marker a space is not used to isolate a single digit, and that the practice &quot;is a matter of choice&quot;. The engine agrees on groups of three, on starting at five digits, and on the space itself for the languages whose pack uses a no-break space (the brochure does not say nonbreaking). It deliberately differs where the pack groups with a comma (en) or a dot, which the brochure forbids; that is local custom, not SI. The brochure is a metrology standard and does not speak for ordinary prose in any one language, so the choice stays general-knowledge. Separators per language come from the packs and are otherwise unverified; Swiss usage differs (the pack follows the Federal Chancellery, not read here).</p>
+<p class="meta">Sources: <a class="chip" href="#src-bipm-si-brochure-9">bipm-si-brochure-9</a></p>
 </article>
 <article class="rule" id="rule-dash-range" data-c="general-knowledge">
 <div class="head"><h3>dash.range</h3><span class="pill general-knowledge">Unchecked</span></div>
@@ -150,14 +150,14 @@ p{margin:6px 0}
 <div class="head"><h3>symbol.plusminus</h3><span class="pill general-knowledge">Unchecked</span></div>
 <p class="about">+- before a digit becomes ± (+-5 becomes ±5)</p>
 <p><b>Why:</b> +- before a digit is the plus-minus sign ±.</p>
-<p><b>Others, gaps, unread:</b> Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge.</p>
+<p><b>Others, gaps, unread:</b> Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge. The SI brochure, 9th ed. (read in full for task 3), does not address the ± sign in section 5.4 or elsewhere in its text, so it does not back this rule.</p>
 <p class="meta">Sources: <span class="none">none read</span></p>
 </article>
 <article class="rule" id="rule-symbol-minus" data-c="general-knowledge">
 <div class="head"><h3>symbol.minus</h3><span class="pill general-knowledge">Unchecked</span></div>
 <p class="about">A hyphen before a digit (-5) becomes a minus sign (−5)</p>
 <p><b>Why:</b> A minus sign is −, not a hyphen.</p>
-<p><b>Others, gaps, unread:</b> Unicode only shows that the character exists; it does not say when to use it. Butterick says to use an en dash for the minus sign (the &quot;Math symbols&quot; page also lists the &amp;minus; entity) and calls an en dash acceptable in spreadsheets, so a style guide that prefers − over – was not found. Still unchecked.</p>
+<p><b>Others, gaps, unread:</b> The SI brochure, 9th ed. (read in full), has no passage on the minus sign: its section 5.4.4 only shows the leading zero (-0.234 but not -.234) and says nothing of the character to use, so it does not back this rule. Unicode only shows that the character exists; it does not say when to use it. Butterick says to use an en dash for the minus sign (the &quot;Math symbols&quot; page also lists the &amp;minus; entity) and calls an en dash acceptable in spreadsheets, so a style guide that prefers − over – was not found. Still unchecked.</p>
 <p class="meta">Sources: <a class="chip" href="#src-unicode-names">unicode-names</a> <a class="chip" href="#src-butterick-dashes">butterick-dashes</a> <a class="chip" href="#src-butterick-math">butterick-math</a></p>
 </article>
 <article class="rule" id="rule-symbol-multiply" data-c="verified">
@@ -212,16 +212,16 @@ p{margin:6px 0}
 <article class="rule" id="rule-space-percent" data-c="verified">
 <div class="head"><h3>space.percent</h3><span class="pill verified">Verified</span></div>
 <p class="about">German, French, Czech, Spanish, Italian, Portuguese, Irish, Maltese, Bulgarian, Croatian, Slovenian, Lithuanian, Latvian, Estonian, Danish, Finnish and Greek: a no-break space between a number and % (5 %); German, French, Czech, Spanish, Italian, Bulgarian, Croatian, Slovenian, Danish, Finnish and Greek: also before € after the number (49 €)</p>
-<p><b>Why:</b> German and French set a no-break space before % and a currency sign. CLDR agrees for % in de and fr, and for the currency sign in de and fr; it sets no space before % in en, uk, pl, de-CH and fr-CH, which is what the engine does. OQLF, a printed-style authority, agrees for French: a no-break space before %, $ and €.</p>
-<p><b>Others, gaps, unread:</b> The space before % and the space before € are two pack fields, percentSpace and currencySpace: Irish, Maltese, Portuguese, Latvian, Lithuanian and Estonian set the first and not the second, because their ISG editions write €30 with no space or show money only as the code EUR (see each pack's notes). CLDR also puts a no-break space before the currency sign in uk, pl and fr-CH; the engine leaves 49€ alone there (a gap, in the backlog). OQLF also asks for a no-break space before a French colon, and none or a fine space before ; ! and ?, which the engine does not set (a gap, in the backlog). OQLF is a Quebec source; a France or Swiss guide may differ (a fine space). The German side rests on CLDR only; no Duden page was read.</p>
-<p class="meta">Sources: <a class="chip" href="#src-cldr-numbers">cldr-numbers</a> <a class="chip" href="#src-oqlf-espacement">oqlf-espacement</a> <a class="chip" href="#src-uax14">uax14</a><br>By language: <span class="lang"><b>de</b> <a class="chip" href="#src-cldr-numbers">cldr-numbers</a></span> <span class="lang"><b>fr</b> <a class="chip" href="#src-cldr-numbers">cldr-numbers</a> <a class="chip" href="#src-oqlf-espacement">oqlf-espacement</a></span></p>
+<p><b>Why:</b> German and French set a no-break space before % and a currency sign. CLDR agrees for % in de and fr, and for the currency sign in de and fr; it sets no space before % in en, uk, pl, de-CH and fr-CH, which is what the engine does. OQLF, a printed-style authority, agrees for French: a no-break space before %, $ and €. For € alone, the Greek, Finnish, Italian and Danish editions of the Interinstitutional Style Guide (part 3, 7) write the symbol after the figure with a space (30 €), as does the Czech handbook (250 €, with a fixed space), so currencySpace stays on in el, fi, it, da and cs.</p>
+<p><b>Others, gaps, unread:</b> The space before % and the space before € are two pack fields, percentSpace and currencySpace: Irish, Maltese, Portuguese, Latvian, Lithuanian and Estonian set the first and not the second, because their ISG editions write €30 with no space or show money only as the code EUR (see each pack's notes). CLDR also puts a no-break space before the currency sign in uk, pl and fr-CH; the engine leaves 49€ alone there (a gap, in the backlog). OQLF also asks for a no-break space before a French colon, and none or a fine space before ; ! and ?, which the engine does not set (a gap, in the backlog). OQLF is a Quebec source; a France or Swiss guide may differ (a fine space). The German side rests on CLDR only; no Duden page was read. The ISG passage is for the euro only (other currency signs are never spaced by the engine) and, apart from the Finnish edition, does not say the space is nonbreaking; the Czech handbook was read as a fetch-tool summary. The ISG percent rule (6.4) cited in the packs was not re-read here. Of the country guides named in the packs (Kielitoimiston ohjepankki, Retskrivningsordbogen, Treccani), none was read for €.</p>
+<p class="meta">Sources: <a class="chip" href="#src-cldr-numbers">cldr-numbers</a> <a class="chip" href="#src-oqlf-espacement">oqlf-espacement</a> <a class="chip" href="#src-isg-2022-euro">isg-2022-euro</a> <a class="chip" href="#src-ijp-penezni-castky">ijp-penezni-castky</a> <a class="chip" href="#src-uax14">uax14</a><br>By language: <span class="lang"><b>de</b> <a class="chip" href="#src-cldr-numbers">cldr-numbers</a></span> <span class="lang"><b>fr</b> <a class="chip" href="#src-cldr-numbers">cldr-numbers</a> <a class="chip" href="#src-oqlf-espacement">oqlf-espacement</a></span></p>
 </article>
-<article class="rule" id="rule-symbol-degree" data-c="general-knowledge">
-<div class="head"><h3>symbol.degree</h3><span class="pill general-knowledge">Unchecked</span></div>
+<article class="rule" id="rule-symbol-degree" data-c="verified">
+<div class="head"><h3>symbol.degree</h3><span class="pill verified">Verified</span></div>
 <p class="about">20 C, 20°C and 20 °C become 20 °C, with a no-break space before the unit</p>
 <p><b>Why:</b> A temperature or angle unit gets a no-break space before it (20 °C), and the degree sign is added where the unit letter stands alone.</p>
-<p><b>Others, gaps, unread:</b> Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge. The SI brochure rule on the space before a unit and its plane-angle exception are in the backlog reading list, not read.</p>
-<p class="meta">Sources: <span class="none">none read</span></p>
+<p><b>Others, gaps, unread:</b> Opt-in rule (off unless named in `enable`). The SI brochure, 9th ed., 5.4.3: a space always separates the unit from the number, so &quot;t = 30.2 °C but not t = 30.2°C&quot;; the one exception is the plane-angle degree, minute and second, which take no space (30° 22′ 8″). The engine agrees: it puts a space before ° only when a C or F follows, and leaves a bare angle degree (30°) alone. The brochure does not say the space is nonbreaking (our choice), and it covers the Celsius scale only: the Fahrenheit case (°F) is not SI, so no source was read for it. The label guard (Type 2 F is not a temperature) and the English-only rule for a bare C or F are the engine's own.</p>
+<p class="meta">Sources: <a class="chip" href="#src-bipm-si-brochure-9">bipm-si-brochure-9</a><br>By language: <span class="lang"><b>en</b> <a class="chip" href="#src-bipm-si-brochure-9">bipm-si-brochure-9</a></span></p>
 </article>
 <article class="rule" id="rule-space-section" data-c="verified">
 <div class="head"><h3>space.section</h3><span class="pill verified">Verified</span></div>
@@ -300,6 +300,27 @@ p{margin:6px 0}
 <p><b>Relied on:</b> There is a space between a numerical value and a unit symbol, and between a number and the percent sign (&quot;10 %&quot;); the page does not say the space is nonbreaking.</p>
 <p class="via summary">Read as a summary by a fetch tool. Check it by hand.</p>
 <p class="meta">Read 2026-10-20 · <a href="https://physics.nist.gov/cuu/Units/checklist.html" target="_blank" rel="noopener">open source ↗</a><br>Used by: <a class="chip" href="#rule-space-number">space.number</a></p>
+</article>
+<article class="src" id="src-isg-2022-euro">
+<div class="head"><h3>isg-2022-euro</h3><span class="kind">style-guide</span></div>
+<p>Interinstitutional Style Guide, Greek (0016), Finnish (0017), Italian (0021) and Danish (0022) editions, PDF of 19 April 2022, part 3 (conventions common to all languages), 7, &quot;Position of the euro symbol (€) in amounts&quot;.</p>
+<p><b>Relied on:</b> The € symbol follows the figure, separated from it by a space (&quot;una somma di 30 €&quot;, &quot;ποσό 30 €&quot;, &quot;et beløb på 30 €&quot;; Finnish &quot;30 €&quot;, the symbol and code separated from the figure by a fixed space); English, Irish, Maltese and Dutch put it before the figure without a space (€30).</p>
+<p class="via raw">Read as raw data.</p>
+<p class="meta">Read 2026-10-22 · <a href="https://publications.europa.eu/resource/cellar/01ed788a-d266-11ec-a95f-01aa75ed71a1.0021.01/DOC_1" target="_blank" rel="noopener">open source ↗</a><br>Used by: <a class="chip" href="#rule-space-percent">space.percent</a></p>
+</article>
+<article class="src" id="src-ijp-penezni-castky">
+<div class="head"><h3>ijp-penezni-castky</h3><span class="kind">orthography</span></div>
+<p>Internetová jazyková příručka, &quot;Peněžní částky, značky měn&quot; (id 786) and &quot;Zalomení řádků a nevhodné výrazy na jejich konci&quot; (id 880).</p>
+<p><b>Relied on:</b> A number and a currency sign are separated by a space (&quot;100 Kč&quot;; without one the compound reads as an adjective), and a line may not break between the number and the sign of a unit or currency (&quot;1 000 000 Kč, 250 €&quot;), for which a fixed space is advised.</p>
+<p class="via summary">Read as a summary by a fetch tool. Check it by hand.</p>
+<p class="meta">Read 2026-10-22 · <a href="https://prirucka.ujc.cas.cz/?id=880" target="_blank" rel="noopener">open source ↗</a><br>Used by: <a class="chip" href="#rule-space-percent">space.percent</a></p>
+</article>
+<article class="src" id="src-bipm-si-brochure-9">
+<div class="head"><h3>bipm-si-brochure-9</h3><span class="kind">standard</span></div>
+<p>BIPM, The International System of Units (SI), 9th edition, 2019 (version of 2022), section 5.4.3 &quot;Formatting the value of a quantity&quot; and 5.4.4 &quot;Formatting numbers, and the decimal marker&quot;, pp. 144-145; Appendix 1, 9th CGPM Resolution 7 (1948) and 22nd CGPM Resolution 10 (2003).</p>
+<p><b>Relied on:</b> A space always separates a number from its unit symbol, so &quot;30.2 °C&quot; and not &quot;30.2°C&quot;; the only exception is the plane-angle symbols for degree, minute and second, which take no space. Digits may be grouped in threes by a space, never by commas or dots, and a four-digit number is not split.</p>
+<p class="via raw">Read as raw data.</p>
+<p class="meta">Read 2026-10-22 · <a href="https://www.bipm.org/documents/20126/41483022/SI-Brochure-9-EN.pdf" target="_blank" rel="noopener">open source ↗</a><br>Used by: <a class="chip" href="#rule-number-group">number.group</a> <a class="chip" href="#rule-symbol-degree">symbol.degree</a></p>
 </article>
 <article class="src" id="src-unicode-names">
 <div class="head"><h3>unicode-names</h3><span class="kind">standard</span></div>

@@ -568,7 +568,7 @@ after   5~% and 49~€
 
 Category: `data`.
 
-Why: [sources.md](../resources/sources.md#symboldegree), `general-knowledge`.
+Why: [sources.md](../resources/sources.md#symboldegree), `verified`.
 
 Off by default: switch it on with `enable` (`--enable` on the command line).
 
