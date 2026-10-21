@@ -100,9 +100,7 @@ export function highlightHtml(html: string): string {
       const tokens = highlight(code, lang);
       if (!tokens) return block;
       const inner = tokens
-        .map((t) =>
-          t.kind ? `<span data-tok="${t.kind}">${esc(t.text)}</span>` : esc(t.text),
-        )
+        .map((t) => (t.kind ? `<span data-tok="${t.kind}">${esc(t.text)}</span>` : esc(t.text)))
         .join('');
       return `<pre><code class="language-${lang}">${inner}</code></pre>`;
     },

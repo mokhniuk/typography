@@ -2,8 +2,9 @@ import { readFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import type { Plugin } from 'vite';
 import { typesetHtml } from '../../../src/html';
-import { footer, header } from './chrome';
+import { footer, header, rootOf } from './chrome';
 import { examplesFigure, samplesTable, specimenFigure } from './examples';
+import { markHangsInPage } from './hang';
 import { highlightHtml } from './highlight';
 import { generatedPages } from './pages';
 import { fill, SITE_ROOT, TYPESET } from './site';
@@ -14,6 +15,25 @@ const pathOf = (file: string): string => {
   return /(^|\/)index\.html$/.test(rel) ? rel.replace(/index\.html$/, '') : '';
 };
 
+/** A link to another site opens in a new tab; one that already says where it opens is left alone. */
+export function externalLinks(html: string): string {
+  return html.replace(/<a\s([^>]*\bhref="https?:\/\/[^"]*"[^>]*)>/g, (tag, attrs: string) => {
+    if (/\btarget=/.test(attrs)) return tag;
+    const rel = /\brel="([^"]*)"/.exec(attrs)?.[1];
+    const words = new Set([...(rel ?? '').split(/\s+/).filter(Boolean), 'noopener']);
+    const kept = attrs.replace(/\s*\brel="[^"]*"/, '');
+    return `<a ${kept} target="_blank" rel="${[...words].join(' ')}">`;
+  });
+}
+
+/** The faces every page uses, fetched with the page so the text does not reflow when they arrive. */
+const FONTS = ['Regular', 'Medium', 'Bold'];
+const preload = (path: string): string =>
+  FONTS.map(
+    (weight) =>
+      `<link rel="preload" href="${rootOf(path)}fonts/KyivType/KyivTypeSans-${weight}.woff2" as="font" type="font/woff2" crossorigin />`,
+  ).join('\n');
+
 /** What every page goes through: the shared header and footer, the numbers, the engine's own typesetting. */
 function finish(html: string, path: string): string {
   const filled = fill(html)
@@ -21,8 +41,9 @@ function finish(html: string, path: string): string {
     .replace('<!--footer-->', () => footer(path))
     .replace('<!--examples-->', () => examplesFigure())
     .replace('<!--specimen-->', () => specimenFigure())
-    .replace('<!--samples-->', () => samplesTable());
-  return typesetHtml(highlightHtml(filled), TYPESET);
+    .replace('<!--samples-->', () => samplesTable())
+    .replace('</head>', () => `${preload(path)}\n</head>`);
+  return markHangsInPage(typesetHtml(externalLinks(highlightHtml(filled)), TYPESET));
 }
 
 /**

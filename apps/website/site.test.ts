@@ -1,7 +1,9 @@
 import { describe, expect, test } from 'bun:test';
 import { posix } from 'node:path';
+import { latestDateOnly } from './build/content';
 import { EXAMPLES, exampleResult } from './build/examples';
 import { generatedPages } from './build/pages';
+import { externalLinks } from './build/plugin';
 import { FACTS, fill } from './build/site';
 
 const pages = generatedPages();
@@ -48,4 +50,25 @@ describe('landing examples', () => {
       expect(after).toContain('<ins');
     });
   }
+});
+
+describe('page details', () => {
+  test('a link to another site opens in a new tab, keeping its rel', () => {
+    expect(externalLinks('<a href="https://github.com/x" rel="noopener">G</a>')).toBe(
+      '<a href="https://github.com/x" target="_blank" rel="noopener">G</a>',
+    );
+    expect(externalLinks('<a href="https://x.y" rel="me">X</a>')).toBe(
+      '<a href="https://x.y" target="_blank" rel="me noopener">X</a>',
+    );
+    expect(externalLinks('<a href="../docs/">Docs</a>')).toBe('<a href="../docs/">Docs</a>');
+    expect(externalLinks('<a href="https://x.y" target="_self">X</a>')).toBe(
+      '<a href="https://x.y" target="_self">X</a>',
+    );
+  });
+
+  test('the changelog dates only its latest release', () => {
+    expect(latestDateOnly('## 0.5.0 (2026-10-21)\n\nx\n\n## 0.4.1 (2026-10-20)\n')).toBe(
+      '## 0.5.0 (2026-10-21)\n\nx\n\n## 0.4.1\n',
+    );
+  });
 });

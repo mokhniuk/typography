@@ -1,5 +1,5 @@
 import { diff, type Lang, PACKS, typographic } from '../../src/core';
-import { hangPunctuation, markHangs } from '../../src/dom';
+import { hangPunctuation } from '../../src/dom';
 
 const STORAGE = 'typography-theme';
 
@@ -58,11 +58,9 @@ for (const pre of document.querySelectorAll<HTMLPreElement>('article pre')) {
   pre.append(button);
 }
 
-// Hanging punctuation on the text of the page, with the engine's own DOM pass.
-for (const root of document.querySelectorAll<HTMLElement>('[data-hanging]')) {
-  markHangs(root);
-  hangPunctuation(root);
-}
+// Hanging punctuation: the build wrapped the marks (build/hang.ts) and an inline script measured
+// them as the page was parsed; this pass takes over from it and keeps them right as the page changes.
+for (const root of document.querySelectorAll<HTMLElement>('[data-hanging]')) hangPunctuation(root);
 
 // The live example on the landing page.
 const input = document.querySelector<HTMLTextAreaElement>('#demo-in');

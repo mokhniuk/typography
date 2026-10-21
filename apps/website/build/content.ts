@@ -95,9 +95,20 @@ export function docs(): Doc[] {
     });
   }
   return entries.map((entry) => {
-    const markdown = readFileSync(join(REPO_ROOT, entry.source), 'utf8');
+    const source = readFileSync(join(REPO_ROOT, entry.source), 'utf8');
+    const markdown = entry.source === 'CHANGELOG.md' ? latestDateOnly(source) : source;
     const out = render(markdown, linker(entry.source, entry.path));
     return { ...entry, ...out };
+  });
+}
+
+/** On the site the changelog dates only its latest release: `## 0.4.1 (2026-10-21)` is `## 0.4.1`. */
+export function latestDateOnly(markdown: string): string {
+  let seen = false;
+  return markdown.replace(/^(## \d+\.\d+\.\d+) \([\d-]+\)$/gm, (heading, version: string) => {
+    if (seen) return version;
+    seen = true;
+    return heading;
   });
 }
 
