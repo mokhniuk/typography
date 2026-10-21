@@ -159,7 +159,7 @@ To check this on your own page: block the JavaScript bundle (for example in the 
 
 ## Benchmark
 
-`bench/RESULTS.md` holds the results of running this package, typograf, typopo, richtypo, tipograph, smartypants and retext-smartypants over the same style-neutral checks, with every case, check and output. The runner is a separate project in `bench/` that git ignores (see [docs/contributing.md](docs/contributing.md#the-benchmark)). The cases were written by this package's author: read them in the results, contest them, and read the caveats at the top of the results and in [docs/limits.md](docs/limits.md). This package is roughly 5 times slower than typograf on large text.
+`apps/bench/RESULTS.md` holds the results of running this package, typograf, typopo, richtypo, tipograph, smartypants and retext-smartypants over the same style-neutral checks, with every case, check and output. The runner is a separate project in `apps/bench/` that git ignores (see [docs/contributing.md](docs/contributing.md#the-benchmark)). The cases were written by this package's author: read them in the results, contest them, and read the caveats at the top of the results and in [docs/limits.md](docs/limits.md). This package is roughly 5 times slower than typograf on large text.
 
 ## Develop
 

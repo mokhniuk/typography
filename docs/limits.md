@@ -65,7 +65,7 @@ Nine rules are off until named in `enable` (`number.group` is described in the r
 
 ## Speed
 
-Since 0.2.0 the package is faster than typograf on English text in one piece, and about 3 times slower than tipograph and smartypants, which do much less (smartypants only quotes, dashes and ellipses; neither has abbreviations or ranges). The benchmark (`bench/RESULTS.md`, generated on the author's machine) reports, for English text in one piece, text mode, best of three (one run at 1 MB):
+Since 0.2.0 the package is faster than typograf on English text in one piece, and about 3 times slower than tipograph and smartypants, which do much less (smartypants only quotes, dashes and ellipses; neither has abbreviations or ranges). The benchmark (`apps/bench/RESULTS.md`, generated on the author's machine) reports, for English text in one piece, text mode, best of three (one run at 1 MB):
 
 | Tool | 10 KB | 100 KB | 1000 KB |
 |---|---|---|---|
@@ -85,9 +85,9 @@ On a JavaScriptCore engine (Bun) a lookbehind with `\p{L}` or `\p{N}` does not s
 
 ## Benchmark caveats
 
-These are repeated at the top of `bench/RESULTS.md`.
+These are repeated at the top of `apps/bench/RESULTS.md`.
 
-- The style-neutral cases (250 are scored for this package, plus 2 register cases) were written by the author of this package. They check what is right (a German quotation is `„…“` or `»…«`; an ISO date is not a range), not one tool's house style, but a tool's default that differs from them is reported as a failure, including this package's own `«…»` for English. Read the cases in `bench/RESULTS.md` and contest them.
+- The style-neutral cases (250 are scored for this package, plus 2 register cases) were written by the author of this package. They check what is right (a German quotation is `„…“` or `»…«`; an ISO date is not a range), not one tool's house style, but a tool's default that differs from them is reported as a failure, including this package's own `«…»` for English. Read the cases in `apps/bench/RESULTS.md` and contest them.
 - They cover what typography tools claim to do, not everything a typographer cares about.
 - Most cases are English: 96 of the 253 cases are English, 11 Ukrainian, 10 German, 8 Polish, 7 French and 6 each for the other twenty languages (a quote, a nested quote, a dash, a range, a sample and a stability check). None is Swiss (`ch`). The 6 cases per new language come from the same style guides as its pack, so they do not test it independently.
 - typograf was run with its default rules and the locales it ships that this package also covers. The only typographic rule it has off by default for these languages (`common/nbsp/afterNumber`) is also run, as a separate column. The other default-off rules insert a final newline, strip or escape HTML, wrap paragraphs, or are for a language this package does not cover.

@@ -31,7 +31,7 @@ bun run docs:languages       # writes docs/languages/*.md from the packs
 | `scripts/gen-rules-doc.ts` | Generates `docs/rules.md` |
 | `scripts/sources.ts` | The sources registry. `bun run docs:sources` generates `docs/sources.md`, `docs/sources.html` (decisions, with a filter) and `docs/bibliography.html` (every source in one table: author, link, what it is, where it is used); open the HTML ones in a browser |
 | `scripts/gen-languages-doc.ts` | Generates `docs/languages/<code>.md` and `docs/languages/index.md` from the packs |
-| `bench/` | The benchmark: a separate project, not tracked except `RESULTS.md` (see below) |
+| `apps/bench/` | The benchmark: a separate project, not tracked except `RESULTS.md` (see below) |
 | `apps/playground/` | The web page (its own `package.json` for `dev`/`build`; uses the root's `vite`) |
 | `docs/` | These pages. `rules.md` and `languages/` are generated; the others are written by hand |
 
@@ -97,7 +97,7 @@ A change that is meant to make the engine faster must change no output and no `e
 bun run compare                  # this checkout against the git ref `speed-baseline` (the frozen engine)
 bun run compare <ref> --n 20000  # against another ref; --slice N runs all N strings through every combination (slow)
 bun run snapshot                 # ONLY for an intentional output change or a new language: rewrites src/snapshot.digests.json
-cd bench && bun run profile      # where the time goes, rule by rule
+cd apps/bench && bun run profile      # where the time goes, rule by rule
 bun scripts/stress.ts [srcDir]   # every rule on long runs of one character at 20k, 40k and 80k: flags quadratic cost
 ```
 
@@ -107,10 +107,10 @@ bun scripts/stress.ts [srcDir]   # every rule on long runs of one character at 2
 
 ## The benchmark
 
-The benchmark is a separate project in `bench/` with its own `package.json` and dependencies. Git ignores it except `bench/RESULTS.md`, so it lives on one machine (move it to its own repository when it needs to be shared). To run it: `cd bench && bun install && bun run bench`. Its own checks: `cd bench && bun run typecheck`.
+The benchmark is a separate project in `apps/bench/` with its own `package.json` and dependencies. Git ignores it except `apps/bench/RESULTS.md`, so it lives on one machine (move it to its own repository when it needs to be shared). To run it: `cd apps/bench && bun install && bun run bench`. Its own checks: `cd apps/bench && bun run typecheck`.
 
 ```sh
-cd bench
+cd apps/bench
 bun run bench       # every tool over every case; writes RESULTS.md
 bun run latency     # time per call on a paragraph
 bun run profile     # our own rules one by one, with their share of the time

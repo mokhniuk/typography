@@ -8,8 +8,8 @@ Priorities: **P0** blocks the audience, **P1** closes a gap other tools do not h
 
 | | podiia | best other | Source |
 |---|---|---|---|
-| Benchmark checks passed (default / literary register) | 242 / 250, 250 / 250 | typograf 131 / 226 | `bench/RESULTS.md` |
-| 1 MB of English, text mode | 33 ms | typograf 59 ms, tipograph 12 ms, smartypants 10 ms | `cd bench && bun run bench` |
+| Benchmark checks passed (default / literary register) | 242 / 250, 250 / 250 | typograf 131 / 226 | `apps/bench/RESULTS.md` |
+| 1 MB of English, text mode | 33 ms | typograf 59 ms, tipograph 12 ms, smartypants 10 ms | `cd apps/bench && bun run bench` |
 | Target languages covered (26) | 26 | typograf 22, tipograph 12 | [languages/index.md](languages/index.md) |
 
 The 26 target languages are the 24 official languages of the EU, Ukrainian and US English (the option `quoteStyle: 'us'`). Podiia's 8 default-run misses are all the house `«…»` for English, which the checks count as a failure; the literary register passes every check. The cases were written by this package's author; read the caveats in [limits.md](limits.md). The cases for the twenty new languages come from the same style guides as the packs, so they are not an independent test.
@@ -162,4 +162,4 @@ English has 96 cases and each other language six. Add a real-text corpus per lan
 
 ## How this was measured
 
-Everything above can be regenerated from the separate benchmark project in `bench/` (see [contributing.md](contributing.md#the-benchmark)): `bun run bench` (quality and large-text speed), `bun run latency` (a paragraph), `bun run profile` (our rules, one by one) and `bun run features` (the same English inputs through every tool). The comparison page that draws on them is a snapshot; update this file when the numbers move.
+Everything above can be regenerated from the separate benchmark project in `apps/bench/` (see [contributing.md](contributing.md#the-benchmark)): `bun run bench` (quality and large-text speed), `bun run latency` (a paragraph), `bun run profile` (our rules, one by one) and `bun run features` (the same English inputs through every tool). The comparison page that draws on them is a snapshot; update this file when the numbers move.
