@@ -1,4 +1,4 @@
-import { GITHUB, NAME, NAV } from './site';
+import { GITHUB, ISSUES, NAME, NAV } from './site';
 
 /** The relative path from a page at `path` ("docs/api/") back to the site root ("../../"). */
 export const rootOf = (path: string): string => {
@@ -8,14 +8,18 @@ export const rootOf = (path: string): string => {
 
 export function header(path: string): string {
   const root = rootOf(path);
-  const current = (href: string) => (path.startsWith(href) ? ' aria-current="page"' : '');
+  // The longest item the path starts with is the current one: the changelog, not Docs, on its page.
+  const here = NAV.map((item) => item.href)
+    .filter((href) => path.startsWith(href))
+    .sort((a, b) => b.length - a.length)[0];
+  const current = (href: string) => (href === here ? ' aria-current="page"' : '');
   const links = NAV.map(
     (item) => `<li><a href="${root}${item.href}"${current(item.href)}>${item.label}</a></li>`,
   ).join('');
   return `<header>
   <nav aria-label="Main">
     <a href="${root}" data-brand><b>Podiia</b> Typography</a>
-    <ul>${links}<li><a href="${GITHUB}" rel="noopener">GitHub</a></li></ul>
+    <ul>${links}<li data-github><a href="${GITHUB}" rel="noopener">GitHub</a></li></ul>
     <button type="button" data-theme-toggle aria-label="Switch between light and dark">
       <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor"/></svg>
     </button>
@@ -27,7 +31,10 @@ export function footer(path: string): string {
   const root = rootOf(path);
   return `<footer>
   <div class="container">
-    <p><strong>${NAME}</strong> sets running text the way a typesetter would: quotation marks by language, dashes, no-break spaces, hanging punctuation. This site is typeset by it.</p>
+    <div>
+      <p><strong>${NAME}</strong> sets running text the way a typesetter would: quotation marks by language, dashes, no-break spaces, hanging punctuation. This site is typeset by it.</p>
+      <p data-credit>Project by <a href="https://oleg.berlin" rel="author">Oleg Mokhniuk</a></p>
+    </div>
     <nav aria-label="Footer">
       <ul>
         <li><a href="${root}docs/getting-started/">Getting started</a></li>
@@ -36,6 +43,7 @@ export function footer(path: string): string {
         <li><a href="${root}docs/languages/">Languages</a></li>
         <li><a href="${root}docs/changelog/">Changelog</a></li>
         <li><a href="${GITHUB}" rel="noopener">GitHub</a></li>
+        <li><a href="${ISSUES}" rel="noopener">Report an issue</a></li>
       </ul>
     </nav>
   </div>

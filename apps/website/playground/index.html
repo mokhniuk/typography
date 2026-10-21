@@ -20,6 +20,7 @@
   </header>
 
 
+      <aside aria-label="Settings" data-settings>
       <form aria-label="Options">
         <fieldset id="mode">
           <legend class="sr-only">Input format</legend>
@@ -48,12 +49,6 @@
             <option value="char">the character</option>
           </select>
         </label>
-        <fieldset>
-          <legend class="sr-only">Input</legend>
-          <button type="button" data-size="short">Short example</button>
-          <button type="button" data-size="long">Long example</button>
-          <button type="button" id="clear">Clear</button>
-        </fieldset>
       </form>
 
       <details>
@@ -65,10 +60,27 @@
         <button type="button" id="rulesAll">Default rules</button>
       </details>
 
+      <details id="configPanel">
+        <summary>Config</summary>
+        <p>The switches on this page as a config. Paste it under the <code>"typography"</code> key of <code>package.json</code> (the <code>typo</code> command reads it), into a <code>.json</code> file for <code>typo --config</code>, or into <code>defineConfig({…})</code> in your code. To try a project's config here, paste it (or its whole <code>package.json</code>) and apply it.</p>
+        <label for="configText" class="sr-only">Config as JSON</label>
+        <textarea id="configText" spellcheck="false" rows="10"></textarea>
+        <p id="configError" role="alert" hidden></p>
+        <button type="button" id="configImport">Apply</button>
+        <button type="button" id="configExport">Show current</button>
+        <button type="button" id="configCopy">Copy</button>
+      </details>
+      </aside>
+
       <section aria-label="Text and result">
         <section>
           <header>
             <label for="input">Your text</label>
+            <div role="group" aria-label="Fill the text" data-examples-bar>
+              <button type="button" data-size="short">Short example</button>
+              <button type="button" data-size="long">Long example</button>
+              <button type="button" id="clear">Clear</button>
+            </div>
           </header>
           <textarea id="input" spellcheck="false" placeholder="Paste or type here…"></textarea>
         </section>
@@ -80,6 +92,12 @@
               <button type="button" role="tab" data-view="changes">Changes <output id="count">0</output></button>
               <button type="button" role="tab" data-view="preview">Preview</button>
             </div>
+            <button type="button" id="copy">Copy</button>
+          </header>
+          <textarea id="result" readonly spellcheck="false"></textarea>
+          <div id="changes" data-panel="changes" hidden></div>
+          <div id="preview" data-panel="preview" hidden></div>
+          <div data-pane-foot>
             <label id="markField"><input type="checkbox" id="mark" /> Mark no-break spaces</label>
             <label id="hangField" hidden>Hanging
               <input type="range" id="hang" min="0" max="3" step="1" list="hangMarks" aria-valuetext="100%" />
@@ -91,12 +109,9 @@
               <option value="2"></option>
               <option value="3"></option>
             </datalist>
-            <button type="button" id="copy" class="primary">Copy</button>
-          </header>
-          <textarea id="result" readonly spellcheck="false"></textarea>
-          <div id="changes" data-panel="changes" hidden></div>
-          <div id="preview" data-panel="preview" hidden></div>
-          <p id="note" hidden></p>
+            <p id="note" hidden></p>
+            <p data-report>Wrong result? <a id="report" href="{{issues}}" rel="noopener" title="Opens a GitHub issue with this text and these settings filled in">Report it</a></p>
+          </div>
         </section>
       </section>
     
@@ -104,6 +119,6 @@
 </main>
 <!--footer-->
 <script type="module" src="../main.ts"></script>
-<script type="module" src="../../playground/main.ts"></script>
+<script type="module" src="./main.ts"></script>
 </body>
 </html>

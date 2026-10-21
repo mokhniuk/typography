@@ -152,6 +152,8 @@ const configError = el<HTMLParagraphElement>('configError');
 const configCopy = el<HTMLButtonElement>('configCopy');
 /** Whether the config box holds pasted text; until then it follows the switches. */
 let configEdited = false;
+/** Only on the website's playground. */
+const report = document.getElementById('report') as HTMLAnchorElement | null;
 
 for (const lang of LANGS) langSelect.add(new Option(LANG_NAMES[lang], lang));
 for (const option of registerSelect.options) {
@@ -261,7 +263,7 @@ function renderPreview(output: string) {
       hangRoot = body;
       applyHang();
     });
-    frame.srcdoc = `<!doctype html><meta charset="utf-8"><style>body{font:19px/1.55 Georgia,serif;max-width:34em;margin:1em;color:#1b1b1a}code,pre{font-size:.85em}</style>${output}`;
+    frame.srcdoc = `<!doctype html><meta charset="utf-8"><style>body{font:19px/1.55 Georgia,serif;max-width:34em;margin:0;color:#1b1b1a}body>:first-child{margin-top:0}code,pre{font-size:.85em}</style>${output}`;
     preview.append(frame);
     return;
   }
@@ -287,6 +289,38 @@ function groups(runs: ReturnType<typeof diff>): number {
     }
   }
   return n;
+}
+
+/** The longest input a report carries: a GitHub link must stay under about 8 000 characters. */
+const REPORT_LIMIT = 1500;
+/** A fenced block that holds `text` whatever backticks are in it. */
+const fenced = (text: string): string => {
+  const fence = '`'.repeat(Math.max(3, ...(text.match(/`+/g) ?? []).map((run) => run.length + 1)));
+  return `${fence}\n${text}\n${fence}`;
+};
+/**
+ * A link that opens a GitHub issue with the text, the settings and the result filled in, on a page
+ * that has one (`#report`, its `href` the new-issue address; the website's playground).
+ */
+function reportUrl(base: string, output: string): string {
+  const cut = (text: string) =>
+    text.length > REPORT_LIMIT ? `${text.slice(0, REPORT_LIMIT)}\n… (cut)` : text;
+  const settings = [
+    `Language: ${state.lang} (${LANG_NAMES[state.lang]})`,
+    `Format: ${state.mode}`,
+    `Register: ${state.register}`,
+    `Quote style: ${state.quoteStyle}`,
+    state.disable.length ? `Switched off: ${state.disable.join(', ')}` : '',
+    state.enable.length ? `Switched on: ${state.enable.join(', ')}` : '',
+  ].filter(Boolean);
+  const body = [
+    settings.map((line) => `- ${line}`).join('\n'),
+    `**Text**\n\n${fenced(cut(state.input))}`,
+    `**Result**\n\n${fenced(cut(output))}`,
+    '**What it should be**\n\n',
+  ].join('\n\n');
+  const title = `Playground (${state.lang}): `;
+  return `${base.split('?')[0]}?${new URLSearchParams({ title, body })}`;
 }
 
 function render() {
@@ -350,6 +384,7 @@ function render() {
     stopHanging?.();
     stopHanging = null;
   }
+  if (report) report.href = reportUrl(report.href, output);
   const untagged = state.mode === 'html' && /\S/.test(state.input) && !/<[a-z]/i.test(state.input);
   note.hidden = !(state.view === 'preview' && untagged);
   note.textContent =

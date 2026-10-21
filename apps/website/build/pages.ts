@@ -1,6 +1,6 @@
 import { page, rootOf } from './chrome';
 import { type Article, articles, type Doc, docs } from './content';
-import { NAME } from './site';
+import { issueUrl, NAME } from './site';
 
 const esc = (text: string): string =>
   text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -61,6 +61,12 @@ function neighbours(all: Doc[], doc: Doc): string {
   return `<nav aria-label="Pages in order" data-pager>${link(prev, 'prev')}${link(next, 'next')}</nav>`;
 }
 
+/** The line at the end of a page that opens an issue about it, its title and address filled in. */
+const report = (what: string, path: string): string => {
+  const href = issueUrl(`${what}: `, `On the page \`/${path}\`:\n\n`);
+  return `<p data-report>Something wrong or unclear here? <a href="${esc(href)}" rel="noopener">Report an issue</a>.</p>`;
+};
+
 function docPage(all: Doc[], doc: Doc): string {
   const root = rootOf(doc.path);
   const here = `<p data-crumbs><a href="${root}docs/">Docs</a> <span aria-hidden="true">/</span> ${esc(doc.group)}</p>`;
@@ -73,6 +79,7 @@ function docPage(all: Doc[], doc: Doc): string {
 <article data-hanging>
 ${here}
 ${doc.html}
+${report(`Docs, ${doc.title}`, doc.path)}
 ${neighbours(all, doc)}
 </article>
 ${contents(doc)}`,
@@ -128,6 +135,7 @@ function articlePage(all: Article[], article: Article): string {
   <p><time datetime="${article.date}">${when(article.date)}</time></p>
 </header>
 ${article.html.replace(/^<h1[^>]*>[\s\S]*?<\/h1>\n?/, '')}
+${report(`Article, ${article.title}`, article.path)}
 <nav aria-label="More articles" data-pager>${link(newer, 'prev')}${link(older, 'next')}</nav>
 </article>`,
   });

@@ -483,15 +483,35 @@ body > header button {
 body > header button:hover {
   color: var(--color-text);
 }
+/* A phone: the brand and the theme switch on one row, the links on a row of their own below. */
 @media (max-width: 560px) {
+  :root {
+    --header-height: 96px;
+  }
   body > header nav {
-    gap: var(--space-4);
+    flex-wrap: wrap;
+    align-content: center;
+    gap: 0 var(--space-4);
   }
   body > header a[data-brand] span {
     display: none;
   }
+  body > header button {
+    margin-left: auto;
+  }
   body > header ul {
-    gap: var(--space-4);
+    order: 1;
+    width: 100%;
+    margin: 0;
+    padding: var(--space-3) 0;
+    gap: var(--space-5);
+    overflow-x: auto;
+    scrollbar-width: none;
+    white-space: nowrap;
+  }
+  /* GitHub is in the footer too; without it the four pages fit a phone's width. */
+  body > header li[data-github] {
+    display: none;
   }
 }
 
@@ -511,6 +531,9 @@ body > footer .container {
 body > footer p {
   max-width: 30em;
   margin: 0;
+}
+body > footer [data-credit] {
+  margin-top: var(--space-4);
 }
 body > footer strong {
   color: var(--color-text);
@@ -769,6 +792,15 @@ article > header > p:not([data-crumbs]):first-of-type {
   font-size: var(--size-lg);
   line-height: 1.5;
 }
+/* The line that opens a GitHub issue about the page (or the playground's result). */
+[data-report] {
+  margin: var(--space-6) 0 0;
+  font: var(--size-sm) / 1.5 var(--font-ui);
+  color: var(--color-muted);
+}
+[data-report] a {
+  color: var(--color-text);
+}
 [data-crumbs] {
   margin: 0 0 var(--space-4);
   font: var(--size-sm) var(--font-ui);
@@ -813,7 +845,7 @@ main[data-layout="docs"] {
   display: grid;
   grid-template-columns: 15rem minmax(0, 1fr) 13rem;
   gap: var(--space-7);
-  width: min(100% - 2 * var(--space-5), 1280px);
+  width: min(100% - 2 * var(--space-5), var(--container));
   margin-inline: auto;
   padding-top: var(--space-7);
   align-items: start;
@@ -1485,7 +1517,7 @@ table[data-samples] small {
 /* Playground */
 
 [data-page="playground"] [data-wide] {
-  width: min(100% - 2 * var(--space-5), 1280px);
+  width: min(100% - 2 * var(--space-5), var(--container));
   margin: 0 auto;
   padding: var(--space-7) 0 0;
 }
@@ -1499,34 +1531,121 @@ table[data-samples] small {
   margin: var(--space-2) 0 0;
   color: var(--color-muted);
 }
+/*
+ * The layout: settings in a column on the left, the two panes beside it. The panes share their rows
+ * (subgrid), so both headers sit on one row and both boxes start and end on one line.
+ */
+[data-page="playground"] [data-wide] {
+  display: grid;
+  grid-template-columns: 14rem minmax(0, 1fr);
+  gap: 0 var(--space-7);
+  align-items: start;
+}
+[data-page="playground"] [data-wide] > header {
+  grid-column: 1 / -1;
+}
+[data-page="playground"] [data-settings] {
+  display: grid;
+  gap: var(--space-5);
+  padding-top: calc(var(--control-height) + var(--space-3));
+}
+
+/* The settings: one control under another, each labelled above, one height and one text size. */
 [data-page="playground"] form {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-4) var(--space-5);
-  align-items: end;
-  margin-bottom: var(--space-5);
+  display: grid;
+  gap: var(--space-4);
+  margin: 0;
 }
 [data-page="playground"] form > label {
   display: grid;
   gap: var(--space-2);
-  font-size: var(--size-xs);
+  font: 500 var(--size-xs) var(--font-ui);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--color-muted);
 }
-[data-page="playground"] form > fieldset:last-child {
+[data-page="playground"] :is(select, button) {
+  min-height: var(--control-height);
+  font: var(--size-sm) var(--font-ui);
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--color-text);
+}
+[data-page="playground"] form select {
+  width: 100%;
+  min-width: 0;
+}
+
+/* A segmented control: the input format, and the view of the result. */
+[data-page="playground"] #mode,
+[data-page="playground"] [role="tablist"] {
   display: flex;
-  gap: var(--space-3);
-  margin-inline-start: auto;
+  gap: 2px;
+  margin: 0;
+  padding: 2px;
+  min-width: 0;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
 }
-[data-page="playground"] form > fieldset:last-child button {
+[data-page="playground"] #mode label {
+  display: flex;
+  flex: 1;
+}
+[data-page="playground"] #mode input + span,
+[data-page="playground"] [role="tab"] {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  /* The control's height less the 2px inset and the border, top and bottom. */
+  height: calc(var(--control-height) - 6px);
+  min-height: 0;
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: 1px;
   background: transparent;
+  font: var(--size-sm) var(--font-ui);
+  color: var(--color-muted);
+  white-space: nowrap;
+  cursor: pointer;
 }
+[data-page="playground"] #mode input:hover + span,
+[data-page="playground"] [role="tab"]:hover {
+  color: var(--color-text);
+}
+[data-page="playground"] #mode input:checked + span,
+[data-page="playground"] [role="tab"][aria-selected="true"] {
+  background: var(--color-text);
+  color: var(--color-bg);
+  font-weight: 400;
+}
+[data-page="playground"] [role="tab"][aria-selected="true"] output {
+  background: color-mix(in srgb, var(--color-bg) 25%, transparent);
+  color: inherit;
+}
+[data-page="playground"] #mode input:focus-visible + span,
+[data-page="playground"] [role="tab"]:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: 2px;
+}
+
+/* Rules: under the settings, a list to scan rather than a grid. */
 [data-page="playground"] details {
-  margin-bottom: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-line);
   font-size: var(--size-sm);
 }
 [data-page="playground"] summary {
   cursor: pointer;
+  font: 500 var(--size-xs) var(--font-ui);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--color-muted);
+}
+[data-page="playground"] summary:hover {
+  color: var(--color-text);
 }
 [data-page="playground"] details p {
   margin: var(--space-3) 0 0;
@@ -1535,77 +1654,203 @@ table[data-samples] small {
 }
 [data-page="playground"] details fieldset {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: var(--space-2) var(--space-5);
+  gap: var(--space-3);
   margin: var(--space-4) 0;
 }
 [data-page="playground"] details label {
-  display: flex;
-  gap: var(--space-3);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0 var(--space-3);
   align-items: baseline;
 }
+[data-page="playground"] details label code {
+  justify-self: start;
+}
+[data-page="playground"] details label small {
+  grid-column: 2;
+  color: var(--color-muted);
+}
 [data-page="playground"] details > button {
+  width: 100%;
   background: transparent;
 }
+/* The config box: JSON, shorter than the text panes, its buttons on one row. */
+[data-page="playground"] #configPanel textarea {
+  display: block;
+  width: 100%;
+  min-height: 12rem;
+  margin: var(--space-3) 0;
+  padding: var(--space-3);
+  font-size: var(--size-xs);
+}
+[data-page="playground"] #configPanel [role="alert"] {
+  color: var(--color-del-text);
+}
+[data-page="playground"] #configPanel > button {
+  width: auto;
+  min-height: 32px;
+  margin: 0 var(--space-1) var(--space-2) 0;
+  padding: 0 var(--space-3);
+}
+
+/* The two panes. */
 [data-page="playground"] [data-wide] > section {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-5);
-}
-@media (max-width: 800px) {
-  [data-page="playground"] [data-wide] > section {
-    grid-template-columns: minmax(0, 1fr);
-  }
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: auto minmax(var(--pane-height), 1fr) auto;
+  gap: 0 var(--space-5);
 }
 [data-page="playground"] [data-wide] > section > section {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-row: 1 / -1;
+  grid-template-rows: subgrid;
   min-width: 0;
 }
 [data-page="playground"] [data-wide] > section > section > header {
+  grid-row: 1;
   min-height: var(--control-height);
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-3);
-  margin-bottom: var(--space-2);
+  gap: var(--space-4);
+  margin-bottom: var(--space-3);
   font-size: var(--size-sm);
   color: var(--color-muted);
 }
-[data-page="playground"] [data-wide] > section > section > header > label:has(input) {
-  display: inline-flex;
-  gap: var(--space-2);
-  align-items: center;
-  font-size: var(--size-xs);
+[data-page="playground"] [data-wide] > section > section > :is(textarea, [data-panel]) {
+  grid-row: 2;
+  min-height: var(--pane-height);
+  height: 100%;
 }
-[data-page="playground"] [data-wide] > section > section > p {
-  margin: var(--space-3) 0 0;
+/* Under the result: the setting of the view on show, and the report link. */
+[data-page="playground"] [data-pane-foot] {
+  grid-row: 3;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-5);
+  min-height: var(--control-height);
+  margin-top: var(--space-2);
   font-size: var(--size-xs);
   color: var(--color-muted);
 }
-[data-page="playground"] textarea {
-  flex: 1;
-  min-height: var(--pane-height);
+[data-page="playground"] [data-pane-foot] p {
+  margin: 0;
 }
-[data-page="playground"] output[for] {
-  min-width: 3.5em;
-  text-align: center;
-  font-variant-numeric: tabular-nums;
+[data-page="playground"] [data-pane-foot] [data-report] {
+  margin-inline-start: auto;
+  font-size: var(--size-xs);
 }
-[role="tablist"] {
-  display: inline-flex;
-  gap: var(--space-2);
+[data-page="playground"] [data-pane-foot] #note {
+  flex-basis: 100%;
+  order: 1;
+}
+[data-page="playground"] [data-wide] > section > section > header > label[for="input"] {
+  margin-inline-end: auto;
+  font: 500 var(--size-xs) var(--font-ui);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+[data-page="playground"] [role="tablist"] {
+  flex: none;
   margin-inline-end: auto;
 }
-[role="tab"] {
+[data-page="playground"] [data-pane-foot] > label {
+  display: inline-flex;
+  gap: var(--space-3);
+  align-items: center;
+  font-size: var(--size-xs);
+  white-space: nowrap;
+}
+[data-page="playground"] #hang {
+  width: 5rem;
+}
+/* The hanging amount: a plain number beside the slider, not a badge. */
+[data-page="playground"] #hangValue {
+  min-width: 2.5em;
+  margin: 0;
+  padding: 0;
+  background: none;
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text);
+}
+/* Secondary actions: quiet text buttons. */
+[data-page="playground"] [data-examples-bar] {
+  display: flex;
+  gap: var(--space-1);
+}
+[data-page="playground"] [data-examples-bar] button,
+[data-page="playground"] #copy {
+  min-height: 32px;
+  padding: 0 var(--space-3);
   border-color: transparent;
   background: transparent;
   color: var(--color-muted);
+  white-space: nowrap;
 }
-[role="tab"][aria-selected="true"] {
+[data-page="playground"] [data-examples-bar] button:hover {
   color: var(--color-text);
   border-color: var(--color-line);
-  background: var(--color-surface);
+}
+[data-page="playground"] #copy {
+  border-color: var(--color-line);
+  color: var(--color-text);
+}
+[data-page="playground"] #copy:hover {
+  border-color: var(--color-text);
+}
+/* Both boxes: one inset, one first line. */
+[data-page="playground"] textarea {
+  resize: none;
+  padding: var(--space-5);
+}
+
+/* A narrower window: the settings become a row of columns above the panes. */
+@media (max-width: 1100px) {
+  [data-page="playground"] [data-wide] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  [data-page="playground"] [data-settings] {
+    padding: 0 0 var(--space-5);
+    margin-bottom: var(--space-5);
+    border-bottom: 1px solid var(--color-line);
+  }
+  [data-page="playground"] form {
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    align-items: end;
+  }
+  [data-page="playground"] #mode {
+    grid-column: 1 / -1;
+    max-width: 24rem;
+  }
+  [data-page="playground"] details fieldset {
+    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+  }
+  [data-page="playground"] details > button {
+    width: auto;
+  }
+}
+/* A phone: the panes one under the other, the input first. */
+@media (max-width: 760px) {
+  [data-page="playground"] [data-wide] > section {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: none;
+    gap: var(--space-6);
+  }
+  [data-page="playground"] [data-wide] > section > section {
+    display: flex;
+    flex-direction: column;
+    grid-row: auto;
+  }
+  [data-page="playground"] [data-wide] > section > section > header {
+    flex-wrap: wrap;
+  }
+  [data-page="playground"] form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  [data-page="playground"] #mode {
+    max-width: none;
+  }
 }
 [data-panel] {
   flex: 1;

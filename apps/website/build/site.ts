@@ -11,6 +11,11 @@ const pkg = JSON.parse(readFileSync(join(REPO_ROOT, 'package.json'), 'utf8')) as
 
 export const GITHUB = 'https://github.com/mokhniuk/typography';
 export const NAME = 'Podiia Typography';
+/** Where a reader reports a problem: a new GitHub issue. */
+export const ISSUES = `${GITHUB}/issues/new`;
+/** A new issue with its title and body filled in. */
+export const issueUrl = (title: string, body: string): string =>
+  `${ISSUES}?${new URLSearchParams({ title, body })}`;
 
 /** How the site sets its own text: the engine, with American quotes because the readers are English. */
 export const TYPESET = { lang: 'en', quoteStyle: 'us' } as const;
@@ -22,6 +27,7 @@ export const FACTS: Record<string, string> = {
   rulesOn: String(RULES.filter((rule) => rule.defaultOn !== false).length),
   rulesOff: String(RULES.filter((rule) => rule.defaultOn === false).length),
   langs: String(LANGS.length),
+  issues: ISSUES,
   git: `git+ssh://git@github.com/mokhniuk/typography.git#v${pkg.version}`,
 };
 
@@ -29,6 +35,7 @@ export const NAV = [
   { href: 'docs/', label: 'Docs' },
   { href: 'playground/', label: 'Playground' },
   { href: 'articles/', label: 'Articles' },
+  { href: 'docs/changelog/', label: 'Changelog' },
 ] as const;
 
 /** `{{name}}` placeholders in a page become the value in `FACTS`. */
