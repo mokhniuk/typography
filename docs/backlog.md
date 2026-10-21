@@ -106,7 +106,7 @@ Today the engine only protects them: a hyphenated phone number is not read as a 
 
 ### Currencies
 
-Partly there: `space.number` binds a number to the symbol or code after it (`49~€`, `100~USD`, `5~$`, `20~zł`, `100~грн`), and `space.percent` handles `%` and `€` spacing for de and fr only. Gaps found on 0.2.1:
+Partly there: `space.number` binds a number to the symbol or code after it (`49~€`, `100~USD`, `5~$`, `20~zł`, `100~грн`), and `space.percent` adds a no-break space before `%` and `€` in the 18 packs with `percentSpace` (`$ £ ₴ zł` are never spaced by it). Gaps found on 0.2.1:
 
 - **Code or symbol before the amount** is not bound: `USD 5 000` and `€ 49.99` can wrap between the code and the number.
 - **Grouped amounts** keep plain spaces between the groups unless `number.group` (opt-in) is on: `1 000 грн` becomes `1 000~грн`, so the number can still break in the middle.
@@ -159,7 +159,7 @@ Found in the review (2026-10-21), none changes output:
 
 ### Publish to npm, with a licence and compiled output (1.0.0)
 
-The package ships `.ts` sources, is private, installs from a git tag, and has no licence. A consumer needs Bun or a TypeScript-aware bundler. This is the last step of 1.0.0, after the website, the open bugs and the docs: ship JavaScript with `.d.ts` files (ESM) so Node and plain tooling work, a `LICENSE`, a CI matrix with Node, then publish. Output changes become major releases from 1.0.0 on, so the decisions that change output (the English default quotes, the `ch` code, the `percentSpace` split) land before it.
+The package ships `.ts` sources, is private, installs from a git tag, and has no licence. A consumer needs Bun or a TypeScript-aware bundler. This is the last step of 1.0.0, after the website, the open bugs and the docs: ship JavaScript with `.d.ts` files (ESM) so Node and plain tooling work, a `LICENSE`, a CI matrix with Node, then publish. Output changes stay minor releases after 1.0.0 (see [contributing.md](contributing.md#releasing)); only API breaks are major, so an API change such as the `ch` code or a renamed option is best made before it.
 
 ### A larger real-text benchmark
 

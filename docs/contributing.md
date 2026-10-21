@@ -137,6 +137,8 @@ Versions are semver while below 1.0.0.
 - A **minor** release (0.1.0 to 0.2.0) may change the output of the engine or the API. Any entry in the changelog marked "Can change existing output: yes" needs a minor release.
 - A **patch** release (0.1.0 to 0.1.1) fixes a bug without changing output you rely on.
 
+From 1.0.0 the output stays out of the major version: the engine's output is not its API, and a better rule or a corrected language pack is a **minor** release (a **patch** if it fixes a bug). A **major** release is for a breaking change to the API: a removed or renamed export, option or rule id, or a changed signature.
+
 To release:
 
 1. Move the new entries of `CHANGELOG.md` under a heading `## X.Y.Z (date)`.
