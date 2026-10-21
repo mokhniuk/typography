@@ -70,3 +70,14 @@ describe('quotes on long runs of one mark', () => {
     });
   }
 });
+
+// A refused inch mark (`5"x"`) is looked up once per lone closer: the cost stays that of the marks.
+describe('quotes on long runs of glued quotations', () => {
+  test('480 KB of 5"x"» are read in linear time', () => {
+    const text = '5"x"» '.repeat(80000);
+    const start = performance.now();
+    const out = quotes(text, 'en', 'display', 'language');
+    expect(out === text).toBe(true);
+    expect(performance.now() - start).toBeLessThan(1500);
+  });
+});

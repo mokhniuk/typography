@@ -2,6 +2,23 @@
 
 Versions follow semver while the package is below 1.0.0: a **minor** release may change the output of the engine or the API (every entry says whether it can change output you already have), a **patch** release fixes a bug without changing output you rely on. If you depend on exact output, pin a tag and read this file before you move it.
 
+## 0.8.0 (2026-10-22)
+
+### Fixes
+
+- A straight `"` glued after a digit-adjacent mark stays as typed: `5"a"` was set `5"a»` (the opener refused as an inch mark, the closer converted) and now stays `5"a"`; the lone `"` is left only when the nearest earlier straight `"` follows a digit, is followed by a non-space, and no quotation that was paired or read as an opener or closer stands between the two (a raw lone mark in the gap does not cancel it). In the HTML and Markdown modes a tag between the digit and the `"` no longer makes it an opener (the tag placeholder is skipped). The digit before a straight `"` is also read as a whole code point of the Unicode number class in both quote passes, so `𝟐" pipe` and `a ٢" bolt` keep the inch mark (the first was a quotation opener, the second had its mark closed). Can change existing output: yes, for text with a straight `"` glued after such a mark, and for text with a non-ASCII digit before a `"`.
+
+### New: a rule
+
+- `space.section` (on by default): a typed space between `§` or `¶` (or the doubled `§§` `¶¶`) and a number becomes a no-break space, so a mark never ends a line apart from its reference (`§ 5`, `§§ 5–7`, `¶ 12`). `§5` with no typed space is left as typed, like `€30`, and `§` before a word or at the end of the text is untouched. Source: Butterick, Practical Typography, "Paragraph and section marks". The run of spaces may mix breaking and no-break ones (`§` NBSP space `5`, `§` space NBSP `5`; the result is one no-break space) and the number may be in any script (`§ ٥`, `§ 𝟓`). Can change existing output: yes, for text with `§` or `¶`, a space and a digit.
+- `space.operator` (on by default): a lone `&`, `+` or `=` between two words, with a single typed space or no-break space on each side, gets no-break spaces on both sides, so a line never ends on the operator or starts with it (`Tom & Jerry`, `rock + roll`, `Fischer = champion`). Operators chain: `Tom & Jerry & Co` binds end to end into one unbreakable unit, and a pathological chain could bind a whole line. An operator next to an inline tag (`Tom &amp; <em>Jerry</em>`) or after a word ending in a combining mark (decomposed `café & bar`) stays unbound. Numbers (`2 + 2`, `x = 5`), doubled operators (`&&`, `==`, `+=`) and operators typed with no spaces (`R&D`, `x+y`) are untouched. The HTML mode now writes an `&` that stands before a no-break space as `&amp;`. No citable source was found; the decision is `general-knowledge`. Can change existing output: yes, for an operator between two words.
+
+### Tooling and docs
+
+- The decision records read two more sources. The SI brochure (BIPM, 9th ed., 5.4.3 and 5.4.4) now backs `symbol.degree` (a space before `°C`, none for a plane-angle degree) and is cited, with the places where the engine differs, in `number.group`; it says nothing on `±` or the minus sign, so those two stay general knowledge. The Greek, Finnish, Italian and Danish editions of the Interinstitutional Style Guide and the Czech language handbook were read for the euro: all five write `30 €` with a space, so `currencySpace` stays on in `el`, `fi`, `it`, `da` and `cs` (the backlog's doubt was about the `€` symbol in the Danish guide, whose source showed the code `EUR` after the figure; the guide's euro-symbol passage writes `et beløb på 30 €`). The backlog item on `currencySpace` without a source is closed. No output change.
+- `space.orphan` is verified for cs from ÚJČ entry 880 (k s v z o u a i; the fetched summary does not mention two-letter words); the pl and uk lists are unchanged and unverified. No output change.
+- A good-practices page, `docs/practices.md` (also on the website): what to bind and with which rule, what to leave to CSS, column width, what never to do, and the no-break space against markup. It cites only sources read and says "general knowledge" for the rest. No output change.
+
 ## 0.7.0 (2026-10-21)
 
 ### Fixes

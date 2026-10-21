@@ -3,7 +3,7 @@
 **Real quotation marks, dashes and spaces, in 26 languages.** A typography engine for running text: plain strings in, typeset strings out, nothing marked up in the source. Tags, links and code are left alone.
 
 [![CI](https://github.com/mokhniuk/typography/actions/workflows/release.yml/badge.svg)](https://github.com/mokhniuk/typography/actions/workflows/release.yml)
-![29 rules](https://img.shields.io/badge/rules-29-4c72b0)
+![31 rules](https://img.shields.io/badge/rules-31-4c72b0)
 ![26 languages](https://img.shields.io/badge/languages-26-4c72b0)
 ![Zero dependencies](https://img.shields.io/badge/dependencies-0-2ca02c)
 ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6)
@@ -59,7 +59,7 @@ The tools that beat it on speed (tipograph, smartypants) score far below it on t
 
 ## What is in the box
 
-- **29 rules** — quotes, apostrophes, dashes, ranges, no-break spaces, symbols, numbers; 20 on by default, 9 opt-in ([docs/rules.md](docs/rules.md)).
+- **31 rules** — quotes, apostrophes, dashes, ranges, no-break spaces, symbols, numbers; 22 on by default, 9 opt-in ([docs/rules.md](docs/rules.md)).
 - **26 languages** — the 24 official EU languages, `uk` and `ch`, each one pack with its quote marks, dash habits, elisions and abbreviations ([docs/languages.md](docs/languages.md)).
 - **Two registers** — `display` for interface and marketing text, `literary` for book-like text.
 - **Every format** — plain text, HTML, Markdown, hast trees (rehype plugin), React components, the DOM, a CLI.
@@ -186,6 +186,7 @@ Honesty over gloss — before you depend on it, know where it is weak:
 | [docs/languages.md](docs/languages.md) | Quote marks, dashes, orphan letters, abbreviations and `%`/`€` spacing per language; review status |
 | [docs/cli.md](docs/cli.md) | All flags, exit codes, standard input, format by extension, examples |
 | [docs/limits.md](docs/limits.md) | Known limits, speed, benchmark caveats |
+| [docs/practices.md](docs/practices.md) | Good practices: what to bind and with which rule, what to leave to CSS, column width, what never to do |
 | [docs/contributing.md](docs/contributing.md) | Tests, adding a rule or a language, the benchmark, the playground, releasing, using it from another project |
 | [CHANGELOG.md](CHANGELOG.md) | What changed in each release, and whether it can change output you already have |
 

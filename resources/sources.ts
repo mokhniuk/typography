@@ -89,6 +89,20 @@ export const SOURCES: readonly Source[] = [
       'Use a nonbreaking space after § and ¶, after abbreviations such as "Ex." and "Fig." before a letter or number, between a title and a name ("Ms."), and with the trademark and copyright symbols.',
   },
   {
+    id: 'butterick-section-marks',
+    kind: 'style-guide',
+    author: 'Matthew Butterick (the page itself names no author)',
+    title: 'Practical Typography: Paragraph and section marks',
+    about:
+      "The handbook on citing numbered paragraphs and sections with ¶ and §. English only; it says nothing about other languages' conventions for citing statutes, and nothing about a mark typed with no space before the number.",
+    cite: 'Matthew Butterick, Practical Typography, "Paragraph and section marks" (web page; no edition or year on the page).',
+    url: 'https://practicaltypography.com/paragraph-and-section-marks.html',
+    accessed: '2026-10-22',
+    readVia: 'summary',
+    claim:
+      '"A paragraph mark or section mark should always be followed by a nonbreaking space", which "acts like glue that keeps the mark joined with the numeric reference that follows"; "In a reference to multiple paragraphs or sections, double the mark (¶¶ or §§)"; at the start of a sentence, spell the word out instead of using the mark.',
+  },
+  {
     id: 'nist-si-checklist',
     kind: 'standard',
     author: 'Not named on the page (hosted by NIST at physics.nist.gov)',
@@ -101,6 +115,49 @@ export const SOURCES: readonly Source[] = [
     readVia: 'summary',
     claim:
       'There is a space between a numerical value and a unit symbol, and between a number and the percent sign ("10 %"); the page does not say the space is nonbreaking.',
+  },
+  {
+    id: 'isg-2022-euro',
+    kind: 'style-guide',
+    author: 'Publications Office of the European Union (interinstitutional)',
+    title:
+      'Interinstitutional Style Guide, Greek, Finnish, Italian and Danish editions (PDF of 19 April 2022), part 3, chapter 7 (codes of countries, languages and currencies): position of the euro symbol',
+    about:
+      "The language editions of the EU institutions' own style guide. The section on currencies sets where the euro code and the euro symbol go beside a figure, in each edition. It binds EU publications, not the national orthographies; it does not say the space is nonbreaking except in the Finnish edition.",
+    cite: 'Interinstitutional Style Guide, PDF of 19 April 2022, part 3 (conventions common to all languages), chapter 7, section "Position of the euro symbol (€) in amounts". Editions read: Greek https://publications.europa.eu/resource/cellar/01ed788a-d266-11ec-a95f-01aa75ed71a1.0016.01/DOC_1; Finnish https://publications.europa.eu/resource/cellar/01ed788a-d266-11ec-a95f-01aa75ed71a1.0017.01/DOC_1; Italian https://publications.europa.eu/resource/cellar/01ed788a-d266-11ec-a95f-01aa75ed71a1.0021.01/DOC_1; Danish https://publications.europa.eu/resource/cellar/01ed788a-d266-11ec-a95f-01aa75ed71a1.0022.01/DOC_1.',
+    url: 'https://publications.europa.eu/resource/cellar/01ed788a-d266-11ec-a95f-01aa75ed71a1.0021.01/DOC_1',
+    accessed: '2026-10-22',
+    readVia: 'raw',
+    claim:
+      'The € symbol follows the figure, separated from it by a space ("una somma di 30 €", "ποσό 30 €", "et beløb på 30 €"; Finnish "30 €", the symbol and code separated from the figure by a fixed space); English, Irish, Maltese and Dutch put it before the figure without a space (€30).',
+  },
+  {
+    id: 'ijp-penezni-castky',
+    kind: 'orthography',
+    author: 'Ústav pro jazyk český AV ČR',
+    title: 'Internetová jazyková příručka: Peněžní částky, značky měn; Zalomení řádků',
+    about:
+      'The online Czech language handbook of the Czech Academy of Sciences. The money entry covers the koruna sign; the € sign appears there only in a list of symbols, and the line-break entry gives the € example and names the one-letter words that must not end a line.',
+    cite: 'Internetová jazyková příručka, "Peněžní částky, značky měn" (id 786) and "Zalomení řádků a nevhodné výrazy na jejich konci" (id 880).',
+    url: 'https://prirucka.ujc.cas.cz/?id=880',
+    accessed: '2026-10-22',
+    readVia: 'summary',
+    claim:
+      'A number and a currency sign are separated by a space ("100 Kč"; without one the compound reads as an adjective), and a line may not break between the number and the sign of a unit or currency ("1 000 000 Kč, 250 €"), for which a fixed space is advised. A line also may not break after the non-syllabic prepositions "k, s, v, z" ("k mostu", "v Plzni") nor after the syllabic prepositions "o, u" and conjunctions "a, i" ("u babičky", "o páté"); one-character prepositions and conjunctions are not separated from the word that follows. The fetched summary does not mention two-letter prepositions.',
+  },
+  {
+    id: 'bipm-si-brochure-9',
+    kind: 'standard',
+    author: 'Bureau International des Poids et Mesures (BIPM)',
+    title: 'The International System of Units (SI), 9th edition (SI Brochure)',
+    about:
+      'The definitive international reference on the SI, in force since 2019. Section 5.4 sets how the value of a quantity and a number are written. It is a metrology standard: it covers unit symbols and digit grouping, not general prose typography, and it does not say whether a space is nonbreaking.',
+    cite: 'BIPM, The International System of Units (SI), 9th edition 2019, version V4.01 of June 2026 (doi 10.59161/AUEZ1291), section 5.4.3 "Formatting the value of a quantity" and 5.4.4 "Formatting numbers, and the decimal marker", pp. 144-145; Appendix 1, 9th CGPM Resolution 7 (1948) and 22nd CGPM Resolution 10 (2003).',
+    url: 'https://www.bipm.org/documents/20126/41483022/SI-Brochure-9-EN.pdf',
+    accessed: '2026-10-22',
+    readVia: 'raw',
+    claim:
+      'A space always separates a number from its unit symbol, so "30.2 °C" and not "30.2°C"; the only exception is the plane-angle symbols for degree, minute and second, which take no space. Digits may be grouped in threes by a space, never by commas or dots, and a four-digit number is not split.',
   },
   {
     id: 'unicode-names',
@@ -591,7 +648,7 @@ export const RULE_SOURCES: Record<string, Decision> = {
     sources: ['unicode-names', 'butterick-dashes', 'butterick-math'],
     why: 'A minus sign is −, not a hyphen.',
     alternative:
-      'Unicode only shows that the character exists; it does not say when to use it. Butterick says to use an en dash for the minus sign (the "Math symbols" page also lists the &minus; entity) and calls an en dash acceptable in spreadsheets, so a style guide that prefers − over – was not found. Still unchecked.',
+      'The SI brochure, 9th ed., has no passage on the minus sign: its section 5.4.4 only shows the leading zero (-0.234 but not -.234) and says nothing of the character to use, so it does not back this rule. Unicode only shows that the character exists; it does not say when to use it. Butterick says to use an en dash for the minus sign (the "Math symbols" page also lists the &minus; entity) and calls an en dash acceptable in spreadsheets, so a style guide that prefers − over – was not found. Still unchecked.',
     confidence: 'general-knowledge',
   },
   'symbol.multiply': {
@@ -633,12 +690,28 @@ export const RULE_SOURCES: Record<string, Decision> = {
     confidence: 'verified',
   },
   'space.percent': {
-    sources: ['cldr-numbers', 'oqlf-espacement', 'uax14'],
-    why: 'German and French set a no-break space before % and a currency sign. CLDR agrees for % in de and fr, and for the currency sign in de and fr; it sets no space before % in en, uk, pl, de-CH and fr-CH, which is what the engine does. OQLF, a printed-style authority, agrees for French: a no-break space before %, $ and €.',
+    sources: ['cldr-numbers', 'oqlf-espacement', 'isg-2022-euro', 'ijp-penezni-castky', 'uax14'],
+    why: 'German and French set a no-break space before % and a currency sign. CLDR agrees for % in de and fr, and for the currency sign in de and fr; it sets no space before % in en, uk, pl, de-CH and fr-CH, which is what the engine does. OQLF, a printed-style authority, agrees for French: a no-break space before %, $ and €. For € alone, the Greek, Finnish, Italian and Danish editions of the Interinstitutional Style Guide (part 3, 7) write the symbol after the figure with a space (30 €), as does the Czech handbook (250 €, with a fixed space), so currencySpace stays on in el, fi, it, da and cs.',
     alternative:
-      "The space before % and the space before € are two pack fields, percentSpace and currencySpace: Irish, Maltese, Portuguese, Latvian, Lithuanian and Estonian set the first and not the second, because their ISG editions write €30 with no space or show money only as the code EUR (see each pack's notes). CLDR also puts a no-break space before the currency sign in uk, pl and fr-CH; the engine leaves 49€ alone there (a gap, in the backlog). OQLF also asks for a no-break space before a French colon, and none or a fine space before ; ! and ?, which the engine does not set (a gap, in the backlog). OQLF is a Quebec source; a France or Swiss guide may differ (a fine space). The German side rests on CLDR only; no Duden page was read.",
+      "The space before % and the space before € are two pack fields, percentSpace and currencySpace: Irish, Maltese, Portuguese, Latvian, Lithuanian and Estonian set the first and not the second, because their ISG editions write €30 with no space or show money only as the code EUR (see each pack's notes). CLDR also puts a no-break space before the currency sign in uk, pl and fr-CH; the engine leaves 49€ alone there (a gap, in the backlog). OQLF also asks for a no-break space before a French colon, and none or a fine space before ; ! and ?, which the engine does not set (a gap, in the backlog). OQLF is a Quebec source; a France or Swiss guide may differ (a fine space). The German side rests on CLDR only; no Duden page was read. The ISG passage is for the euro only (other currency signs are never spaced by the engine) and, apart from the Finnish edition, does not say the space is nonbreaking; the Czech handbook was read as a fetch-tool summary. The ISG percent rule (6.4) cited in the packs was not re-read here. Of the country guides named in the packs (Kielitoimiston ohjepankki, Retskrivningsordbogen, Treccani), none was read for €.",
     confidence: 'verified',
-    langs: { de: ['cldr-numbers'], fr: ['cldr-numbers', 'oqlf-espacement'] },
+    langs: {
+      de: ['cldr-numbers'],
+      fr: ['cldr-numbers', 'oqlf-espacement'],
+      el: ['isg-2022-euro'],
+      fi: ['isg-2022-euro'],
+      it: ['isg-2022-euro'],
+      da: ['isg-2022-euro'],
+      cs: ['ijp-penezni-castky'],
+    },
+  },
+  'space.section': {
+    sources: ['butterick-section-marks', 'butterick-nbsp'],
+    why: 'A § or ¶ stays on the line of the number it cites. Butterick: a mark "should always be followed by a nonbreaking space"; the page shows the break between § and the number as the error. The nonbreaking-spaces page repeats it for § and ¶.',
+    alternative:
+      'The source says "always" and so would also have a space inserted in §5; the engine only turns a typed space into a no-break space, in the same way as ©2026 and €30 are left as typed. The page says to double the mark for several references and to spell the word out at a sentence start; the engine does neither, it only keeps the mark with its number. English only: the source does not cover how other languages set § (German and French practice, for one, is not checked). Read as a fetch-tool summary with quotes; not compared with other tools.',
+    confidence: 'verified',
+    langs: { en: ['butterick-section-marks'] },
   },
   'space.association': general('e.V. stays on the line of the name it follows.'),
   'space.copyright': {
@@ -647,10 +720,20 @@ export const RULE_SOURCES: Record<string, Decision> = {
     alternative: 'Not compared with other tools or with guides for the other languages.',
     confidence: 'verified',
   },
-  'space.orphan': {
-    ...general('A one-letter word does not end a line.'),
+  'space.operator': {
+    ...general(
+      'A lone &, + or = between two words stays on the line of the word before it and of the word after it, so a line neither ends on the operator nor starts with it (Tom & Jerry, rock + roll).',
+    ),
     alternative:
-      'No authoritative source found. Only secondary pages (a WebKit bug thread, a Czech nbsp generator, plugin pages) state the Polish and Czech practice; none is a style guide, so none is cited. A Polish or Ukrainian typography guide is needed, and the English a/I rule has no source at all.',
+      'No source found. Practical Typography "Nonbreaking spaces" was read (as a fetch-tool summary) and does not mention an ampersand or any operator; a web search for a guide on binding an ampersand between names found only general pages on no-break spaces and a LaTeX tie guide for forenames, none a style guide on this point, so none is cited. The rule is a judgement: a line ending on "&" or starting with it reads as a break in the pair. It binds both sides, so "Tom & Jerry" is one unbreakable unit, and a chain of operators binds end to end ("Tom & Jerry & Co" is five tokens in one unit; "one + two + three + four + five" is one run, and a pathological chain could bind a whole line); a guide may prefer a break before the operator instead. Two shapes stay unbound: an operator next to an inline tag in HTML or Markdown ("Tom &amp; <em>Jerry</em>": the tag placeholder is not a letter) and a word ending in a combining mark (decomposed "café & bar"). Numbers (2 + 2, x = 5) are left to the author; doubled operators (&&, ==, +=) and operators with no typed spaces (R&D, x+y) are untouched.',
+  },
+  'space.orphan': {
+    sources: ['ijp-penezni-castky'],
+    why: 'A one-letter word does not end a line.',
+    alternative:
+      'Czech is settled by the Internetová jazyková příručka (entry 880, read through a fetch summary): k, s, v, z, o, u, a, i stay with the next word, which is exactly the cs list; the fetched summary does not mention two-letter prepositions (do, na, ve, ...), so none is bound. Polish (a, i, o, u, w, z): only a Wikipedia article ("Sierotka (typografia)", which cites PWN and PN-P-55366:1983 without our having read either) states the six words, so the list is unchanged and not verified; the PWN Poradnia pages could not be fetched. Ukrainian: no readable source (the one found, a university layout handbook, returned 403 and a search snippet is not a read), so the list is unchanged and not verified. The English a/I rule has no source at all. Neither the Polish nor the Ukrainian two-letter prepositions are bound.',
+    confidence: 'verified',
+    langs: { cs: ['ijp-penezni-castky'] },
   },
   'space.arrow': general('An arrow stays on the line of the word it points from or to.'),
   'space.before-punctuation': {
@@ -682,17 +765,17 @@ export const RULE_SOURCES: Record<string, Decision> = {
     confidence: 'general-knowledge',
   },
   'number.group': {
-    sources: [],
+    sources: ['bipm-si-brochure-9'],
     why: 'Integers of five or more digits are grouped in threes with the language separator (comma, no-break space, dot) so a long number can be read.',
     alternative:
-      'Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge. Separators per language come from the packs and are unverified; Swiss usage differs (the pack follows the Federal Chancellery, not read here).',
+      'Opt-in rule (off unless named in `enable`). The SI brochure (9th ed., 5.4.4) says digits "may be divided into groups of three by a space", that "neither dots nor commas are ever inserted in the spaces between groups", that with only four digits before or after the decimal marker a space is not used to isolate a single digit, and that the practice "is a matter of choice". The engine agrees on groups of three, on starting at five digits, and on the space itself for the languages whose pack uses a no-break space (the brochure does not say nonbreaking). It deliberately differs where the pack groups with a comma (en) or a dot, which the brochure forbids; that is local custom, not SI. The brochure is a metrology standard and does not speak for ordinary prose in any one language, so the choice stays general-knowledge. Separators per language come from the packs and are otherwise unverified; Swiss usage differs (the pack follows the Federal Chancellery, not read here).',
     confidence: 'general-knowledge',
   },
   'symbol.plusminus': {
     sources: [],
     why: '+- before a digit is the plus-minus sign ±.',
     alternative:
-      'Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge.',
+      'Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge. The SI brochure, 9th ed., does not address the ± sign in section 5.4, so it does not back this rule.',
     confidence: 'general-knowledge',
   },
   'symbol.fraction': {
@@ -703,11 +786,12 @@ export const RULE_SOURCES: Record<string, Decision> = {
     confidence: 'general-knowledge',
   },
   'symbol.degree': {
-    sources: [],
+    sources: ['bipm-si-brochure-9'],
     why: 'A temperature or angle unit gets a no-break space before it (20 °C), and the degree sign is added where the unit letter stands alone.',
     alternative:
-      'Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge. The SI brochure rule on the space before a unit and its plane-angle exception are in the backlog reading list, not read.',
-    confidence: 'general-knowledge',
+      'Opt-in rule (off unless named in `enable`). The SI brochure, 9th ed., 5.4.3: a space always separates the unit from the number, so "t = 30.2 °C but not t = 30.2°C"; the one exception is the plane-angle degree, minute and second, which take no space (30° 22′ 8″). The engine agrees: it puts a space before ° only when a C or F follows, and leaves a bare angle degree (30°) alone. The brochure does not say the space is nonbreaking (our choice), and it covers the Celsius scale only: the Fahrenheit case (°F) is not SI, so no source was read for it. The label guard (Type 2 F is not a temperature) and the English-only rule for a bare C or F are the engine\'s own.',
+    confidence: 'verified',
+    langs: { en: ['bipm-si-brochure-9'] },
   },
   'space.trailing': {
     sources: [],

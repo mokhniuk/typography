@@ -23,7 +23,9 @@ import {
   initials,
   mayAbbreviate,
   numberUnit,
+  operator,
   orphans,
+  section,
   titles,
   unitSymbol,
 } from './spaces';
@@ -280,6 +282,13 @@ export const RULES: readonly Rule[] = [
     apply: (text, { lang }) => degrees(text, lang),
   },
   {
+    id: 'space.section',
+    category: 'symbols',
+    about: 'No-break space after § and ¶, doubled or not, before a number',
+    when: hasAny('§', '¶'),
+    apply: section,
+  },
+  {
     id: 'space.association',
     category: 'tradition',
     about: 'No-break space before e.V.',
@@ -292,6 +301,13 @@ export const RULES: readonly Rule[] = [
     about: 'No-break space after ©',
     when: has('©'),
     apply: copyright,
+  },
+  {
+    id: 'space.operator',
+    category: 'symbols',
+    about: 'No-break spaces around & + = standing alone between two words',
+    when: hasAny('&', '+', '='),
+    apply: operator,
   },
   {
     id: 'space.orphan',

@@ -106,7 +106,9 @@ function decode(text: string, kept: string[]): string {
 
 function encode(text: string, nbsp: 'entity' | 'char'): string {
   const escaped = text
-    .replace(/&(?=[#A-Za-z])/g, '&amp;')
+    // Any `&` before a no-break space is escaped (`&nbsp;` in the default mode), so `&&nbsp;` is never written; `space.operator` is what puts one there.
+    // The same pattern also escapes an `&` before an ASCII letter or `#`, which would otherwise read as the start of an entity (pre-existing).
+    .replace(/&(?=[#A-Za-z\u00a0])/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;');
   return nbsp === 'entity' ? escaped.replaceAll(NBSP, '&nbsp;') : escaped;

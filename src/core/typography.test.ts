@@ -170,6 +170,77 @@ describe('spaces', () => {
     expect(t('Vitsche e.V.')).toBe('Vitsche~e.V.');
   });
 
+  test('§ and ¶ stay with the number after them', () => {
+    expect(t('see § 5')).toBe('see §~5');
+    expect(t('§§ 5–7')).toBe('§§~5–7');
+    expect(t('see ¶ 12')).toBe('see ¶~12');
+    expect(t('¶¶ 3, 4')).toBe('¶¶~3, 4');
+    expect(t('see §  5')).toBe('see §~5');
+  });
+
+  test('§ and ¶ bind a mixed run of spaces and no-break spaces, and a number of any script', () => {
+    expect(t('see §\u00a0 5')).toBe('see §~5');
+    expect(t('see § \u00a05')).toBe('see §~5');
+    expect(t('see §\u00a05')).toBe('see §~5');
+    expect(typographic(typographic('see §\u00a0 5'))).toBe('see §\u00a05');
+    expect(t('see § ٥')).toBe('see §~٥');
+    expect(t('see § 𝟓')).toBe('see §~𝟓');
+  });
+
+  test('§ and ¶ are left alone where there is no typed space before a number', () => {
+    expect(t('see §5')).toBe('see §5');
+    expect(t('the § sign')).toBe('the § sign');
+    expect(t('Model T ¶')).toBe('Model T ¶');
+    expect(t('¶ and §')).toBe('¶ and §');
+  });
+
+  test('§ and ¶ spacing is stable and recorded by explain', () => {
+    const once = typographic('see § 5 and ¶ 12');
+    expect(typographic(once)).toBe(once);
+    expect(explain('see § 5').changes).toEqual([{ rule: 'space.section', from: ' ', to: NBSP }]);
+    expect(t('see § 5', 'en', { disable: ['space.section'] })).toBe('see § 5');
+  });
+
+  test('an operator between two words keeps its spaces unbreakable', () => {
+    expect(t('Tom & Jerry')).toBe('Tom~&~Jerry');
+    expect(t('rock + roll')).toBe('rock~+~roll');
+    expect(t('Fischer = champion')).toBe('Fischer~=~champion');
+    expect(t('x = y')).toBe('x~=~y');
+    expect(t('Tom\u00a0& Jerry')).toBe('Tom~&~Jerry');
+    expect(t('Tom & Jerry & Co')).toBe('Tom~&~Jerry~&~Co');
+    expect(t('Ян & Анна')).toBe('Ян~&~Анна');
+  });
+
+  test('an operator is left alone unless one operator stands between two letter words', () => {
+    expect(t('2 + 2')).toBe('2 + 2');
+    expect(t('x = 5')).toBe('x = 5');
+    expect(t('5 + x')).toBe('5 + x');
+    expect(t('ab == cd')).toBe('ab == cd');
+    expect(t('ab && cd')).toBe('ab && cd');
+    expect(t('ab += cd')).toBe('ab += cd');
+    expect(t('R&D')).toBe('R&D');
+    expect(t('x+y')).toBe('x+y');
+    expect(t('Tom &')).toBe('Tom &');
+    expect(t('& Jerry')).toBe('& Jerry');
+  });
+
+  test('the disclosed unbound operator shapes stay unbound', () => {
+    // decomposed: the word ends in a combining mark (e + U+0301), so the operator is not between two letter words
+    expect(t('café & bar')).toBe('café & bar');
+    // one-sided: no space after the operator
+    expect(t('Tom &Jerry')).toBe('Tom &Jerry');
+  });
+
+  test('operator spacing is stable and recorded by explain', () => {
+    const once = typographic('Tom & Jerry + rock');
+    expect(typographic(once)).toBe(once);
+    expect(explain('Tom & Jerry').changes).toEqual([
+      { rule: 'space.operator', from: ' ', to: NBSP },
+      { rule: 'space.operator', from: ' ', to: NBSP },
+    ]);
+    expect(t('Tom & Jerry', 'en', { disable: ['space.operator'] })).toBe('Tom & Jerry');
+  });
+
   test('one-letter words by language', () => {
     expect(t('a stone and I', 'en')).toBe('a~stone and I');
     expect(t('pamięć w kamieniu', 'pl')).toBe('pamięć w~kamieniu');
@@ -494,6 +565,35 @@ describe('a quote with no partner', () => {
     expect(t('A 2" pipe and a 4" pipe.')).toBe('A~2" pipe and a~4" pipe.');
     expect(t('He is 5\'10" and she is 5\'6" tall.')).toBe('He is 5\'10" and she is 5\'6" tall.');
     expect(t('Cut 2" off, then 3" more.', 'de')).toBe('Cut 2" off, then 3" more.');
+  });
+
+  test('a digit of any script before the mark keeps it an inch mark', () => {
+    expect(t('𝟐" pipe')).toBe('𝟐" pipe');
+    expect(t('a ٢" bolt and a ٤" bolt')).toBe('a~٢" bolt and a~٤" bolt');
+    for (const text of ['𝟐" pipe', 'a ٢" bolt and a ٤" bolt']) expect(t(t(text))).toBe(t(text));
+  });
+
+  test('a quotation glued to a digit keeps both marks as written', () => {
+    expect(t('5"a"')).toBe('5"a"');
+    expect(t('5"ab cd"')).toBe('5"ab cd"');
+    for (const text of ['5"a"', '5"ab cd"']) expect(t(t(text))).toBe(t(text));
+    expect(t('He said, "stop and left.')).toBe('He said, «stop and left.');
+    expect(t('and so said he" to all')).toBe('and so said he» to all');
+    expect(t('Tallinn"ä"')).toBe('Tallinn«ä»');
+  });
+
+  test('an inch mark that cannot have opened anything does not hold a later closer', () => {
+    expect(t('a 2" pipe, said he"')).toBe('a~2" pipe, said he»');
+    expect(t('He was 6\' 2" tall. She said “hello" to him.')).toContain('«hello»');
+    expect(t('Use a 2" pipe. He said “stop now" and left.')).toContain('«stop now»');
+    expect(t('A 2" pipe. Then: «stop now" ok')).toContain('«stop now»');
+    expect(t('5"a b “c" d')).toContain('«c»');
+  });
+
+  test('tags and surrogate digits do not hide the refused mark', () => {
+    expect(t('5\uFFFC"a"')).toBe('5\uFFFC"a"');
+    expect(t('𝟓"a"')).toBe('𝟓"a"');
+    expect(t(t('𝟓"a"'))).toBe('𝟓"a"');
   });
 
   test('a quotation that ends in a digit still closes, and one opens after a dash or a colon', () => {

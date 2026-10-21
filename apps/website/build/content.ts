@@ -42,6 +42,7 @@ const DOC_FILES: { source: string; slug: string; group: string; label: string }[
   { source: 'docs/rules.md', slug: 'rules', group: 'Reference', label: 'Rules' },
   { source: 'docs/languages.md', slug: 'languages', group: 'Reference', label: 'Languages' },
   { source: 'docs/limits.md', slug: 'limits', group: 'Guides', label: 'Known limits' },
+  { source: 'docs/practices.md', slug: 'practices', group: 'Guides', label: 'Good practices' },
   { source: 'docs/contributing.md', slug: 'contributing', group: 'Guides', label: 'Contributing' },
   { source: 'CHANGELOG.md', slug: 'changelog', group: 'Project', label: 'Changelog' },
 ];

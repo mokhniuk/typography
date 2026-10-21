@@ -46,6 +46,7 @@ const CASES = [
   '<pre>"raw" -> raw</pre><p>"set" -> set</p>',
   '<p>R&amp;D "x" &lt;tag&gt; 5 &euro; 10%</p>',
   '<p>"one" <!-- "comment" --> "two"</p>',
+  '<p>Tom &amp; Jerry + rock</p>',
   '<ul><li>"a" - b</li><li>"c" - d</li></ul>',
   '<div><p>"outer"</p><blockquote><p>"inner" - x</p></blockquote></div>',
   '<p>Prof. Dr. K. Słoboda z. B. Nr. 5 e.V. (c) 2026 Read more -></p>',
@@ -56,6 +57,14 @@ const CASES = [
   '<p>5\'10" tall and a 2" pipe "quoted"</p>',
   '<p>\n  "indented"\n  text - here\n</p>',
 ];
+
+describe('the disclosed unbound operator shape in HTML', () => {
+  test('an operator next to an inline tag stays unbound', () => {
+    expect(typesetHtml('<p>Tom &amp; <em>Jerry</em></p>', { lang: 'en' })).toBe(
+      '<p>Tom &amp; <em>Jerry</em></p>',
+    );
+  });
+});
 
 describe('the HTML mode and the rehype mode set the same text', () => {
   for (const html of CASES) {

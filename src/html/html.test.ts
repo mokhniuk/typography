@@ -10,6 +10,13 @@ describe('typesetHtml', () => {
     expect(h('<p>He said "hi" - and left.</p>')).toBe('<p>He said «hi»~— and left.</p>');
   });
 
+  test('an operator between two words is bound, written as &amp; or as a raw &', () => {
+    expect(h('<p>Tom &amp; Jerry</p>')).toBe('<p>Tom~&amp;~Jerry</p>');
+    expect(h('<p>Tom & Jerry</p>')).toBe('<p>Tom~&amp;~Jerry</p>');
+    expect(typesetHtml('<p>Tom &amp; Jerry</p>', { nbsp: 'char' })).toBe('<p>Tom\u00a0&amp;\u00a0Jerry</p>');
+    expect(h('<p>rock + roll</p>')).toBe('<p>rock~+~roll</p>');
+  });
+
   test('a quotation pairs across an inline element', () => {
     expect(h('<p>"See <a href="/x?a=1-2">Name</a> speak"</p>')).toBe(
       '<p>«See <a href="/x?a=1-2">Name</a> speak»</p>',
@@ -57,7 +64,7 @@ describe('typesetHtml', () => {
   });
 
   test('a block that needs no change comes back byte for byte', () => {
-    const html = '<div>\n  <p>Plain text &amp; more.</p>\n  <p>«Done»</p>\n</div>';
+    const html = '<div>\n  <p>Plain text &amp; «more».</p>\n  <p>«Done»</p>\n</div>';
     expect(typesetHtml(html)).toBe(html);
   });
 

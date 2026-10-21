@@ -24,26 +24,22 @@ Every pack has `reviewed: false`: bg cs da el es et fi ga hr hu it lt lv mt nl p
 
 ### Finish the sources registry
 
-[sources.md](../resources/sources.md) has 11 of 29 decisions still `general-knowledge` (the nine opt-in rules have no source read), one `disputed`, 17 `verified` for the cases and languages named in each entry (mostly English; `dash.dialogue` since 0.4.0 for 17 languages). Read the sources and upgrade them, and have a native speaker check each language. Found while building it (2026-10-20, CLDR 46):
+[sources.md](../resources/sources.md) has 15 of 31 decisions still `general-knowledge` (eight of them opt-in rules with no source read, seven default-on), one `disputed`, 15 `verified` for the cases and languages named in each entry (mostly English; `dash.dialogue` since 0.4.0 for 17 languages). Read the sources and upgrade them, and have a native speaker check each language. Found while building it (2026-10-20, CLDR 46):
 
 - `quote` is `disputed`: CLDR has English `“ ” ‘ ’` (see the American quotes item above), German `„ “ ‚ ‘` (the engine sets `» « › ‹`), French `« »` with `« »` inside (the engine uses `“ ”`), and de-CH `„ “ ‚ ‘` (the engine's `ch` profile is the fr-CH one: `« » ‹ ›`). Decide per language whether the engine or CLDR is right, citing a guide. The English default is settled with the named configs (built on `TypographyConfig`, which exists since the per-project config): the engine defaults to the language standard and ships `standard` and a house config (guillemets in English; perhaps named `display`, a name the register already uses) that restores the house style.
 - `space.percent` / currency: CLDR sets a no-break space before the currency sign in `uk`, `pl` and `fr-CH`; the engine leaves `49€` alone there.
 - Gaps found against Practical Typography and OQLF (2026-10-20, probed in the engine; both sources were read as fetch-tool summaries, check them first):
-  - `space.section` (P1): no-break space after `§` and `¶`, doubled `§§` `¶¶`; `§ 5` keeps an ordinary space now.
   - French `:` gets a no-break space before it, and `;` `!` `?` none or a fine space (OQLF). The engine sets none of these. A France or Swiss guide may differ, so read one before building it.
   - `ellipsis` (P2): a no-break space on a side with no text (`... and so`); keep the last two words of a paragraph together (P2, or document `text-wrap: pretty`).
   - Out of scope, by design: repeated `!!` or `?!` and one exclamation mark per three pages (a lint, not a substitution), superscript ordinals (Butterick says not to, and the engine already leaves `1st` alone).
-  - `dash.sentence`: the engine's spaced em dash with a no-break space before it matches neither Butterick (unspaced em, spaced acceptable) nor Bringhurst (spaced en, from a search result, not read). Pick one and cite it.
-- Reading list, none read yet, each to be read before it is cited: Bringhurst, *The Elements of Typographic Style*, 4th ed. (Hartley & Marks, 2013), section 5.2.1; *The Chicago Manual of Style*, 18th ed. (University of Chicago Press, 2024); Butterick, *Typography for Lawyers*, 2nd ed. (O'Connors, 2015); BIPM, *SI Brochure*, 9th ed. (2019), section 5.4 (space between value and unit, plane-angle exception) and ISO 80000-1; Knuth and Plass, "Breaking Paragraphs into Lines", *Software: Practice and Experience* 11 (1981) 1119–1184; Dyson on on-screen line length and Beier, *Reading Letters* (BIS, 2012), as context only. No peer-reviewed study of punctuation, dash or no-break-space conventions was found; the empirical work found (Ho Sang and Petrarca, *Visible Language* 59(3), 2025, a review of 42 studies) is about typeface, size and line length, so no rule here should cite research.
+- Reading list, none read yet, each to be read before it is cited: Bringhurst, *The Elements of Typographic Style*, 4th ed. (Hartley & Marks, 2013), section 5.2.1; *The Chicago Manual of Style*, 18th ed. (University of Chicago Press, 2024); Butterick, *Typography for Lawyers*, 2nd ed. (O'Connors, 2015); ISO 80000-1 (the SI Brochure, 9th ed., was read in 0.8.0 and backs `symbol.degree`); Knuth and Plass, "Breaking Paragraphs into Lines", *Software: Practice and Experience* 11 (1981) 1119–1184; Dyson on on-screen line length and Beier, *Reading Letters* (BIS, 2012), as context only. No peer-reviewed study of punctuation, dash or no-break-space conventions was found; the empirical work found (Ho Sang and Petrarca, *Visible Language* 59(3), 2025, a review of 42 studies) is about typeface, size and line length, so no rule here should cite research.
 - Unread, to read next: Pravopys 2019 (§ 161 "Тире" for `dash.dialogue`, the quote section; mon.gov.ua refused the fetch), the Swiss Federal Chancellery Schreibweisungen § 2.1.1 (the PDF has no extractable text here; needs a PDF reader), Imprimerie nationale Lexique, Duden, a Polish or Ukrainian typography guide for `space.orphan`, Chicago, Bringhurst, and a guide that prefers `−` and `×` (`symbol.minus`, `symbol.multiply`).
 
 ### Inch marks and quotations: the cases left
 
-Found in the review of the inch-mark fix (2026-10-21). Each is a limit, listed in [limits.md](limits.md):
+Found in the review of the inch-mark fix (2026-10-21). It is a limit, listed in [limits.md](limits.md):
 
-- **A quotation glued to a digit** (`5"a"`) is half set: the opener is skipped as an inch mark, the lone-mark pass then converts the closer (`5"a»`). Main set it `5«a»`. Decide: leave both marks as written, or pair them. Fix in the lone-mark pass of `src/core/quotes.ts` (`closeLone` must not close a `"` whose partner was refused as an inch mark).
 - **An inch mark inside a quotation** (`He said "a 5" hole" ok`) closes the quotation at the inch mark, leaving the real closer lone (`«a 5» hole»`). Same on main. A closer after a digit followed by a letter or space and another `"` later is the ambiguous case; research what other tools do before choosing.
-- **Non-ASCII digits** (`𝟐"`, Arabic-Indic) before the mark: the pair scan tests one UTF-16 unit with `\p{N}`, and the lone-mark pass tests ASCII `\d`. Make both read the code point and the same digit class, with a golden test.
 ### Language gaps found while writing the packs
 
 Each is a limit of the pack format or an unverified choice, not a crash:
@@ -99,7 +95,6 @@ Partly there: `space.number` binds a number to the symbol or code after it (`49~
 - **Code or symbol before the amount** is not bound: `USD 5 000` and `€ 49.99` can wrap between the code and the number.
 - **Grouped amounts** keep plain spaces between the groups unless `number.group` (opt-in) is on: `1 000 грн` becomes `1 000~грн`, so the number can still break in the middle.
 - **Placement and spacing per locale** (`€49.99` in en, `49,99 €` in de, fr and uk, `49,99 zł` in pl) is not applied: the engine never moves a symbol, which is right, but only `€` has a pack field (`currencySpace`) that says whether a space belongs between amount and symbol.
-- **`currencySpace: true` without a source for `€`**: el, fi, it and cs cite a source for `%` only, and da's source writes `EUR` after the figure with an ordinary space (the split in 0.6.0 kept their output). Read a source for each and set `false` where it says `30€` or shows only the code.
 - **Swiss apostrophe grouping** (`CHF 1'000`) is not read as a number group, and the apostrophe is not a quote.
 - **Symbols and codes** are an inline list; a code list (ISO 4217) and the symbols of the audience's currencies (`€ $ £ ₴ zł Kč Ft lei лв kr`) should be one table in `src/core`, not in two rules.
 - Done when: golden tests per locale for the amount, the symbol and the code before and after; `space.number` and `number.group` agree on grouped amounts; no rule moves or adds a currency symbol.
@@ -118,12 +113,11 @@ The pack exists but is thin, because the Irish edition of the Interinstitutional
 
 Today `space.orphan` binds a one-letter word in a language's list to the next word (`a~long`, `в~місті`), `space.number` binds a number to a short word, and `space.title`, `space.initial` and `space.abbreviation` bind their cases. Not covered, checked on 0.2.1:
 
-- `&`, `+`, `=` and other operators between words (`Tom & Jerry`, `rock + roll`) get no no-break space: a line can end on `&`, or start with it.
-- Short words of two or three letters (`to`, `of`, `the`; `на`, `до`; `der`, `die`) are bound only where a pack lists them as one-letter orphans.
+- Short words of two or three letters (`to`, `of`, `the`; `на`, `до`; `der`, `die`) are not bound by any pack.
 - **The last words of a paragraph (widows and runts)** are decided: not a string rule, CSS `text-wrap: pretty` on the page (written down in [limits.md](limits.md)).
 - **How to bind, not only what:** a no-break space is a character and travels with the text (copy, search, screen readers read it as a space), a `<span style="white-space: nowrap">` is markup and stays on the page. The HTML, rehype and React modes could offer `bind: 'nbsp' | 'nowrap'` (the text mode and the CLI on plain text have only the character). Research what the two do to search, copy, hyphenation and `text-wrap: pretty` before choosing a default; the string engine keeps the no-break space.
-- **A good-practices page** (`docs/practices.md`, later the website): what to bind (one-letter words, a number and its unit, a title and a name, an operator between words, a short tail), what to leave to CSS (`text-wrap: pretty`, `balance` for headings, `hyphens`), how a column width changes the answer, and what never to do (bind a whole line, bind inside a link text that wraps). Written from the sources registry, with before/after examples rendered at two widths.
-- Done when each rule has golden tests per language that has the pattern, no rule can bind a whole line, and the practices page exists with an example per rule.
+- **Short words in other languages:** only cs, en, pl and uk have an `orphans` list (no source read gives one for the rest; sk, sl and hr have strong one-letter conventions); Polish and Ukrainian lists are unverified. Add a list only from a style guide.
+- Done when each rule has golden tests per language that has the pattern, no rule can bind a whole line (`space.operator` chains are the known, disclosed exception, see limits.md), and the `bind: nowrap` question is answered.
 
 ### Speed: what is left
 
@@ -139,7 +133,7 @@ Found in the review (2026-10-21), none changes output:
 - The anchor slug is written two ways (`slug()` and `rule.replaceAll('.', '-')`, and `replaceAll('.', '')` in `gen-rules-doc.ts`). One function, one anchor format, checked by a test that every `docs/rules.md` link lands on an anchor in `sources.md`.
 - `sources.html` prints an empty "Used by:" for a source no decision cites, `bibliography.html` says "unused". Say "unused" in both.
 - `render()` in `sources.ts` and `sources-html.ts` skip a rule with no decision, while `gen-rules-doc.ts` links it as `general-knowledge`. `resources/sources.test.ts` stops that from shipping today; make the generators fail loudly instead of skipping, so a run outside the test cannot write a page that disagrees with its counts.
-- The nine opt-in rules have `general-knowledge` entries with no source (`space.before-punctuation`, `space.after-comma`, `punctuation.double`, `symbol.implies`, `number.group`, `symbol.plusminus`, `symbol.fraction`, `symbol.degree`, `space.trailing`). Read a source for each and upgrade; the SI brochure for `symbol.degree`, a guide for the grouping separator of each language for `number.group`. Counted in "Finish the sources registry" above.
+- Eight opt-in rules have `general-knowledge` entries with no source (`space.before-punctuation`, `space.after-comma`, `punctuation.double`, `symbol.implies`, `number.group`, `symbol.plusminus`, `symbol.fraction`, `space.trailing`; `symbol.degree` is `verified` since 0.8.0). Read a source for each and upgrade; a guide for the grouping separator of each language for `number.group` (the SI brochure is cited there already, but says nothing on `±`). Counted in "Finish the sources registry" above.
 
 ### Publish to npm, with a licence and compiled output (1.0.0)
 

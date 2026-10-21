@@ -73,6 +73,19 @@ function spacesBefore(text: string, re: RegExp): string {
 
 export const copyright = (text: string): string => text.replace(/©[ ]+(?=\d)/g, `©${NBSP}`);
 
+/** A typed run of spaces and no-break spaces between § or ¶ (doubled for several) and a number (any script) becomes a no-break space; `§5` is left as typed. */
+export const section = (text: string): string =>
+  text.replace(/([§¶]{1,2})[ \u00a0]+(?=\p{N})/gu, `$1${NBSP}`);
+
+/**
+ * A lone `&`, `+` or `=` with a single typed space or no-break space on each side, a letter before
+ * the first and a letter after the second, gets no-break spaces on both sides. `2 + 2`, `x = 5`,
+ * `a == b`, `R&D` and `x+y` do not match. Matches do not overlap on the letter between two operators
+ * because only the letter before and the one after (a lookahead) are read.
+ */
+export const operator = (text: string): string =>
+  text.replace(/(\p{L})[ \u00a0]([&+=])[ \u00a0](?=\p{L})/gu, `$1${NBSP}$2${NBSP}`);
+
 /**
  * The pack's orphan pattern without its leading `(?<![\p{L}\p{N}])`, when it has exactly that one
  * (every pack's does), as a forward regex that opens with the letter class; `null` for a pattern of

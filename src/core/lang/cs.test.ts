@@ -33,6 +33,10 @@ describe('Czech', () => {
     expect(t('Řekl: "jdu domů".')).toBe('Řekl: „jdu domů“.');
   });
 
+  test('a word that ends in a list letter is not bound; the standalone letter after it is', () => {
+    expect(t('Rusko a on')).toBe('Rusko a~on');
+  });
+
   test('ÚJČ line ends: k, s, v, z, o, u, a, i stay with the next word', () => {
     expect(t('Jdu k lesu s přítelem v noci z města')).toBe('Jdu k~lesu s~přítelem v~noci z~města');
     expect(t('o domě u cesty a on i ona')).toBe('o~domě u~cesty a~on i~ona');
@@ -42,8 +46,15 @@ describe('Czech', () => {
     expect(t('Dnes. V lese A on')).toBe('Dnes. V~lese A~on');
   });
 
-  test('a longer word is not bound', () => {
+  test('a longer word is not bound: the source names only one-letter words', () => {
     expect(t('do lesa')).toBe('do lesa');
+    expect(t('na lese ve vsi')).toBe('na lese ve vsi');
+  });
+
+  test('a one-letter word inside another word is untouched, and the output is stable', () => {
+    expect(t('dvě kola, ovoce')).toBe('dvě kola, ovoce');
+    const once = typographic('Jdu k lesu a on i ona', 'cs');
+    expect(typographic(once, 'cs')).toBe(once);
   });
 
   test('ÚJČ procento: a space stands between number and %, and it does not break', () => {

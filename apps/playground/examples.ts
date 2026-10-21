@@ -20,7 +20,7 @@ export const LONG: Record<Lang, Long> = {
       `"Shall we wait?" asked Dr. K. Novak.`,
       `The workshop runs 21-26 September, 10:00-12:00, in a hall for 125000 people , and the screens are 1920x1080. Tickets are cheap,with 15% off.`,
       `Outside it is -5 C, +-2 C at night.  Add 1/2 cup of sugar. Wow!!! Read on -> p. 12 => done.`,
-      `See Fig. 3 and No. 4 for details. (c) 2026 Studio.`,
+      `See Fig. 3, No. 4 and § 7 for details, Tom & Jerry included. (c) 2026 Studio.`,
     ],
     run: `Run {code} and read {link}.`,
     link: `the "guide"`,
