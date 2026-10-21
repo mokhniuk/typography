@@ -2,7 +2,7 @@
 
 Versions follow semver while the package is below 1.0.0: a **minor** release may change the output of the engine or the API (every entry says whether it can change output you already have), a **patch** release fixes a bug without changing output you rely on. If you depend on exact output, pin a tag and read this file before you move it.
 
-## Unreleased
+## 0.4.0 (2026-10-21)
 
 - `hangPunctuation` (and so `hangScript` and `TypographyRoot`) reads the CSS custom property `--hang-amount`: how far an opening mark hangs, as a share of its width from 0 to 1 (0 turns hanging off). Unset, it is 1, as before. `data-hung` now holds the share a mark was hung by instead of being empty. Can change existing output: no (the engine's text output is unchanged; hanging is unchanged unless the property is set).
 - Dialogue dash in 17 languages, in both registers. A paragraph that opens with a hyphen or dash and a space is a line of dialogue where the language writes dialogue with a dash: em dash in `uk pl fr it pt bg da`, attached raya in `es` (`—¿Esperamos?`), en dash in `ro hr sl hu fi sv cs sk lt`, followed by a no-break space. Before, only Ukrainian in the literary register had it. A paragraph whose later line also opens with a dash is read as a list and left alone. Each language is backed by its orthography or language advice service (17 sources added to the registry; `dash.dialogue` is now `verified`). Greek and Latvian are not set: no source confirmed the dash. The pack field `dialogueDash` is now `{ mark, attached? }` instead of `true` (type `DialogueDash`). Can change existing output: yes, for a paragraph that opens with `- `, `– ` or `— ` in those languages (Ukrainian in the display register included).
