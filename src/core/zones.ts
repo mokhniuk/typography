@@ -4,7 +4,14 @@
 const ZONE = '\uE003';
 /** The zones that start with a literal: a code span, a web address. Found by the regex engine in one pass. */
 const LITERAL_ZONES = new RegExp(
-  ['`[^`\\n]+`', 'https?://[^\\s<>"“”«»‘’‚„‹›]+', 'www\\.[^\\s<>"“”«»‘’‚„‹›]+'].join('|'),
+  [
+    '`[^`\\n]+`',
+    'https?://[^\\s<>"“”«»‘’‚„‹›]+',
+    'www\\.[^\\s<>"“”«»‘’‚„‹›]+',
+    // A private-use character the engine uses as a placeholder (the quote marks, the apostrophe,
+    // the zone itself): set aside as a zone of its own, so text that holds one is not misread.
+    '[\\uE000-\\uE003]',
+  ].join('|'),
   'gu',
 );
 
@@ -93,7 +100,13 @@ function addressLength(zone: string): number {
   let end = zone.length;
   while (end > 0) {
     const ch = zone.charAt(end - 1);
-    if (ch === ')' ? open < close : ch === ']' ? squareOpen < squareClose : SENTENCE_PUNCTUATION.test(ch)) {
+    if (
+      ch === ')'
+        ? open < close
+        : ch === ']'
+          ? squareOpen < squareClose
+          : SENTENCE_PUNCTUATION.test(ch)
+    ) {
       if (ch === ')') close--;
       else if (ch === ']') squareClose--;
       end--;
@@ -104,13 +117,12 @@ function addressLength(zone: string): number {
 
 /** Sets the zones aside; the second value puts them back into the typeset text. */
 export function shield(text: string): [string, (typeset: string) => string] {
-  if (text.includes(ZONE)) return [text, (s) => s];
   const zones: string[] = [];
   let out = '';
   let copied = 0;
   for (const [start, end] of zonesOf(text)) {
     const match = text.slice(start, end);
-    const kept = match.startsWith('`') ? match.length : addressLength(match);
+    const kept = match.startsWith('`') || match.length === 1 ? match.length : addressLength(match);
     zones.push(match.slice(0, kept));
     out += text.slice(copied, start) + ZONE + match.slice(kept);
     copied = end;

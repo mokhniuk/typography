@@ -661,3 +661,13 @@ describe('a space inside a quotation next to a mark glued to the outside word mo
     expect(t('a " b c " d')).toBe('a~«b c» d');
   });
 });
+
+describe('private-use characters in the input', () => {
+  test('one that equals the zone placeholder does not switch the zones off', () => {
+    expect(t('see  https://a.com/1-2 (c) 2020')).toBe('see  https://a.com/1-2 ©~2020');
+  });
+
+  test('ones that equal the quote placeholders are not read as quote marks', () => {
+    expect(t('odd  char and x')).toBe('odd  char and x');
+  });
+});
