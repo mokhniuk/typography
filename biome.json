@@ -4,12 +4,15 @@
     "includes": [
       "src/**",
       "apps/playground/**",
+      "apps/website/**",
       "scripts/**",
       "resources/**",
       "!**/dist",
       "!**/node_modules",
       "!**/*.json",
       "!**/*.md",
+      "!apps/website/**/*.html",
+      "!apps/website/**/*.svg",
       "!src/dom/script.ts",
       "!resources/*.html"
     ]

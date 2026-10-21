@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Playground · Podiia Typography</title>
+<meta name="description" content="Paste plain text, HTML or Markdown and get proper typography: quotes by language, dashes, no-break spaces, hanging punctuation. Runs in your browser." />
+<link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="../style.css" />
+<script>try{const t=localStorage.getItem('typography-theme');if(t)document.documentElement.dataset.theme=t}catch{}</script>
+</head>
+<body>
+<a href="#content" class="sr-only">Skip to the text</a>
+<!--header-->
+<main id="content" data-page="playground">
+<div data-wide>
+  <header>
+    <h1>Playground</h1>
+    <p>Paste text, HTML or Markdown and get it typeset. It runs in your browser; nothing is sent anywhere.</p>
+  </header>
+
+
+      <form aria-label="Options">
+        <fieldset id="mode">
+          <legend class="sr-only">Input format</legend>
+          <label><input type="radio" name="mode" value="text" /><span>Text</span></label>
+          <label><input type="radio" name="mode" value="html" /><span>HTML</span></label>
+          <label><input type="radio" name="mode" value="markdown" /><span>Markdown</span></label>
+        </fieldset>
+        <label>Language
+          <select id="lang"></select>
+        </label>
+        <label>Register
+          <select id="register">
+            <option value="display">Display (marketing, UI)</option>
+            <option value="literary">Literary (books)</option>
+          </select>
+        </label>
+        <label>Quotes
+          <select id="quoteStyle">
+            <option value="language">Of the language</option>
+            <option value="us">US: “…” and ‘…’</option>
+          </select>
+        </label>
+        <label id="nbspField" hidden>No-break space as
+          <select id="nbsp">
+            <option value="entity">&amp;nbsp;</option>
+            <option value="char">the character</option>
+          </select>
+        </label>
+        <fieldset>
+          <legend class="sr-only">Input</legend>
+          <button type="button" data-size="short">Short example</button>
+          <button type="button" data-size="long">Long example</button>
+          <button type="button" id="clear">Clear</button>
+        </fieldset>
+      </form>
+
+      <details>
+        <summary>Rules <output id="ruleCount"></output></summary>
+        <p>Switch a rule off to see what it does. Each name is also what <code>typo --disable</code> takes.</p>
+        <fieldset id="ruleList">
+          <legend class="sr-only">Rules</legend>
+        </fieldset>
+        <button type="button" id="rulesAll">Default rules</button>
+      </details>
+
+      <section aria-label="Text and result">
+        <section>
+          <header>
+            <label for="input">Your text</label>
+          </header>
+          <textarea id="input" spellcheck="false" placeholder="Paste or type here…"></textarea>
+        </section>
+
+        <section>
+          <header>
+            <div role="tablist" aria-label="Result view">
+              <button type="button" role="tab" data-view="result">Result</button>
+              <button type="button" role="tab" data-view="changes">Changes <output id="count">0</output></button>
+              <button type="button" role="tab" data-view="preview">Preview</button>
+            </div>
+            <label id="markField"><input type="checkbox" id="mark" /> Mark no-break spaces</label>
+            <label id="hangField" hidden>Hanging
+              <input type="range" id="hang" min="0" max="3" step="1" list="hangMarks" aria-valuetext="100%" />
+              <output id="hangValue" for="hang">100%</output>
+            </label>
+            <datalist id="hangMarks">
+              <option value="0"></option>
+              <option value="1"></option>
+              <option value="2"></option>
+              <option value="3"></option>
+            </datalist>
+            <button type="button" id="copy" class="primary">Copy</button>
+          </header>
+          <textarea id="result" readonly spellcheck="false"></textarea>
+          <div id="changes" data-panel="changes" hidden></div>
+          <div id="preview" data-panel="preview" hidden></div>
+          <p id="note" hidden></p>
+        </section>
+      </section>
+    
+</div>
+</main>
+<!--footer-->
+<script type="module" src="../main.ts"></script>
+<script type="module" src="../../playground/main.ts"></script>
+</body>
+</html>

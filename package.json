@@ -18,7 +18,7 @@
     "typo": "./src/cli/main.ts"
   },
   "scripts": {
-    "test": "bun test src apps/playground resources",
+    "test": "bun test src apps/playground apps/website resources",
     "typecheck": "tsc -p tsconfig.json",
     "playground": "vite --config apps/playground/vite.config.ts",
     "playground:build": "vite build --config apps/playground/vite.config.ts",
@@ -27,7 +27,9 @@
     "docs:languages": "bun scripts/gen-languages-doc.ts",
     "gen:script": "bun scripts/gen-hang-script.ts",
     "compare": "bun scripts/compare-engines.ts",
-    "snapshot": "bun scripts/update-snapshot.ts"
+    "snapshot": "bun scripts/update-snapshot.ts",
+    "website": "vite --config apps/website/vite.config.ts",
+    "website:build": "vite build --config apps/website/vite.config.ts"
   },
   "peerDependencies": {
     "react": ">=18"
@@ -46,6 +48,7 @@
     "react-dom": "19.3.1",
     "rehype-parse": "^9.0.1",
     "rehype-stringify": "^10.0.1",
+    "remark-gfm": "^4.0.1",
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.1.2",
     "typescript": "^7.0.2",

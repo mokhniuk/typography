@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Podiia Typography: proper typography for running text</title>
+<meta name="description" content="A typography engine for running text: quotation marks by language, dashes and ranges, no-break spaces and hanging punctuation. Plain strings in, typeset strings out." />
+<link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="./style.css" />
+<script>try{const t=localStorage.getItem('typography-theme');if(t)document.documentElement.dataset.theme=t}catch{}</script>
+</head>
+<body>
+<a href="#content" class="sr-only">Skip to the text</a>
+<!--header-->
+<main id="content" data-page="home">
+
+  <section data-hero data-hanging>
+    <div class="container">
+      <p data-eyebrow>Typography engine · {{langs}} languages · {{rules}} rules</p>
+      <h1>Plain text in. Typeset text out.</h1>
+      <p data-lede>Podiia Typography sets quotation marks by language and nesting level, dashes and number ranges, apostrophes, ellipses and no-break spaces, so the text you ship reads like text a typesetter touched. Nothing is marked up in your source.</p>
+
+      <section aria-labelledby="install" data-install>
+        <h2 id="install" class="sr-only">Install</h2>
+        <form>
+          <fieldset>
+            <legend class="sr-only">Package manager</legend>
+            <label><input type="radio" name="pm" value="npm install @podiia/typography" checked /><span>npm</span></label>
+            <label><input type="radio" name="pm" value="pnpm add @podiia/typography" /><span>pnpm</span></label>
+            <label><input type="radio" name="pm" value="bun add @podiia/typography" /><span>bun</span></label>
+            <label><input type="radio" name="pm" value="yarn add @podiia/typography" /><span>yarn</span></label>
+            <label><input type="radio" name="pm" value="bun add {{git}}" data-today /><span>git <small>(today)</small></span></label>
+          </fieldset>
+        </form>
+        <div data-command>
+          <pre><code>npm install @podiia/typography</code></pre>
+          <button type="button" data-copy aria-label="Copy the install command">Copy</button>
+        </div>
+        <p data-status><strong>Pre-release, {{version}}.</strong> The package reaches npm with 1.0. Until then, install a release tag from git (<em>git</em> above); the repository is private, so the machine needs SSH access to it.</p>
+      </section>
+
+      <p data-actions>
+        <a href="./docs/getting-started/" class="primary">Get started</a>
+        <a href="./playground/">Open the playground</a>
+      </p>
+    </div>
+  </section>
+
+  <section aria-labelledby="results" data-section>
+    <div class="container">
+      <header>
+        <h2 id="results">What comes out</h2>
+        <p>Straight quotes, hyphens used as dashes, three dots, a space where a line must not break. Every sentence below went through the engine, in its own language.</p>
+      </header>
+      <!--examples-->
+    </div>
+  </section>
+
+  <section aria-labelledby="usage" data-section data-tone="paper">
+    <div class="container" data-split>
+      <header>
+        <h2 id="usage">One function, or the whole pipeline</h2>
+        <p>Give it a string and a language. It returns the string, set. It can also say what it did, rule by rule, so a change is never a mystery.</p>
+        <p><a href="./docs/api/">Read the API</a></p>
+      </header>
+      <figure>
+        <pre><code>import { typographic, explain } from '@podiia/typography';
+
+typographic('He said "we\'re here" - and left.', 'en', { quoteStyle: 'us' });
+// He said “we’re here” — and left.
+
+explain('He said "hi"... 21-26', 'en', { quoteStyle: 'us' }).changes;
+// quote “  ·  quote ”  ·  ellipsis …  ·  dash.range –</code></pre>
+        <figcaption>The dash is preceded by a no-break space, so it never starts a line.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section aria-labelledby="does" data-section>
+    <div class="container">
+      <header>
+        <h2 id="does">What it takes care of</h2>
+        <p>{{rulesOn}} rules run by default and {{rulesOff}} more you switch on. Each has a page that says what it does and why.</p>
+      </header>
+      <dl data-features>
+        <div><dt>Quotation marks</dt><dd>By language, nesting level and register, in all {{langs}} packs: the 24 official languages of the EU, Ukrainian and Swiss usage. American quotes are an option.</dd></div>
+        <div><dt>Dashes and ranges</dt><dd>Dialogue dashes, sentence dashes and en dashes in ranges such as 21–26 and 10:00–12:00.</dd></div>
+        <div><dt>No-break spaces</dt><dd>Between a number and its unit, initials and surnames, abbreviations, one-letter words, and before a dash.</dd></div>
+        <div><dt>Symbols</dt><dd>Arrows, ©, the minus sign, ×, degrees and fractions, where you asked for them.</dd></div>
+        <div><dt>Hanging punctuation</dt><dd>Opening and closing marks hang in the margin at any width, without measuring where lines break.</dd></div>
+        <div><dt>Markup aware</dt><dd>HTML, Markdown and rehype modes leave tags, attributes, links and code exactly as they were.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section aria-labelledby="where" data-section data-tone="paper">
+    <div class="container">
+      <header>
+        <h2 id="where">Wherever your text already is</h2>
+        <p>Seven entry points, one engine. No runtime dependencies; React is an optional peer.</p>
+      </header>
+      <div data-scroll tabindex="0" role="region" aria-label="Entry points">
+      <table>
+        <thead><tr><th scope="col">Import</th><th scope="col">For</th></tr></thead>
+        <tbody>
+          <tr><th scope="row"><code>@podiia/typography</code></th><td>A string, with <code>explain</code> for the record of changes</td></tr>
+          <tr><th scope="row"><code>…/html</code></th><td>An HTML string; tags and code untouched</td></tr>
+          <tr><th scope="row"><code>…/markdown</code></th><td>A Markdown document</td></tr>
+          <tr><th scope="row"><code>…/rehype</code></th><td>A unified or rehype pipeline, or any hast tree</td></tr>
+          <tr><th scope="row"><code>…/react</code></th><td><code>Typeset</code> and <code>TypographyRoot</code>, with hanging punctuation</td></tr>
+          <tr><th scope="row"><code>…/dom</code></th><td>Hanging punctuation in the browser, no framework</td></tr>
+          <tr><th scope="row"><code>typo</code></th><td>The command line, for files and CI (<code>typo -c docs/*.md</code>)</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="try" data-section>
+    <div class="container">
+      <header>
+        <h2 id="try">Try it</h2>
+        <p>Type or paste. It runs in your browser; nothing leaves it.</p>
+      </header>
+      <form data-demo-options>
+        <label>Language <select id="demo-lang"></select></label>
+        <label><input type="checkbox" id="demo-us" /> American quotes</label>
+        <a href="./playground/">More options in the playground</a>
+      </form>
+      <div data-demo>
+        <div>
+          <label for="demo-in">Your text</label>
+          <textarea id="demo-in" spellcheck="false" rows="6">"Typography is the craft," she said - "of making text read well..." Pages 21-26, room 4B, 15% off.</textarea>
+        </div>
+        <div>
+          <p id="demo-label">Typeset</p>
+          <div id="demo-out" role="region" aria-labelledby="demo-label" aria-live="polite"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+<!--footer-->
+<script type="module" src="./main.ts"></script>
+</body>
+</html>

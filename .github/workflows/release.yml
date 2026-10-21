@@ -17,9 +17,10 @@ jobs:
       - uses: oven-sh/setup-bun@v2
       - run: bun install --frozen-lockfile
       - run: bunx biome ci .
-      - run: bun test src apps/playground resources
+      - run: bun test src apps/playground apps/website resources
       - run: bun run typecheck
       - run: bun run playground:build
+      - run: bun run website:build
 
   tag:
     needs: check

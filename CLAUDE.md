@@ -6,7 +6,7 @@ Bun project, TypeScript sources shipped as they are (no build step). Details: `R
 
 ## Commands
 
-- `bun test src apps/playground resources`: all tests. `bun run typecheck`: `tsc`, covers src, apps/playground, scripts, resources.
+- `bun test src apps/playground apps/website resources`: all tests. `bun run typecheck`: `tsc`, covers src, apps/playground, scripts, resources.
 - `bun run docs:rules`: regenerate `docs/rules.md` (generated, never edit by hand; `src/docs.test.ts` fails if stale).
 - `bun run docs:languages`: regenerate `docs/languages/*.md` from the language packs (generated; `src/lang-docs.test.ts` fails if stale).
 - `bun run gen:script`: regenerate `src/dom/script.ts` (generated) after changing `src/dom/hang.ts`.
@@ -21,8 +21,10 @@ Bun project, TypeScript sources shipped as they are (no build step). Details: `R
 - Nothing in `src/` or `apps/playground/` may import from outside the package except `react` (`src/boundary.test.ts`).
 - Every change to engine output or API gets a `CHANGELOG.md` entry saying whether it can change existing output.
 - Every rule has a decision record in `resources/sources.ts` (`RULE_SOURCES`); `bun run docs:sources` regenerates `resources/sources.md`, `resources/sources.html` and `resources/bibliography.html` (generated, never edit; `resources/sources.test.ts` checks all three; open the HTML pages to browse the decisions and the sources). A new `Source` needs `author`, `title`, `about`, `cite`, `claim`, `readVia`. Read a source before you cite it; no source read means `general-knowledge`.
-- UI (playground, comparison page, the future website): semantic HTML, one `style.css` with theme values as CSS variables, no runtime dependencies; see `docs/ui.md`.
+- UI (playground, comparison page, `apps/website`): semantic HTML, one `style.css` with theme values as CSS variables, no runtime dependencies; see `docs/ui.md`.
 - Hand-written docs: `api.md`, `cli.md`, `languages.md`, `limits.md`, `contributing.md`, `ui.md`, `README.md`. Update them when behaviour they describe changes (rule count, languages, exports, speed numbers).
+
+- Website: `bun run website` (dev), `bun run website:build`. Docs pages are generated from `docs/*.md`; articles are `apps/website/content/articles/*.md`. Details in `docs/ui.md`.
 
 ## Backlog
 
@@ -39,7 +41,7 @@ If the changes since the last tag touch `src/` (anything that ships), check that
 1. Find the last tag: `git describe --tags --abbrev=0`, then `git log <tag>..HEAD --oneline` and `git diff <tag>..HEAD --stat -- src`.
 2. If `src/` changed and `version` in `package.json` still equals that tag, the release is missing. Pick the bump by the rules in `docs/contributing.md`: minor if output or API can change ("Can change existing output: yes"), patch for a fix that keeps output. Ask me if unsure.
 3. Move the new `CHANGELOG.md` entries under `## X.Y.Z (date)`, set `version` in `package.json`.
-4. Run `bun test src apps/playground resources`, `bun run typecheck`, `bun run docs:rules`, and `bun run gen:script` if `src/dom/hang.ts` changed.
+4. Run `bun test src apps/playground apps/website resources`, `bun run typecheck`, `bun run docs:rules`, and `bun run gen:script` if `src/dom/hang.ts` changed.
 5. Commit as `release: X.Y.Z`.
 6. Push `main`. Do NOT tag by hand: `.github/workflows/release.yml` creates the plain tag `vX.Y.Z` from `package.json` after the push. If a tag is ever needed manually, use a plain `git tag vX.Y.Z`, never `git tag -a` (Bun 1.3 cannot resolve annotated tags).
 

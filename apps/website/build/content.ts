@@ -1,0 +1,123 @@
+import { readdirSync, readFileSync } from 'node:fs';
+import { join, posix, relative } from 'node:path';
+import { frontMatter, type Heading, render } from './markdown';
+import { GITHUB, REPO_ROOT, SITE_ROOT } from './site';
+
+export type Doc = {
+  /** The page's path on the site, with a trailing slash: `docs/api/`. */
+  path: string;
+  /** The source file, relative to the repository. */
+  source: string;
+  group: string;
+  label: string;
+  html: string;
+  headings: Heading[];
+  title: string;
+  lead: string;
+};
+
+export type Article = {
+  path: string;
+  title: string;
+  summary: string;
+  date: string;
+  html: string;
+  headings: Heading[];
+};
+
+/** The hand-ordered part of the docs; the language pages are added after it. */
+const DOC_FILES: { source: string; slug: string; group: string; label: string }[] = [
+  {
+    source: 'apps/website/content/docs/getting-started.md',
+    slug: 'getting-started',
+    group: 'Start',
+    label: 'Getting started',
+  },
+  { source: 'docs/api.md', slug: 'api', group: 'Reference', label: 'API' },
+  { source: 'docs/cli.md', slug: 'cli', group: 'Reference', label: 'Command line' },
+  { source: 'docs/rules.md', slug: 'rules', group: 'Reference', label: 'Rules' },
+  { source: 'docs/languages.md', slug: 'languages', group: 'Reference', label: 'Languages' },
+  { source: 'docs/limits.md', slug: 'limits', group: 'Guides', label: 'Known limits' },
+  { source: 'docs/contributing.md', slug: 'contributing', group: 'Guides', label: 'Contributing' },
+  { source: 'CHANGELOG.md', slug: 'changelog', group: 'Project', label: 'Changelog' },
+];
+
+/** Repository path to site path, for every file the site publishes. */
+function sitePaths(): Map<string, string> {
+  const map = new Map<string, string>();
+  for (const file of DOC_FILES) map.set(file.source, `docs/${file.slug}/`);
+  map.set('docs/languages/index.md', 'docs/languages/all/');
+  for (const name of readdirSync(join(REPO_ROOT, 'docs/languages'))) {
+    if (name.endsWith('.md') && name !== 'index.md')
+      map.set(`docs/languages/${name}`, `docs/languages/${name.slice(0, -3)}/`);
+  }
+  return map;
+}
+
+/** Maps a link found in `source` (a repository path) to a link valid from the page at `from`. */
+function linker(source: string, from: string): (href: string) => string {
+  const paths = sitePaths();
+  return (href) => {
+    if (/^([a-z]+:|#|\/\/)/i.test(href)) return href;
+    // A link that starts with a slash is a page of the site: `/docs/api/#options`.
+    if (href.startsWith('/')) {
+      const [site = '', anchor] = href.slice(1).split('#');
+      return `${posix.relative(from, site) || '.'}/${anchor ? `#${anchor}` : ''}`;
+    }
+    const [file = '', hash] = href.split('#');
+    const target = posix.normalize(posix.join(posix.dirname(source), file));
+    const suffix = hash ? `#${hash}` : '';
+    const page = paths.get(target);
+    if (page) return `${posix.relative(from, page) || '.'}/${suffix}`;
+    // Anything else in the repository (a source file, a folder, the benchmark) is read on GitHub.
+    return `${GITHUB}/blob/main/${target}${suffix}`;
+  };
+}
+
+export function docs(): Doc[] {
+  const entries = [...DOC_FILES.map((file) => ({ ...file, path: `docs/${file.slug}/` }))];
+  entries.push({
+    source: 'docs/languages/index.md',
+    slug: 'all',
+    group: 'Languages',
+    label: 'All languages',
+    path: 'docs/languages/all/',
+  });
+  for (const name of readdirSync(join(REPO_ROOT, 'docs/languages')).sort()) {
+    if (!name.endsWith('.md') || name === 'index.md') continue;
+    const code = name.slice(0, -3);
+    entries.push({
+      source: `docs/languages/${name}`,
+      slug: code,
+      group: 'Languages',
+      label: code,
+      path: `docs/languages/${code}/`,
+    });
+  }
+  return entries.map((entry) => {
+    const markdown = readFileSync(join(REPO_ROOT, entry.source), 'utf8');
+    const out = render(markdown, linker(entry.source, entry.path));
+    return { ...entry, ...out };
+  });
+}
+
+export function articles(): Article[] {
+  const dir = join(SITE_ROOT, 'content/articles');
+  return readdirSync(dir)
+    .filter((name) => name.endsWith('.md'))
+    .map((name) => {
+      const { data, body } = frontMatter(readFileSync(join(dir, name), 'utf8'));
+      const slug = name.replace(/^\d{4}-\d{2}-\d{2}-/, '').replace(/\.md$/, '');
+      const path = `articles/${slug}/`;
+      const out = render(body, linker(relative(REPO_ROOT, join(dir, name)), path));
+      return {
+        path,
+        title: data.title ?? out.title,
+        summary: data.summary ?? out.lead,
+        date: data.date ?? '',
+        html: out.html,
+        headings: out.headings,
+      };
+    })
+    .sort((a, b) => b.date.localeCompare(a.date));
+}

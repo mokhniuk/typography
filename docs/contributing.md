@@ -5,7 +5,7 @@ Everything here runs from the project folder with Bun.
 ## Checks
 
 ```sh
-bun test src apps/playground resources      # every test; this is the package's `test` script
+bun test src apps/playground apps/website resources      # every test; this is the package's `test` script
 bun run typecheck            # tsc -p tsconfig.json; tests are typechecked too
 ```
 
@@ -34,6 +34,7 @@ bun run docs:languages       # writes docs/languages/*.md from the packs
 | `resources/` | The sources registry (below) and the pages generated from it; not part of the package |
 | `apps/bench/` | The benchmark: a separate project, not tracked except `RESULTS.md` (see below) |
 | `apps/playground/` | The web page (its own `package.json` for `dev`/`build`; uses the root's `vite`) |
+| `apps/website/` | The website: landing, docs (built from `docs/`), articles, playground; see [ui.md](ui.md#the-website) |
 | `docs/` | These pages. `rules.md` and `languages/` are generated; the others are written by hand |
 
 ## Adding a rule
@@ -105,7 +106,7 @@ bun scripts/stress.ts [srcDir]   # every rule on long runs of one character at 2
 ```
 
 - `bun run compare` extracts `src/` of the base ref into a temp directory with `git archive`, then, for every language, register (`display`, `literary`), `quoteStyle` (`language`, `us`), rule set (default; every opt-in rule enabled) and mode (`typographic` with `explain`, text, HTML, Markdown, hast), compares the output and every change record (rule id, `from`, `to`, order), the rule table and a thrown error. It prints the first ten differences with input, mode, language and both results, exits 1 on any difference, and ends with a timing table (best of 3, on a 1 MB paragraph and on 1000 paragraphs of 1 KB). Languages that exist here but not in the base are skipped. Expect `0 differences`.
-- `src/snapshot.test.ts` (part of `bun test src apps/playground resources`) holds a SHA-256 per language and variant in `src/snapshot.digests.json` and fails on any change. A language without a digest fails with `run: bun run snapshot`. Never run `bun run snapshot` to make a speed change pass: a speed change must pass without it. The same test mutates a temp copy of `src/` to prove that both tools notice a changed regex and a changed rule attribution.
+- `src/snapshot.test.ts` (part of `bun test src apps/playground apps/website resources`) holds a SHA-256 per language and variant in `src/snapshot.digests.json` and fails on any change. A language without a digest fails with `run: bun run snapshot`. Never run `bun run snapshot` to make a speed change pass: a speed change must pass without it. The same test mutates a temp copy of `src/` to prove that both tools notice a changed regex and a changed rule attribution.
 - What they cannot see: the React hooks and `HangText`, the DOM measuring, the CLI, inputs far outside the corpus (very long runs of one mark, megabyte inputs with changes, lone surrogates, text in scripts the rules do not know), and timing noise on a busy machine. Run the whole suite as well.
 
 ## The benchmark
@@ -144,7 +145,7 @@ To release:
 
 1. Move the new entries of `CHANGELOG.md` under a heading `## X.Y.Z (date)`.
 2. Set `version` in `package.json` (`typo --version` reads it).
-3. Run `bun test src apps/playground resources`, `bun run typecheck`, `bun run docs:rules`, `bun run docs:languages` and, if `src/dom/hang.ts` changed, `bun run gen:script`, and commit with the message `release: X.Y.Z`.
+3. Run `bun test src apps/playground apps/website resources`, `bun run typecheck`, `bun run docs:rules`, `bun run docs:languages` and, if `src/dom/hang.ts` changed, `bun run gen:script`, and commit with the message `release: X.Y.Z`.
 4. Push or merge to `main`. `.github/workflows/release.yml` runs the tests and creates the plain tag `vX.Y.Z` from `version` in `package.json` if it does not exist yet. Do not tag by hand; if you must, use a plain `git tag vX.Y.Z` (not `-a`, see below) and `git push origin vX.Y.Z`.
 
 ## Using it from another project

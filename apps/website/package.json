@@ -1,0 +1,10 @@
+{
+  "name": "typography-website",
+  "private": true,
+  "type": "module",
+  "description": "The website: landing, docs, articles, playground. Not part of the package; imports the engine from ../../src and uses the root's vite and unified.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  }
+}
