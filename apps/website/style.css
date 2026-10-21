@@ -483,8 +483,8 @@ body > header button {
 body > header button:hover {
   color: var(--color-text);
 }
-/* A phone: the brand and the theme switch on one row, the links on a row of their own below. */
-@media (max-width: 560px) {
+/* A narrow window: the brand and the theme switch on one row, the links on a row of their own below. */
+@media (max-width: 700px) {
   :root {
     --header-height: 96px;
   }
@@ -721,6 +721,8 @@ article {
   font-size: var(--size-lg);
   line-height: 1.6;
   min-width: 0;
+  /* A bare web address is one long word: on a phone it breaks rather than widen the page. */
+  overflow-wrap: break-word;
 }
 article :is(table, button, small, nav, dt, th, td, [data-scroll]) {
   font-family: var(--font-ui);
@@ -1467,13 +1469,16 @@ table[data-samples] small {
   text-decoration: none;
   padding: 0;
 }
+/* The caption spans the content-sized tab columns; contained, its length cannot widen them. */
 [data-examples] figcaption {
   grid-column: 1 / -1;
+  contain: inline-size;
   margin-top: var(--space-6);
 }
 @media (max-width: 760px) {
   [data-examples] {
-    grid-template-columns: repeat(2, max-content);
+    /* Two equal columns that share the width: a column sized by its content grows with the pane. */
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0 var(--space-6);
   }
   [data-examples] [data-example] > label {
@@ -1505,6 +1510,14 @@ table[data-samples] small {
   display: inline-flex;
   align-items: center;
   gap: var(--space-3);
+}
+/* On the narrowest phones the select gives way rather than push past the edge. */
+[data-demo-options] label:has(select) {
+  max-width: 100%;
+}
+[data-demo-options] select {
+  flex: 0 1 auto;
+  min-width: 0;
 }
 [data-demo-options] a {
   margin-inline-start: auto;
