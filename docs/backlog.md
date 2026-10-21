@@ -37,6 +37,15 @@ Every pack has `reviewed: false`: bg cs da el es et fi ga hr hu it lt lv mt nl p
 - Reading list, none read yet, each to be read before it is cited: Bringhurst, *The Elements of Typographic Style*, 4th ed. (Hartley & Marks, 2013), section 5.2.1; *The Chicago Manual of Style*, 18th ed. (University of Chicago Press, 2024); Butterick, *Typography for Lawyers*, 2nd ed. (O'Connors, 2015); BIPM, *SI Brochure*, 9th ed. (2019), section 5.4 (space between value and unit, plane-angle exception) and ISO 80000-1; Knuth and Plass, "Breaking Paragraphs into Lines", *Software: Practice and Experience* 11 (1981) 1119–1184; Dyson on on-screen line length and Beier, *Reading Letters* (BIS, 2012), as context only. No peer-reviewed study of punctuation, dash or no-break-space conventions was found; the empirical work found (Ho Sang and Petrarca, *Visible Language* 59(3), 2025, a review of 42 studies) is about typeface, size and line length, so no rule here should cite research.
 - Unread, to read next: Pravopys 2019 (§ 161 "Тире" for `dash.dialogue`, the quote section; mon.gov.ua refused the fetch), the Swiss Federal Chancellery Schreibweisungen § 2.1.1 (the PDF has no extractable text here; needs a PDF reader), Imprimerie nationale Lexique, Duden, a Polish or Ukrainian typography guide for `space.orphan`, Chicago, Bringhurst, and a guide that prefers `−` and `×` (`symbol.minus`, `symbol.multiply`).
 
+### Inch marks and quotations: the cases left
+
+Found in the review of the inch-mark fix (2026-10-21). Each is a limit, listed in [limits.md](limits.md):
+
+- **A quotation glued to a digit** (`5"a"`) is half set: the opener is skipped as an inch mark, the lone-mark pass then converts the closer (`5"a»`). Main set it `5«a»`. Decide: leave both marks as written, or pair them. Fix in the lone-mark pass of `src/core/quotes.ts` (`closeLone` must not close a `"` whose partner was refused as an inch mark).
+- **An inch mark inside a quotation** (`He said "a 5" hole" ok`) closes the quotation at the inch mark, leaving the real closer lone (`«a 5» hole»`). Same on main. A closer after a digit followed by a letter or space and another `"` later is the ambiguous case; research what other tools do before choosing.
+- **Non-ASCII digits** (`𝟐"`, Arabic-Indic) before the mark: the pair scan tests one UTF-16 unit with `\p{N}`, and the lone-mark pass tests ASCII `\d`. Make both read the code point and the same digit class, with a golden test.
+- **Speed guard:** the straight pair is a hand scan (`pairStraight`), because a regex re-read to the end of the text for every inch mark with no closer (1.2 s per MB with 35 of them). Add a case with many inch marks and no closer to `scripts/stress.ts` and `src/speed.test.ts`.
+
 ### Language gaps found while writing the packs
 
 Each is a limit of the pack format or an unverified choice, not a crash:
@@ -123,6 +132,17 @@ Today `space.orphan` binds a one-letter word in a language's list to the next wo
 Nothing superlinear is known (0.2.1). Typical text costs 30 to 60 ms per MB; the biggest rules are `quote`, `space.abbreviation` and `space.title` at 5 to 10 ms each. Further gains would be constant-factor work on those; tipograph and smartypants (10 to 20 ms) do much less. React already memoises per component (`useMemo` in `Typeset`), so no paragraph cache is needed.
 
 ## P2 (deferred by choice)
+
+### Cleanups in the sources scripts
+
+Found in the review (2026-10-21), none changes output:
+
+- `scripts/bibliography-html.ts` `usage()` repeats `usedBy()` of `scripts/sources-html.ts` (which rules cite a source), and `esc` is defined in both. Export one of each (from `sources.ts`) so the two pages cannot disagree.
+- The anchor slug is written two ways (`slug()` and `rule.replaceAll('.', '-')`, and `replaceAll('.', '')` in `gen-rules-doc.ts`). One function, one anchor format, checked by a test that every `docs/rules.md` link lands on an anchor in `sources.md`.
+- `sources.html` prints an empty "Used by:" for a source no decision cites, `bibliography.html` says "unused". Say "unused" in both.
+- `render()` in `sources.ts` and `sources-html.ts` skip a rule with no decision, while `gen-rules-doc.ts` links it as `general-knowledge`. `src/sources.test.ts` stops that from shipping today; make the generators fail loudly instead of skipping, so a run outside the test cannot write a page that disagrees with its counts.
+- The nine opt-in rules have `general-knowledge` entries with no source (`space.before-punctuation`, `space.after-comma`, `punctuation.double`, `symbol.implies`, `number.group`, `symbol.plusminus`, `symbol.fraction`, `symbol.degree`, `space.trailing`). Read a source for each and upgrade; the SI brochure for `symbol.degree`, a guide for the grouping separator of each language for `number.group`. Counted in "Finish the sources registry" above.
+- `compare-engines.ts` fails with `ENOBUFS` when given a git ref whose `src/` archive is large (`bun run compare main`): the `git archive` output exceeds `execFileSync`'s buffer. Raise `maxBuffer` or extract to a file; `--base-dir` is the workaround.
 
 ### Accessibility checker (future)
 
