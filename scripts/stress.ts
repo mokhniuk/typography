@@ -78,6 +78,10 @@ export const classes: Record<string, string> = {
   'I ': 'I ',
   'z. B.': 'z. B. ',
   '"': '"',
+  // Inch marks with no closer: the straight pair is a hand scan because a regex read on to the end
+  // of the text from every one of them (1.2 s per MB with 35).
+  '5"': '5" ',
+  'a 5" b': 'a 5" pipe ',
   '//': '/',
   '`': '`',
   '@': '@',
@@ -115,7 +119,6 @@ const variants = Object.entries(classes).flatMap(([name, unit]) =>
 const sizes = [20_000, 40_000, 80_000];
 const rows: string[] = [];
 for (const rule of mod.RULES) {
-  if (rule.id === 'quote') continue;
   if (only && rule.id !== only) continue;
   for (const [label, unit, wrap] of variants) {
     const name = label;

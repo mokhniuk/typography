@@ -44,8 +44,6 @@ Found in the review of the inch-mark fix (2026-10-21). Each is a limit, listed i
 - **A quotation glued to a digit** (`5"a"`) is half set: the opener is skipped as an inch mark, the lone-mark pass then converts the closer (`5"a»`). Main set it `5«a»`. Decide: leave both marks as written, or pair them. Fix in the lone-mark pass of `src/core/quotes.ts` (`closeLone` must not close a `"` whose partner was refused as an inch mark).
 - **An inch mark inside a quotation** (`He said "a 5" hole" ok`) closes the quotation at the inch mark, leaving the real closer lone (`«a 5» hole»`). Same on main. A closer after a digit followed by a letter or space and another `"` later is the ambiguous case; research what other tools do before choosing.
 - **Non-ASCII digits** (`𝟐"`, Arabic-Indic) before the mark: the pair scan tests one UTF-16 unit with `\p{N}`, and the lone-mark pass tests ASCII `\d`. Make both read the code point and the same digit class, with a golden test.
-- **Speed guard:** the straight pair is a hand scan (`pairStraight`), because a regex re-read to the end of the text for every inch mark with no closer (1.2 s per MB with 35 of them). Add a case with many inch marks and no closer to `scripts/stress.ts` and `src/speed.test.ts`.
-
 ### Language gaps found while writing the packs
 
 Each is a limit of the pack format or an unverified choice, not a crash:

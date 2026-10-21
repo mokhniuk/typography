@@ -25,3 +25,13 @@ test('typesetting 4x the text takes under 8x the time (linear, not quadratic)', 
 test('1 MB of English prose is typeset in under 2 s, a ceiling about 8x the measured time', () => {
   expect(best(longText(1_000_000), 2)).toBeLessThan(2000);
 });
+
+// Inch marks with no closing quote: the straight pair is a hand scan (`pairStraight` in core/quotes.ts)
+// because a regex read on to the end of the text from every inch mark (1.2 s per MB with 35 of them).
+// 40 KB with 3000 inch marks takes about 1 ms; a scan that reads to the end from each one takes over 1 s.
+test('40 KB of inch marks with no closing quote is typeset in under 100 ms (no re-scan per mark)', () => {
+  const unit = 'A 5" pipe fits a 2" valve. ';
+  const text = unit.repeat(Math.ceil(40_000 / unit.length));
+  typographic(text, 'en'); // warm the regex caches
+  expect(best(text)).toBeLessThan(100);
+});
