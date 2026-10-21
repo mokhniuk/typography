@@ -48,15 +48,15 @@ English text in one piece, best of three (one run at 1 MB), text mode. "not run"
 
 | Tool | 10 KB | 100 KB | 1000 KB |
 |---|---|---|---|
-| podiia | 1 ms | 6 ms | 57 ms |
-| podiia literary | 1 ms | 6 ms | 56 ms |
-| typograf | 1 ms | 12 ms | 118 ms |
-| typograf +nbsp | 1 ms | 11 ms | 112 ms |
-| typopo | 46 ms | 2095 ms | not run (~209 s) |
-| richtypo | 4876 ms | not run (~485 s) | not run (~48448 s) |
+| podiia | 1 ms | 6 ms | 56 ms |
+| podiia literary | 1 ms | 6 ms | 55 ms |
+| typograf | 1 ms | 11 ms | 117 ms |
+| typograf +nbsp | 1 ms | 11 ms | 117 ms |
+| typopo | 41 ms | 2101 ms | not run (~210 s) |
+| richtypo | 5026 ms | not run (~500 s) | not run (~49943 s) |
 | tipograph | 0 ms | 2 ms | 24 ms |
-| smartypants | 0 ms | 2 ms | 20 ms |
-| retext-smartypants | 5 ms | 50 ms | 1016 ms |
+| smartypants | 0 ms | 2 ms | 18 ms |
+| retext-smartypants | 5 ms | 51 ms | 1059 ms |
 
 ## Every case
 
@@ -1110,8 +1110,8 @@ Input: `Kámen - paměť - a čas`
 
 Input: `Kameň - pamäť - a čas`
 
-- ✓ podiia: `Kameň~— pamäť~— a čas`
-- ✓ podiia literary: `Kameň~— pamäť~— a čas`
+- ✓ podiia: `Kameň~– pamäť~– a čas`
+- ✓ podiia literary: `Kameň~– pamäť~– a čas`
 - ✗ typograf: `Kameň - pamäť - a~čas`
 - ✗ typograf +nbsp: `Kameň - pamäť - a~čas`
 - ✓ typopo: `Kameň — pamäť — a~čas`
@@ -1138,8 +1138,8 @@ Input: `Steen - geheugen - en tijd`
 
 Input: `Piatra - memoria - și timpul`
 
-- ✓ podiia: `Piatra~— memoria~— și timpul`
-- ✓ podiia literary: `Piatra~— memoria~— și timpul`
+- ✓ podiia: `Piatra~– memoria~– și timpul`
+- ✓ podiia literary: `Piatra~– memoria~– și timpul`
 - ✗ typograf: `Piatra - memoria - și~timpul`
 - ✗ typograf +nbsp: `Piatra - memoria - și~timpul`
 - – typopo: 
@@ -1152,8 +1152,8 @@ Input: `Piatra - memoria - și timpul`
 
 Input: `Kő - emlék - és idő`
 
-- ✓ podiia: `Kő~— emlék~— és idő`
-- ✓ podiia literary: `Kő~— emlék~— és idő`
+- ✓ podiia: `Kő~– emlék~– és idő`
+- ✓ podiia literary: `Kő~– emlék~– és idő`
 - ✗ typograf: `Kő~- emlék - és~idő`
 - ✗ typograf +nbsp: `Kő~- emlék - és~idő`
 - – typopo: 
@@ -1166,8 +1166,8 @@ Input: `Kő - emlék - és idő`
 
 Input: `Sten - minne - och tid`
 
-- ✓ podiia: `Sten~— minne~— och tid`
-- ✓ podiia literary: `Sten~— minne~— och tid`
+- ✓ podiia: `Sten~– minne~– och tid`
+- ✓ podiia literary: `Sten~– minne~– och tid`
 - ✗ typograf: `Sten - minne - och tid`
 - ✗ typograf +nbsp: `Sten - minne - och tid`
 - – typopo: 
@@ -1264,8 +1264,8 @@ Input: `Камък - спомен - и време`
 
 Input: `Kamen - sjećanje - i vrijeme`
 
-- ✓ podiia: `Kamen~— sjećanje~— i vrijeme`
-- ✓ podiia literary: `Kamen~— sjećanje~— i vrijeme`
+- ✓ podiia: `Kamen~– sjećanje~– i vrijeme`
+- ✓ podiia literary: `Kamen~– sjećanje~– i vrijeme`
 - – typograf: 
 - – typograf +nbsp: 
 - – typopo: 
@@ -2610,8 +2610,8 @@ Input: `Řekl "jdeme k lesu" - a odešel... Trvá 21-26 září, 14 % sleva. Ví
 
 Input: `Povedal "ideme k lesu" - a odišiel... Trvá 21-26 septembra. Viac ->`
 
-- ✓ podiia: `Povedal „ideme k lesu“~— a odišiel… Trvá 21–26~septembra. Viac~→`
-- ✓ podiia literary: `Povedal „ideme k lesu“~— a odišiel… Trvá 21–26~septembra. Viac~→`
+- ✓ podiia: `Povedal „ideme k lesu“~– a odišiel… Trvá 21–26~septembra. Viac~→`
+- ✓ podiia literary: `Povedal „ideme k lesu“~– a odišiel… Trvá 21–26~septembra. Viac~→`
 - ✓ typograf: `Povedal „ideme k~lesu“ - a~odišiel… Trvá 21-26 septembra. Viac →`
 - ✓ typograf +nbsp: `Povedal „ideme k~lesu“ - a~odišiel… Trvá 21-26 septembra. Viac →`
 - ✓ typopo: `Povedal „ideme k~lesu“ a~odišiel… Trvá 21–26~septembra. Viac ->`
@@ -2638,8 +2638,8 @@ Input: `Hij zei "ik zie 't huis" - en ging... Het duurt 21-26 september. Meer ->
 
 Input: `A spus "suntem aici" - și a plecat... Durează 21-26 septembrie. Mai mult ->`
 
-- ✓ podiia: `A spus „suntem aici”~— și a plecat… Durează 21–26 septembrie. Mai mult~→`
-- ✓ podiia literary: `A spus „suntem aici”~— și a plecat… Durează 21–26 septembrie. Mai mult~→`
+- ✓ podiia: `A spus „suntem aici”~– și a plecat… Durează 21–26 septembrie. Mai mult~→`
+- ✓ podiia literary: `A spus „suntem aici”~– și a plecat… Durează 21–26 septembrie. Mai mult~→`
 - ✓ typograf: `A~spus „suntem aici” - și~a~plecat… Durează 21-26 septembrie. Mai mult →`
 - ✓ typograf +nbsp: `A~spus „suntem aici” - și~a~plecat… Durează 21-26 septembrie. Mai mult →`
 - – typopo: 
@@ -2652,8 +2652,8 @@ Input: `A spus "suntem aici" - și a plecat... Durează 21-26 septembrie. Mai mu
 
 Input: `Azt mondta "itt vagyunk" - és elment... Tart 21-26 szeptember. Tovább ->`
 
-- ✓ podiia: `Azt mondta „itt vagyunk”~— és elment… Tart 21–26 szeptember. Tovább~→`
-- ✓ podiia literary: `Azt mondta „itt vagyunk”~— és elment… Tart 21–26 szeptember. Tovább~→`
+- ✓ podiia: `Azt mondta „itt vagyunk”~– és elment… Tart 21–26 szeptember. Tovább~→`
+- ✓ podiia literary: `Azt mondta „itt vagyunk”~– és elment… Tart 21–26 szeptember. Tovább~→`
 - ✓ typograf: `Azt mondta „itt vagyunk” - és~elment… Tart 21-26 szeptember. Tovább →`
 - ✓ typograf +nbsp: `Azt mondta „itt vagyunk” - és~elment… Tart 21-26 szeptember. Tovább →`
 - – typopo: 
@@ -2666,8 +2666,8 @@ Input: `Azt mondta "itt vagyunk" - és elment... Tart 21-26 szeptember. Tovább 
 
 Input: `Han sa "vi är här" - och gick... Det pågår 21-26 september. Mer ->`
 
-- ✓ podiia: `Han sa ”vi är här”~— och gick… Det pågår 21–26~september. Mer~→`
-- ✓ podiia literary: `Han sa ”vi är här”~— och gick… Det pågår 21–26~september. Mer~→`
+- ✓ podiia: `Han sa ”vi är här”~– och gick… Det pågår 21–26~september. Mer~→`
+- ✓ podiia literary: `Han sa ”vi är här”~– och gick… Det pågår 21–26~september. Mer~→`
 - ✓ typograf: `Han sa~”vi~är~här” - och gick… Det pågår 21-26 september. Mer →`
 - ✓ typograf +nbsp: `Han sa~”vi~är~här” - och gick… Det pågår 21-26 september. Mer →`
 - – typopo: 
@@ -2764,8 +2764,8 @@ Input: `Той каза "тук сме" - и си тръгна... Продълж
 
 Input: `Rekao je "ovdje smo" - i otišao... Traje 21-26. rujna, 10:00-12:00, popust 15%. Više ->`
 
-- ✓ podiia: `Rekao je „ovdje smo”~— i otišao… Traje 21–26. rujna, 10:00–12:00, popust 15~%. Više~→`
-- ✓ podiia literary: `Rekao je „ovdje smo”~— i otišao… Traje 21–26. rujna, 10:00–12:00, popust 15~%. Više~→`
+- ✓ podiia: `Rekao je „ovdje smo”~– i otišao… Traje 21–26. rujna, 10:00–12:00, popust 15~%. Više~→`
+- ✓ podiia literary: `Rekao je „ovdje smo”~– i otišao… Traje 21–26. rujna, 10:00–12:00, popust 15~%. Više~→`
 - – typograf: 
 - – typograf +nbsp: 
 - – typopo: 
@@ -3360,8 +3360,8 @@ Input: `Řekl "jdeme k lesu" - a odešel... Trvá 21-26 září, 14 % sleva. Ví
 
 Input: `Povedal "ideme k lesu" - a odišiel... Trvá 21-26 septembra. Viac ->`
 
-- ✓ podiia: `Povedal „ideme k lesu“~— a odišiel… Trvá 21–26~septembra. Viac~→`
-- ✓ podiia literary: `Povedal „ideme k lesu“~— a odišiel… Trvá 21–26~septembra. Viac~→`
+- ✓ podiia: `Povedal „ideme k lesu“~– a odišiel… Trvá 21–26~septembra. Viac~→`
+- ✓ podiia literary: `Povedal „ideme k lesu“~– a odišiel… Trvá 21–26~septembra. Viac~→`
 - ✓ typograf: `Povedal „ideme k~lesu“ - a~odišiel… Trvá 21-26 septembra. Viac →`
 - ✓ typograf +nbsp: `Povedal „ideme k~lesu“ - a~odišiel… Trvá 21-26 septembra. Viac →`
 - ✓ typopo: `Povedal „ideme k~lesu“ a~odišiel… Trvá 21–26~septembra. Viac ->`
@@ -3388,8 +3388,8 @@ Input: `Hij zei "ik zie 't huis" - en ging... Het duurt 21-26 september. Meer ->
 
 Input: `A spus "suntem aici" - și a plecat... Durează 21-26 septembrie. Mai mult ->`
 
-- ✓ podiia: `A spus „suntem aici”~— și a plecat… Durează 21–26 septembrie. Mai mult~→`
-- ✓ podiia literary: `A spus „suntem aici”~— și a plecat… Durează 21–26 septembrie. Mai mult~→`
+- ✓ podiia: `A spus „suntem aici”~– și a plecat… Durează 21–26 septembrie. Mai mult~→`
+- ✓ podiia literary: `A spus „suntem aici”~– și a plecat… Durează 21–26 septembrie. Mai mult~→`
 - ✓ typograf: `A~spus „suntem aici” - și~a~plecat… Durează 21-26 septembrie. Mai mult →`
 - ✓ typograf +nbsp: `A~spus „suntem aici” - și~a~plecat… Durează 21-26 septembrie. Mai mult →`
 - – typopo: 
@@ -3402,8 +3402,8 @@ Input: `A spus "suntem aici" - și a plecat... Durează 21-26 septembrie. Mai mu
 
 Input: `Azt mondta "itt vagyunk" - és elment... Tart 21-26 szeptember. Tovább ->`
 
-- ✓ podiia: `Azt mondta „itt vagyunk”~— és elment… Tart 21–26 szeptember. Tovább~→`
-- ✓ podiia literary: `Azt mondta „itt vagyunk”~— és elment… Tart 21–26 szeptember. Tovább~→`
+- ✓ podiia: `Azt mondta „itt vagyunk”~– és elment… Tart 21–26 szeptember. Tovább~→`
+- ✓ podiia literary: `Azt mondta „itt vagyunk”~– és elment… Tart 21–26 szeptember. Tovább~→`
 - ✓ typograf: `Azt mondta „itt vagyunk” - és~elment… Tart 21-26 szeptember. Tovább →`
 - ✓ typograf +nbsp: `Azt mondta „itt vagyunk” - és~elment… Tart 21-26 szeptember. Tovább →`
 - – typopo: 
@@ -3416,8 +3416,8 @@ Input: `Azt mondta "itt vagyunk" - és elment... Tart 21-26 szeptember. Tovább 
 
 Input: `Han sa "vi är här" - och gick... Det pågår 21-26 september. Mer ->`
 
-- ✓ podiia: `Han sa ”vi är här”~— och gick… Det pågår 21–26~september. Mer~→`
-- ✓ podiia literary: `Han sa ”vi är här”~— och gick… Det pågår 21–26~september. Mer~→`
+- ✓ podiia: `Han sa ”vi är här”~– och gick… Det pågår 21–26~september. Mer~→`
+- ✓ podiia literary: `Han sa ”vi är här”~– och gick… Det pågår 21–26~september. Mer~→`
 - ✓ typograf: `Han sa~”vi~är~här” - och gick… Det pågår 21-26 september. Mer →`
 - ✓ typograf +nbsp: `Han sa~”vi~är~här” - och gick… Det pågår 21-26 september. Mer →`
 - – typopo: 
@@ -3514,8 +3514,8 @@ Input: `Той каза "тук сме" - и си тръгна... Продълж
 
 Input: `Rekao je "ovdje smo" - i otišao... Traje 21-26. rujna, 10:00-12:00, popust 15%. Više ->`
 
-- ✓ podiia: `Rekao je „ovdje smo”~— i otišao… Traje 21–26. rujna, 10:00–12:00, popust 15~%. Više~→`
-- ✓ podiia literary: `Rekao je „ovdje smo”~— i otišao… Traje 21–26. rujna, 10:00–12:00, popust 15~%. Više~→`
+- ✓ podiia: `Rekao je „ovdje smo”~– i otišao… Traje 21–26. rujna, 10:00–12:00, popust 15~%. Više~→`
+- ✓ podiia literary: `Rekao je „ovdje smo”~– i otišao… Traje 21–26. rujna, 10:00–12:00, popust 15~%. Više~→`
 - – typograf: 
 - – typograf +nbsp: 
 - – typopo: 
