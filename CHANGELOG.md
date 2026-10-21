@@ -16,7 +16,7 @@ Versions follow semver while the package is below 1.0.0: a **minor** release may
 ### Tooling and docs
 
 - The decision records read two more sources. The SI brochure (BIPM, 9th ed., 5.4.3 and 5.4.4) now backs `symbol.degree` (a space before `°C`, none for a plane-angle degree) and is cited, with the places where the engine differs, in `number.group`; it says nothing on `±` or the minus sign, so those two stay general knowledge. The Greek, Finnish, Italian and Danish editions of the Interinstitutional Style Guide and the Czech language handbook were read for the euro: all five write `30 €` with a space, so `currencySpace` stays on in `el`, `fi`, `it`, `da` and `cs` (the backlog's doubt was about the `€` symbol in the Danish guide, whose source showed the code `EUR` after the figure; the guide's euro-symbol passage writes `et beløb på 30 €`). The backlog item on `currencySpace` without a source is closed. No output change.
-- - `space.orphan` is verified for cs from ÚJČ entry 880 (k s v z o u a i; the fetched summary does not mention two-letter words); the pl and uk lists are unchanged and unverified. No output change.
+- `space.orphan` is verified for cs from ÚJČ entry 880 (k s v z o u a i; the fetched summary does not mention two-letter words); the pl and uk lists are unchanged and unverified. No output change.
 - A good-practices page, `docs/practices.md` (also on the website): what to bind and with which rule, what to leave to CSS, column width, what never to do, and the no-break space against markup. It cites only sources read and says "general knowledge" for the rest. No output change.
 
 ## 0.7.0 (2026-10-21)
