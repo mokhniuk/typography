@@ -65,7 +65,10 @@ export function exampleResult(example: Example): {
   return { before, after, changes };
 }
 
-/** The figure for the landing page: one tab per language, all of them in the HTML. */
+/**
+ * The figure for the landing page: one tab per language, all of them in the HTML. Each output is in
+ * `samp`, which the build's own typesetting (English) leaves alone, so it keeps its language's marks.
+ */
 export function examplesFigure(): string {
   const items = EXAMPLES.map((example, i) => {
     const { before, after, changes } = exampleResult(example);
@@ -77,14 +80,14 @@ export function examplesFigure(): string {
     <p data-note>${example.note}</p>
     <dl>
       <div><dt>Before</dt><dd lang="${example.lang}"><code data-raw>${before}</code></dd></div>
-      <div><dt>After <output>${changes} ${changes === 1 ? 'change' : 'changes'}</output></dt><dd lang="${example.lang}">${after}</dd></div>
+      <div><dt>After <output>${changes} ${changes === 1 ? 'change' : 'changes'}</output></dt><dd lang="${example.lang}"><samp>${after}</samp></dd></div>
     </dl>
   </div>
 </div>`;
   }).join('\n');
   return `<figure data-examples>
 ${items}
-<figcaption>Set by the engine when this page was built. Green is what it added, red is what it replaced; a boxed space is a no-break space.</figcaption>
+<figcaption>Set by the engine when this page was built. Marked: what the engine replaced, and what it put in its place; a boxed space is a no-break space.</figcaption>
 </figure>`;
 }
 
@@ -151,7 +154,7 @@ export function samplesTable(): string {
     return `<tr>
   <th scope="row"><code>${sample.rule}</code>${off ? ' <small>opt-in</small>' : ''}</th>
   <td lang="${sample.lang}"><code data-raw>${esc(sample.input)}</code></td>
-  <td lang="${sample.lang}">${html}</td>
+  <td lang="${sample.lang}"><samp>${html}</samp></td>
 </tr>`;
   }).join('\n');
   return `<div data-scroll tabindex="0" role="region" aria-label="Rules with examples">

@@ -82,7 +82,7 @@
   --color-rule: #0a0a0a;
   --color-accent: #0a0a0a;
   --color-accent-text: #fcfcfc;
-  --color-ins: #dcdcdc;
+  --color-ins: #fff0a0;
   --color-ins-text: #0a0a0a;
   --color-del: #efefef;
   --color-del-text: #5c5c5c;
@@ -92,6 +92,9 @@
   --color-code-text: #f4f4f4;
   --color-code-muted: #9a9a9a;
   --color-code-line: #2c2c2c;
+  --color-code-string: #f2dc7d;
+  --color-code-keyword: #9ec5ff;
+  --color-code-literal: #f0a58f;
   /* The select arrow, drawn in --color-muted (a data URI cannot read a variable). */
   --select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%235c5c5c' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 
@@ -141,7 +144,7 @@
     --color-rule: #f4f4f4;
     --color-accent: #f4f4f4;
     --color-accent-text: #0a0a0a;
-    --color-ins: #383838;
+    --color-ins: #5c5214;
     --color-ins-text: #f4f4f4;
     --color-del: #222222;
     --color-del-text: #9a9a9a;
@@ -164,7 +167,7 @@
   --color-rule: #f4f4f4;
   --color-accent: #f4f4f4;
   --color-accent-text: #0a0a0a;
-  --color-ins: #383838;
+  --color-ins: #5c5214;
   --color-ins-text: #f4f4f4;
   --color-del: #222222;
   --color-del-text: #9a9a9a;
@@ -522,6 +525,87 @@ pre {
 pre code {
   font: inherit;
 }
+/* Tokens of the build-time highlighter (build/highlight.ts), on the dark code background. */
+[data-tok="comment"] {
+  color: var(--color-code-muted);
+  font-style: italic;
+}
+[data-tok="string"] {
+  color: var(--color-code-string);
+}
+[data-tok="keyword"],
+[data-tok="tag"] {
+  color: var(--color-code-keyword);
+}
+[data-tok="fn"] {
+  color: var(--color-code-text);
+  font-weight: 600;
+}
+[data-tok="literal"] {
+  color: var(--color-code-literal);
+}
+
+/* A rules example: what you type, and what the rule gives, the changes marked. */
+figure[data-rule-example] {
+  margin: var(--space-5) 0;
+  padding: var(--space-4) var(--space-5) var(--space-5);
+  border: 1px solid var(--color-line);
+  background: var(--color-surface);
+  max-width: var(--measure);
+}
+figure[data-rule-example] figcaption {
+  margin-bottom: var(--space-3);
+  font: 500 var(--size-xs) var(--font-mono);
+  color: var(--color-muted);
+}
+figure[data-rule-example] dl {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: var(--space-3) var(--space-5);
+  margin: 0;
+}
+figure[data-rule-example] dl > div {
+  display: contents;
+}
+figure[data-rule-example] dt {
+  padding-top: 0.35em;
+  font: 500 var(--size-xs) var(--font-ui);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+figure[data-rule-example] dd {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  hyphens: none;
+}
+figure[data-rule-example] kbd {
+  font: var(--size-sm) / 1.8 var(--font-mono);
+  color: var(--color-muted);
+  background: none;
+  border: 0;
+  padding: 0;
+}
+figure[data-rule-example] samp {
+  font: var(--size-lg) / 1.5 var(--font-text);
+  color: var(--color-text);
+}
+figure[data-rule-example] :is(ins, del) {
+  background: var(--color-ins);
+  color: var(--color-ins-text);
+  text-decoration: none;
+  padding: 0;
+}
+figure[data-rule-example] ins[data-nbsp] {
+  padding: 0 var(--space-1);
+}
+/* The note after an example is about that example. */
+figure[data-rule-example] + p {
+  margin-top: calc(-1 * var(--space-3));
+  font-size: var(--size-sm);
+  color: var(--color-muted);
+}
 pre > button {
   position: absolute;
   top: var(--space-3);
@@ -593,12 +677,15 @@ article {
   line-height: 1.6;
   min-width: 0;
 }
-article :is(table, pre, code, button, small, nav, dt, th, td, [data-scroll]) {
+article :is(table, button, small, nav, dt, th, td, [data-scroll]) {
   font-family: var(--font-ui);
 }
-article pre,
-article code {
+article :is(pre, code, kbd, samp) {
   font-family: var(--font-mono);
+}
+/* A hyphen added inside code reads as part of it. */
+:is(pre, code, kbd, samp) {
+  hyphens: manual;
 }
 article h1 {
   font-size: var(--size-2xl);
@@ -1078,10 +1165,14 @@ input[type="radio"]:focus-visible + span {
   background: none;
   color: inherit;
   padding: 0;
+  box-shadow: none;
 }
 [data-specimen]:has(input[name="marks"]:checked) ins {
   background: var(--color-ins);
   color: var(--color-ins-text);
+}
+[data-specimen]:has(input[name="marks"]:checked) ins[data-nbsp] {
+  box-shadow: inset 0 0 0 1px currentColor;
 }
 [data-specimen] form {
   display: flex;
@@ -1181,6 +1272,7 @@ table[data-samples] small {
 /* Other languages: one tab each, before above after */
 
 [data-examples] {
+  position: relative;
   margin: 0;
   display: grid;
   grid-template-columns: repeat(4, max-content) 1fr;
@@ -1190,8 +1282,12 @@ table[data-samples] small {
 [data-examples] [data-example] {
   display: contents;
 }
+/* Pinned to the tabs: a click focuses the radio, and the browser scrolls to where it sits. */
 [data-examples] [data-example] > input {
   position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0;
   opacity: 0;
   pointer-events: none;
 }
@@ -1263,8 +1359,23 @@ table[data-samples] small {
   font-size: var(--size-xl);
   line-height: 1.5;
 }
+/* Before: the text as typed, in mono so straight quotes and hyphens read; what changes is marked, not struck. */
 [data-examples] dl > div:first-child dd {
   color: var(--color-muted);
+}
+[data-examples] dl > div:first-child code[data-raw] {
+  font: 0.8em / 1.9 var(--font-mono);
+  hyphens: none;
+}
+/* The engine's output, shown in the text face (samp keeps the page's typesetting off it). */
+:is([data-examples], [data-samples]) samp {
+  font: inherit;
+}
+[data-examples] del {
+  background: var(--color-ins);
+  color: var(--color-ins-text);
+  text-decoration: none;
+  padding: 0;
 }
 [data-examples] figcaption {
   grid-column: 1 / -1;

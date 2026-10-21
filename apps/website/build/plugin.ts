@@ -4,6 +4,7 @@ import type { Plugin } from 'vite';
 import { typesetHtml } from '../../../src/html';
 import { footer, header } from './chrome';
 import { examplesFigure, samplesTable, specimenFigure } from './examples';
+import { highlightHtml } from './highlight';
 import { generatedPages } from './pages';
 import { fill, SITE_ROOT, TYPESET } from './site';
 
@@ -21,7 +22,7 @@ function finish(html: string, path: string): string {
     .replace('<!--examples-->', () => examplesFigure())
     .replace('<!--specimen-->', () => specimenFigure())
     .replace('<!--samples-->', () => samplesTable());
-  return typesetHtml(filled, TYPESET);
+  return typesetHtml(highlightHtml(filled), TYPESET);
 }
 
 /**
