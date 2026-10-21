@@ -147,9 +147,14 @@ const hangValue = el<HTMLOutputElement>('hangValue');
 const hangField = el<HTMLLabelElement>('hangField');
 const markField = el<HTMLLabelElement>('markField');
 const copy = el<HTMLButtonElement>('copy');
-const configArea = el<HTMLTextAreaElement>('configText');
-const configError = el<HTMLParagraphElement>('configError');
-const configCopy = el<HTMLButtonElement>('configCopy');
+/** The config box. Optional: on a page without `#configPanel` the playground runs without it. */
+const config = document.getElementById('configPanel')
+  ? {
+      area: el<HTMLTextAreaElement>('configText'),
+      error: el<HTMLParagraphElement>('configError'),
+      copy: el<HTMLButtonElement>('configCopy'),
+    }
+  : null;
 /** Whether the config box holds pasted text; until then it follows the switches. */
 let configEdited = false;
 /** Only on the website's playground. */
@@ -345,7 +350,7 @@ function render() {
   ruleCount.textContent = ruleBadge(state);
   ruleCount.hidden = !ruleCount.textContent;
   if (input.value !== state.input) input.value = state.input;
-  if (!configEdited) configArea.value = configText(state);
+  if (config && !configEdited) config.area.value = configText(state);
 
   const { output, changes: made } = convert();
   const runs = diff(state.input, output);
@@ -478,38 +483,41 @@ copy.addEventListener('click', async () => {
   }, 1500);
 });
 
-configArea.addEventListener('input', () => {
-  configEdited = true;
-});
-el('configExport').addEventListener('click', () => {
-  configEdited = false;
-  configError.hidden = true;
-  configArea.value = configText(state);
-});
-el('configImport').addEventListener('click', () => {
-  try {
-    const switches = fromConfig(configArea.value);
-    Object.assign(state, switches, { hang: readHang(switches.hang) });
-    swapExample();
+if (config) {
+  const { area: configArea, error: configError, copy: configCopy } = config;
+  configArea.addEventListener('input', () => {
+    configEdited = true;
+  });
+  el('configExport').addEventListener('click', () => {
     configEdited = false;
     configError.hidden = true;
-    schedule();
-  } catch (error) {
-    configError.textContent = error instanceof Error ? error.message : String(error);
-    configError.hidden = false;
-  }
-});
-configCopy.addEventListener('click', async () => {
-  try {
-    await navigator.clipboard.writeText(configArea.value);
-    configCopy.textContent = 'Copied';
-  } catch {
-    configArea.select();
-    configCopy.textContent = 'Select and copy';
-  }
-  setTimeout(() => {
-    configCopy.textContent = 'Copy';
-  }, 1500);
-});
+    configArea.value = configText(state);
+  });
+  el('configImport').addEventListener('click', () => {
+    try {
+      const switches = fromConfig(configArea.value);
+      Object.assign(state, switches, { hang: readHang(switches.hang) });
+      swapExample();
+      configEdited = false;
+      configError.hidden = true;
+      schedule();
+    } catch (error) {
+      configError.textContent = error instanceof Error ? error.message : String(error);
+      configError.hidden = false;
+    }
+  });
+  configCopy.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(configArea.value);
+      configCopy.textContent = 'Copied';
+    } catch {
+      configArea.select();
+      configCopy.textContent = 'Select and copy';
+    }
+    setTimeout(() => {
+      configCopy.textContent = 'Copy';
+    }, 1500);
+  });
+}
 
 render();
