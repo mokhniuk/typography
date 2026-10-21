@@ -28,6 +28,10 @@ import { HANG_SCRIPT } from './script';
 
 export function hangPunctuation(el: HTMLElement): () => void {
   // Self-contained on purpose: `hangScript` sends this function's source to the page as it is.
+  // One pass per element: the inline script starts one as the page is parsed, and the React hook
+  // starts one on the same root once hydrated, so the later call stops the earlier pass.
+  const owner = el as HTMLElement & { __hang?: () => void };
+  owner.__hang?.();
   const PULL = 'calc(var(--hang-w) * var(--hang-amount, 1) * -1)';
   const SPACE = 'calc(var(--hang-open, 0em) * var(--hang-amount, 1))';
   const CLOSE_SPACE = 'calc((var(--hang-w) + var(--hang-open, 0em)) * var(--hang-amount, 1))';
@@ -36,7 +40,7 @@ export function hangPunctuation(el: HTMLElement): () => void {
   /** The width of a span's text, without the whitespace a closing span holds after its mark. */
   const glyphs = (span: HTMLElement): number => {
     const text = span.firstChild;
-    if (!text || text.nodeType !== 3) return span.getBoundingClientRect().width;
+    if (text?.nodeType !== 3) return span.getBoundingClientRect().width;
     const range = document.createRange();
     range.setStart(text, 0);
     range.setEnd(text, (text.textContent ?? '').replace(/\s+$/, '').length);
@@ -140,12 +144,15 @@ export function hangPunctuation(el: HTMLElement): () => void {
     schedule();
   });
   additions.observe(el, { childList: true, subtree: true, characterData: true });
-  return () => {
+  const stop = () => {
     alive = false;
     cancelAnimationFrame(frame);
     resizes.disconnect();
     additions.disconnect();
+    if (owner.__hang === stop) delete owner.__hang;
   };
+  owner.__hang = stop;
+  return stop;
 }
 
 /**
