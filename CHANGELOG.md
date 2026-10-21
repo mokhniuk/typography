@@ -2,7 +2,7 @@
 
 Versions follow semver while the package is below 1.0.0: a **minor** release may change the output of the engine or the API (every entry says whether it can change output you already have), a **patch** release fixes a bug without changing output you rely on. If you depend on exact output, pin a tag and read this file before you move it.
 
-## Unreleased
+## 0.8.0 (2026-10-22)
 
 ### Fixes
 
@@ -14,7 +14,7 @@ Versions follow semver while the package is below 1.0.0: a **minor** release may
 
 ### Tooling and docs
 
-- The decision records read two more sources. The SI brochure (BIPM, 9th ed., 5.4.3 and 5.4.4) now backs `symbol.degree` (a space before `°C`, none for a plane-angle degree) and is cited, with the places where the engine differs, in `number.group`; it says nothing on `±` or the minus sign, so those two stay general knowledge. The Greek, Finnish, Italian and Danish editions of the Interinstitutional Style Guide and the Czech language handbook were read for the euro: all five write `30 €` with a space, so `currencySpace` stays on in `el`, `fi`, `it`, `da` and `cs` (the backlog doubted only the Danish guide, whose source showed the code `EUR` after the figure; its euro-symbol passage writes `et beløb på 30 €`). The backlog item on `currencySpace` without a source is closed. No output change.
+- The decision records read two more sources. The SI brochure (BIPM, 9th ed., 5.4.3 and 5.4.4) now backs `symbol.degree` (a space before `°C`, none for a plane-angle degree) and is cited, with the places where the engine differs, in `number.group`; it says nothing on `±` or the minus sign, so those two stay general knowledge. The Greek, Finnish, Italian and Danish editions of the Interinstitutional Style Guide and the Czech language handbook were read for the euro: all five write `30 €` with a space, so `currencySpace` stays on in `el`, `fi`, `it`, `da` and `cs` (the backlog's doubt was about the `€` symbol in the Danish guide, whose source showed the code `EUR` after the figure; the guide's euro-symbol passage writes `et beløb på 30 €`). The backlog item on `currencySpace` without a source is closed. No output change.
 
 ## 0.7.0 (2026-10-21)
 
