@@ -172,7 +172,7 @@ Confidence: `general-knowledge`.
 
 Why: +- before a digit is the plus-minus sign ±.
 
-Alternative: Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge. The SI brochure, 9th ed. (read in full for task 3), does not address the ± sign in section 5.4 or elsewhere in its text, so it does not back this rule.
+Alternative: Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge. The SI brochure, 9th ed., does not address the ± sign in section 5.4, so it does not back this rule.
 
 ### `symbol.minus`
 
@@ -180,7 +180,7 @@ Confidence: `general-knowledge`.
 
 Why: A minus sign is −, not a hyphen.
 
-Alternative: The SI brochure, 9th ed. (read in full), has no passage on the minus sign: its section 5.4.4 only shows the leading zero (-0.234 but not -.234) and says nothing of the character to use, so it does not back this rule. Unicode only shows that the character exists; it does not say when to use it. Butterick says to use an en dash for the minus sign (the "Math symbols" page also lists the &minus; entity) and calls an en dash acceptable in spreadsheets, so a style guide that prefers − over – was not found. Still unchecked.
+Alternative: The SI brochure, 9th ed., has no passage on the minus sign: its section 5.4.4 only shows the leading zero (-0.234 but not -.234) and says nothing of the character to use, so it does not back this rule. Unicode only shows that the character exists; it does not say when to use it. Butterick says to use an en dash for the minus sign (the "Math symbols" page also lists the &minus; entity) and calls an en dash acceptable in spreadsheets, so a style guide that prefers − over – was not found. Still unchecked.
 
 Sources: [unicode-names](#src-unicode-names), [butterick-dashes](#src-butterick-dashes), [butterick-math](#src-butterick-math)
 
@@ -354,7 +354,7 @@ Relied on: Per locale: en “ ” and ‘ ’; uk « » and „ “; de „ “ 
 Relied on: There is a space between a numerical value and a unit symbol, and between a number and the percent sign ("10 %"); the page does not say the space is nonbreaking.
 
 <a id="src-bipm-si-brochure-9"></a>
-**bipm-si-brochure-9**. BIPM, The International System of Units (SI), 9th edition, 2019 (version of 2022), section 5.4.3 "Formatting the value of a quantity" and 5.4.4 "Formatting numbers, and the decimal marker", pp. 144-145; Appendix 1, 9th CGPM Resolution 7 (1948) and 22nd CGPM Resolution 10 (2003).
+**bipm-si-brochure-9**. BIPM, The International System of Units (SI), 9th edition 2019, version V4.01 of June 2026 (doi 10.59161/AUEZ1291), section 5.4.3 "Formatting the value of a quantity" and 5.4.4 "Formatting numbers, and the decimal marker", pp. 144-145; Appendix 1, 9th CGPM Resolution 7 (1948) and 22nd CGPM Resolution 10 (2003).
 
 <https://www.bipm.org/documents/20126/41483022/SI-Brochure-9-EN.pdf>, read as raw data on 2026-10-22.
 
@@ -405,7 +405,7 @@ Relied on: Use a nonbreaking space after § and ¶, after abbreviations such as 
 Relied on: "A paragraph mark or section mark should always be followed by a nonbreaking space", which "acts like glue that keeps the mark joined with the numeric reference that follows"; "In a reference to multiple paragraphs or sections, double the mark (¶¶ or §§)"; at the start of a sentence, spell the word out instead of using the mark.
 
 <a id="src-isg-2022-euro"></a>
-**isg-2022-euro**. Interinstitutional Style Guide, Greek (0016), Finnish (0017), Italian (0021) and Danish (0022) editions, PDF of 19 April 2022, part 3 (conventions common to all languages), 7, "Position of the euro symbol (€) in amounts".
+**isg-2022-euro**. Interinstitutional Style Guide, PDF of 19 April 2022, part 3 (conventions common to all languages), chapter 7, section "Position of the euro symbol (€) in amounts". Editions read: Greek https://publications.europa.eu/resource/cellar/01ed788a-d266-11ec-a95f-01aa75ed71a1.0016.01/DOC_1; Finnish https://publications.europa.eu/resource/cellar/01ed788a-d266-11ec-a95f-01aa75ed71a1.0017.01/DOC_1; Italian https://publications.europa.eu/resource/cellar/01ed788a-d266-11ec-a95f-01aa75ed71a1.0021.01/DOC_1; Danish https://publications.europa.eu/resource/cellar/01ed788a-d266-11ec-a95f-01aa75ed71a1.0022.01/DOC_1.
 
 <https://publications.europa.eu/resource/cellar/01ed788a-d266-11ec-a95f-01aa75ed71a1.0021.01/DOC_1>, read as raw data on 2026-10-22.
 

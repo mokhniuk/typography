@@ -121,10 +121,10 @@ export const SOURCES: readonly Source[] = [
     kind: 'style-guide',
     author: 'Publications Office of the European Union (interinstitutional)',
     title:
-      'Interinstitutional Style Guide, Greek, Finnish, Italian and Danish editions (PDF of 19 April 2022), part 3, 7: codes of countries, languages and currencies',
+      'Interinstitutional Style Guide, Greek, Finnish, Italian and Danish editions (PDF of 19 April 2022), part 3, chapter 7 (codes of countries, languages and currencies): position of the euro symbol',
     about:
       "The language editions of the EU institutions' own style guide. The section on currencies sets where the euro code and the euro symbol go beside a figure, in each edition. It binds EU publications, not the national orthographies; it does not say the space is nonbreaking except in the Finnish edition.",
-    cite: 'Interinstitutional Style Guide, Greek (0016), Finnish (0017), Italian (0021) and Danish (0022) editions, PDF of 19 April 2022, part 3 (conventions common to all languages), 7, "Position of the euro symbol (€) in amounts".',
+    cite: 'Interinstitutional Style Guide, PDF of 19 April 2022, part 3 (conventions common to all languages), chapter 7, section "Position of the euro symbol (€) in amounts". Editions read: Greek https://publications.europa.eu/resource/cellar/01ed788a-d266-11ec-a95f-01aa75ed71a1.0016.01/DOC_1; Finnish https://publications.europa.eu/resource/cellar/01ed788a-d266-11ec-a95f-01aa75ed71a1.0017.01/DOC_1; Italian https://publications.europa.eu/resource/cellar/01ed788a-d266-11ec-a95f-01aa75ed71a1.0021.01/DOC_1; Danish https://publications.europa.eu/resource/cellar/01ed788a-d266-11ec-a95f-01aa75ed71a1.0022.01/DOC_1.',
     url: 'https://publications.europa.eu/resource/cellar/01ed788a-d266-11ec-a95f-01aa75ed71a1.0021.01/DOC_1',
     accessed: '2026-10-22',
     readVia: 'raw',
@@ -151,8 +151,8 @@ export const SOURCES: readonly Source[] = [
     author: 'Bureau International des Poids et Mesures (BIPM)',
     title: 'The International System of Units (SI), 9th edition (SI Brochure)',
     about:
-      'The definitive international reference on the SI, in force since 2019 (2022 text). Section 5.4 sets how the value of a quantity and a number are written. It is a metrology standard: it covers unit symbols and digit grouping, not general prose typography, and it does not say whether a space is nonbreaking.',
-    cite: 'BIPM, The International System of Units (SI), 9th edition, 2019 (version of 2022), section 5.4.3 "Formatting the value of a quantity" and 5.4.4 "Formatting numbers, and the decimal marker", pp. 144-145; Appendix 1, 9th CGPM Resolution 7 (1948) and 22nd CGPM Resolution 10 (2003).',
+      'The definitive international reference on the SI, in force since 2019. Section 5.4 sets how the value of a quantity and a number are written. It is a metrology standard: it covers unit symbols and digit grouping, not general prose typography, and it does not say whether a space is nonbreaking.',
+    cite: 'BIPM, The International System of Units (SI), 9th edition 2019, version V4.01 of June 2026 (doi 10.59161/AUEZ1291), section 5.4.3 "Formatting the value of a quantity" and 5.4.4 "Formatting numbers, and the decimal marker", pp. 144-145; Appendix 1, 9th CGPM Resolution 7 (1948) and 22nd CGPM Resolution 10 (2003).',
     url: 'https://www.bipm.org/documents/20126/41483022/SI-Brochure-9-EN.pdf',
     accessed: '2026-10-22',
     readVia: 'raw',
@@ -648,7 +648,7 @@ export const RULE_SOURCES: Record<string, Decision> = {
     sources: ['unicode-names', 'butterick-dashes', 'butterick-math'],
     why: 'A minus sign is −, not a hyphen.',
     alternative:
-      'The SI brochure, 9th ed. (read in full), has no passage on the minus sign: its section 5.4.4 only shows the leading zero (-0.234 but not -.234) and says nothing of the character to use, so it does not back this rule. Unicode only shows that the character exists; it does not say when to use it. Butterick says to use an en dash for the minus sign (the "Math symbols" page also lists the &minus; entity) and calls an en dash acceptable in spreadsheets, so a style guide that prefers − over – was not found. Still unchecked.',
+      'The SI brochure, 9th ed., has no passage on the minus sign: its section 5.4.4 only shows the leading zero (-0.234 but not -.234) and says nothing of the character to use, so it does not back this rule. Unicode only shows that the character exists; it does not say when to use it. Butterick says to use an en dash for the minus sign (the "Math symbols" page also lists the &minus; entity) and calls an en dash acceptable in spreadsheets, so a style guide that prefers − over – was not found. Still unchecked.',
     confidence: 'general-knowledge',
   },
   'symbol.multiply': {
@@ -757,7 +757,7 @@ export const RULE_SOURCES: Record<string, Decision> = {
     sources: [],
     why: '+- before a digit is the plus-minus sign ±.',
     alternative:
-      'Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge. The SI brochure, 9th ed. (read in full for task 3), does not address the ± sign in section 5.4 or elsewhere in its text, so it does not back this rule.',
+      'Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge. The SI brochure, 9th ed., does not address the ± sign in section 5.4, so it does not back this rule.',
     confidence: 'general-knowledge',
   },
   'symbol.fraction': {
