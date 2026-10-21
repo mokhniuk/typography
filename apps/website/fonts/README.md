@@ -1,18 +1,9 @@
 # Fonts
 
-Poppins (SIL OFL 1.1, see `OFL-Poppins.txt`) is self-hosted here, Latin and Latin Extended only. It has no Cyrillic, so Ukrainian text falls back to the system sans until a Cyrillic face is added.
+Poppins (SIL OFL 1.1, see `OFL-Poppins.txt`) is self-hosted here, Latin and Latin Extended only, as the fallback for KyivType Sans.
 
-## Adding KyivType Sans
+## KyivType Sans
 
-Its licence is not in this repository; get the web licence and the `woff2` files yourself and put them in this folder (do not commit files you may not redistribute without checking the licence). Then in `style.css` add one `@font-face` per weight, for example:
+The site's face: `--font-ui` and `--font-text` put `"KyivType Sans"` first, with Poppins after it. `style.css` declares three weights from `KyivType/`: Regular (400), Medium (500) and Bold (700, which also serves 600). Only these three `woff2` files are kept. The family ships each weight in four versions that differ in stroke contrast (no suffix is low contrast, `2` medium, `3` high, `-` low with thin `M`, `W`, `K`); the site uses the low-contrast one, and the Serif and Titling families are not used.
 
-```css
-@font-face {
-  font-family: "KyivType Sans";
-  font-weight: 400;
-  font-display: swap;
-  src: url("./fonts/KyivTypeSans-Regular.woff2") format("woff2");
-}
-```
-
-and put `"KyivType Sans"` first in `--font-ui` and `--font-text`.
+Its licence is not in this repository: check the web licence before you commit these files.
