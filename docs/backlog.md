@@ -66,6 +66,15 @@ Each is a limit of the pack format or an unverified choice, not a crash:
 - **`symbol.degree`** knows an English label list only (`Type C`, `Vitamin C`).
 - The opt-in rules' own limits are in [limits.md](limits.md#opt-in-rules).
 
+### A configuration per project
+
+Today every call site repeats its options (`lang`, `register`, `quoteStyle`, `enable`, `disable`, `rules`, `nbsp`, `--hang-amount` in CSS), the playground keeps its own state in `localStorage`, and the house choices (English guillemets) live in the engine's defaults. Plan: one object that names a project's typography, used everywhere.
+
+- A `preset` (or `config`) type: the options above plus `hangAmount` and the characters to avoid (next item), with the same names the functions take, so it spreads straight into any call. Shipped presets for a house style (`podiia`: guillemets in English) and for the plain language defaults; a project writes its own as a constant.
+- Read by every site: `typographic` and the modes (`preset` option, the explicit options winning), `TypographyRoot` (one prop instead of six), the CLI (`typo --config typography.config.ts` or a `typography` key in `package.json`), and the playground (import and export the current switches as a preset, so what was tried on the page is what the project ships).
+- This is also where the English default quote question is settled: the engine defaults to the language standard, the house preset restores the house style (see the sources entry for `quote`, `disputed`).
+- Done when one preset constant drives the CLI, a React page and the playground with identical output, `docs/api.md` documents it next to the options, and the option-threading list in `CLAUDE.md` names it.
+
 ### Keep the original when the font lacks the glyph
 
 A rule that inserts a character the font does not have shows a box or a mismatched fallback glyph; the text as typed is better. The engine is string to string and cannot see the font, so the plan is an option that names the characters to avoid:
@@ -75,6 +84,16 @@ A rule that inserts a character the font does not have shows a box or a mismatch
 - Docs: explained next to the other options, and every opt-in rule and flag gets a before/after preview in the docs and the playground (a "preview" for each feature flag), so a reader sees what a flag changes and which characters it needs.
 - Later, a browser add-on: `supports(char)` in the React/DOM layer (`document.fonts.check` or a canvas measure), used when given; server rendering uses the option.
 - Done when: a golden test per rule shows the original text kept when its character is avoided, idempotence holds, and `explain` records nothing for the skipped match.
+
+### Font checker: is this font ready for this language and these rules
+
+A tool on the website (and in the playground): upload a font file, or name an installed one, pick languages, and get a verdict.
+
+- **Glyph coverage**: the characters every rule can insert (`« » „ “ ‚ ‘ ‹ › “ ” ’ … – — − × ± ½ ¼ ¾ ° § ¶ © ® ™ → ← ⇒`, the no-break and thin spaces) and the letters of each selected language that fonts most often lack (Ukrainian `ґ є і ї`, Polish `ł ą ę ś ź ż`, Maltese `ħ ġ ċ ż`, Irish fada vowels, Romanian `ș ț` with comma below, Latvian and Lithuanian macrons and ogoneks), each as present, missing, or present as a fallback glyph (the browser substitutes silently; `document.fonts.check` and a canvas width comparison against the fallback font tell them apart). The missing ones become the `avoid` list of the item above, copied as a preset.
+- **Rendered examples**: the long example of each selected language, typeset by the engine with the current switches, set in the font at two widths, with hanging punctuation on, so the reader sees the quotes, dashes and marks the font actually draws.
+- **Rating and recommendation**: a score per language from the coverage, and a suggested text preset: size, line height for a vertical rhythm, measure (45 to 90 characters), `--hang-amount` for the font's quote marks (a wide guillemet hangs less than a thin `‘`). The rhythm and measure advice rests on the reading list in the sources item (Dyson, Beier), cited as context, not as rules.
+- Runs in the browser with no dependencies, per `docs/ui.md`: the font is loaded with `FontFace`, never uploaded anywhere; the glyph table is read with the browser's own measuring, not an OpenType parser, unless the fallback detection proves too unreliable (then a small table reader for `cmap`, written here).
+- Done when a font with a known gap (a system font without `ґ`, a display font without `»`) is reported with the exact characters, the `avoid` preset it writes makes the engine keep the original text for them, and the examples page renders every selected language.
 
 ### Phone numbers
 
@@ -118,7 +137,9 @@ Today `space.orphan` binds a one-letter word in a language's list to the next wo
 - `&`, `+`, `=` and other operators between words (`Tom & Jerry`, `rock + roll`) get no no-break space: a line can end on `&`, or start with it.
 - Short words of two or three letters (`to`, `of`, `the`; `на`, `до`; `der`, `die`) are bound only where a pack lists them as one-letter orphans.
 - **The last words of a paragraph (widows and runts)** are decided: not a string rule, CSS `text-wrap: pretty` on the page (written down in [limits.md](limits.md)).
-- Done when each rule has golden tests per language that has the pattern, and no rule can bind a whole line.
+- **How to bind, not only what:** a no-break space is a character and travels with the text (copy, search, screen readers read it as a space), a `<span style="white-space: nowrap">` is markup and stays on the page. The HTML, rehype and React modes could offer `bind: 'nbsp' | 'nowrap'` (the text mode and the CLI on plain text have only the character). Research what the two do to search, copy, hyphenation and `text-wrap: pretty` before choosing a default; the string engine keeps the no-break space.
+- **A good-practices page** (`docs/practices.md`, later the website): what to bind (one-letter words, a number and its unit, a title and a name, an operator between words, a short tail), what to leave to CSS (`text-wrap: pretty`, `balance` for headings, `hyphens`), how a column width changes the answer, and what never to do (bind a whole line, bind inside a link text that wraps). Written from the sources registry, with before/after examples rendered at two widths.
+- Done when each rule has golden tests per language that has the pattern, no rule can bind a whole line, and the practices page exists with an example per rule.
 
 ### Speed: what is left
 
