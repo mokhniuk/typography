@@ -671,3 +671,16 @@ describe('private-use characters in the input', () => {
     expect(t('odd  char and x')).toBe('odd  char and x');
   });
 });
+
+describe('arrows that are not arrows', () => {
+  test('a comparison with a negative number, a double-headed arrow and an HTML comment stay', () => {
+    expect(t('x<-1 and y<-10')).toBe('x<-1~and y<-10');
+    expect(t('a <-> b')).toBe('a~<-> b');
+    expect(t('<--> c', 'en', { disable: ['dash.sentence'] })).toBe('<--> c');
+    expect(t('<!-- note --> ok')).toBe('<!-- note --> ok');
+  });
+
+  test('an arrow against a word is still an arrow', () => {
+    expect(t('a->b and c<-d')).toBe('a→b and c←d');
+  });
+});

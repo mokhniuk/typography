@@ -19,7 +19,22 @@ export const apostrophe = (text: string): string =>
 
 export const ellipsis = (text: string): string => text.replace(/\.{3}/g, '…');
 
-export const arrows = (text: string): string => text.replace(/->/g, '→').replace(/<-/g, '←');
+const ARROW = /<-|->/g;
+const WORD = /[\p{L}\p{N}]/u;
+
+/**
+ * -> and <- become → and ←. Not the end of an HTML comment or a long arrow (`-->`), not a
+ * double-headed one (`<->`, `<-->`), and not a comparison with a negative number (`x<-1`: a letter or
+ * digit before, a digit after).
+ */
+export const arrows = (text: string): string =>
+  text.replace(ARROW, (arrow, offset: number, whole: string) => {
+    const before = whole.charAt(offset - 1);
+    const after = whole.charAt(offset + 2);
+    if (arrow === '->') return before === '-' || before === '<' ? arrow : '→';
+    if (after === '-' || after === '>') return arrow;
+    return after >= '0' && after <= '9' && WORD.test(before) ? arrow : '←';
+  });
 
 /** © from (c) before a year or (C), ® from (R), ™ from (TM). */
 export const legal = (text: string): string =>
@@ -55,11 +70,16 @@ const LONG_RUN = /[\dx.,]{48}/;
 
 const multiplyJoined = (text: string): string =>
   LONG_RUN.test(text)
-    ? text.replace(JOINED, (_m, first: string, rest: string) => `${first}${rest.replaceAll('x', '\u00D7')}`)
-    : text.replace(JOINED_FORWARD, (match, first: string, rest: string, offset: number, whole: string) =>
-        offset > 0 && WORD_OR_JOINER.test(whole.charAt(offset - 1))
-          ? match
-          : `${first}${rest.replaceAll('x', '\u00D7')}`,
+    ? text.replace(
+        JOINED,
+        (_m, first: string, rest: string) => `${first}${rest.replaceAll('x', '\u00D7')}`,
+      )
+    : text.replace(
+        JOINED_FORWARD,
+        (match, first: string, rest: string, offset: number, whole: string) =>
+          offset > 0 && WORD_OR_JOINER.test(whole.charAt(offset - 1))
+            ? match
+            : `${first}${rest.replaceAll('x', '\u00D7')}`,
       );
 
 const SPACED_X = /x[ ]+(?=\d)/g;
