@@ -4,7 +4,7 @@ Every entry point in `package.json` `exports`, plus the `typo` command (see [cli
 
 | Entry | Source | What it exports |
 |---|---|---|
-| `.` | `src/index.ts` | everything in `src/core` (below), plus `typesetText` and `TextOptions` |
+| `.` | `src/index.ts` | everything in `src/core` (below: the engine, `TypographyConfig`, `defineConfig`, `checkConfig`), plus `typesetText` and `TextOptions` |
 | `./text` | `src/text/index.ts` | `typesetText`, `TextOptions` |
 | `./html` | `src/html/index.ts` | `typesetHtml`, `HtmlOptions` |
 | `./markdown` | `src/markdown/index.ts` | `typesetMarkdown`, `MarkdownOptions` |
@@ -29,7 +29,10 @@ These are the options the functions below take. Which function takes which is in
 | `disable` | `readonly string[]` | none | Rules to switch off: ids (`'dash.range'`) or groups (`'space'`, or `'space.*'`). A name that matches no rule throws an `Error` that lists the rule ids, so a typo cannot pass for "everything stays on". See [rules.md](rules.md). |
 | `onChange` | `(change: Change) => void` | none | Called with each change a rule makes, in the order the rules ran (not in text order). Costs one word-level diff per rule that changed anything. |
 | `blockStart` | `boolean` | `true` | Whether the text opens its paragraph. Only then can its first dash be read as a dialogue dash (`dash.dialogue`), in the languages that write dialogue with one. Taken by `typographic` and `explain` only; the text, HTML, Markdown and rehype modes always treat each block as opening a paragraph. |
-| `nbsp` | `'entity' \| 'char'` | `'entity'` | HTML only (`HtmlOptions`, and `--nbsp` on the command line). How a no-break space is written in a block that changed: as `&nbsp;`, or as the character U+00A0. |
+| `nbsp` | `'entity' \| 'char'` | `'entity'` | HTML only (`--nbsp` on the command line). How a no-break space is written in a block that changed: as `&nbsp;`, or as the character U+00A0. Every mode accepts it, so a config spreads into any of them; only `typesetHtml` reads it. |
+| `hangAmount` | `number`, 0 to 1 | `1` | How far hanging punctuation hangs: `TypographyRoot` sets it as the CSS custom property `--hang-amount` on its `div` (see [`hangPunctuation`](#hangpunctuationel-htmlelement---void)). The string modes and the command line accept it and do nothing with it. |
+| `config` | `TypographyConfig` | none | A prop of `TypographyRoot` and `Typeset`: every option above in one object. See [Config](#config). |
+| `hangAmount` | `number`, 0 to 1 | none: set as `--hang-amount` on the root's `div` (`style="--hang-amount:0.5"`); left out, the `div` has no style and the amount is inherited through CSS |
 | `early` | `boolean` | `true` | A prop of `TypographyRoot`, not an engine option. Whether the root sends the hanging pass inline (`HangScript`). Set `false` on a page whose content security policy forbids inline scripts. |
 
 `quoteStyle`, `enable` and `rules` go wherever `register` and `disable` go (every function and component in the table, including `TypographyRoot` and `Typeset`, and `--quotes` and `--enable` on the command line). `TypographyRoot` and `Typeset` also take `disable` and `onChange`.
@@ -42,6 +45,50 @@ These are the options the functions below take. Which function takes which is in
 | `typesetHtml` | yes | yes | yes | yes | | yes | |
 | `Typeset` | prop | prop | prop | prop | `atStart` prop | | |
 | `TypographyRoot` | prop | prop | prop | prop | | | prop |
+
+## Config
+
+A project's typography in one object, `TypographyConfig`: the options above under the same names, so it spreads straight into any call, and `TypographyRoot`, `Typeset` and the command line read it as a whole.
+
+```ts
+type TypographyConfig = {
+  lang?: Lang;
+  register?: Register;
+  quoteStyle?: QuoteStyle;
+  disable?: readonly string[];
+  enable?: readonly string[];
+  rules?: readonly Rule[];   // only from a module, not JSON
+  nbsp?: 'entity' | 'char';  // read by the HTML mode only
+  hangAmount?: number;       // 0 to 1, read by TypographyRoot only
+};
+```
+
+```ts
+// typography.config.ts
+import { defineConfig } from '@podiia/typography';
+
+export default defineConfig({ lang: 'uk', quoteStyle: 'us', enable: ['symbol.plusminus'], hangAmount: 0.5 });
+```
+
+```ts
+import site from './typography.config';
+
+typographic(text, site.lang, site);
+typesetHtml(html, site);
+typesetMarkdown(md, { ...site, lang: 'de' });   // an option of the call beats the config's
+unified().use(rehypeTypography, site);
+<TypographyRoot config={site}>…</TypographyRoot>
+```
+
+```sh
+typo --config typography.config.ts page.md   # or a "typography" key in package.json
+```
+
+- **Precedence**: an option given to a call replaces the config's value for that option. Lists are not merged: `{ ...site, disable: ['quote'] }` drops the config's `disable` and switches off `quote` only. On `TypographyRoot` and `Typeset` a prop beats `config`, which beats the outer root. On the command line a flag beats the config (see [cli.md](cli.md#config)).
+- `defineConfig(config): TypographyConfig` returns `config` unchanged after checking it, so a mistake throws where the config is written: an unknown key, a `lang`, `register`, `quoteStyle` or `nbsp` that is not one of its values, a `hangAmount` outside 0 to 1, or a name in `disable` or `enable` that matches no rule (checked against the config's `rules` when given, like `selectRules`). A plain object typed `TypographyConfig` works as well, unchecked.
+- `checkConfig(value: unknown): TypographyConfig` is the same check for a value read from JSON (a file, a `package.json` key, a pasted text); the command line and the playground use it.
+- The playground's "Config" panel shows its switches as a config, ready for `package.json` or a file, and applies one pasted back.
+- A new option goes into `TypographyConfig`; `ModeOptions` is derived from it, so it reaches every mode's type.
 
 ## The change record
 
@@ -99,7 +146,7 @@ explain('He said "hi"... 21-26');
 
 ### `typesetText(text, options = {}): string`
 
-`TextOptions` is `ModeOptions` (`lang`, `register`, `quoteStyle`, `disable`, `enable`, `rules`, `onChange`). Typesets plain text a paragraph at a time: paragraphs are separated by blank lines, and each opens a block, so a dialogue dash is read at the start of every paragraph. Line breaks, indentation, trailing spaces and the blank lines between paragraphs are kept exactly; a paragraph that needs no change comes back byte for byte. A paragraph in which a rule would add or remove a line is kept as it came.
+`TextOptions` is `ModeOptions` (a `TypographyConfig` and `onChange`). Typesets plain text a paragraph at a time: paragraphs are separated by blank lines, and each opens a block, so a dialogue dash is read at the start of every paragraph. Line breaks, indentation, trailing spaces and the blank lines between paragraphs are kept exactly; a paragraph that needs no change comes back byte for byte. A paragraph in which a rule would add or remove a line is kept as it came.
 
 ### `typesetBlock(joined, options): { text: string; keep: () => void }`
 
@@ -108,21 +155,18 @@ The building block of the modes. Typesets one block with `ModeOptions` and holds
 ### `ModeOptions`
 
 ```ts
-type ModeOptions = {
-  lang?: Lang;          // default 'en'
-  register?: Register;  // default 'display'
-  quoteStyle?: QuoteStyle; // default 'language'
-  disable?: readonly string[];
-  enable?: readonly string[];
-  rules?: readonly Rule[];
+type ModeOptions = TypographyConfig & {
   onChange?: (change: Change) => void;
 };
 ```
+
+Every mode takes the whole config: `nbsp` is read by the HTML mode only, `hangAmount` by none of them.
 
 ### Data
 
 | Export | What it is |
 |---|---|
+| `TypographyConfig`, `defineConfig`, `checkConfig` | See [Config](#config). |
 | `RULES: readonly Rule[]` | The rules in the order they run. `Rule` is `{ id: string; about: string; category?: RuleCategory; defaultOn?: boolean; when?(text, context): boolean; apply(text, context): string }`; `defaultOn: false` means the rule runs only when named in `enable`. `category` says what the rule is for (see `RULE_CATEGORIES`); every built-in rule has one, a custom rule may leave it out. `when` is an optional cheap test: when it returns false `apply` is skipped, so it must be false only if `apply` would return the text unchanged. A rule without `when` always runs. A custom rule made by spreading a built-in (`{ ...RULES[i], apply }`) copies its `when`: set `when: undefined`. |
 | `selectRules({ rules?, disable?, enable? })` | The rules that run, in order. Names are checked against `rules` (the built-in list unless given); an unknown name, or a rule named in both `disable` and `enable`, throws. `without(disable)` is `selectRules({ disable })`. |
 | `addRule(list, rule, position)` | A new list with `rule` at `{ before: id }`, `{ after: id }`, `{ first: true }` or `{ last: true }`. Does not change `list` or `RULES`; an unknown anchor or a duplicate id throws. |
@@ -145,7 +189,7 @@ type ModeOptions = {
 ### `typesetHtml(html, options = {}): string`
 
 ```ts
-type HtmlOptions = ModeOptions & { nbsp?: 'entity' | 'char' };
+type HtmlOptions = ModeOptions; // reads nbsp
 ```
 
 Typesets the text of an HTML string. Tags, attributes, comments and the content of `<pre>`, `<code>`, `<script>`, `<style>`, `<kbd>`, `<samp>`, `<textarea>`, `<svg>`, `<math>` and `<template>` are left exactly as they were. Text is typeset a block at a time with each inline element standing in as a placeholder, so a quotation pairs across a link. A block whose text needs no change is returned byte for byte.
@@ -264,13 +308,14 @@ hangPieces('Grass (Camden House, 2027). He');
 
 `react` (18 or later) is an optional peer dependency; only this entry needs it.
 
-### `<TypographyRoot lang? register? quoteStyle? disable? enable? rules? onChange? early?>`
+### `<TypographyRoot config? lang? register? quoteStyle? disable? enable? rules? onChange? hangAmount? early?>`
 
-Wraps a page so its text is typeset: it sets the language and register every `Typeset` under it falls back to (a value left out is inherited from an outer root, then from `en` and `display`), and hangs opening punctuation wherever a line starts with it. It renders one `<div>` around its children. On a prerendered page it also sends the hanging pass inline with `<HangScript />` as the last child of that div; `early={false}` turns that off.
+Wraps a page so its text is typeset: it sets the language and register every `Typeset` under it falls back to (a value is taken from the root's own prop, then from `config`, then from an outer root, then `en` and `display`), and hangs opening punctuation wherever a line starts with it. It renders one `<div>` around its children. On a prerendered page it also sends the hanging pass inline with `<HangScript />` as the last child of that div; `early={false}` turns that off.
 
 | Prop | Type | Default |
 |---|---|---|
 | `children` | `ReactNode` | required |
+| `config` | `TypographyConfig` | none; pass a constant. Its `nbsp` is not read. |
 | `lang` | `Lang` | inherited |
 | `register` | `Register` | inherited |
 | `quoteStyle` | `QuoteStyle` | inherited |
@@ -279,14 +324,15 @@ Wraps a page so its text is typeset: it sets the language and register every `Ty
 | `onChange` | `(change: Change) => void` | inherited; pass a stable function (`useCallback`). Called when a text is typeset, not on every render. |
 | `early` | `boolean` | `true` |
 
-### `<Typeset text atStart? lang? register? quoteStyle? disable? enable? rules? onChange?>`
+### `<Typeset text atStart? config? lang? register? quoteStyle? disable? enable? rules? onChange?>`
 
-A plain string, typeset in the language and register of the surrounding root (or those given as props), with its hanging marks wrapped in `data-hang` spans. Memoised on its arguments.
+A plain string, typeset in the language and register of the surrounding root (or those given as props, then in `config`), with its hanging marks wrapped in `data-hang` spans. Memoised on its arguments.
 
 | Prop | Type | Default |
 |---|---|---|
 | `text` | `string` | required |
 | `atStart` | `boolean` | `true`; set `false` for a string that continues a paragraph after an element. Also passed as `blockStart`. |
+| `config` | `TypographyConfig` | none; its values beat the root's, its own props beat it. Pass a constant. |
 | `lang`, `register`, `quoteStyle` | `Lang`, `Register`, `QuoteStyle` | from `TypographyRoot` |
 | `disable`, `enable`, `rules`, `onChange` | as on `TypographyRoot` | from `TypographyRoot`; pass constants |
 

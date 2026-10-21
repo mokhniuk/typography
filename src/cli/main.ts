@@ -1,5 +1,7 @@
 #!/usr/bin/env bun
 import { readFile, writeFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { run } from './run';
 
 async function readStdin(): Promise<string> {
@@ -11,6 +13,7 @@ async function readStdin(): Promise<string> {
 process.exitCode = await run(process.argv.slice(2), {
   readStdin,
   readFile: (path) => readFile(path, 'utf8'),
+  importModule: (path) => import(pathToFileURL(resolve(path)).href),
   writeFile: (path, data) => writeFile(path, data, 'utf8'),
   out: (text) => {
     process.stdout.write(text);

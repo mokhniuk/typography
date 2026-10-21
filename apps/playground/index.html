@@ -59,6 +59,17 @@
         <button type="button" id="rulesAll">Default rules</button>
       </details>
 
+      <details id="configPanel">
+        <summary>Config</summary>
+        <p>The switches on this page as a config. Paste it under the <code>"typography"</code> key of <code>package.json</code> (the <code>typo</code> command reads it), into a <code>.json</code> file for <code>typo --config</code>, or into <code>defineConfig({…})</code> in your code. To try a project's config here, paste it (or its whole <code>package.json</code>) and apply it.</p>
+        <label for="configText" class="sr-only">Config as JSON</label>
+        <textarea id="configText" spellcheck="false" rows="10"></textarea>
+        <p id="configError" role="alert" hidden></p>
+        <button type="button" id="configImport">Apply</button>
+        <button type="button" id="configExport">Show current</button>
+        <button type="button" id="configCopy">Copy</button>
+      </details>
+
       <section aria-label="Text and result">
         <section>
           <header>

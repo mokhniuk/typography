@@ -21,11 +21,11 @@ import { BLOCK, RAW_BLOCK, RAW_INLINE } from '../shared/elements';
  * Not done: the `lang` attribute is not read (pass `lang`), and a tag is not told
  * from text by a real HTML parser, only by a tokenizer: malformed markup is left
  * alone rather than repaired.
+ *
+ * `nbsp` (a `TypographyConfig` field, read by this mode only) is how a no-break space is written in
+ * a block that changes: `entity` (`&nbsp;`, the default) or the character.
  */
-export type HtmlOptions = ModeOptions & {
-  /** How a no-break space is written in a block that changes: `entity` (`&nbsp;`, the default) or the character. */
-  nbsp?: 'entity' | 'char' | undefined;
-};
+export type HtmlOptions = ModeOptions;
 
 /** Stands for an inline element while a block's text is typeset. */
 const UNIT = '\uFFFC';

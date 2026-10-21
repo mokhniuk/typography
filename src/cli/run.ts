@@ -2,6 +2,7 @@ import { parseArgs } from 'node:util';
 import pkg from '../../package.json';
 import {
   type Change,
+  checkConfig,
   LANGS,
   type Lang,
   type QuoteStyle,
@@ -9,6 +10,7 @@ import {
   type Register,
   RULES,
   type Rule,
+  type TypographyConfig,
   typographic,
 } from '../core';
 import { typesetHtml } from '../html';
@@ -19,6 +21,8 @@ import { typesetText } from '../text';
 export type Io = {
   readStdin(): Promise<string>;
   readFile(path: string): Promise<string>;
+  /** Loads a JavaScript or TypeScript module (a `--config` file), relative to the current directory. */
+  importModule(path: string): Promise<unknown>;
   writeFile(path: string, data: string): Promise<void>;
   out(text: string): void;
   err(text: string): void;
@@ -50,6 +54,9 @@ Options
   -w, --write                     rewrite the files in place
   -c, --check                     change nothing; exit 1 if any file would change
       --nbsp <entity|char>        HTML only: write a no-break space as &nbsp; (default) or the character
+      --config <file>             read the options from a config: a .ts/.js/.mjs module with a
+                                  default export, or a .json file. Without it, the "typography"
+                                  key of ./package.json is read, if there is one. A flag beats both.
   -h, --help                      show this
   -v, --version                   show the version
 
@@ -97,21 +104,27 @@ export async function run(argv: string[], io: Io): Promise<number> {
     io.out(`${VERSION}\n`);
     return 0;
   }
-  const lang = (values.lang ?? 'en') as Lang;
-  const register = (values.register ?? 'display') as Register;
+  let config: TypographyConfig;
+  try {
+    config = await loadConfig(values.config, io);
+  } catch (error) {
+    return usage(io, error instanceof Error ? error.message : String(error));
+  }
+  const lang = (values.lang ?? config.lang ?? 'en') as Lang;
+  const register = (values.register ?? config.register ?? 'display') as Register;
   if (!LANGS.includes(lang))
     return usage(io, `unknown language "${values.lang}" (${LANGS.join(', ')})`);
   if (!REGISTERS.includes(register)) return usage(io, `unknown register "${values.register}"`);
   if (values.quotes && values.quotes !== 'language' && values.quotes !== 'us') {
     return usage(io, `--quotes is "language" or "us", not "${values.quotes}"`);
   }
-  const quoteStyle = (values.quotes ?? 'language') as QuoteStyle;
+  const quoteStyle = (values.quotes ?? config.quoteStyle ?? 'language') as QuoteStyle;
   if (values.nbsp && values.nbsp !== 'entity' && values.nbsp !== 'char') {
     return usage(io, `--nbsp is "entity" or "char", not "${values.nbsp}"`);
   }
   if (values.write && values.check) return usage(io, '--write and --check cannot be used together');
   if (values.rules) {
-    io.out(`${formatRules(RULES)}\n`);
+    io.out(`${formatRules(config.rules ?? RULES)}\n`);
     return 0;
   }
   if (values.json && !values.explain) return usage(io, '--json goes with --explain');
@@ -123,14 +136,16 @@ export async function run(argv: string[], io: Io): Promise<number> {
       .flatMap((d) => d.split(','))
       .map((d) => d.trim())
       .filter(Boolean);
-  const disable = names(values.disable);
-  const enable = names(values.enable);
+  // A flag replaces the config's list, as an option given to a call does.
+  const disable = values.disable ? names(values.disable) : (config.disable ?? []);
+  const enable = values.enable ? names(values.enable) : (config.enable ?? []);
+  const rules = config.rules;
   try {
-    typographic('', lang, { disable, enable });
+    typographic('', lang, { disable, enable, rules });
   } catch (error) {
     return usage(io, error instanceof Error ? error.message : String(error));
   }
-  const nbsp = values.nbsp === 'char' ? 'char' : 'entity';
+  const nbsp = (values.nbsp ?? config.nbsp) === 'char' ? 'char' : 'entity';
   const found: (Change & { file: string | null })[] = [];
   const typeset = (text: string, format: Format, file: string | null) => {
     const options = {
@@ -139,6 +154,7 @@ export async function run(argv: string[], io: Io): Promise<number> {
       quoteStyle,
       disable,
       enable,
+      rules,
       onChange: values.explain ? (change: Change) => found.push({ file, ...change }) : undefined,
     };
     return format === 'html'
@@ -211,6 +227,77 @@ export async function run(argv: string[], io: Io): Promise<number> {
   return status;
 }
 
+const message = (error: unknown) => (error instanceof Error ? error.message : String(error));
+
+/** Reads JSON, naming the file in the error. */
+function parseJson(path: string, text: string): unknown {
+  try {
+    return JSON.parse(text);
+  } catch (error) {
+    throw new Error(`${path}: ${message(error)}`);
+  }
+}
+
+/** Checks a config read as JSON, which cannot hold rules. */
+function fromJson(path: string, value: unknown): TypographyConfig {
+  if (value && typeof value === 'object' && 'rules' in value) {
+    throw new Error(
+      `${path}: rules can only come from a module config (--config typography.config.ts)`,
+    );
+  }
+  try {
+    return checkConfig(value);
+  } catch (error) {
+    throw new Error(`${path}: ${message(error)}`);
+  }
+}
+
+/**
+ * The config the options start from: the `--config` file if given (a module's default export, or a
+ * JSON file), else the `typography` key of `package.json` in the current directory, else nothing.
+ * The two are never merged.
+ */
+async function loadConfig(path: string | undefined, io: Io): Promise<TypographyConfig> {
+  if (path === undefined) {
+    let text: string;
+    try {
+      text = await io.readFile('package.json');
+    } catch {
+      return {};
+    }
+    const pkg = parseJson('package.json', text);
+    const value =
+      pkg && typeof pkg === 'object' ? (pkg as Record<string, unknown>).typography : undefined;
+    return value === undefined ? {} : fromJson('package.json', value);
+  }
+  if (/\.json$/i.test(path)) {
+    let text: string;
+    try {
+      text = await io.readFile(path);
+    } catch (error) {
+      throw new Error(`cannot read ${path}: ${message(error)}`);
+    }
+    return fromJson(path, parseJson(path, text));
+  }
+  if (!/\.[cm]?[jt]s$/i.test(path)) {
+    throw new Error(`--config takes a .ts, .js, .mjs or .json file, not "${path}"`);
+  }
+  let loaded: unknown;
+  try {
+    loaded = await io.importModule(path);
+  } catch (error) {
+    throw new Error(`cannot read ${path}: ${message(error)}`);
+  }
+  const value =
+    loaded && typeof loaded === 'object' ? (loaded as { default?: unknown }).default : undefined;
+  if (value === undefined) throw new Error(`${path}: expected a default export (the config)`);
+  try {
+    return checkConfig(value);
+  } catch (error) {
+    throw new Error(`${path}: ${message(error)}`);
+  }
+}
+
 function usage(io: Io, message: string): number {
   io.err(`typo: ${message}\nTry "typo --help".\n`);
   return 2;
@@ -226,6 +313,7 @@ function parse(argv: string[]) {
       quotes: { type: 'string' },
       format: { type: 'string', short: 'f' },
       nbsp: { type: 'string' },
+      config: { type: 'string' },
       disable: { type: 'string', short: 'd', multiple: true },
       enable: { type: 'string', short: 'e', multiple: true },
       rules: { type: 'boolean' },

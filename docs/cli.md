@@ -18,12 +18,13 @@ It typesets text, HTML or Markdown with the same engine as the library functions
 | `--quotes` | | `language`, `us` | `language` | `language`: the quote marks of the language. `us`: `“…”` and `‘…’` in any language and register. |
 | `--disable` | `-d` | rule ids or groups, comma separated | none | Switch rules off, for example `dash.range,space`. The flag may be given more than once. |
 | `--enable` | `-e` | rule ids or groups, comma separated | none | Switch on rules that are off by default (`--rules` marks them). A rule named in both `--enable` and `--disable` is a usage error. |
-| `--rules` | | | | List the rules, one per line: id, category (`tradition`, `symbols`, `math` or `data`, see [rules.md](rules.md#categories)) and description, and exit 0. A rule that is off by default is marked `(off by default; --enable <id>)`. |
+| `--rules` | | | | List the rules (the config's `rules` when it has them), one per line: id, category (`tradition`, `symbols`, `math` or `data`, see [rules.md](rules.md#categories)) and description, and exit 0. A rule that is off by default is marked `(off by default; --enable <id>)`. |
 | `--explain` | | | | Print every change and the rule behind it, instead of the typeset text. |
 | `--json` | | | | JSON output for `--explain`. An error without `--explain`. |
 | `--write` | `-w` | | | Rewrite the files in place. |
 | `--check` | `-c` | | | Change nothing; exit 1 if any input would change. |
 | `--nbsp` | | `entity`, `char` | `entity` | HTML only: write a no-break space as `&nbsp;` or as the character. Checked for every format, used only for HTML. |
+| `--config` | | a file | `typography` in `./package.json` | Read the options from a config (see [Config](#config) below). |
 | `--help` | `-h` | | | Show the help and exit 0. |
 | `--version` | `-v` | | | Print the version of the package (from `package.json`) and exit 0. |
 
@@ -53,7 +54,7 @@ When `-f` is not given:
 |---|---|
 | 0 | Success. With `--check`: nothing would change. |
 | 1 | `--check` only: at least one input would change. |
-| 2 | A usage error (unknown flag, language, register, format, rule or `--nbsp` value; `--write` with `--check`; `--json` without `--explain`; `--explain` with `--write` or `--check`; `--write` without files; several files with no `--write`/`--check`/`--explain`) or a file that could not be read. |
+| 2 | A usage error (unknown flag, language, register, format, rule or `--nbsp` value; a config that cannot be read or does not check; `--write` with `--check`; `--json` without `--explain`; `--explain` with `--write` or `--check`; `--write` without files; several files with no `--write`/`--check`/`--explain`) or a file that could not be read. |
 
 Messages go to standard error, prefixed `typo:`. With `--check`, each file that would change is named on standard error as `<file>: would change`. With `--write`, each file that was rewritten is named as `<file>: typeset`; a file that needs no change is not written. When a file cannot be read, the command reports it, goes on to the next file and exits 2 at the end (a later `would change` does not lower it to 1).
 
@@ -101,6 +102,27 @@ bun run src/cli/main.ts --check -l en docs/*.md || exit 1
 ```
 
 Exit 1 means "would change", exit 2 means the command was misused or a file is missing, so a CI step can tell the two apart. A second run on the output of `--write` reports nothing (the engine is stable on its own output).
+
+## Config
+
+The options can come from a config (`TypographyConfig`, see [api.md](api.md#config)), so a project writes them once:
+
+- `--config <file>`: a module (`.ts`, `.mts`, `.js`, `.mjs`, `.cjs`) whose default export is the config, usually written with `defineConfig`, or a `.json` file holding the config object. A path is relative to the current directory.
+- Without `--config`: the `typography` key of `package.json` in the current directory, if the file and the key exist.
+
+```json
+{
+  "name": "site",
+  "typography": { "lang": "uk", "quoteStyle": "us", "enable": ["symbol.plusminus"] }
+}
+```
+
+Precedence: a flag beats the config, and `--config` beats `package.json`, which is then not read; nothing is merged, so `--disable quote` replaces the config's `disable` list rather than adding to it. The config is checked like `defineConfig` (unknown key, bad value, a rule name that matches no rule): a mistake is a usage error (exit 2) that names the file. Custom `rules` can only come from a module; in JSON they are an error. `nbsp` is used for HTML only, and `hangAmount` is accepted and ignored (it is for `TypographyRoot`).
+
+```sh
+typo --config typography.config.ts -w docs/*.md
+typo -l de page.md                  # package.json's config, with the language replaced
+```
 
 ## Rules and groups
 

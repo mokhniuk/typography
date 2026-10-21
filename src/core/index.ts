@@ -1,3 +1,4 @@
+export { checkConfig, defineConfig, type TypographyConfig } from './config';
 export { type DiffRun, diff } from './diff';
 export { type HangPiece, hangPieces, splitHangs, type TextPart } from './hang';
 export { type LangPack, type Level, PACK, PACKS } from './lang';

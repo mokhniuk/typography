@@ -26,7 +26,7 @@ Every pack has `reviewed: false`: bg cs da el es et fi ga hr hu it lt lv mt nl p
 
 [sources.md](../resources/sources.md) has 11 of 29 decisions still `general-knowledge` (the nine opt-in rules have no source read), one `disputed`, 17 `verified` for the cases and languages named in each entry (mostly English; `dash.dialogue` since 0.4.0 for 17 languages). Read the sources and upgrade them, and have a native speaker check each language. Found while building it (2026-10-20, CLDR 46):
 
-- `quote` is `disputed`: CLDR has English `“ ” ‘ ’` (see the American quotes item above), German `„ “ ‚ ‘` (the engine sets `» « › ‹`), French `« »` with `« »` inside (the engine uses `“ ”`), and de-CH `„ “ ‚ ‘` (the engine's `ch` profile is the fr-CH one: `« » ‹ ›`). Decide per language whether the engine or CLDR is right, citing a guide.
+- `quote` is `disputed`: CLDR has English `“ ” ‘ ’` (see the American quotes item above), German `„ “ ‚ ‘` (the engine sets `» « › ‹`), French `« »` with `« »` inside (the engine uses `“ ”`), and de-CH `„ “ ‚ ‘` (the engine's `ch` profile is the fr-CH one: `« » ‹ ›`). Decide per language whether the engine or CLDR is right, citing a guide. The English default is settled with the named configs (built on `TypographyConfig`, which exists since the per-project config): the engine defaults to the language standard and ships `standard` and a house config (guillemets in English; perhaps named `display`, a name the register already uses) that restores the house style.
 - `space.percent` / currency: CLDR sets a no-break space before the currency sign in `uk`, `pl` and `fr-CH`; the engine leaves `49€` alone there.
 - Gaps found against Practical Typography and OQLF (2026-10-20, probed in the engine; both sources were read as fetch-tool summaries, check them first):
   - `space.section` (P1): no-break space after `§` and `¶`, doubled `§§` `¶¶`; `§ 5` keeps an ordinary space now.
@@ -64,21 +64,12 @@ Each is a limit of the pack format or an unverified choice, not a crash:
 - **`symbol.degree`** knows an English label list only (`Type C`, `Vitamin C`).
 - The opt-in rules' own limits are in [limits.md](limits.md#opt-in-rules).
 
-### A configuration per project
-
-Today every call site repeats its options (`lang`, `register`, `quoteStyle`, `enable`, `disable`, `rules`, `nbsp`, `--hang-amount` in CSS), the playground keeps its own state in `localStorage`, and the house choices (English guillemets) live in the engine's defaults. Plan: one object that names a project's typography, used everywhere.
-
-- A `preset` (or `config`) type: the options above plus `hangAmount` and the characters to avoid (next item), with the same names the functions take, so it spreads straight into any call. Shipped presets for a house style (`podiia`: guillemets in English) and for the plain language defaults; a project writes its own as a constant.
-- Read by every site: `typographic` and the modes (`preset` option, the explicit options winning), `TypographyRoot` (one prop instead of six), the CLI (`typo --config typography.config.ts` or a `typography` key in `package.json`), and the playground (import and export the current switches as a preset, so what was tried on the page is what the project ships).
-- This is also where the English default quote question is settled: the engine defaults to the language standard, the house preset restores the house style (see the sources entry for `quote`, `disputed`).
-- Done when one preset constant drives the CLI, a React page and the playground with identical output, `docs/api.md` documents it next to the options, and the option-threading list in `CLAUDE.md` names it.
-
 ### Keep the original when the font lacks the glyph
 
 A rule that inserts a character the font does not have shows a box or a mismatched fallback glyph; the text as typed is better. The engine is string to string and cannot see the font, so the plan is an option that names the characters to avoid:
 
 - A rule whose output would contain an avoided character is skipped for that match, and the original stays (the change is not recorded by `explain`). Default on, with a documented default set of characters the engine expects every font to have; the user lists what their font lacks (for example `⇒`, `½ ¼ ¾`, `−`, `→`). The candidates at risk are the symbols the rules insert: `⇒ ½ ¼ ¾ ± − × → ← ™ ® ° …` and the quote marks of unusual fonts.
-- Threaded through every mode like `enable` was: `typographic`, `typesetBlock`, text, HTML, Markdown, rehype, React, CLI, playground, `scripts/gen-rules-doc.ts`.
+- An `avoid` field of `TypographyConfig` (so it reaches every mode's type and the config check), threaded like `enable` was: `typographic`, React, CLI, playground (and its config export), `scripts/gen-rules-doc.ts`.
 - Docs: explained next to the other options, and every opt-in rule and flag gets a before/after preview in the docs and the playground (a "preview" for each feature flag), so a reader sees what a flag changes and which characters it needs.
 - Later, a browser add-on: `supports(char)` in the React/DOM layer (`document.fonts.check` or a canvas measure), used when given; server rendering uses the option.
 - Done when: a golden test per rule shows the original text kept when its character is avoided, idempotence holds, and `explain` records nothing for the skipped match.
@@ -87,11 +78,11 @@ A rule that inserts a character the font does not have shows a box or a mismatch
 
 A tool on the website (and in the playground): upload a font file, or name an installed one, pick languages, and get a verdict.
 
-- **Glyph coverage**: the characters every rule can insert (`« » „ “ ‚ ‘ ‹ › “ ” ’ … – — − × ± ½ ¼ ¾ ° § ¶ © ® ™ → ← ⇒`, the no-break and thin spaces) and the letters of each selected language that fonts most often lack (Ukrainian `ґ є і ї`, Polish `ł ą ę ś ź ż`, Maltese `ħ ġ ċ ż`, Irish fada vowels, Romanian `ș ț` with comma below, Latvian and Lithuanian macrons and ogoneks), each as present, missing, or present as a fallback glyph (the browser substitutes silently; `document.fonts.check` and a canvas width comparison against the fallback font tell them apart). The missing ones become the `avoid` list of the item above, copied as a preset.
+- **Glyph coverage**: the characters every rule can insert (`« » „ “ ‚ ‘ ‹ › “ ” ’ … – — − × ± ½ ¼ ¾ ° § ¶ © ® ™ → ← ⇒`, the no-break and thin spaces) and the letters of each selected language that fonts most often lack (Ukrainian `ґ є і ї`, Polish `ł ą ę ś ź ż`, Maltese `ħ ġ ċ ż`, Irish fada vowels, Romanian `ș ț` with comma below, Latvian and Lithuanian macrons and ogoneks), each as present, missing, or present as a fallback glyph (the browser substitutes silently; `document.fonts.check` and a canvas width comparison against the fallback font tell them apart). The missing ones become the `avoid` list of the item above, copied into a config.
 - **Rendered examples**: the long example of each selected language, typeset by the engine with the current switches, set in the font at two widths, with hanging punctuation on, so the reader sees the quotes, dashes and marks the font actually draws.
 - **Rating and recommendation**: a score per language from the coverage, and a suggested text preset: size, line height for a vertical rhythm, measure (45 to 90 characters), `--hang-amount` for the font's quote marks (a wide guillemet hangs less than a thin `‘`). The rhythm and measure advice rests on the reading list in the sources item (Dyson, Beier), cited as context, not as rules.
 - Runs in the browser with no dependencies, per `docs/ui.md`: the font is loaded with `FontFace`, never uploaded anywhere; the glyph table is read with the browser's own measuring, not an OpenType parser, unless the fallback detection proves too unreliable (then a small table reader for `cmap`, written here).
-- Done when a font with a known gap (a system font without `ґ`, a display font without `»`) is reported with the exact characters, the `avoid` preset it writes makes the engine keep the original text for them, and the examples page renders every selected language.
+- Done when a font with a known gap (a system font without `ґ`, a display font without `»`) is reported with the exact characters, the `avoid` config it writes makes the engine keep the original text for them, and the examples page renders every selected language.
 
 ### Phone numbers
 

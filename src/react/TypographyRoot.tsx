@@ -1,4 +1,5 @@
 import {
+  type CSSProperties,
   type ReactNode,
   type RefObject,
   useContext,
@@ -7,7 +8,7 @@ import {
   useRef,
   useSyncExternalStore,
 } from 'react';
-import type { Change, Lang, QuoteStyle, Register, Rule } from '../core';
+import type { Change, Lang, QuoteStyle, Register, Rule, TypographyConfig } from '../core';
 import { hangPunctuation, hangScript } from '../dom';
 import { TypographyContext } from './context';
 
@@ -47,7 +48,8 @@ const useServerRender = () =>
 /**
  * Wraps a page so its text is typeset: sets the language and register every
  * `Typeset` under it falls back to, and hangs opening punctuation wherever a line
- * starts with it. A value left out is inherited from an outer root.
+ * starts with it. A value is taken from the root's own prop, then from `config`, then
+ * from an outer root.
  *
  * On a prerendered page it also sends the hanging pass inline (`hangScript`), so the
  * marks hang as the page is parsed and do not move when the bundle has loaded. Turn
@@ -56,6 +58,7 @@ const useServerRender = () =>
  */
 export function TypographyRoot({
   children,
+  config,
   lang,
   register,
   quoteStyle,
@@ -63,9 +66,12 @@ export function TypographyRoot({
   enable,
   rules,
   onChange,
+  hangAmount,
   early = true,
 }: {
   children: ReactNode;
+  /** A project's config (see `TypographyConfig`); a prop given here beats it. Pass a constant. `nbsp` is not read. */
+  config?: TypographyConfig | undefined;
   lang?: Lang | undefined;
   register?: Register | undefined;
   /** `language` (the default) or `us`: “…” and ‘…’ in any language. */
@@ -78,17 +84,20 @@ export function TypographyRoot({
   rules?: readonly Rule[] | undefined;
   /** Called with each change made to a text under this root; pass a stable function (`useCallback`). */
   onChange?: ((change: Change) => void) | undefined;
+  /** How far marks hang, 0 to 1: set as `--hang-amount` on the root's div. Left out, it is inherited through CSS. */
+  hangAmount?: number | undefined;
   early?: boolean;
 }) {
   const root = useRef<HTMLDivElement>(null);
   const inherited = useContext(TypographyContext);
-  const language = lang ?? inherited.lang;
-  const setting = register ?? inherited.register;
-  const style = quoteStyle ?? inherited.quoteStyle;
-  const switchedOff = disable ?? inherited.disable;
-  const switchedOn = enable ?? inherited.enable;
-  const list = rules ?? inherited.rules;
+  const language = lang ?? config?.lang ?? inherited.lang;
+  const setting = register ?? config?.register ?? inherited.register;
+  const style = quoteStyle ?? config?.quoteStyle ?? inherited.quoteStyle;
+  const switchedOff = disable ?? config?.disable ?? inherited.disable;
+  const switchedOn = enable ?? config?.enable ?? inherited.enable;
+  const list = rules ?? config?.rules ?? inherited.rules;
   const listener = onChange ?? inherited.onChange;
+  const amount = hangAmount ?? config?.hangAmount;
   const value = useMemo(
     () => ({
       lang: language,
@@ -104,7 +113,12 @@ export function TypographyRoot({
   useHangingPunctuation(root);
   return (
     <TypographyContext.Provider value={value}>
-      <div ref={root}>
+      <div
+        ref={root}
+        style={
+          amount === undefined ? undefined : ({ '--hang-amount': String(amount) } as CSSProperties)
+        }
+      >
         {children}
         {early ? <HangScript /> : null}
       </div>

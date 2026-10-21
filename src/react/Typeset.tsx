@@ -5,6 +5,7 @@ import {
   type QuoteStyle,
   type Register,
   type Rule,
+  type TypographyConfig,
   typographic,
 } from '../core';
 import { TypographyContext, type TypographySetting } from './context';
@@ -23,10 +24,14 @@ export function typesetFor(text: string, setting: TypographySetting, atStart: bo
   });
 }
 
-/** A plain string, typeset in the language and register of the surrounding `TypographyRoot`. */
+/**
+ * A plain string, typeset in the language and register of the surrounding `TypographyRoot`. A value
+ * is taken from its own prop, then from `config`, then from the root.
+ */
 export function Typeset({
   text,
   atStart = true,
+  config,
   lang,
   register,
   quoteStyle,
@@ -38,6 +43,8 @@ export function Typeset({
   text: string;
   /** Whether `text` opens its paragraph; false for a string that continues one after an element. */
   atStart?: boolean | undefined;
+  /** A config (see `TypographyConfig`) that overrides the root's values; its own props beat it. Pass a constant. */
+  config?: TypographyConfig | undefined;
   /** Overrides the language of the surrounding `TypographyRoot`. */
   lang?: Lang | undefined;
   /** Overrides the register of the surrounding `TypographyRoot`. */
@@ -54,12 +61,12 @@ export function Typeset({
   onChange?: ((change: Change) => void) | undefined;
 }) {
   const inherited = useContext(TypographyContext);
-  const language = lang ?? inherited.lang;
-  const setting = register ?? inherited.register;
-  const style = quoteStyle ?? inherited.quoteStyle;
-  const switchedOff = disable ?? inherited.disable;
-  const switchedOn = enable ?? inherited.enable;
-  const list = rules ?? inherited.rules;
+  const language = lang ?? config?.lang ?? inherited.lang;
+  const setting = register ?? config?.register ?? inherited.register;
+  const style = quoteStyle ?? config?.quoteStyle ?? inherited.quoteStyle;
+  const switchedOff = disable ?? config?.disable ?? inherited.disable;
+  const switchedOn = enable ?? config?.enable ?? inherited.enable;
+  const list = rules ?? config?.rules ?? inherited.rules;
   const listener = onChange ?? inherited.onChange;
   // The rules are a dozen regex passes; hover state in a parent re-renders this often.
   const formatted = useMemo(

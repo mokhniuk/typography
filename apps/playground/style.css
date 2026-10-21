@@ -325,6 +325,16 @@ details label {
 details > button {
   background: transparent;
 }
+/* The config box: JSON, shorter than the text panes */
+details > textarea {
+  display: block;
+  min-height: auto;
+  margin: var(--space-3) 0;
+  font-size: var(--size-xs);
+}
+details [role="alert"] {
+  color: var(--color-del-text);
+}
 
 /* Text and result */
 

@@ -15,6 +15,7 @@ import { hangPunctuation, markHangs } from '../../src/dom';
 import { typesetHtml } from '../../src/html';
 import { typesetMarkdown } from '../../src/markdown';
 import { typesetText } from '../../src/text';
+import { configText, fromConfig } from './config-io';
 import { example, exampleIn, type Mode, type Size } from './examples';
 import {
   groupRules,
@@ -147,6 +148,11 @@ const hangValue = el<HTMLOutputElement>('hangValue');
 const hangField = el<HTMLLabelElement>('hangField');
 const markField = el<HTMLLabelElement>('markField');
 const copy = el<HTMLButtonElement>('copy');
+const configArea = el<HTMLTextAreaElement>('configText');
+const configError = el<HTMLParagraphElement>('configError');
+const configCopy = el<HTMLButtonElement>('configCopy');
+/** Whether the config box holds pasted text; until then it follows the switches. */
+let configEdited = false;
 
 for (const lang of LANGS) langSelect.add(new Option(LANG_NAMES[lang], lang));
 for (const option of registerSelect.options) {
@@ -306,6 +312,7 @@ function render() {
   ruleCount.textContent = ruleBadge(state);
   ruleCount.hidden = !ruleCount.textContent;
   if (input.value !== state.input) input.value = state.input;
+  if (!configEdited) configArea.value = configText(state);
 
   const { output, changes: made } = convert();
   const runs = diff(state.input, output);
@@ -434,6 +441,40 @@ copy.addEventListener('click', async () => {
   }
   setTimeout(() => {
     copy.textContent = 'Copy';
+  }, 1500);
+});
+
+configArea.addEventListener('input', () => {
+  configEdited = true;
+});
+el('configExport').addEventListener('click', () => {
+  configEdited = false;
+  configError.hidden = true;
+  configArea.value = configText(state);
+});
+el('configImport').addEventListener('click', () => {
+  try {
+    const switches = fromConfig(configArea.value);
+    Object.assign(state, switches, { hang: readHang(switches.hang) });
+    swapExample();
+    configEdited = false;
+    configError.hidden = true;
+    schedule();
+  } catch (error) {
+    configError.textContent = error instanceof Error ? error.message : String(error);
+    configError.hidden = false;
+  }
+});
+configCopy.addEventListener('click', async () => {
+  try {
+    await navigator.clipboard.writeText(configArea.value);
+    configCopy.textContent = 'Copied';
+  } catch {
+    configArea.select();
+    configCopy.textContent = 'Select and copy';
+  }
+  setTimeout(() => {
+    configCopy.textContent = 'Copy';
   }, 1500);
 });
 

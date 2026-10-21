@@ -27,7 +27,7 @@ Nothing in the package imports anything outside the folder except `react` (the `
 
 | Entry | Use it for | Exports |
 |---|---|---|
-| `@podiia/typography` | The whole engine and the plain-text mode | everything in `src/core` (`typographic`, `explain`, `typesetBlock`, `RULES`, `RULE_IDS`, `LANGS`, `REGISTERS`, `NBSP`, `splitHangs`, `diff` and their types) plus `typesetText` |
+| `@podiia/typography` | The whole engine and the plain-text mode | everything in `src/core` (`typographic`, `explain`, `typesetBlock`, `defineConfig`, `RULES`, `RULE_IDS`, `LANGS`, `REGISTERS`, `NBSP`, `splitHangs`, `diff` and their types) plus `typesetText` |
 | `@podiia/typography/text` | Plain text a paragraph at a time | `typesetText` |
 | `@podiia/typography/html` | An HTML string | `typesetHtml` |
 | `@podiia/typography/markdown` | A Markdown document | `typesetMarkdown` |
@@ -37,6 +37,19 @@ Nothing in the package imports anything outside the folder except `react` (the `
 | `typo` (bin) | The command line; needs Bun | see [docs/cli.md](docs/cli.md) |
 
 Every function that typesets takes `lang`, `register`, `quoteStyle`, `disable`, `enable`, `rules` and `onChange`; the full table of options and the signatures are in [docs/api.md](docs/api.md).
+
+A project writes its options once, as a config, and spreads it into every call; an option given to a call replaces the config's:
+
+```ts
+import { defineConfig } from '@podiia/typography';
+
+export const site = defineConfig({ lang: 'uk', quoteStyle: 'us', hangAmount: 0.5 }); // checked here
+typesetHtml(html, site);
+typesetMarkdown(md, { ...site, lang: 'de' });
+<TypographyRoot config={site}>…</TypographyRoot>
+```
+
+`typo --config typography.config.ts` reads it too, and so does a `typography` key in `package.json` (see [docs/api.md](docs/api.md#config)).
 
 ### Main entry
 

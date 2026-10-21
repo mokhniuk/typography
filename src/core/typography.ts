@@ -50,6 +50,7 @@
  * end (see `hangPieces` and `hangPunctuation` in ../dom).
  */
 
+import type { TypographyConfig } from './config';
 import { type DiffRun, diff } from './diff';
 import { DEFAULT_RULES, type Rule, selectRules } from './rules';
 import type { Context, Lang, QuoteStyle, Register } from './types';
@@ -145,19 +146,12 @@ export function explain(
   return { output, changes };
 }
 
-/** What the text, HTML and Markdown modes take besides the text. */
-export type ModeOptions = {
-  /** Language of the text; `en` unless given. */
-  lang?: Lang | undefined;
-  register?: Register | undefined;
-  /** `language` (the default) or `us`; see `TypographicOptions`. */
-  quoteStyle?: QuoteStyle | undefined;
-  /** Rules to switch off: ids (`dash.range`) or groups (`space`). An unknown name throws. */
-  disable?: readonly string[] | undefined;
-  /** Rules to switch on that are off by default: ids or groups. An unknown name throws. */
-  enable?: readonly string[] | undefined;
-  /** The list of rules to run instead of the built-in `RULES`; see `addRule`. */
-  rules?: readonly Rule[] | undefined;
+/**
+ * What the text, HTML, Markdown and rehype modes take besides the text: a `TypographyConfig` (so a
+ * project's config spreads straight in, and a field added to it reaches every mode) and `onChange`.
+ * `nbsp` is read by the HTML mode only and `hangAmount` by none of them.
+ */
+export type ModeOptions = TypographyConfig & {
   /** Called with each change made to the text. A block a mode cannot map back is not reported. */
   onChange?: ((change: Change) => void) | undefined;
 };
@@ -165,20 +159,17 @@ export type ModeOptions = {
 /**
  * Typesets one block of text for a mode. Its changes are held back until `keep()`,
  * so a block the mode throws away (it cannot map the result back onto its markup)
- * reports nothing.
+ * reports nothing. Every option goes on to `typographic` as it is, so a new one needs no change here.
  */
 export function typesetBlock(
   joined: string,
-  { lang = 'en', register = 'display', quoteStyle, disable, enable, rules, onChange }: ModeOptions,
+  options: ModeOptions,
 ): { text: string; keep: () => void } {
   const found: Change[] = [];
-  const text = typographic(joined, lang, {
-    register,
-    quoteStyle,
+  const { onChange } = options;
+  const text = typographic(joined, options.lang, {
+    ...options,
     blockStart: true,
-    disable,
-    enable,
-    rules,
     onChange: onChange ? (change) => found.push(change) : undefined,
   });
   return {

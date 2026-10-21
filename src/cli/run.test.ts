@@ -13,6 +13,9 @@ function fake(files: Record<string, string> = {}, stdin = '') {
       if (text === undefined) throw new Error('ENOENT');
       return text;
     },
+    importModule: async (path) => {
+      throw new Error(`no module ${path}`);
+    },
     writeFile: async (path, data) => {
       written[path] = data;
     },
