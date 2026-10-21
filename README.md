@@ -155,7 +155,7 @@ To check this on your own page: block the JavaScript bundle (for example in the 
 
 ## Web page
 
-`bun run playground` serves a page where you paste text, HTML or Markdown and get the typeset result, with a view of what changed, a preview with hanging punctuation and a switch for each rule. `bun run playground:build` writes a static site to `apps/playground/dist`. It runs entirely in the browser.
+`bun run playground` serves a page where you paste text, HTML or Markdown and get the typeset result, with a view of what changed, a preview with hanging punctuation, a switch for each rule, and a short and a long example in each language. `bun run playground:build` writes a static site to `apps/playground/dist`. It runs entirely in the browser.
 
 ## Benchmark
 

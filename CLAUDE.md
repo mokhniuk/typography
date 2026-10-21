@@ -21,7 +21,8 @@ Bun project, TypeScript sources shipped as they are (no build step). Details: `R
 - Nothing in `src/` or `apps/playground/` may import from outside the package except `react` (`src/boundary.test.ts`).
 - Every change to engine output or API gets a `CHANGELOG.md` entry saying whether it can change existing output.
 - Every rule has a decision record in `resources/sources.ts` (`RULE_SOURCES`); `bun run docs:sources` regenerates `resources/sources.md`, `resources/sources.html` and `resources/bibliography.html` (generated, never edit; `resources/sources.test.ts` checks all three; open the HTML pages to browse the decisions and the sources). A new `Source` needs `author`, `title`, `about`, `cite`, `claim`, `readVia`. Read a source before you cite it; no source read means `general-knowledge`.
-- Hand-written docs: `api.md`, `cli.md`, `languages.md`, `limits.md`, `contributing.md`, `README.md`. Update them when behaviour they describe changes (rule count, languages, exports, speed numbers).
+- UI (playground, comparison page, the future website): semantic HTML, one `style.css` with theme values as CSS variables, no runtime dependencies; see `docs/ui.md`.
+- Hand-written docs: `api.md`, `cli.md`, `languages.md`, `limits.md`, `contributing.md`, `ui.md`, `README.md`. Update them when behaviour they describe changes (rule count, languages, exports, speed numbers).
 
 ## Backlog
 

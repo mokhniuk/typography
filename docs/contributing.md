@@ -59,13 +59,14 @@ A language is one object, a pack, and no code names a language: rules read the p
 3. Create `src/core/lang/<code>.test.ts`: call `wellFormed(pack, '<code>.test.ts')` from `pack-checks.ts` and add golden tests for what the pack sets. Golden tests for a language live in that file, not in `typography.test.ts`.
 4. Run `bun run docs:languages` and commit `docs/languages/<code>.md` and `index.md`; `src/lang-docs.test.ts` fails if a page differs from its pack. Never edit them by hand.
 5. If a rule acts on the new language, add an examples row to `scripts/gen-rules-doc.ts` and run `bun run docs:rules`.
-6. Update the hand-written overview [languages.md](languages.md).
+6. Add a long example in the language to `LONG` in `apps/playground/examples.ts` (the playground's "Long example"; `tsc` fails while it is missing, and `apps/playground/examples.test.ts` checks that it gives the rules something to do).
+7. Update the hand-written overview [languages.md](languages.md).
 
 The pack:
 
 | Field | Meaning |
 |---|---|
-| `code`, `name`, `sample` | The code (`Lang` is the union of every pack's code), the name shown in the playground (`German (Deutsch)`), and a sentence for the playground. |
+| `code`, `name`, `sample` | The code (`Lang` is the union of every pack's code), the name shown in the playground (`German (Deutsch)`), and a sentence for the playground's "Short example" (the benchmark and the corpus also use it). The longer text lives in `apps/playground/examples.ts`. |
 | `quotes` | Quote marks per nesting level, `[open, close][]`; deeper nesting starts over. |
 | `literary` | The same for the literary register, if it differs. |
 | `orphans` | A global regex with one capture group: one-letter words kept with the next word. |
@@ -127,7 +128,7 @@ bun run playground           # vite dev server for apps/playground/
 bun run playground:build     # static site in apps/playground/dist
 ```
 
-A client-side page: paste text, HTML or Markdown, pick language, register and how a no-break space is written, and see the result, a word-level diff of what changed, a switch for each rule, and a preview with hanging punctuation (HTML is previewed in a sandboxed frame). Nothing is sent anywhere. The page imports from `../../src` and is covered by the boundary test.
+A client-side page: paste text, HTML or Markdown, pick the language, register, quote style (`language` or `us`) and how a no-break space is written, and see the result, a word-level diff of what changed with what each rule did, a switch for each rule (opt-in rules start off), and a preview with hanging punctuation (HTML is previewed in a sandboxed frame). "Short example" inserts the pack's `sample`; "Long example" inserts a longer text in the language, in the chosen format, from `apps/playground/examples.ts`. Nothing is sent anywhere. The page imports from `../../src` and is covered by the boundary test. Its markup and CSS follow [ui.md](ui.md).
 
 ## Releasing
 

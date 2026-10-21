@@ -2,6 +2,10 @@
 
 Versions follow semver while the package is below 1.0.0: a **minor** release may change the output of the engine or the API (every entry says whether it can change output you already have), a **patch** release fixes a bug without changing output you rely on. If you depend on exact output, pin a tag and read this file before you move it.
 
+## Unreleased
+
+- Playground: a short and a long example in each of the 26 languages, with the HTML and Markdown examples written in the language too (they were English around the sample sentence); the list of what each rule did is a `dl`; markup is semantic and every theme value is a CSS variable, with a `data-theme` switch ready ([docs/ui.md](docs/ui.md)). Playground and docs only, cannot change existing output.
+
 ## 0.3.0 (2026-10-21)
 
 - Two inch marks in one text are no longer read as a quotation: `A 2" pipe and a 4" pipe.` was set `A 2«pipe and a 4» pipe.` (the space after the first mark was lost) and now keeps both marks as written, as does `He is 5'10" and she is 5'6" tall.` A straight `"` that stands straight after a digit no longer opens a quotation; after a letter it still does (`Tallinn"ä"`). Can change existing output: yes, for text with a straight `"` directly after a digit that used to pair with a later `"` (two inch marks, or `5"` followed by a quotation); `"call 911"` and a quote after a space, bracket, dash or colon pair as before. Found by reading Practical Typography against the engine.

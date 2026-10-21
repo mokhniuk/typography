@@ -15,9 +15,9 @@ import { hangPunctuation } from '../../src/dom';
 import { typesetHtml } from '../../src/html';
 import { typesetMarkdown } from '../../src/markdown';
 import { typesetText } from '../../src/text';
+import { example, type Mode, type Size } from './examples';
 import { isOn, readSaved, reset, ruleBadge, setRule } from './rules-state';
 
-type Mode = 'text' | 'html' | 'markdown';
 type View = 'result' | 'changes' | 'preview';
 type State = {
   mode: Mode;
@@ -39,22 +39,6 @@ const LANG_NAMES = Object.fromEntries(PACKS.map((pack) => [pack.code, pack.name]
   string
 >;
 
-const SAMPLE = Object.fromEntries(PACKS.map((pack) => [pack.code, pack.sample])) as Record<
-  Lang,
-  string
->;
-
-function example(mode: Mode, lang: Lang): string {
-  const base = SAMPLE[lang];
-  if (mode === 'html') {
-    return `<h1>"Title" - subtitle</h1>\n<p>${base}</p>\n<p>Run <code>a -> b</code> and see <a href="https://example.org/1-2">the "docs"</a>.</p>`;
-  }
-  if (mode === 'markdown') {
-    return `# "Title" - subtitle\n\n${base}\n\nRun \`a -> b\` and see [the "docs"](https://example.org/1-2).`;
-  }
-  return `${base}\n\nSee https://example.org/1-2 or write to info@example.org (c) 2026.`;
-}
-
 const STORAGE = 'typeset-playground';
 
 function load(): State {
@@ -67,7 +51,7 @@ function load(): State {
     view: 'result',
     mark: false,
     ...reset(),
-    input: example('text', 'en'),
+    input: example('text', 'en', 'long'),
   };
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE) ?? 'null') as Partial<State> | null;
@@ -215,7 +199,7 @@ function render() {
   for (const radio of document.querySelectorAll<HTMLInputElement>('#mode input')) {
     radio.checked = radio.value === state.mode;
   }
-  for (const tab of document.querySelectorAll<HTMLButtonElement>('.tabs button')) {
+  for (const tab of document.querySelectorAll<HTMLButtonElement>('[role="tab"]')) {
     tab.setAttribute('aria-selected', String(tab.dataset.view === state.view));
   }
   langSelect.value = state.lang;
@@ -256,9 +240,9 @@ function render() {
       .slice(0, 3)
       .map((e) => escapeHtml(e))
       .join('; ');
-    return [`<li><code>${rule.id}</code> ×${own.length} <span class="ex">${examples}</span></li>`];
+    return [`<dt><code>${rule.id}</code></dt><dd>×${own.length} <small>${examples}</small></dd>`];
   });
-  changes.innerHTML = `<div class="diff">${inline}</div>${used.length ? `<ul class="used">${used.join('')}</ul>` : ''}`;
+  changes.innerHTML = `<p>${inline}</p>${used.length ? `<dl>${used.join('')}</dl>` : ''}`;
   result.hidden = state.view !== 'result';
   changes.hidden = state.view !== 'changes';
   preview.hidden = state.view !== 'preview';
@@ -290,7 +274,7 @@ for (const radio of document.querySelectorAll<HTMLInputElement>('#mode input')) 
     schedule();
   });
 }
-for (const tab of document.querySelectorAll<HTMLButtonElement>('.tabs button')) {
+for (const tab of document.querySelectorAll<HTMLButtonElement>('[role="tab"]')) {
   tab.addEventListener('click', () => {
     state.view = tab.dataset.view as View;
     schedule();
@@ -316,10 +300,12 @@ mark.addEventListener('change', () => {
   state.mark = mark.checked;
   schedule();
 });
-el('example').addEventListener('click', () => {
-  state.input = example(state.mode, state.lang);
-  schedule();
-});
+for (const button of document.querySelectorAll<HTMLButtonElement>('[data-size]')) {
+  button.addEventListener('click', () => {
+    state.input = example(state.mode, state.lang, button.dataset.size as Size);
+    schedule();
+  });
+}
 el('clear').addEventListener('click', () => {
   state.input = '';
   schedule();
