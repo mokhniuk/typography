@@ -16,6 +16,7 @@ export const cs = {
   sentenceDash: '–',
   sentenceDashLiterary: '–',
   percentSpace: true,
+  // Internetová jazyková příručka, line breaks (id 880): 250 € with a fixed space; money (id 786): 100 Kč, a space.
   currencySpace: true,
   numbers: { group: NBSP, decimal: ',' },
   dialogueDash: { mark: '–' },

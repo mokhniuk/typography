@@ -20,6 +20,7 @@ export const it = {
   },
   // ISG 6.4 (common to all languages): a fixed space before %.
   percentSpace: true,
+  // ISG part 3, 7 (euro): the € sign follows the figure, separated by a space (30 €); read in the Italian edition.
   currencySpace: true,
   // ISG 6.5: a comma for the decimals, a fixed space between groups of three digits.
   numbers: { group: NBSP, decimal: ',' },

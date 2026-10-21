@@ -21,6 +21,7 @@ export const fi = {
   sentenceDash: '–',
   // ISG 6.4: a fixed space between the figure and %.
   percentSpace: true,
+  // ISG part 3, 7 (euro): the € sign follows the figure, separated by a fixed space (30 €); read in the Finnish edition.
   currencySpace: true,
   // ISG 6.5 and 10.2.1: a comma for the decimals, a thin fixed space between groups of three digits.
   numbers: { group: NBSP, decimal: ',' },

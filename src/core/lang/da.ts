@@ -16,6 +16,7 @@ export const da = {
   },
   // ISG 6.4: a fixed space between the figure and %; 10.2: 15 %.
   percentSpace: true,
+  // ISG part 3, 7 (euro): the € sign follows the figure, separated by a space (et beløb på 30 €); read in the Danish edition.
   currencySpace: true,
   // ISG 4.2.3 and 6.5: a comma for the decimals, a fixed space between groups of three digits.
   numbers: { group: NBSP, decimal: ',' },
