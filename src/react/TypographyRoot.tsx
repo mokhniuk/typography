@@ -7,7 +7,7 @@ import {
   useRef,
   useSyncExternalStore,
 } from 'react';
-import type { Lang, QuoteStyle, Register, Rule } from '../core';
+import type { Change, Lang, QuoteStyle, Register, Rule } from '../core';
 import { hangPunctuation, hangScript } from '../dom';
 import { TypographyContext } from './context';
 
@@ -20,9 +20,9 @@ import { TypographyContext } from './context';
 export function HangScript() {
   const prerendering = useServerRender();
   if (!prerendering) return null;
-  // biome-ignore lint/security/noDangerouslySetInnerHtml: the source is this package's own function, not user input
   // The function's source is printed by the server build and by the client build, and a bundler
   // formats it differently (comments, whitespace); the script has already run, so the text is not read again.
+  // biome-ignore lint/security/noDangerouslySetInnerHtml: the source is this package's own function, not user input
   return <script suppressHydrationWarning dangerouslySetInnerHTML={{ __html: hangScript() }} />;
 }
 
@@ -59,8 +59,10 @@ export function TypographyRoot({
   lang,
   register,
   quoteStyle,
+  disable,
   enable,
   rules,
+  onChange,
   early = true,
 }: {
   children: ReactNode;
@@ -68,10 +70,14 @@ export function TypographyRoot({
   register?: Register | undefined;
   /** `language` (the default) or `us`: “…” and ‘…’ in any language. */
   quoteStyle?: QuoteStyle | undefined;
+  /** Rules to switch off: ids or groups; pass a constant, not an inline array. */
+  disable?: readonly string[] | undefined;
   /** Rules to switch on that are off by default; pass a constant, not an inline array. */
   enable?: readonly string[] | undefined;
   /** The list of rules to run instead of the built-in one; pass a constant. */
   rules?: readonly Rule[] | undefined;
+  /** Called with each change made to a text under this root; pass a stable function (`useCallback`). */
+  onChange?: ((change: Change) => void) | undefined;
   early?: boolean;
 }) {
   const root = useRef<HTMLDivElement>(null);
@@ -79,11 +85,21 @@ export function TypographyRoot({
   const language = lang ?? inherited.lang;
   const setting = register ?? inherited.register;
   const style = quoteStyle ?? inherited.quoteStyle;
+  const switchedOff = disable ?? inherited.disable;
   const switchedOn = enable ?? inherited.enable;
   const list = rules ?? inherited.rules;
+  const listener = onChange ?? inherited.onChange;
   const value = useMemo(
-    () => ({ lang: language, register: setting, quoteStyle: style, enable: switchedOn, rules: list }),
-    [language, setting, style, switchedOn, list],
+    () => ({
+      lang: language,
+      register: setting,
+      quoteStyle: style,
+      disable: switchedOff,
+      enable: switchedOn,
+      rules: list,
+      onChange: listener,
+    }),
+    [language, setting, style, switchedOff, switchedOn, list, listener],
   );
   useHangingPunctuation(root);
   return (

@@ -31,13 +31,28 @@ describe('typesetFor', () => {
 
   test('passes rules and enable on', () => {
     expect(typesetFor('so loud', { ...root, rules }, true)).toBe('so loud');
-    expect(typesetFor('so loud', { ...root, rules, enable: ['extra.shout'] }, true)).toBe('so LOUD');
+    expect(typesetFor('so loud', { ...root, rules, enable: ['extra.shout'] }, true)).toBe(
+      'so LOUD',
+    );
   });
 
   test('passes quoteStyle on, and it beats the literary register', () => {
     expect(typesetFor('"x"', { ...root, quoteStyle: 'us' }, true)).toBe('“x”');
-    expect(typesetFor('"x"', { lang: 'de', register: 'literary', quoteStyle: 'us' }, true)).toBe('“x”');
+    expect(typesetFor('"x"', { lang: 'de', register: 'literary', quoteStyle: 'us' }, true)).toBe(
+      '“x”',
+    );
     expect(typesetFor('"x"', { ...root, quoteStyle: 'language' }, true)).toBe('«x»');
   });
 });
 
+describe('typesetFor passes the remaining options on', () => {
+  test('disable switches a rule off', () => {
+    expect(typesetFor('"x" 1-2', { ...root, disable: ['dash.range'] }, true)).toBe('«x» 1-2');
+  });
+
+  test('onChange sees every change', () => {
+    const seen: string[] = [];
+    typesetFor('"x"... ok', { ...root, onChange: (c) => seen.push(c.rule) }, true);
+    expect(seen).toEqual(['quote', 'quote', 'ellipsis']);
+  });
+});
