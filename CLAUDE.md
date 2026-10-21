@@ -6,7 +6,7 @@ Bun project, TypeScript sources shipped as they are (no build step). Details: `R
 
 ## Commands
 
-- `bun test src playground`: all tests. `bun run typecheck`: `tsc`, covers src, playground, scripts.
+- `bun test src apps/playground`: all tests. `bun run typecheck`: `tsc`, covers src, apps/playground, scripts.
 - `bun run docs:rules`: regenerate `docs/rules.md` (generated, never edit by hand; `src/docs.test.ts` fails if stale).
 - `bun run docs:languages`: regenerate `docs/languages/*.md` from the language packs (generated; `src/lang-docs.test.ts` fails if stale).
 - `bun run gen:script`: regenerate `src/dom/script.ts` (generated) after changing `src/dom/hang.ts`.
@@ -18,7 +18,7 @@ Bun project, TypeScript sources shipped as they are (no build step). Details: `R
 - Rules live in the `RULES` table in `src/core/rules.ts`; never add a step inside `typographic()`. Order matters (places for planned rules are reserved in the comment above `RULES`, pinned by `src/core/rules-order.test.ts`). A rule with `defaultOn: false` runs only when named in `enable`. Adding a rule or language: follow `docs/contributing.md`.
 - A language is one pack, `src/core/lang/<code>.ts`, listed in `src/core/lang/index.ts`; `Lang`, `LANGS` and the tables in `profiles.ts` are derived from it, and no rule names a language (it reads a pack field: `percentSpace`, `dialogueDash`, `turnedPairs`, `elisions`, `openers`, `sameMarkQuotes`, `numbers`, ...). Golden tests for a language live in `src/core/lang/<code>.test.ts`. The contract is in `docs/contributing.md`.
 - Options are `register`, `quoteStyle` (`'language'` or `'us'`), `disable`, `enable` and `rules` (a custom list, see `addRule`/`selectRules`). A new option must be threaded through every site: `typographic`, `typesetBlock` (it destructures by name), the text, HTML, Markdown and rehype modes, `src/react` (`Typeset`, `TypographyRoot`, context), the CLI, the playground and `scripts/gen-rules-doc.ts`.
-- Nothing in `src/` or `playground/` may import from outside the package except `react` (`src/boundary.test.ts`).
+- Nothing in `src/` or `apps/playground/` may import from outside the package except `react` (`src/boundary.test.ts`).
 - Every change to engine output or API gets a `CHANGELOG.md` entry saying whether it can change existing output.
 - Every rule has a decision record in `scripts/sources.ts` (`RULE_SOURCES`); `bun run docs:sources` regenerates `docs/sources.md`, `docs/sources.html` and `docs/bibliography.html` (generated, never edit; `src/sources.test.ts` checks all three; open the HTML pages to browse the decisions and the sources). A new `Source` needs `author`, `title`, `about`, `cite`, `claim`, `readVia`. Read a source before you cite it; no source read means `general-knowledge`.
 - Hand-written docs: `api.md`, `cli.md`, `languages.md`, `limits.md`, `contributing.md`, `README.md`. Update them when behaviour they describe changes (rule count, languages, exports, speed numbers).
@@ -38,7 +38,7 @@ If the changes since the last tag touch `src/` (anything that ships), check that
 1. Find the last tag: `git describe --tags --abbrev=0`, then `git log <tag>..HEAD --oneline` and `git diff <tag>..HEAD --stat -- src`.
 2. If `src/` changed and `version` in `package.json` still equals that tag, the release is missing. Pick the bump by the rules in `docs/contributing.md`: minor if output or API can change ("Can change existing output: yes"), patch for a fix that keeps output. Ask me if unsure.
 3. Move the new `CHANGELOG.md` entries under `## X.Y.Z (date)`, set `version` in `package.json`.
-4. Run `bun test src playground`, `bun run typecheck`, `bun run docs:rules`, and `bun run gen:script` if `src/dom/hang.ts` changed.
+4. Run `bun test src apps/playground`, `bun run typecheck`, `bun run docs:rules`, and `bun run gen:script` if `src/dom/hang.ts` changed.
 5. Commit as `release: X.Y.Z`.
 6. Push `main`. Do NOT tag by hand: `.github/workflows/release.yml` creates the plain tag `vX.Y.Z` from `package.json` after the push. If a tag is ever needed manually, use a plain `git tag vX.Y.Z`, never `git tag -a` (Bun 1.3 cannot resolve annotated tags).
 

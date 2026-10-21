@@ -155,7 +155,7 @@ To check this on your own page: block the JavaScript bundle (for example in the 
 
 ## Web page
 
-`bun run playground` serves a page where you paste text, HTML or Markdown and get the typeset result, with a view of what changed, a preview with hanging punctuation and a switch for each rule. `bun run playground:build` writes a static site to `playground/dist`. It runs entirely in the browser.
+`bun run playground` serves a page where you paste text, HTML or Markdown and get the typeset result, with a view of what changed, a preview with hanging punctuation and a switch for each rule. `bun run playground:build` writes a static site to `apps/playground/dist`. It runs entirely in the browser.
 
 ## Benchmark
 
@@ -164,12 +164,12 @@ To check this on your own page: block the JavaScript bundle (for example in the 
 ## Develop
 
 ```sh
-bun test src playground
+bun test src apps/playground
 bun run typecheck
 bun run docs:rules     # regenerate docs/rules.md
 ```
 
-The package has to stay self-contained: `src/boundary.test.ts` fails if anything in `src/` or `playground/` imports from outside the package or from anything but `react`. See [docs/contributing.md](docs/contributing.md).
+The package has to stay self-contained: `src/boundary.test.ts` fails if anything in `src/` or `apps/playground/` imports from outside the package or from anything but `react`. See [docs/contributing.md](docs/contributing.md).
 
 ## Licence
 

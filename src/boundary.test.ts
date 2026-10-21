@@ -4,12 +4,12 @@ import { dirname, join, relative, resolve } from 'node:path';
 
 /**
  * The package must stay liftable out of the monorepo as it stands: every import
- * in `src/` and `playground/` either stays inside the package (relative) or is one of the few bare modules below.
+ * in `src/` and `apps/playground/` either stays inside the package (relative) or is one of the few bare modules below.
  * No monorepo aliases (`@i18n/…`), no `@podiia/…` workspace packages, no reaching
  * out with `../../..`. This is the test that fails the day someone takes a shortcut.
  */
 const ROOT = resolve(import.meta.dir, '..');
-const SCANNED = ['src', 'playground'].map((dir) => join(ROOT, dir));
+const SCANNED = ['src', 'apps/playground'].map((dir) => join(ROOT, dir));
 const BARE_ALLOWED = new Set(['react', 'react/jsx-runtime', 'bun:test']);
 /** Dev dependencies a test may use to run the library inside a real pipeline. */
 const TEST_ONLY = new Set([

@@ -10,11 +10,11 @@ import {
   REGISTERS,
   RULES,
   splitHangs,
-} from '../src/core';
-import { hangPunctuation } from '../src/dom';
-import { typesetHtml } from '../src/html';
-import { typesetMarkdown } from '../src/markdown';
-import { typesetText } from '../src/text';
+} from '../../src/core';
+import { hangPunctuation } from '../../src/dom';
+import { typesetHtml } from '../../src/html';
+import { typesetMarkdown } from '../../src/markdown';
+import { typesetText } from '../../src/text';
 import { isOn, readSaved, reset, ruleBadge, setRule } from './rules-state';
 
 type Mode = 'text' | 'html' | 'markdown';

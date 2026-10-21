@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import type { Rule } from '../src/core';
+import type { Rule } from '../../src/core';
 import { isOn, readSaved, reset, ruleBadge, setRule } from './rules-state';
 
 const noop = (t: string) => t;

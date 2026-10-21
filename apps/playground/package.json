@@ -1,0 +1,10 @@
+{
+  "name": "typography-playground",
+  "private": true,
+  "type": "module",
+  "description": "The playground page. Not part of the package; imports the engine from ../../src and uses the root's vite.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  }
+}

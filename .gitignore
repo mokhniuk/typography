@@ -1,6 +1,6 @@
 node_modules
 dist
-playground/dist
+apps/playground/dist
 .DS_Store
 
 # The benchmark is a separate project (its own package.json); only its results are kept.
