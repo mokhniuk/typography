@@ -17,6 +17,7 @@ const DIGIT_BEFORE = /\p{N}/u;
  * allowed ("call 911"). Found by a scan from one mark to the next, not by a regex: an opener with no
  * closer (an inch mark) would make a regex read on to the end of the text each time.
  */
+const OPENS_HERE = /[\s([]/;
 const STRAIGHT: unique symbol = Symbol('straight');
 function pairStraight(text: string): string {
   let out = '';
@@ -33,7 +34,17 @@ function pairStraight(text: string): string {
       at = text.indexOf('"', end);
       continue;
     }
-    out += `${text.slice(last, at)}${OPEN}${trimInner(text.slice(at + 1, end))}${CLOSE}`;
+    // The next " stands where a quotation opens (a space or a bracket before it, a word after it):
+    // it is an opener of its own, so the one at `at` has no partner and is read by where it stands.
+    if (
+      OPENS_HERE.test(text[end - 1] as string) &&
+      end + 1 < text.length &&
+      NON_SPACE.test(text[end + 1] as string)
+    ) {
+      at = end;
+      continue;
+    }
+    out += text.slice(last, at) + setPair(text.slice(at + 1, end), text[at - 1], text[end + 1]);
     last = end + 1;
     at = text.indexOf('"', last);
   }
@@ -66,7 +77,7 @@ const LONE_CLOSING = new RegExp(`[${LONE}]|${NBSP}[${SPACED_CLOSING}]`, 'g');
 const SPACE = /\s/;
 const NON_SPACE = /\S/;
 const DIGIT = /\d/;
-const BEFORE_CLOSING_BLOCKED = /[\s(\[]/;
+const BEFORE_CLOSING_BLOCKED = /[\s([]/;
 
 /**
  * Every opening mark that stands where a quotation opens (`openerBefore` tells which characters may
@@ -111,7 +122,24 @@ function closeLone(text: string): string {
   });
 }
 
-const trimInner = (s: string) => s.replace(/^[\s\u00A0]+|[\s\u00A0]+$/g, '');
+/**
+ * The spaces just inside a pair go (`" stone "` is `«stone»`) where the mark is free on the outside:
+ * an opener after the start, a space, a bracket or another opener, a closer before the end, a space, a
+ * bracket, punctuation or another mark. Where the mark is glued to a word instead (`km‘ z`, `c ‘d`,
+ * `Nr." %"`, a zone), the space was typed on the wrong side of it: it moves to the outside (`km «z`,
+ * `c» d`), so that no two words are glued together and the mark is read the same way again.
+ */
+const FREE_BEFORE = /[\s([\uE000¿¡]/;
+const FREE_AFTER = /[\s)\].,;:!?\uE000\uE001"„“”‚‘’«»‹›']/;
+function setPair(inner: string, before: string | undefined, after: string | undefined): string {
+  const leading = /^[\s\u00A0]+/.exec(inner)?.[0] ?? '';
+  const body = inner.slice(leading.length);
+  const trailing = /[\s\u00A0]+$/.exec(body)?.[0] ?? '';
+  const kept = body.slice(0, body.length - trailing.length);
+  const pre = before === undefined || FREE_BEFORE.test(before) ? '' : leading;
+  const post = after === undefined || FREE_AFTER.test(after) ? '' : trailing;
+  return `${pre}${OPEN}${kept}${CLOSE}${post}`;
+}
 
 // An apostrophe inside a word (don't, don’t, Maria’s) must not be taken for a quote mark, or
 // the quotation around it would not pair. It is set aside as a placeholder and put back.
@@ -201,7 +229,9 @@ function setupOf(pack: LangPack): Setup {
       'yu',
     ),
     elisionGroups: elision.groups,
-    relevant: charClass(`${RAW}${LONE}${SPACED}${SPACED_CLOSING}'${turnedMarks.join('')}${OPEN}${CLOSE}${APOSTROPHE}`),
+    relevant: charClass(
+      `${RAW}${LONE}${SPACED}${SPACED_CLOSING}'${turnedMarks.join('')}${OPEN}${CLOSE}${APOSTROPHE}`,
+    ),
     pairable: charClass(`${RAW}'${turnedMarks.join('')}`),
     lone: charClass(`${LONE}${SPACED}${SPACED_CLOSING}`),
   };
@@ -238,11 +268,14 @@ export function quotesFor(
         out =
           pair === STRAIGHT
             ? pairStraight(out)
-            : out.replace(pair, (_, inner: string) => `${OPEN}${trimInner(inner)}${CLOSE}`);
+            : out.replace(pair, (match: string, inner: string, offset: number, whole: string) =>
+                setPair(inner, whole[offset - 1], whole[offset + match.length]),
+              );
       }
       out = out.replace(
         single,
-        (_, lead: string, inner: string) => `${lead}${OPEN}${trimInner(inner)}${CLOSE}`,
+        (match: string, lead: string, inner: string, offset: number, whole: string) =>
+          lead + setPair(inner, lead || undefined, whole[offset + match.length]),
       );
       changed = out !== before && pairable.test(out);
     }

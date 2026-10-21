@@ -1,5 +1,14 @@
 import { describe, expect, test } from 'bun:test';
-import { explain, hangPieces, LANGS, NBSP, PACK, RULE_IDS, RULES, splitHangs, typographic } from './index';
+import {
+  explain,
+  hangPieces,
+  LANGS,
+  NBSP,
+  RULE_IDS,
+  RULES,
+  splitHangs,
+  typographic,
+} from './index';
 import { LITERARY } from './profiles';
 
 /** The rules output (and expect) non-breaking spaces, which look like spaces: show them as ~. */
@@ -200,13 +209,13 @@ describe('text that is left alone', () => {
 });
 
 describe('an apostrophe that stands for dropped letters', () => {
-  test('rock \'n\' roll is not a quotation', () => {
+  test("rock 'n' roll is not a quotation", () => {
     expect(t("rock 'n' roll")).toBe('rock ’n’ roll');
-    expect(t('“rock \'n\' roll” forever')).toBe('«rock ’n’ roll» forever');
+    expect(t("“rock 'n' roll” forever")).toBe('«rock ’n’ roll» forever');
     expect(t("Rock 'N' Roll")).toBe('Rock ’N’ Roll');
   });
 
-  test('a leading apostrophe on \'til, \'em and \'cause is an apostrophe', () => {
+  test("a leading apostrophe on 'til, 'em and 'cause is an apostrophe", () => {
     expect(t("'til dawn and 'em all")).toBe('’til dawn and ’em all');
     expect(t("Wait 'cause it's late, 'Til then")).toBe('Wait ’cause it’s late, ’Til then');
   });
@@ -226,12 +235,14 @@ describe('an apostrophe that stands for dropped letters', () => {
 describe('an apostrophe that opens a quotation is still an apostrophe', () => {
   test('an elision right after an opening quote mark', () => {
     expect(t('He said "\'tis fine" today')).toBe('He said «’tis fine» today');
-    expect(t('He said “\'tis fine” today')).toBe('He said «’tis fine» today');
+    expect(t("He said “'tis fine” today")).toBe('He said «’tis fine» today');
     expect(t('He said "\'til dawn" today')).toBe('He said «’til dawn» today');
   });
 
-  test('Dutch \'s and \'t after a quote mark', () => {
-    expect(t('Hij zei "\'s avonds gaan we" en ging.', 'nl')).toBe('Hij zei “’s avonds gaan we” en ging.');
+  test("Dutch 's and 't after a quote mark", () => {
+    expect(t('Hij zei "\'s avonds gaan we" en ging.', 'nl')).toBe(
+      'Hij zei “’s avonds gaan we” en ging.',
+    );
     expect(t('Hij zei "\'t is mooi" en ging.', 'nl')).toBe('Hij zei “’t is mooi” en ging.');
   });
 
@@ -571,7 +582,15 @@ describe('explain', () => {
 describe('hangPieces', () => {
   const show = (text: string, atStart = true) =>
     hangPieces(text, atStart)
-      .map((p) => (p.kind === 'space' ? `<${p.text}>` : p.kind === 'open' ? `[${p.text}` : p.kind === 'close' ? `${p.text}]` : p.text))
+      .map((p) =>
+        p.kind === 'space'
+          ? `<${p.text}>`
+          : p.kind === 'open'
+            ? `[${p.text}`
+            : p.kind === 'close'
+              ? `${p.text}]`
+              : p.text,
+      )
       .join('');
 
   test('the space before an opening run is its own piece; a closing run takes the space after it', () => {
@@ -590,13 +609,55 @@ describe('hangPieces', () => {
 
   test('a closing run followed by an opening one shares the space', () => {
     expect(show('(a) (b)')).toBe('[(a) ][(b)]');
-    expect(hangPieces('(a) (b)').map((p) => p.kind)).toEqual(['open', 'text', 'close', 'open', 'text', 'close']);
+    expect(hangPieces('(a) (b)').map((p) => p.kind)).toEqual([
+      'open',
+      'text',
+      'close',
+      'open',
+      'text',
+      'close',
+    ]);
   });
 
   test('the text round-trips, and a continuation is read from its first character', () => {
     const text = 'Grass (Camden House, 2027) and «x»';
-    expect(hangPieces(text).map((p) => p.text).join('')).toBe(text);
+    expect(
+      hangPieces(text)
+        .map((p) => p.text)
+        .join(''),
+    ).toBe(text);
     expect(show('(x', false)).toBe('(x');
     expect(show(' (x', false)).toBe('< >[(x');
+  });
+});
+
+describe('a straight quote whose next mark opens another quotation', () => {
+  test('is a lone opener, and the pair after it keeps its spaces and nests', () => {
+    expect(t('"a then "b" c')).toBe('«a~then „b“ c');
+    expect(t('He said "first line\nThen "x" and "y"')).toBe(
+      'He said «first line\nThen „x“ and „y“',
+    );
+  });
+
+  test('a quotation with spaces inside its marks still pairs', () => {
+    expect(t('He said " stone " and left')).toBe('He said «stone» and left');
+  });
+});
+
+describe('a space inside a quotation next to a mark glued to the outside word moves out', () => {
+  const twice = (text: string) => t(t(text));
+
+  test('an opener glued to the word before it gives the space to the outside', () => {
+    expect(t('km‘ z and 10’')).toBe('km «z and 10»');
+    expect(twice('km‘ z and 10’')).toBe('km «z and 10»');
+  });
+
+  test('a closer glued to the word after it gives the space to the outside', () => {
+    expect(t('a ‚b c ‘d e')).toBe('a~«b c» d e');
+    expect(twice('a ‚b c ‘d e')).toBe('a~«b c» d e');
+  });
+
+  test('a free pair is trimmed on both sides', () => {
+    expect(t('a " b c " d')).toBe('a~«b c» d');
   });
 });

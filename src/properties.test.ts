@@ -184,9 +184,62 @@ const letters = (text: string) =>
 
 const CASES = 1500;
 
+const RUN = /[\s\u00A0]+/g;
+const MARK = /["„“”‚‘’«»‹›']/;
+const DASH = /[-–—]/;
+/** Whether a letter or digit stands at `at`, or beyond any quote marks from `at` on, in direction `step`. */
+function wordBeyond(text: string, at: number, step: 1 | -1): boolean {
+  let ch = text[at];
+  while (ch !== undefined && MARK.test(ch)) {
+    at += step;
+    ch = text[at];
+  }
+  return ch !== undefined && /[\p{L}\p{N}]/u.test(ch);
+}
+/**
+ * How many runs of whitespace in `text` must still be there after the rules ran: those with a word
+ * on both sides, where a quote mark between the run and the word does not count (`Then "x"`,
+ * `2" pipe`, `km‘ z`). A rule may change such a run (a no-break space, a dash with spaces), add to
+ * it or move it past a mark, never remove it: that would glue two words together. A run just inside
+ * a free quotation may go (`" stone "` is `«stone»`), and one beside a dash too (a spaced range
+ * closes up).
+ */
+function survivingRuns(text: string): number {
+  let count = 0;
+  RUN.lastIndex = 0;
+  for (let run = RUN.exec(text); run; run = RUN.exec(text)) {
+    const left = text[run.index - 1];
+    const right = text[run.index + run[0].length];
+    // A spaced range (`5 - 26`) closes up to `5–26`, so a run beside a dash is not held to survive.
+    const besideDash =
+      (left !== undefined && DASH.test(left)) || (right !== undefined && DASH.test(right));
+    if (
+      !besideDash &&
+      wordBeyond(text, run.index - 1, -1) &&
+      wordBeyond(text, run.index + run[0].length, 1)
+    )
+      count++;
+  }
+  return count;
+}
+const runs = (text: string) => (text.match(RUN) ?? []).length;
+
 describe('properties of typographic()', () => {
   for (const lang of LANGS) {
     for (const register of REGISTERS) {
+      test(`${lang}/${register}: never removes a space that stands between two words`, () => {
+        const rand = random(101 + LANGS.indexOf(lang) * 7 + REGISTERS.indexOf(register));
+        for (let i = 0; i < CASES; i++) {
+          const input = sample(rand, 1 + Math.floor(rand() * 14));
+          const output = typographic(input, lang, { register });
+          if (runs(output) < survivingRuns(input)) {
+            throw new Error(
+              `a space between words was lost in ${JSON.stringify(input)} -> ${JSON.stringify(output)}`,
+            );
+          }
+        }
+      });
+
       test(`${lang}/${register}: never loses or adds a letter or digit`, () => {
         const rand = random(1 + LANGS.indexOf(lang) * 7 + REGISTERS.indexOf(register));
         for (let i = 0; i < CASES; i++) {
