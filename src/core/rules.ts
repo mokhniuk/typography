@@ -23,6 +23,7 @@ import {
   initials,
   mayAbbreviate,
   numberUnit,
+  operator,
   orphans,
   section,
   titles,
@@ -300,6 +301,13 @@ export const RULES: readonly Rule[] = [
     about: 'No-break space after ©',
     when: has('©'),
     apply: copyright,
+  },
+  {
+    id: 'space.operator',
+    category: 'symbols',
+    about: 'No-break spaces around & + = standing alone between two words',
+    when: hasAny('&', '+', '='),
+    apply: operator,
   },
   {
     id: 'space.orphan',

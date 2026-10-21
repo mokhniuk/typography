@@ -41,16 +41,16 @@ p{margin:6px 0}
 <body>
 <main>
 <h1>Typography sources</h1>
-<p class="lead">Why each of the 30 rules exists, which source backs it, and what is not checked yet. Generated from <code>resources/sources.ts</code> by <code>bun run docs:sources</code>; do not edit by hand. All sources in one table, with authors: <a href="bibliography.html">bibliography</a>.</p>
+<p class="lead">Why each of the 31 rules exists, which source backs it, and what is not checked yet. Generated from <code>resources/sources.ts</code> by <code>bun run docs:sources</code>; do not edit by hand. All sources in one table, with authors: <a href="bibliography.html">bibliography</a>.</p>
 <div class="summary-row">
 <span class="pill verified">14 verified</span>
 <span class="pill disputed">1 disputed</span>
-<span class="pill general-knowledge">15 unchecked</span>
+<span class="pill general-knowledge">16 unchecked</span>
 </div>
 <p>To check a rule, open its sources and confirm the “Relied on” line is in the text. “Verified” means a source read says what the rule does for the cases named; read the gaps in each entry. Sources marked in red were read as summaries and need a look by hand.</p>
 <h2>Rules</h2>
 <div class="filters" role="group" aria-label="Filter rules by confidence">
-<button type="button" data-f="all" aria-pressed="true">All 30</button>
+<button type="button" data-f="all" aria-pressed="true">All 31</button>
 <button type="button" data-f="verified" aria-pressed="false">Verified</button>
 <button type="button" data-f="disputed" aria-pressed="false">Disputed</button>
 <button type="button" data-f="general-knowledge" aria-pressed="false">Unchecked</button>
@@ -243,6 +243,13 @@ p{margin:6px 0}
 <p><b>Why:</b> © stays on the line of the year or name after it. Butterick: a no-break space between © and the year.</p>
 <p><b>Others, gaps, unread:</b> Not compared with other tools or with guides for the other languages.</p>
 <p class="meta">Sources: <a class="chip" href="#src-butterick-nbsp">butterick-nbsp</a> <a class="chip" href="#src-butterick-legal">butterick-legal</a> <a class="chip" href="#src-uax14">uax14</a></p>
+</article>
+<article class="rule" id="rule-space-operator" data-c="general-knowledge">
+<div class="head"><h3>space.operator</h3><span class="pill general-knowledge">Unchecked</span></div>
+<p class="about">No-break spaces around &amp; + = standing alone between two words</p>
+<p><b>Why:</b> A lone &amp;, + or = between two words stays on the line of the word before it and of the word after it, so a line neither ends on the operator nor starts with it (Tom &amp; Jerry, rock + roll).</p>
+<p><b>Others, gaps, unread:</b> No source found. Practical Typography &quot;Nonbreaking spaces&quot; was read (as a fetch-tool summary) and does not mention an ampersand or any operator; a web search for a guide on binding an ampersand between names found only general pages on no-break spaces and a LaTeX tie guide for forenames, none a style guide on this point, so none is cited. The rule is a judgement: a line ending on &quot;&amp;&quot; or starting with it reads as a break in the pair. It binds both sides, so the pair &quot;Tom &amp; Jerry&quot; can only move as a whole with its neighbours (a three-word unit); a guide may prefer a break before the operator instead. Numbers (2 + 2, x = 5) are left to space.number and to the author; doubled operators (&amp;&amp;, ==, +=) and operators with no typed spaces (R&amp;D, x+y) are untouched.</p>
+<p class="meta">Sources: <span class="none">none read</span></p>
 </article>
 <article class="rule" id="rule-space-orphan" data-c="general-knowledge">
 <div class="head"><h3>space.orphan</h3><span class="pill general-knowledge">Unchecked</span></div>

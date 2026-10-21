@@ -201,6 +201,39 @@ describe('spaces', () => {
     expect(t('see § 5', 'en', { disable: ['space.section'] })).toBe('see § 5');
   });
 
+  test('an operator between two words keeps its spaces unbreakable', () => {
+    expect(t('Tom & Jerry')).toBe('Tom~&~Jerry');
+    expect(t('rock + roll')).toBe('rock~+~roll');
+    expect(t('Fischer = champion')).toBe('Fischer~=~champion');
+    expect(t('x = y')).toBe('x~=~y');
+    expect(t('Tom\u00a0& Jerry')).toBe('Tom~&~Jerry');
+    expect(t('Tom & Jerry & Co')).toBe('Tom~&~Jerry~&~Co');
+    expect(t('Ян & Анна')).toBe('Ян~&~Анна');
+  });
+
+  test('an operator is left alone unless one operator stands between two letter words', () => {
+    expect(t('2 + 2')).toBe('2 + 2');
+    expect(t('x = 5')).toBe('x = 5');
+    expect(t('5 + x')).toBe('5 + x');
+    expect(t('ab == cd')).toBe('ab == cd');
+    expect(t('ab && cd')).toBe('ab && cd');
+    expect(t('ab += cd')).toBe('ab += cd');
+    expect(t('R&D')).toBe('R&D');
+    expect(t('x+y')).toBe('x+y');
+    expect(t('Tom &')).toBe('Tom &');
+    expect(t('& Jerry')).toBe('& Jerry');
+  });
+
+  test('operator spacing is stable and recorded by explain', () => {
+    const once = typographic('Tom & Jerry + rock');
+    expect(typographic(once)).toBe(once);
+    expect(explain('Tom & Jerry').changes).toEqual([
+      { rule: 'space.operator', from: ' ', to: NBSP },
+      { rule: 'space.operator', from: ' ', to: NBSP },
+    ]);
+    expect(t('Tom & Jerry', 'en', { disable: ['space.operator'] })).toBe('Tom & Jerry');
+  });
+
   test('one-letter words by language', () => {
     expect(t('a stone and I', 'en')).toBe('a~stone and I');
     expect(t('pamięć w kamieniu', 'pl')).toBe('pamięć w~kamieniu');

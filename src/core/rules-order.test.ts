@@ -35,6 +35,7 @@ const ORDER = [
   'space.section',
   'space.association',
   'space.copyright',
+  'space.operator',
   'space.orphan',
   'space.arrow',
   'space.trailing',

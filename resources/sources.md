@@ -316,6 +316,14 @@ Alternative: Not compared with other tools or with guides for the other language
 
 Sources: [butterick-nbsp](#src-butterick-nbsp), [butterick-legal](#src-butterick-legal), [uax14](#src-uax14)
 
+### `space.operator`
+
+Confidence: `general-knowledge`.
+
+Why: A lone &, + or = between two words stays on the line of the word before it and of the word after it, so a line neither ends on the operator nor starts with it (Tom & Jerry, rock + roll).
+
+Alternative: No source found. Practical Typography "Nonbreaking spaces" was read (as a fetch-tool summary) and does not mention an ampersand or any operator; a web search for a guide on binding an ampersand between names found only general pages on no-break spaces and a LaTeX tie guide for forenames, none a style guide on this point, so none is cited. The rule is a judgement: a line ending on "&" or starting with it reads as a break in the pair. It binds both sides, so the pair "Tom & Jerry" can only move as a whole with its neighbours (a three-word unit); a guide may prefer a break before the operator instead. Numbers (2 + 2, x = 5) are left to space.number and to the author; doubled operators (&&, ==, +=) and operators with no typed spaces (R&D, x+y) are untouched.
+
 ### `space.orphan`
 
 Confidence: `general-knowledge`.

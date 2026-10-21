@@ -113,7 +113,6 @@ The pack exists but is thin, because the Irish edition of the Interinstitutional
 
 Today `space.orphan` binds a one-letter word in a language's list to the next word (`a~long`, `в~місті`), `space.number` binds a number to a short word, and `space.title`, `space.initial` and `space.abbreviation` bind their cases. Not covered, checked on 0.2.1:
 
-- `&`, `+`, `=` and other operators between words (`Tom & Jerry`, `rock + roll`) get no no-break space: a line can end on `&`, or start with it.
 - Short words of two or three letters (`to`, `of`, `the`; `на`, `до`; `der`, `die`) are bound only where a pack lists them as one-letter orphans.
 - **The last words of a paragraph (widows and runts)** are decided: not a string rule, CSS `text-wrap: pretty` on the page (written down in [limits.md](limits.md)).
 - **How to bind, not only what:** a no-break space is a character and travels with the text (copy, search, screen readers read it as a space), a `<span style="white-space: nowrap">` is markup and stays on the page. The HTML, rehype and React modes could offer `bind: 'nbsp' | 'nowrap'` (the text mode and the CLI on plain text have only the character). Research what the two do to search, copy, hyphenation and `text-wrap: pretty` before choosing a default; the string engine keeps the no-break space.

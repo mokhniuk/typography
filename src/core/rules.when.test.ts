@@ -52,6 +52,7 @@ describe('Rule.when', () => {
       'space.section',
       'space.association',
       'space.copyright',
+      'space.operator',
       'space.orphan',
       'space.arrow',
       'space.trailing',

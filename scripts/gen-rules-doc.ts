@@ -162,6 +162,7 @@ export const EXAMPLES: Record<string, readonly Example[]> = {
   'space.association': [{ input: 'Kulturverein e.V.', lang: 'de' }],
   'space.copyright': [{ input: '© 2026 Studio' }],
   'space.section': [{ input: 'See § 5 and ¶¶ 3, 4' }],
+  'space.operator': [{ input: 'Tom & Jerry, rock + roll' }],
   'space.orphan': [
     { input: 'A cat and I', lang: 'en' },
     { input: 'Він і я в домі', lang: 'uk' },
