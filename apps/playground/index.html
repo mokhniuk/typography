@@ -75,6 +75,14 @@
               <button type="button" role="tab" data-view="preview">Preview</button>
             </div>
             <label id="markField"><input type="checkbox" id="mark" /> Mark no-break spaces</label>
+            <label id="hangField" hidden>Hanging
+              <select id="hang">
+                <option value="off">Off</option>
+                <option value="light">Light (30%)</option>
+                <option value="medium">Medium (50%)</option>
+                <option value="full">Full (100%)</option>
+              </select>
+            </label>
             <button type="button" id="copy" class="primary">Copy</button>
           </header>
           <textarea id="result" readonly spellcheck="false"></textarea>

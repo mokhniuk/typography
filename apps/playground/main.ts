@@ -19,6 +19,9 @@ import { example, exampleIn, type Mode, type Size } from './examples';
 import { isOn, readSaved, reset, ruleBadge, setRule } from './rules-state';
 
 type View = 'result' | 'changes' | 'preview';
+/** How far an opening mark hangs in the preview, as `--hang-amount`. */
+const HANGS = { off: 0, light: 0.3, medium: 0.5, full: 1 } as const;
+type Hang = keyof typeof HANGS;
 type State = {
   mode: Mode;
   lang: Lang;
@@ -27,6 +30,7 @@ type State = {
   nbsp: 'entity' | 'char';
   view: View;
   mark: boolean;
+  hang: Hang;
   /** Rules that are on by default and were switched off. */
   disable: string[];
   /** Rules that are off by default and were switched on. */
@@ -52,6 +56,7 @@ function load(): State {
     nbsp: 'entity',
     view: 'result',
     mark: false,
+    hang: 'full',
     ...reset(),
     input: example('text', 'en', 'long'),
     example: 'long',
@@ -78,6 +83,7 @@ function load(): State {
       nbsp: saved.nbsp === 'char' ? 'char' : 'entity',
       view: saved.view === 'changes' || saved.view === 'preview' ? saved.view : 'result',
       mark: saved.mark === true,
+      hang: saved.hang && saved.hang in HANGS ? saved.hang : 'full',
       ...readSaved(saved, RULES),
       input: known ? example(mode, lang, known) : input,
       example: known,
@@ -113,6 +119,8 @@ const quoteStyleSelect = el<HTMLSelectElement>('quoteStyle');
 const nbspSelect = el<HTMLSelectElement>('nbsp');
 const nbspField = el<HTMLLabelElement>('nbspField');
 const mark = el<HTMLInputElement>('mark');
+const hangSelect = el<HTMLSelectElement>('hang');
+const hangField = el<HTMLLabelElement>('hangField');
 const markField = el<HTMLLabelElement>('markField');
 const copy = el<HTMLButtonElement>('copy');
 
@@ -163,17 +171,66 @@ function convert(): { output: string; changes: Change[] } {
   return { output, changes };
 }
 
+/** Text that is never typeset, so its marks never hang. */
+const NO_HANG = new Set(['PRE', 'CODE', 'KBD', 'SAMP', 'SCRIPT', 'STYLE', 'TEXTAREA']);
+
+/**
+ * Wraps the opening marks of the HTML preview in `data-hang` spans, as the text and Markdown
+ * previews get them from `splitHangs`. A text node opens its block when no text came before
+ * it in the nearest ancestor that is not inline.
+ */
+function markHangs(body: HTMLElement) {
+  const view = body.ownerDocument.defaultView;
+  if (!view) return;
+  const blockOf = (node: Node): Element => {
+    let box = node.parentElement;
+    while (box && box !== body && view.getComputedStyle(box).display === 'inline') box = box.parentElement;
+    return box ?? body;
+  };
+  const walker = body.ownerDocument.createTreeWalker(body, NodeFilter.SHOW_TEXT);
+  const nodes: Text[] = [];
+  for (let node = walker.nextNode(); node; node = walker.nextNode()) nodes.push(node as Text);
+  const started = new Set<Element>();
+  for (const node of nodes) {
+    if (!/\S/.test(node.data) || node.parentElement?.closest([...NO_HANG].join(','))) continue;
+    const block = blockOf(node);
+    const atStart = !started.has(block);
+    started.add(block);
+    const parts = splitHangs(node.data, atStart);
+    if (!parts.some((part) => part.hang)) continue;
+    const doc = body.ownerDocument;
+    node.replaceWith(
+      ...parts.map((part) => {
+        if (!part.hang) return doc.createTextNode(part.text);
+        const span = doc.createElement('span');
+        span.dataset.hang = '';
+        span.textContent = part.text;
+        return span;
+      }),
+    );
+  }
+}
+
 let stopHanging: (() => void) | null = null;
 
 function renderPreview(output: string) {
   stopHanging?.();
   stopHanging = null;
   preview.replaceChildren();
+  preview.style.setProperty('--hang-amount', String(HANGS[state.hang]));
   if (state.mode === 'html') {
     const frame = document.createElement('iframe');
-    // No scripts, no same-origin access: pasted HTML is shown, never run.
-    frame.setAttribute('sandbox', '');
+    // No scripts run inside: pasted HTML is shown, never run. Same origin only so this page can
+    // mark and measure the opening punctuation in it.
+    frame.setAttribute('sandbox', 'allow-same-origin');
     frame.title = 'Preview of the HTML result';
+    frame.addEventListener('load', () => {
+      const body = frame.contentDocument?.body;
+      if (!body) return;
+      body.style.setProperty('--hang-amount', String(HANGS[state.hang]));
+      markHangs(body);
+      stopHanging = hangPunctuation(body);
+    });
     frame.srcdoc = `<!doctype html><meta charset="utf-8"><style>body{font:19px/1.55 Georgia,serif;max-width:34em;margin:1em;color:#1b1b1a}code,pre{font-size:.85em}</style>${output}`;
     preview.append(frame);
     return;
@@ -185,7 +242,7 @@ function renderPreview(output: string) {
       if (part.hang) {
         const span = document.createElement('span');
         span.dataset.hang = '';
-        if (part.lead) span.style.marginLeft = '-0.5em';
+        if (part.lead) span.style.marginLeft = `${-0.5 * HANGS[state.hang]}em`;
         span.textContent = part.text;
         p.append(span);
       } else {
@@ -222,6 +279,7 @@ function render() {
   quoteStyleSelect.value = state.quoteStyle;
   nbspSelect.value = state.nbsp;
   mark.checked = state.mark;
+  hangSelect.value = state.hang;
   nbspField.hidden = state.mode !== 'html';
   for (const box of ruleList.querySelectorAll<HTMLInputElement>('input')) {
     const rule = RULES.find((r) => r.id === box.dataset.id);
@@ -262,16 +320,16 @@ function render() {
   changes.hidden = state.view !== 'changes';
   preview.hidden = state.view !== 'preview';
   markField.hidden = state.view !== 'result';
+  hangField.hidden = state.view !== 'preview';
   if (state.view === 'preview') renderPreview(output);
   else {
     stopHanging?.();
     stopHanging = null;
   }
   const untagged = state.mode === 'html' && /\S/.test(state.input) && !/<[a-z]/i.test(state.input);
-  note.hidden = !(state.view === 'preview' && state.mode === 'html');
-  note.textContent = untagged
-    ? 'This text has no HTML tags, so the preview shows it as one run of text, the way a browser would. For plain text, pick Text.'
-    : 'Opening punctuation hangs in the margin in the text and Markdown previews; the HTML preview does not show it.';
+  note.hidden = !(state.view === 'preview' && untagged);
+  note.textContent =
+    'This text has no HTML tags, so the preview shows it as one run of text, the way a browser would. For plain text, pick Text.';
   save(state);
 }
 
@@ -319,6 +377,10 @@ quoteStyleSelect.addEventListener('change', () => {
 });
 nbspSelect.addEventListener('change', () => {
   state.nbsp = nbspSelect.value === 'char' ? 'char' : 'entity';
+  schedule();
+});
+hangSelect.addEventListener('change', () => {
+  state.hang = hangSelect.value in HANGS ? (hangSelect.value as Hang) : 'full';
   schedule();
 });
 mark.addEventListener('change', () => {

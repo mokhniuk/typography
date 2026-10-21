@@ -193,9 +193,9 @@ Framework-free, browser only (it needs `getComputedStyle`, `ResizeObserver`, `Mu
 
 ### `hangPunctuation(el: HTMLElement): () => void`
 
-Hangs the opening punctuation marked with a `data-hang` attribute under `el`, wherever a line starts with it: the first line of a paragraph and any line the text wraps onto. A mark that starts a line is pulled left by exactly its own width (set as an inline `margin-left` in em, so it follows the text size); a mark in the middle of a line is left alone. Hanging a mark gives its line a little more room, which can move a later break, so the pass repeats (at most four rounds each time it runs) until no mark changes.
+Hangs the opening punctuation marked with a `data-hang` attribute under `el`, wherever a line starts with it: the first line of a paragraph and any line the text wraps onto. A mark that starts a line is pulled left by its own width (set as an inline `margin-left` in em, so it follows the text size); a mark in the middle of a line is left alone. How far it hangs is the CSS custom property `--hang-amount` on the mark or any ancestor: a share of the width from `0` to `1` (`0.3` hangs it by 30%, `0` not at all); unset is `1`. The value is read each time the pass runs, so after changing it on a live page call `hangPunctuation` again or wait for the next resize. Hanging a mark gives its line a little more room, which can move a later break, so the pass repeats (at most four rounds each time it runs) until no mark changes.
 
-It runs once now, again when web fonts are ready, when `el` or a `<dialog>` inside it is resized, and when text or elements under `el` change. It returns a function that stops all of that. It marks the spans it has seen with `data-measured` and the ones it has hung with `data-hung`.
+It runs once now, again when web fonts are ready, when `el` or a `<dialog>` inside it is resized, and when text or elements under `el` change. It returns a function that stops all of that. It marks the spans it has seen with `data-measured` and the ones it has hung with `data-hung`, whose value is the share they were hung by.
 
 A mark is not hung where there is no left edge for a line to start from: text that is centred, right-aligned, `end`- or `justify-all`-aligned, has a non-zero `text-indent`, or is not left-to-right. A mark with no width (a closed dialog) is left until it has one.
 
