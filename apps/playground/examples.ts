@@ -350,3 +350,13 @@ export function example(mode: Mode, lang: Lang, size: Size): string {
   }
   return [title, ...body, fill(run, CODE, `${link} (${URL})`)].join('\n\n');
 }
+
+/**
+ * Which example `input` is, for state saved before the playground remembered it: the long one by its
+ * title, the short one by the pack's sample; `null` for text someone wrote.
+ */
+export function exampleIn(input: string, lang: Lang): Size | null {
+  if (input.includes(LONG[lang].title)) return 'long';
+  if (input.includes(PACK[lang].sample)) return 'short';
+  return null;
+}

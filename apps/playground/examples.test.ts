@@ -2,7 +2,7 @@ import { describe, expect, test } from 'bun:test';
 import { type Change, LANGS, type Register, RULES } from '../../src/core';
 import { typesetHtml } from '../../src/html';
 import { typesetText } from '../../src/text';
-import { example, LONG, MODES } from './examples';
+import { example, exampleIn, LONG, MODES } from './examples';
 
 const OPT_IN = RULES.filter((rule) => rule.defaultOn === false).map((rule) => rule.id);
 
@@ -42,6 +42,13 @@ describe('playground examples', () => {
       }
     }
     expect(RULES.map((rule) => rule.id).filter((id) => !all.has(id))).toEqual([]);
+  });
+
+  test.each([...LANGS])('an %s example is recognised in any format, written text is not', (lang) => {
+    for (const size of ['short', 'long'] as const) {
+      for (const mode of MODES) expect(exampleIn(example(mode, lang, size), lang)).toBe(size);
+    }
+    expect(exampleIn('My own text - here.', lang)).toBeNull();
   });
 
   test.each([...LANGS])('every %s example is in the language, not English, and changes', (lang) => {

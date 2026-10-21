@@ -15,7 +15,7 @@ import { hangPunctuation } from '../../src/dom';
 import { typesetHtml } from '../../src/html';
 import { typesetMarkdown } from '../../src/markdown';
 import { typesetText } from '../../src/text';
-import { example, type Mode, type Size } from './examples';
+import { example, exampleIn, type Mode, type Size } from './examples';
 import { isOn, readSaved, reset, ruleBadge, setRule } from './rules-state';
 
 type View = 'result' | 'changes' | 'preview';
@@ -59,17 +59,28 @@ function load(): State {
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE) ?? 'null') as Partial<State> | null;
     if (!saved) return fallback;
+    const mode: Mode = saved.mode === 'html' || saved.mode === 'markdown' ? saved.mode : 'text';
+    const lang = LANGS.includes(saved.lang as Lang) ? (saved.lang as Lang) : 'en';
+    const input = typeof saved.input === 'string' ? saved.input : fallback.input;
+    // State saved before the example was remembered has no `example`: an example still in the input
+    // is recognised and set again, so it is the current one and follows the format.
+    const known =
+      saved.example === 'short' || saved.example === 'long'
+        ? saved.example
+        : saved.example === undefined
+          ? exampleIn(input, lang)
+          : null;
     return {
-      mode: saved.mode === 'html' || saved.mode === 'markdown' ? saved.mode : 'text',
-      lang: LANGS.includes(saved.lang as Lang) ? (saved.lang as Lang) : 'en',
+      mode,
+      lang,
       register: saved.register === 'literary' ? 'literary' : 'display',
       quoteStyle: saved.quoteStyle === 'us' ? 'us' : 'language',
       nbsp: saved.nbsp === 'char' ? 'char' : 'entity',
       view: saved.view === 'changes' || saved.view === 'preview' ? saved.view : 'result',
       mark: saved.mark === true,
       ...readSaved(saved, RULES),
-      input: typeof saved.input === 'string' ? saved.input : fallback.input,
-      example: saved.example === 'short' || saved.example === 'long' ? saved.example : null,
+      input: known ? example(mode, lang, known) : input,
+      example: known,
     };
   } catch {
     return fallback;
@@ -256,9 +267,11 @@ function render() {
     stopHanging?.();
     stopHanging = null;
   }
+  const untagged = state.mode === 'html' && /\S/.test(state.input) && !/<[a-z]/i.test(state.input);
   note.hidden = !(state.view === 'preview' && state.mode === 'html');
-  note.textContent =
-    'Opening punctuation hangs in the margin in the text and Markdown previews; the HTML preview does not show it.';
+  note.textContent = untagged
+    ? 'This text has no HTML tags, so the preview shows it as one run of text, the way a browser would. For plain text, pick Text.'
+    : 'Opening punctuation hangs in the margin in the text and Markdown previews; the HTML preview does not show it.';
   save(state);
 }
 
