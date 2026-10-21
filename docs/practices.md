@@ -23,14 +23,14 @@ A no-break space keeps two words on one line. Bind a pair when a line that ends 
   (de)  before  5% and 49€      after  5~% and 49~€
   ```
 
-  The space between a value and its unit is backed by [space.number](../resources/sources.md#spacenumber); that the space is a no-break one, and the month case, are our choice. `%` and `€` get the space only in the languages whose pack says so ([space.percent](../resources/sources.md#spacepercent)).
+  The rule binds a number to the short word after it (up to nine letters), whatever the word is: a unit, a month, or `and` (`Fig. 2 and p. 14` gives `Fig.~2~and p.~14`). The space between a value and its unit is backed by [space.number](../resources/sources.md#spacenumber); that the space is a no-break one, and the month case, are our choice. `%` and `€` get the space only in the languages whose pack says so ([space.percent](../resources/sources.md#spacepercent)).
 
 - **A title and the name after it, an initial and the surname, an abbreviation and what it qualifies** (`space.title`, `space.initial`, `space.abbreviation`).
 
   ```text
   (en)  before  Prof. Dr. Oksana opens.   after  Prof.~Dr.~Oksana opens.
   (en)  before  Written by K. Słoboda.    after  Written by K.~Słoboda.
-  (en)  before  See Fig. 2 and p. 14.     after  See Fig.~2 and p.~14.
+  (en)  before  See Fig. 2, p. 14.         after  See Fig.~2, p.~14.
   ```
 
   Titles and the English abbreviation case are backed by a source read ([space.title](../resources/sources.md#spacetitle), [space.abbreviation](../resources/sources.md#spaceabbreviation)). The German, Ukrainian and Polish abbreviation lists, and the initial rule ([space.initial](../resources/sources.md#spaceinitial)), are general knowledge.
@@ -47,7 +47,7 @@ A no-break space keeps two words on one line. Bind a pair when a line that ends 
 - **A section mark and its number** (`space.section`).
 
   ```text
-  (en)  before  See § 5 and ¶¶ 3, 4      after  See §~5 and ¶¶~3, 4
+  (en)  before  See § 5, ¶¶ 3, 4           after  See §~5, ¶¶~3, 4
   ```
 
   Backed by a source read: Butterick says the mark is always followed by a nonbreaking space ([space.section](../resources/sources.md#spacesection)).
@@ -65,7 +65,7 @@ All three are general knowledge here: no source in the registry covers them.
 ## Column width
 
 - A narrow column (a phone, a sidebar) punishes every binding: each bound pair is a longer unbreakable unit, and the lines around it come out short or loose.
-- A wide column (over about 75 characters a line) hides the problem, because a line seldom ends on a short word, but bindings cost nothing there either.
+- A wide column (over about 75 characters a line; a rule of thumb, general knowledge) hides the problem, because a line seldom ends on a short word, but bindings cost nothing there either.
 - With justified text a long bound unit makes the spaces on its line stretch, so check the result in the narrowest column you ship.
 - A chain of bindings (`Tom & Jerry & Co`, `Prof. Dr. K. Słoboda`) is one unit as long as the whole chain, so in a narrow column it moves to the next line as a block.
 - Judge the page at two widths, the narrowest and the widest, not at one.
