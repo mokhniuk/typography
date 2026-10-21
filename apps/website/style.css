@@ -555,8 +555,6 @@ body > footer h2 {
   padding: 0;
   border: 0;
   font: 500 var(--size-xs) var(--font-ui);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
   color: var(--color-muted);
 }
 body > footer p {
@@ -585,7 +583,7 @@ body > footer a:hover {
 
 /*
  * The design grid, an overlay for checking alignment: pink columns over the container, 12 on a
- * desktop, 8 on a tablet, 4 on a phone. On while the experiment runs: <html data-grid>, G hides it (main.ts).
+ * desktop, 8 on a tablet, 4 on a phone. <html data-grid>: on in development, G toggles it (main.ts).
  */
 :root {
   --grid-columns: 12;
@@ -684,8 +682,6 @@ figure[data-rule-example] dl > div {
 figure[data-rule-example] dt {
   padding-top: 0.35em;
   font: 500 var(--size-xs) var(--font-ui);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
   color: var(--color-muted);
 }
 figure[data-rule-example] dd {
@@ -763,7 +759,6 @@ thead th {
   font-weight: 600;
   color: var(--color-muted);
   font-size: var(--size-xs);
-  text-transform: uppercase;
   letter-spacing: 0.06em;
   white-space: nowrap;
 }
@@ -937,8 +932,6 @@ main[data-layout="docs"] > nav h2,
 main[data-layout="docs"] > aside h2 {
   margin: var(--space-5) 0 var(--space-3);
   font: 600 var(--size-xs) var(--font-ui);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
   color: var(--color-muted);
 }
 main[data-layout="docs"] > nav summary {
@@ -1038,13 +1031,6 @@ main[data-layout="index"] > .container > header p {
   font: var(--size-lg) / 1.5 var(--font-text);
   color: var(--color-muted);
 }
-[data-eyebrow] {
-  margin: 0 0 var(--space-5);
-  font: 600 var(--size-xs) var(--font-ui);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--color-accent);
-}
 /* Articles: a card each, its cover a mark hanging past the text edge (the site's own motif). */
 ol[data-articles] {
   list-style: none;
@@ -1132,12 +1118,6 @@ ol[data-articles] p {
   font-family: var(--font-text);
   font-size: var(--size-md);
 }
-ol[data-articles] [data-more] {
-  margin-top: auto;
-  padding-top: var(--space-2);
-  font: 500 var(--size-sm) var(--font-ui);
-  color: var(--color-text);
-}
 
 /* Landing */
 
@@ -1150,17 +1130,6 @@ ol[data-articles] [data-more] {
   grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
   gap: var(--space-7) var(--space-8);
   align-items: start;
-}
-[data-hero] [data-status-line] {
-  margin: 0 0 var(--space-6);
-  font-size: var(--size-sm);
-  color: var(--color-muted);
-}
-[data-hero] [data-status-line] code {
-  color: var(--color-text);
-  background: none;
-  border: 0;
-  padding: 0;
 }
 [data-hero] h1 {
   font-size: var(--size-display);
@@ -1284,43 +1253,71 @@ input[type="radio"]:focus-visible + span {
   opacity: 0.85;
 }
 
-/* The specimen: one real paragraph, with its toggles */
+/* The converter in the hero: the text to edit, the engine's result under it, every change marked. */
 
 [data-specimen] {
   margin: 0;
-  padding: var(--space-6) var(--space-6) var(--space-5);
-  border: 1px solid var(--color-rule);
+  border: 1px solid var(--color-line);
   background: var(--color-surface);
 }
 [data-specimen]:has(input[name="hang"]:not(:checked)) {
   --hang-amount: 0;
 }
-[data-specimen] [data-before] {
-  margin: 0 0 var(--space-6);
-  padding-bottom: var(--space-5);
+[data-specimen-input] {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+  padding: var(--space-4) var(--space-5) 0;
+  background: var(--color-paper);
   border-bottom: 1px solid var(--color-line);
-  font: var(--size-sm) / 1.7 var(--font-mono);
+}
+[data-specimen-input] label {
+  font-size: var(--size-sm);
   color: var(--color-muted);
 }
-[data-specimen] [data-before] small {
-  display: block;
-  margin-bottom: var(--space-2);
-  font: 500 var(--size-xs) var(--font-ui);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+[data-specimen-input] select {
+  min-width: 0;
+  min-height: 30px;
+  padding-block: 0;
+  font-size: var(--size-sm);
+  background-color: var(--color-surface);
 }
+[data-specimen-input] textarea {
+  grid-column: 1 / -1;
+  min-height: 0;
+  /* As tall as its text (main.ts sets the height; field-sizing does it where supported). */
+  field-sizing: content;
+  margin: 0;
+  padding: var(--space-2) 0 var(--space-4);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  font: var(--size-sm) / 1.7 var(--font-mono);
+  color: var(--color-text);
+  overflow: hidden;
+  resize: none;
+}
+[data-specimen-input] textarea:focus-visible {
+  outline: none;
+}
+[data-specimen-input]:has(textarea:focus-visible) {
+  box-shadow: inset 0 -2px 0 var(--color-text);
+}
+/* The result: the text face, with room on the left for the opening marks to hang into. */
 [data-specimen] [data-after] {
-  margin: 0 0 var(--space-5) var(--space-6);
-  padding: 0 0 0 0;
-  border-left: 1px solid var(--color-text);
-  font-size: var(--size-lg);
-  line-height: 1.65;
+  padding: var(--space-5) var(--space-5) var(--space-5) var(--space-6);
+  font: var(--size-lg) / 1.6 var(--font-text);
+  color: var(--color-text);
   hyphens: none;
+  overflow-wrap: break-word;
 }
 [data-specimen] [data-after] p {
-  margin: 0;
-  color: var(--color-text);
+  margin: 0 0 0.8em;
   text-wrap: pretty;
+}
+[data-specimen] [data-after] p:last-child {
+  margin-bottom: 0;
 }
 [data-specimen] ins {
   background: none;
@@ -1332,24 +1329,31 @@ input[type="radio"]:focus-visible + span {
   background: var(--color-ins);
   color: var(--color-ins-text);
 }
+/* A hanging mark pulls its box to nothing with its negative margin: the mark itself is marked. */
+[data-specimen]:has(input[name="marks"]:checked) ins > :is([data-hang], [data-hang-close]) {
+  background: var(--color-ins);
+}
 [data-specimen]:has(input[name="marks"]:checked) ins[data-nbsp] {
   box-shadow: inset 0 0 0 1px currentColor;
 }
-[data-specimen] form {
+[data-specimen-options] {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-3) var(--space-6);
+  gap: var(--space-2) var(--space-5);
+  padding: 0 var(--space-5) var(--space-4);
   font-size: var(--size-sm);
 }
-[data-specimen] label {
+[data-specimen-options] label {
   display: inline-flex;
-  gap: var(--space-3);
+  gap: var(--space-2);
   align-items: center;
   cursor: pointer;
 }
 [data-specimen] figcaption {
-  margin-top: var(--space-4);
+  padding: var(--space-3) var(--space-5);
+  border-top: 1px solid var(--color-line);
   font-size: var(--size-xs);
+  color: var(--color-muted);
 }
 
 /* Numbered sections: the label on the left, the matter on the right */
@@ -1367,11 +1371,6 @@ section[data-section] > .container > header {
   position: sticky;
   top: calc(var(--header-height) + var(--space-6));
   align-self: start;
-}
-section[data-section] [data-index] {
-  margin: 0 0 var(--space-3);
-  font: var(--size-sm) var(--font-mono);
-  color: var(--color-muted);
 }
 section[data-section] h2 {
   font-size: var(--size-xl);
@@ -1501,8 +1500,6 @@ table[data-samples] small {
 }
 [data-examples] dt {
   font: 500 var(--size-xs) var(--font-ui);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
   color: var(--color-muted);
 }
 [data-examples] dt output {
@@ -1567,71 +1564,6 @@ table[data-samples] small {
 
 /* Live example */
 
-[data-demo-options] {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-4) var(--space-6);
-  margin-bottom: var(--space-5);
-  font-size: var(--size-sm);
-}
-[data-demo-options] label {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-3);
-}
-/* On the narrowest phones the select gives way rather than push past the edge. */
-[data-demo-options] label:has(select) {
-  max-width: 100%;
-}
-[data-demo-options] select {
-  flex: 0 1 auto;
-  min-width: 0;
-}
-[data-demo-options] a {
-  margin-inline-start: auto;
-}
-[data-demo] {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-5);
-}
-[data-demo] > div {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  min-width: 0;
-}
-[data-demo] :is(label, p) {
-  margin: 0;
-  font: 500 var(--size-xs) var(--font-ui);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--color-muted);
-}
-[data-demo] textarea {
-  flex: 1;
-  min-height: 12rem;
-}
-[data-demo] [role="region"] {
-  flex: 1;
-  min-height: 12rem;
-  padding: var(--space-5);
-  background: var(--color-surface);
-  border: 1px solid var(--color-line);
-  font: var(--size-lg) / 1.65 var(--font-text);
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-}
-@media (max-width: 760px) {
-  [data-demo] {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  [data-demo-options] a {
-    margin-inline-start: 0;
-  }
-}
-
 /* Playground */
 
 [data-page="playground"] [data-wide] {
@@ -1678,8 +1610,6 @@ table[data-samples] small {
   display: grid;
   gap: var(--space-2);
   font: 500 var(--size-xs) var(--font-ui);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
   color: var(--color-muted);
 }
 [data-page="playground"] :is(select, button) {
@@ -1758,8 +1688,6 @@ table[data-samples] small {
 [data-page="playground"] summary {
   cursor: pointer;
   font: 500 var(--size-xs) var(--font-ui);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
   color: var(--color-muted);
 }
 [data-page="playground"] summary:hover {
@@ -1865,8 +1793,6 @@ table[data-samples] small {
 [data-page="playground"] [data-wide] > section > section > header > label[for="input"] {
   margin-inline-end: auto;
   font: 500 var(--size-xs) var(--font-ui);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
 }
 [data-page="playground"] [role="tablist"] {
   flex: none;

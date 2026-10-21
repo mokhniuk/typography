@@ -139,7 +139,6 @@ function articlesIndex(all: Article[]): string {
       <p data-meta><time datetime="${article.date}">${when(article.date)}</time> · ${article.minutes} min read</p>
       <h2><a href="${root}${article.path}">${esc(article.title)}</a></h2>
       <p>${esc(article.summary)}</p>
-      <p data-more aria-hidden="true">Read →</p>
     </div>
   </article>
 </li>`,

@@ -94,7 +94,11 @@ ${items}
 /** A real paragraph (Carroll, 1865, public domain), as an e-text would have it: straight quotes and a hyphen for a dash. */
 export const SPECIMEN = `"Curiouser and curiouser!" cried Alice (she was so much surprised, that for the moment she quite forgot how to speak good English); "now I'm opening out like the largest telescope that ever was! Good-bye, feet!" - for when she looked down at her feet, they seemed to be almost out of sight...`;
 
-/** The specimen set by the engine, the changed runs wrapped in `ins`, for the toggles on the landing page. */
+/**
+ * The converter in the hero: the specimen in an editable box, and the engine's result under it with
+ * every change marked. Set here at build time, so the page shows it before any script runs; main.ts
+ * makes it live (it sets the text again as you type or pick a language).
+ */
 export function specimenFigure(): string {
   const output = typographic(SPECIMEN, 'en', { quoteStyle: 'us' });
   let after = '';
@@ -103,13 +107,17 @@ export function specimenFigure(): string {
     else if (run.kind === 'ins') after += mark('ins', run.text);
   }
   return `<figure data-specimen>
-  <p data-before><small>What you have</small><code data-raw>${esc(SPECIMEN)}</code></p>
-  <blockquote data-hanging data-after><p>${after}</p></blockquote>
-  <form>
-    <label><input type="checkbox" name="marks" /> Mark what changed</label>
+  <div data-specimen-input>
+    <label for="hero-in">Your text</label>
+    <select id="hero-lang" aria-label="Language"><option value="en" selected>English</option></select>
+    <textarea id="hero-in" spellcheck="false" rows="5">${esc(SPECIMEN)}</textarea>
+  </div>
+  <div id="hero-out" data-hanging data-after role="region" aria-label="Typeset" aria-live="polite"><p>${after}</p></div>
+  <form data-specimen-options>
+    <label><input type="checkbox" name="marks" checked /> Mark what changed</label>
     <label><input type="checkbox" name="hang" checked /> Hang the punctuation</label>
   </form>
-  <figcaption>From <cite>Alice's Adventures in Wonderland</cite>. The line on the left is the text edge.</figcaption>
+  <figcaption>From <cite>Alice's Adventures in Wonderland</cite>. Edit it, or paste your own.</figcaption>
 </figure>`;
 }
 

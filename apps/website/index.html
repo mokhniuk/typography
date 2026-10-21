@@ -18,7 +18,6 @@
   <section data-hero>
     <div class="container">
       <div data-intro>
-        <p data-status-line><code>@podiia/typography {{version}}</code> · pre-release</p>
         <h1>Real quotation marks, dashes and spaces, in {{langs}} languages.</h1>
         <p data-lede>A library that fixes the typography of running text. Give it a string and a language. It gives the string back with the right quotation marks, dashes where there were hyphens, an ellipsis, and no-break spaces where a line should not break. Tags, links and code are left alone.</p>
 
@@ -38,7 +37,7 @@
             <pre><code>npm install @podiia/typography</code></pre>
             <button type="button" data-copy aria-label="Copy the install command">Copy</button>
           </div>
-          <p data-status>Not on npm yet; it will be there at 1.0. Until then, pick <em>git</em> and install a release tag. The repository is private, so the machine needs SSH access.</p>
+          <p data-status>Version {{version}}, a pre-release. Not on npm yet; it will be there at 1.0. Until then, pick <em>git</em> and install a release tag. The repository is private, so the machine needs SSH access.</p>
         </section>
 
         <p data-actions>
@@ -53,7 +52,6 @@
   <section aria-labelledby="languages" data-section>
     <div class="container">
       <header>
-        <p data-index>01</p>
         <h2 id="languages">Other languages</h2>
       </header>
       <div>
@@ -66,7 +64,6 @@
   <section aria-labelledby="rules" data-section>
     <div class="container">
       <header>
-        <p data-index>02</p>
         <h2 id="rules">What it changes</h2>
       </header>
       <div>
@@ -80,7 +77,6 @@
   <section aria-labelledby="use" data-section>
     <div class="container">
       <header>
-        <p data-index>03</p>
         <h2 id="use">Using it</h2>
       </header>
       <div>
@@ -114,7 +110,6 @@ explain('He said "hi"... 21-26', 'en', { quoteStyle: 'us' }).changes;
   <section aria-labelledby="gaps" data-section>
     <div class="container">
       <header>
-        <p data-index>04</p>
         <h2 id="gaps">What isn't finished</h2>
       </header>
       <div>
@@ -126,33 +121,6 @@ explain('He said "hi"... 21-26', 'en', { quoteStyle: 'us' }).changes;
           <li><strong>Some input can't be read with certainty.</strong> An inch mark inside a quotation (<code>a 5" hole</code>) is one. Such cases are listed as limits, not guessed at.</li>
         </ul>
         <p><a href="./docs/limits/">Known limits</a> · <a href="./docs/languages/">Languages and their review status</a></p>
-      </div>
-    </div>
-  </section>
-
-  <section aria-labelledby="try" data-section>
-    <div class="container">
-      <header>
-        <p data-index>05</p>
-        <h2 id="try">Try it</h2>
-      </header>
-      <div>
-        <p data-lede>Type or paste. It runs in your browser and nothing leaves it.</p>
-        <form data-demo-options>
-          <label>Language <select id="demo-lang"></select></label>
-          <label><input type="checkbox" id="demo-us" /> American quotes</label>
-          <a href="./playground/">More options in the playground</a>
-        </form>
-        <div data-demo>
-          <div>
-            <label for="demo-in">Your text</label>
-            <textarea id="demo-in" spellcheck="false" rows="6">"Typography is the craft," she said - "of making text read well..." Pages 21-26, room 4B, 15% off.</textarea>
-          </div>
-          <div>
-            <p id="demo-label">Typeset</p>
-            <div id="demo-out" role="region" aria-labelledby="demo-label" aria-live="polite"></div>
-          </div>
-        </div>
       </div>
     </div>
   </section>

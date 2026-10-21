@@ -1,5 +1,6 @@
 import { diff, type Lang, PACKS, typographic } from '../../src/core';
-import { hangPunctuation } from '../../src/dom';
+import { hangPunctuation, markHangs } from '../../src/dom';
+import { example } from '../playground/examples';
 
 const STORAGE = 'typography-theme';
 
@@ -10,20 +11,21 @@ const save = (key: string, value: string) => {
   } catch {}
 };
 
-// The design grid (an experiment): pink columns over the page, on until G hides them (remembered).
+// The design grid: pink columns over the page. G toggles it (remembered); until then it is on in
+// development (localhost) and off on the site, or on anywhere with ?grid.
 const GRID = 'typography-grid';
 const showGrid = (on: boolean) => {
   if (on) document.documentElement.dataset.grid = '';
   else delete document.documentElement.dataset.grid;
   save(GRID, on ? 'on' : 'off');
 };
+const local = ['localhost', '127.0.0.1'].includes(location.hostname);
+let chosen: string | null = null;
 try {
-  showGrid(
-    localStorage.getItem(GRID) !== 'off' || new URLSearchParams(location.search).has('grid'),
-  );
-} catch {
+  chosen = localStorage.getItem(GRID);
+} catch {}
+if (new URLSearchParams(location.search).has('grid') || (chosen ?? (local ? 'on' : 'off')) === 'on')
   showGrid(true);
-}
 document.addEventListener('keydown', (event) => {
   if (event.key !== 'g' && event.key !== 'G') return;
   if (event.metaKey || event.ctrlKey || event.altKey) return;
@@ -85,31 +87,63 @@ for (const pre of document.querySelectorAll<HTMLPreElement>('article pre')) {
 // them as the page was parsed; this pass takes over from it and keeps them right as the page changes.
 for (const root of document.querySelectorAll<HTMLElement>('[data-hanging]')) hangPunctuation(root);
 
-// The live example on the landing page.
-const input = document.querySelector<HTMLTextAreaElement>('#demo-in');
-const output = document.querySelector<HTMLElement>('#demo-out');
-const language = document.querySelector<HTMLSelectElement>('#demo-lang');
-const american = document.querySelector<HTMLInputElement>('#demo-us');
-if (input && output && language && american) {
-  for (const pack of PACKS)
-    language.add(new Option(pack.name, pack.code, pack.code === 'en', pack.code === 'en'));
-  american.checked = true;
-  const run = () => {
-    const text = typographic(input.value, language.value as Lang, {
-      quoteStyle: american.checked ? 'us' : 'language',
+// The converter in the hero: the build set its first result; this sets it again as you type or
+// pick a language. English uses American quotes, like the rest of the site; an unedited text follows
+// the language (the playground's short example for it).
+const heroIn = document.querySelector<HTMLTextAreaElement>('#hero-in');
+const heroOut = document.querySelector<HTMLElement>('#hero-out');
+const heroLang = document.querySelector<HTMLSelectElement>('#hero-lang');
+if (heroIn && heroOut && heroLang) {
+  for (const pack of PACKS) if (pack.code !== 'en') heroLang.add(new Option(pack.name, pack.code));
+  let edited = false;
+  const NBSP = '\u00a0';
+  const marked = (text: string): Node[] =>
+    text.split(new RegExp(`(${NBSP})`)).flatMap((part) => {
+      if (!part) return [];
+      const ins = document.createElement('ins');
+      ins.textContent = part;
+      if (part === NBSP) ins.dataset.nbsp = '';
+      return [ins];
     });
-    output.replaceChildren();
-    for (const part of diff(input.value, text)) {
+  const run = () => {
+    const lang = heroLang.value as Lang;
+    const source = heroIn.value;
+    const result = typographic(source, lang, { quoteStyle: lang === 'en' ? 'us' : 'language' });
+    // One paragraph per block of text, as the input has them.
+    const paragraphs: Node[][] = [[]];
+    for (const part of diff(source, result)) {
       if (part.kind === 'del') continue;
-      const node =
-        part.kind === 'ins' ? document.createElement('ins') : document.createTextNode(part.text);
-      if (node instanceof HTMLElement) {
-        node.textContent = part.text;
-        if (part.text === ' ') node.dataset.nbsp = '';
-      }
-      output.append(node);
+      const pieces = part.text.split(/\n\s*\n/);
+      pieces.forEach((piece, n) => {
+        if (n) paragraphs.push([]);
+        const nodes = part.kind === 'ins' ? marked(piece) : [document.createTextNode(piece)];
+        paragraphs[paragraphs.length - 1]?.push(...nodes);
+      });
     }
+    heroOut.replaceChildren(
+      ...paragraphs.map((nodes) => {
+        const p = document.createElement('p');
+        p.append(...nodes);
+        return p;
+      }),
+    );
+    markHangs(heroOut);
   };
-  for (const control of [input, language, american]) control.addEventListener('input', run);
-  run();
+  // The box grows with its text, so the whole input shows.
+  const fit = () => {
+    heroIn.style.height = 'auto';
+    heroIn.style.height = `${heroIn.scrollHeight}px`;
+  };
+  fit();
+  addEventListener('resize', fit);
+  heroIn.addEventListener('input', () => {
+    edited = true;
+    fit();
+    run();
+  });
+  heroLang.addEventListener('change', () => {
+    if (!edited) heroIn.value = example('text', heroLang.value as Lang, 'short');
+    fit();
+    run();
+  });
 }
