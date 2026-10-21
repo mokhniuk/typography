@@ -496,6 +496,22 @@ describe('a quote with no partner', () => {
     expect(t('Cut 2" off, then 3" more.', 'de')).toBe('Cut 2" off, then 3" more.');
   });
 
+  test('a digit of any script before the mark keeps it an inch mark', () => {
+    expect(t('𝟐" pipe')).toBe('𝟐" pipe');
+    expect(t('a ٢" bolt and a ٤" bolt')).toBe('a~٢" bolt and a~٤" bolt');
+    for (const text of ['𝟐" pipe', 'a ٢" bolt and a ٤" bolt']) expect(t(t(text))).toBe(t(text));
+  });
+
+  test('a quotation glued to a digit keeps both marks as written', () => {
+    expect(t('5"a"')).toBe('5"a"');
+    expect(t('5"ab cd"')).toBe('5"ab cd"');
+    for (const text of ['5"a"', '5"ab cd"']) expect(t(t(text))).toBe(t(text));
+    expect(t('He said, "stop and left.')).toBe('He said, «stop and left.');
+    expect(t('and so said he" to all')).toBe('and so said he» to all');
+    expect(t(t('a 2" pipe, said he"'))).toBe(t('a 2" pipe, said he"'));
+    expect(t('Tallinn"ä"')).not.toContain('"');
+  });
+
   test('a quotation that ends in a digit still closes, and one opens after a dash or a colon', () => {
     expect(t('He said "call 911" and left.')).toBe('He said «call 911» and left.');
     expect(t('He said: "stop"')).toBe('He said: «stop»');

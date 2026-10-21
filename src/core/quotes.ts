@@ -10,7 +10,6 @@ const BODY = `[^${RAW}]*`;
 const GUILLEMETS = new RegExp(`«(${BODY})»`, 'g');
 const SINGLE_GUILLEMETS = new RegExp(`‹(${BODY})›`, 'g');
 const ANY_RAW = new RegExp(`[${RAW}]`, 'g');
-const DIGIT_BEFORE = /\p{N}/u;
 /**
  * Marks the straight pair `"…"`. A straight " cannot open a quotation straight after a digit: there it
  * is an inch mark (2" pipe), so two inch marks in one text do not pair. Closing after a digit is still
@@ -23,7 +22,7 @@ function pairStraight(text: string): string {
   let out = '';
   let last = 0;
   for (let at = text.indexOf('"'); at !== -1; ) {
-    if (at > 0 && DIGIT_BEFORE.test(text[at - 1] as string)) {
+    if (DIGIT.test(codePointBefore(text, at) ?? '')) {
       at = text.indexOf('"', at + 1);
       continue;
     }
@@ -76,7 +75,7 @@ const LONE_MARK = new RegExp(`[${LONE}]`, 'g');
 const LONE_CLOSING = new RegExp(`[${LONE}]|${NBSP}[${SPACED_CLOSING}]`, 'g');
 const SPACE = /\s/;
 const NON_SPACE = /\S/;
-const DIGIT = /\d/;
+const DIGIT = /\p{N}/u;
 const BEFORE_CLOSING_BLOCKED = /[\s([]/;
 /** The HTML, Markdown and rehype modes put this where a tag stands; a lone mark reads past it. */
 const TAG = '\uFFFC';
@@ -85,6 +84,14 @@ const charBefore = (text: string, at: number): string | undefined => {
   let i = at - 1;
   while (text[i] === TAG) i--;
   return text[i];
+};
+/** The whole code point before `at`, past any tags (a digit outside the BMP is two UTF-16 units). */
+const codePointBefore = (text: string, at: number): string | undefined => {
+  let i = at - 1;
+  while (text[i] === TAG) i--;
+  if (i < 0) return undefined;
+  const unit = text.charCodeAt(i);
+  return unit >= 0xdc00 && unit <= 0xdfff && i > 0 ? text.slice(i - 1, i + 1) : text[i];
 };
 
 /**
@@ -120,13 +127,35 @@ function openLone(text: string, openerBefore: RegExp): string {
   return last ? out + text.slice(last) : text;
 }
 
+/** Whether a quotation is open at `at`: more OPENs than CLOSEs before it (an inch mark in it is not a refused opener). */
+function insideQuotation(text: string, at: number): boolean {
+  let depth = 0;
+  for (let i = 0; i < at; i++) {
+    if (text[i] === OPEN) depth++;
+    else if (text[i] === CLOSE) depth--;
+  }
+  return depth > 0;
+}
+
 /** After a digit only a curly or guillemet mark closes: the straight " is an inch (5'10"). */
 function closeLone(text: string): string {
   return text.replace(LONE_CLOSING, (found: string, at: number) => {
     const before = charBefore(text, at);
     if (before === undefined) return found;
     if (found.length === 2) return NON_SPACE.test(before) ? CLOSE : found;
-    if (DIGIT.test(before)) return found === '"' ? found : CLOSE;
+    if (DIGIT.test(codePointBefore(text, at) as string)) return found === '"' ? found : CLOSE;
+    // The nearest straight " before this one did not pair: if it was refused as an inch mark (5"a"),
+    // this one is its quotation's closer and stays as written too.
+    if (found === '"') {
+      const partner = text.lastIndexOf('"', at - 1);
+      if (
+        partner !== -1 &&
+        DIGIT.test(codePointBefore(text, partner) ?? '') &&
+        !insideQuotation(text, partner)
+      ) {
+        return found;
+      }
+    }
     return BEFORE_CLOSING_BLOCKED.test(before) ? found : CLOSE;
   });
 }

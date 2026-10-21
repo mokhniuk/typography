@@ -39,11 +39,9 @@ Every pack has `reviewed: false`: bg cs da el es et fi ga hr hu it lt lv mt nl p
 
 ### Inch marks and quotations: the cases left
 
-Found in the review of the inch-mark fix (2026-10-21). Each is a limit, listed in [limits.md](limits.md):
+Found in the review of the inch-mark fix (2026-10-21). It is a limit, listed in [limits.md](limits.md):
 
-- **A quotation glued to a digit** (`5"a"`) is half set: the opener is skipped as an inch mark, the lone-mark pass then converts the closer (`5"a»`). Main set it `5«a»`. Decide: leave both marks as written, or pair them. Fix in the lone-mark pass of `src/core/quotes.ts` (`closeLone` must not close a `"` whose partner was refused as an inch mark).
 - **An inch mark inside a quotation** (`He said "a 5" hole" ok`) closes the quotation at the inch mark, leaving the real closer lone (`«a 5» hole»`). Same on main. A closer after a digit followed by a letter or space and another `"` later is the ambiguous case; research what other tools do before choosing.
-- **Non-ASCII digits** (`𝟐"`, Arabic-Indic) before the mark: the pair scan tests one UTF-16 unit with `\p{N}`, and the lone-mark pass tests ASCII `\d`. Make both read the code point and the same digit class, with a golden test.
 ### Language gaps found while writing the packs
 
 Each is a limit of the pack format or an unverified choice, not a crash:

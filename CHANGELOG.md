@@ -2,6 +2,13 @@
 
 Versions follow semver while the package is below 1.0.0: a **minor** release may change the output of the engine or the API (every entry says whether it can change output you already have), a **patch** release fixes a bug without changing output you rely on. If you depend on exact output, pin a tag and read this file before you move it.
 
+## Unreleased
+
+### Fixes
+
+- A straight `"` glued to a digit keeps both marks as written: `5"a"` was set `5"a»` (the opener refused as an inch mark, the closer converted) and now stays `5"a"`; a lone `"` whose nearest earlier straight `"` stands after a digit is left as typed. Can change existing output: yes, for text with a straight `"` after such a refused inch mark.
+- The digit before a straight `"` is read as a whole code point with the Unicode number class in both quote passes: `𝟐" pipe` and `a ٢" bolt` keep the inch mark (the first was a quotation opener, the second had its mark closed). Can change existing output: yes, for text with a non-ASCII digit before a `"`.
+
 ## 0.7.0 (2026-10-21)
 
 ### Fixes
