@@ -651,7 +651,7 @@ No-break space after a one-letter word the language must not strand at a line en
 
 Category: `tradition`.
 
-Why: [sources.md](../resources/sources.md#spaceorphan), `general-knowledge`.
+Why: [sources.md](../resources/sources.md#spaceorphan), `verified`.
 
 ```text
 (en)

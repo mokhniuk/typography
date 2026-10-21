@@ -326,11 +326,15 @@ Alternative: No source found. Practical Typography "Nonbreaking spaces" was read
 
 ### `space.orphan`
 
-Confidence: `general-knowledge`.
+Confidence: `verified`.
 
 Why: A one-letter word does not end a line.
 
-Alternative: No authoritative source found. Only secondary pages (a WebKit bug thread, a Czech nbsp generator, plugin pages) state the Polish and Czech practice; none is a style guide, so none is cited. A Polish or Ukrainian typography guide is needed, and the English a/I rule has no source at all.
+Alternative: Czech is settled by the Internetová jazyková příručka (entry 880, read through a fetch summary): k, s, v, z, o, u, a, i stay with the next word, which is exactly the cs list; the entry says nothing of two-letter prepositions (do, na, ve, ...), so none is bound. Polish (a, i, o, u, w, z): only a Wikipedia article ("Sierotka (typografia)", which cites PWN and PN-P-55366:1983 without our having read either) states the six words, so the list is unchanged and not verified; the PWN Poradnia pages could not be fetched. Ukrainian: no readable source (the one found, a university layout handbook, returned 403 and a search snippet is not a read), so the list is unchanged and not verified. The English a/I rule has no source at all. Neither the Polish nor the Ukrainian two-letter prepositions are bound.
+
+Sources: [ijp-penezni-castky](#src-ijp-penezni-castky)
+
+- `cs`: [ijp-penezni-castky](#src-ijp-penezni-castky)
 
 ### `space.arrow`
 
@@ -522,7 +526,7 @@ Relied on: Direct speech shown as dialogue is set off with dashes (brūkšniai),
 
 <https://prirucka.ujc.cas.cz/?id=880>, read as a summary by a fetch tool, check it by hand on 2026-10-22.
 
-Relied on: A number and a currency sign are separated by a space ("100 Kč"; without one the compound reads as an adjective), and a line may not break between the number and the sign of a unit or currency ("1 000 000 Kč, 250 €"), for which a fixed space is advised.
+Relied on: A number and a currency sign are separated by a space ("100 Kč"; without one the compound reads as an adjective), and a line may not break between the number and the sign of a unit or currency ("1 000 000 Kč, 250 €"), for which a fixed space is advised. A line also may not break after the non-syllabic prepositions "k, s, v, z" ("k mostu", "v Plzni") nor after the syllabic prepositions "o, u" and conjunctions "a, i" ("u babičky", "o páté"); one-character prepositions and conjunctions are not separated from the word that follows. The entry does not speak of two-letter prepositions.
 
 <a id="src-pravopys-125"></a>
 **pravopys-125**. Український правопис (1993 rules, labelled the 2015 edition on pravopys.net), § 125, points 1 and 3б.

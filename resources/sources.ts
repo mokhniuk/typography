@@ -137,13 +137,13 @@ export const SOURCES: readonly Source[] = [
     author: 'Ústav pro jazyk český AV ČR',
     title: 'Internetová jazyková příručka: Peněžní částky, značky měn; Zalomení řádků',
     about:
-      'The online Czech language handbook of the Czech Academy of Sciences. The money entry covers the koruna sign; the € sign appears there only in a list of symbols, and the line-break entry gives the € example.',
+      'The online Czech language handbook of the Czech Academy of Sciences. The money entry covers the koruna sign; the € sign appears there only in a list of symbols, and the line-break entry gives the € example and names the one-letter words that must not end a line.',
     cite: 'Internetová jazyková příručka, "Peněžní částky, značky měn" (id 786) and "Zalomení řádků a nevhodné výrazy na jejich konci" (id 880).',
     url: 'https://prirucka.ujc.cas.cz/?id=880',
     accessed: '2026-10-22',
     readVia: 'summary',
     claim:
-      'A number and a currency sign are separated by a space ("100 Kč"; without one the compound reads as an adjective), and a line may not break between the number and the sign of a unit or currency ("1 000 000 Kč, 250 €"), for which a fixed space is advised.',
+      'A number and a currency sign are separated by a space ("100 Kč"; without one the compound reads as an adjective), and a line may not break between the number and the sign of a unit or currency ("1 000 000 Kč, 250 €"), for which a fixed space is advised. A line also may not break after the non-syllabic prepositions "k, s, v, z" ("k mostu", "v Plzni") nor after the syllabic prepositions "o, u" and conjunctions "a, i" ("u babičky", "o páté"); one-character prepositions and conjunctions are not separated from the word that follows. The entry does not speak of two-letter prepositions.',
   },
   {
     id: 'bipm-si-brochure-9',
@@ -728,9 +728,12 @@ export const RULE_SOURCES: Record<string, Decision> = {
       'No source found. Practical Typography "Nonbreaking spaces" was read (as a fetch-tool summary) and does not mention an ampersand or any operator; a web search for a guide on binding an ampersand between names found only general pages on no-break spaces and a LaTeX tie guide for forenames, none a style guide on this point, so none is cited. The rule is a judgement: a line ending on "&" or starting with it reads as a break in the pair. It binds both sides, so "Tom & Jerry" is one unbreakable unit, and a chain of operators binds end to end ("Tom & Jerry & Co" is five tokens in one unit; "one + two + three + four + five" is one run, and a pathological chain could bind a whole line); a guide may prefer a break before the operator instead. Two shapes stay unbound: an operator next to an inline tag in HTML or Markdown ("Tom &amp; <em>Jerry</em>": the tag placeholder is not a letter) and a word ending in a combining mark (decomposed "café & bar"). Numbers (2 + 2, x = 5) are left to the author; doubled operators (&&, ==, +=) and operators with no typed spaces (R&D, x+y) are untouched.',
   },
   'space.orphan': {
-    ...general('A one-letter word does not end a line.'),
+    sources: ['ijp-penezni-castky'],
+    why: 'A one-letter word does not end a line.',
     alternative:
-      'No authoritative source found. Only secondary pages (a WebKit bug thread, a Czech nbsp generator, plugin pages) state the Polish and Czech practice; none is a style guide, so none is cited. A Polish or Ukrainian typography guide is needed, and the English a/I rule has no source at all.',
+      'Czech is settled by the Internetová jazyková příručka (entry 880, read through a fetch summary): k, s, v, z, o, u, a, i stay with the next word, which is exactly the cs list; the entry says nothing of two-letter prepositions (do, na, ve, ...), so none is bound. Polish (a, i, o, u, w, z): only a Wikipedia article ("Sierotka (typografia)", which cites PWN and PN-P-55366:1983 without our having read either) states the six words, so the list is unchanged and not verified; the PWN Poradnia pages could not be fetched. Ukrainian: no readable source (the one found, a university layout handbook, returned 403 and a search snippet is not a read), so the list is unchanged and not verified. The English a/I rule has no source at all. Neither the Polish nor the Ukrainian two-letter prepositions are bound.',
+    confidence: 'verified',
+    langs: { cs: ['ijp-penezni-castky'] },
   },
   'space.arrow': general('An arrow stays on the line of the word it points from or to.'),
   'space.before-punctuation': {
