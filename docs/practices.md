@@ -65,7 +65,7 @@ All three are general knowledge here: no source in the registry covers them.
 ## Column width
 
 - A narrow column (a phone, a sidebar) punishes every binding: each bound pair is a longer unbreakable unit, and the lines around it come out short or loose.
-- A wide column (over about 75 characters a line; a rule of thumb, general knowledge) hides the problem, because a line seldom ends on a short word, but bindings cost nothing there either.
+- A wide column (over about 75 characters a line; a rule of thumb, general knowledge) hides the problem, because a binding costs little in a wide column (a bound pair rarely forces an early break), and it is cheap to keep.
 - With justified text a long bound unit makes the spaces on its line stretch, so check the result in the narrowest column you ship.
 - A chain of bindings (`Tom & Jerry & Co`, `Prof. Dr. K. Słoboda`) is one unit as long as the whole chain, so in a narrow column it moves to the next line as a block.
 - Judge the page at two widths, the narrowest and the widest, not at one.
@@ -73,7 +73,7 @@ All three are general knowledge here: no source in the registry covers them.
 ## What never to do
 
 - **Do not bind a whole line.** A run of no-break spaces leaves the browser no place to break, and the text overflows its column. The rules bind pairs; a chain of operators (`one + two + three + four + five`) is the known case that can grow long ([limits.md](limits.md)). Do not add a no-break space between every word by hand.
-- **Do not bind inside link text that wraps.** A long link or button label with no-break spaces cannot wrap and may overflow on a phone. Keep the link text short, or leave it unbound.
+- **Do not bind inside link text that wraps.** A long link or button label with no-break spaces cannot wrap and may overflow on a phone. Keep the link text short, or leave it unbound. The engine itself binds inside link text too, so disable the relevant rules for such blocks if that matters.
 - **Do not use no-break spaces to fix a widow.** Use `text-wrap: pretty`.
 - **Do not bind for a layout you have not looked at.** A binding that reads well in one column can be worst in another.
 

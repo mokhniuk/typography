@@ -58,6 +58,14 @@ const CASES = [
   '<p>\n  "indented"\n  text - here\n</p>',
 ];
 
+describe('the disclosed unbound operator shape in HTML', () => {
+  test('an operator next to an inline tag stays unbound', () => {
+    expect(typesetHtml('<p>Tom &amp; <em>Jerry</em></p>', { lang: 'en' })).toBe(
+      '<p>Tom &amp; <em>Jerry</em></p>',
+    );
+  });
+});
+
 describe('the HTML mode and the rehype mode set the same text', () => {
   for (const html of CASES) {
     test(html, () => {

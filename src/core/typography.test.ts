@@ -224,6 +224,13 @@ describe('spaces', () => {
     expect(t('& Jerry')).toBe('& Jerry');
   });
 
+  test('the disclosed unbound operator shapes stay unbound', () => {
+    // decomposed: the word ends in a combining mark (e + U+0301), so the operator is not between two letter words
+    expect(t('café & bar')).toBe('café & bar');
+    // one-sided: no space after the operator
+    expect(t('Tom &Jerry')).toBe('Tom &Jerry');
+  });
+
   test('operator spacing is stable and recorded by explain', () => {
     const once = typographic('Tom & Jerry + rock');
     expect(typographic(once)).toBe(once);

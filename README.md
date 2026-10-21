@@ -156,6 +156,7 @@ Run it as `bun run src/cli/main.ts` before the `typo` bin is linked.
 | [docs/languages.md](docs/languages.md) | Quote marks, dashes, orphan letters, abbreviations and `%`/`€` spacing per language; review status; what is not implemented |
 | [docs/cli.md](docs/cli.md) | All flags, exit codes, standard input, format by extension, examples |
 | [docs/limits.md](docs/limits.md) | Known limits, speed, benchmark caveats |
+| [docs/practices.md](docs/practices.md) | Good practices: what to bind and with which rule, what to leave to CSS, column width, what never to do |
 | [docs/contributing.md](docs/contributing.md) | Tests, adding a rule or a language, the benchmark, the playground, releasing, using it from another project |
 | [docs/backlog.md](docs/backlog.md) | What is missing against the other tools, by priority, with the measurements behind each item |
 | [CHANGELOG.md](CHANGELOG.md) | What changed in each release, and whether it can change output you already have |

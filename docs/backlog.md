@@ -116,8 +116,8 @@ Today `space.orphan` binds a one-letter word in a language's list to the next wo
 - Short words of two or three letters (`to`, `of`, `the`; `на`, `до`; `der`, `die`) are not bound by any pack.
 - **The last words of a paragraph (widows and runts)** are decided: not a string rule, CSS `text-wrap: pretty` on the page (written down in [limits.md](limits.md)).
 - **How to bind, not only what:** a no-break space is a character and travels with the text (copy, search, screen readers read it as a space), a `<span style="white-space: nowrap">` is markup and stays on the page. The HTML, rehype and React modes could offer `bind: 'nbsp' | 'nowrap'` (the text mode and the CLI on plain text have only the character). Research what the two do to search, copy, hyphenation and `text-wrap: pretty` before choosing a default; the string engine keeps the no-break space.
-- **Short words in other languages:** `ga`, `es`, `it`, `pt`, `et`, `lv`, `lt` have no `orphans` list, because no source read gives one; Polish and Ukrainian lists are unverified. Add a list only from a style guide.
-- Done when each rule has golden tests per language that has the pattern, no rule can bind a whole line, and the `bind: nowrap` question is answered.
+- **Short words in other languages:** only cs, en, pl and uk have an `orphans` list (no source read gives one for the rest; sk, sl and hr have strong one-letter conventions); Polish and Ukrainian lists are unverified. Add a list only from a style guide.
+- Done when each rule has golden tests per language that has the pattern, no rule can bind a whole line (`space.operator` chains are the known, disclosed exception, see limits.md), and the `bind: nowrap` question is answered.
 
 ### Speed: what is left
 
