@@ -81,6 +81,23 @@ describe('typesetMarkdown', () => {
     );
   });
 
+  test('a pre, script, style or textarea block is left alone to its closing tag, blank lines included', () => {
+    expect(m('<pre>\nkeep "this" -> raw\n\nalso "this" -> raw\n</pre>\n\nthen "text"\n')).toBe(
+      '<pre>\nkeep "this" -> raw\n\nalso "this" -> raw\n</pre>\n\nthen «text»\n',
+    );
+    expect(m('<script>\nvar a = "x";\n\nvar b = "y";\n</script>\n"z"\n')).toBe(
+      '<script>\nvar a = "x";\n\nvar b = "y";\n</script>\n«z»\n',
+    );
+  });
+
+  test('a leading thematic break is not front matter', () => {
+    expect(m('---\n\nA "para" -> x\n')).toBe('---\n\nA~«para»~→ x\n');
+    expect(m('---\ntitle: "a"\n---\n\nA "para"\n')).toBe('---\ntitle: "a"\n---\n\nA~«para»\n');
+    expect(m('---\nA "para" with no closing fence\n')).toBe(
+      '---\nA~«para» with no closing fence\n',
+    );
+  });
+
   test('is idempotent', () => {
     const md = '# "a" - b\n\nx "y *z*" - 21-26 September... `c -> d`\n\n```\n"q"\n```\n';
     const once = typesetMarkdown(md);

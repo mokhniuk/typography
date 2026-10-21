@@ -45,6 +45,8 @@ const BREAK = /^\s{0,3}(?:([-*_=])(?:\s*\1){2,})\s*$/;
 const TABLE_RULE = /^\s*\|?\s*:?-+:?\s*(?:\|\s*:?-+:?\s*)*\|?\s*$/;
 const DEFINITION = /^\s{0,3}\[[^\]]+\]:\s/;
 const INDENTED = /^(?: {4}|\t)/;
+/** A raw block that runs to its closing tag, blank lines included (CommonMark's first kind of HTML block). */
+const RAW_TO_CLOSING = /^\s{0,3}<(pre|script|style|textarea)(?:\s|>|$)/i;
 /** The first line of a raw HTML block: a comment, a block-level tag, or a line that is one tag and nothing else. */
 const HTML_BLOCK =
   /^\s{0,3}(?:<!--|<\/?(?:address|article|aside|blockquote|details|dialog|div|dl|fieldset|figcaption|figure|footer|form|h[1-6]|header|hr|iframe|li|main|nav|ol|p|pre|script|section|style|summary|table|tbody|td|tfoot|th|thead|tr|ul)(?:\s|\/?>|$)|<[A-Za-z][^<>]*>\s*$)/i;
@@ -96,7 +98,15 @@ export function typesetMarkdown(markdown: string, options: MarkdownOptions = {})
   };
   let fence: string | null = null;
   let htmlBlock = false;
-  let frontMatter = parts[0]?.trim() === '---';
+  /** Inside a `pre`, `script`, `style` or `textarea` block: the closing tag that ends it. */
+  let rawEnd: RegExp | null = null;
+  // Front matter opens with `---` on the first line, goes straight on (no blank line) and closes
+  // with `---` or `...`; a `---` with none of that is a thematic break.
+  const lines = parts.filter((_, k) => k % 2 === 0);
+  let frontMatter =
+    lines[0]?.trim() === '---' &&
+    /\S/.test(lines[1] ?? '') &&
+    lines.slice(1).some((line) => /^(?:---|\.\.\.)\s*$/.test(line));
   for (let i = 0; i < parts.length; i += 2) {
     const text = parts[i] ?? '';
     const eol = parts[i + 1] ?? '';
@@ -118,7 +128,17 @@ export function typesetMarkdown(markdown: string, options: MarkdownOptions = {})
         return true;
       }
       if (htmlBlock) {
-        if (!/\S/.test(text)) htmlBlock = false;
+        if (rawEnd ? rawEnd.test(text) : !/\S/.test(text)) {
+          htmlBlock = false;
+          rawEnd = null;
+        }
+        return true;
+      }
+      const raw = RAW_TO_CLOSING.exec(text);
+      if (raw) {
+        rawEnd = new RegExp(`</${raw[1]}\\s*>`, 'i');
+        htmlBlock = !rawEnd.test(text);
+        if (!htmlBlock) rawEnd = null;
         return true;
       }
       if (HTML_BLOCK.test(text)) {
