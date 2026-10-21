@@ -16,12 +16,16 @@ const SCRIPT = new RegExp(
   ].join('|'),
   'gy',
 );
+/** Where a shell command starts: a line (after an optional `$ ` prompt), or after `&&`, `||`, `|`, `;`. */
+const COMMAND_AT = String.raw`(?:^[ \t]*(?:\$ )?|(?:&&|\|\||[|;])[ \t]*)`;
 const SHELL = new RegExp(
   [
     String.raw`(?<comment>(?:^|(?<=\s))#[^\n]*)`,
     `(?<string>${STRING})`,
-    String.raw`(?<fn>(?<=^[ \t]*(?:\$ )?)[\w./@-]+)`,
-    String.raw`(?<keyword>(?<=\s)--?[\w-]+)`,
+    // The command, then its subcommand (`bun run`, `git tag`), then flags.
+    String.raw`(?<fn>(?<=${COMMAND_AT})[\w./@-]+)`,
+    String.raw`(?<keyword>(?<=${COMMAND_AT}[\w./@-]+[ \t]+)[a-z][\w:-]*(?![\w./@-]))`,
+    String.raw`(?<literal>(?<=\s)--?[\w-]+(?:=\S*)?)`,
   ].join('|'),
   'gmy',
 );
