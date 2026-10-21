@@ -2038,6 +2038,44 @@ ol[data-articles] > li {
     grid-column: 3 / -1;
   }
 }
+/*
+ * The landing's tables on the grid: no box, the cell text starting on a column line, each column of
+ * the table a whole number of the section's columns (9 on a desktop, 6 on a tablet).
+ */
+section[data-section] [data-scroll] {
+  /* A column width in cqw: a table column ignores a calc() that mixes % and px. */
+  container-type: inline-size;
+  border: 0;
+  border-top: 1px solid var(--color-line);
+  border-radius: 0;
+  background: none;
+}
+section[data-section] :is(th, td) {
+  padding-inline: 0 var(--grid-gutter);
+}
+@media (min-width: 761px) {
+  section[data-section] table {
+    table-layout: fixed;
+  }
+  /* A column is a few grid columns: a long example wraps rather than run into the next one. */
+  section[data-section] table[data-samples] td {
+    white-space: normal;
+  }
+}
+@media (min-width: 1025px) {
+  /* Rule, You write, You get: three columns each. Import: three columns, For: the other six. */
+  section[data-section] table[data-samples] thead th:not(:last-child),
+  section[data-section] table:not([data-samples]) thead th:first-child {
+    width: calc((100cqw - 8 * var(--grid-gutter)) / 9 * 3 + 3 * var(--grid-gutter));
+  }
+}
+@media (min-width: 761px) and (max-width: 1024px) {
+  section[data-section] table[data-samples] thead th:not(:last-child),
+  section[data-section] table:not([data-samples]) thead th:first-child {
+    width: calc((100cqw - 5 * var(--grid-gutter)) / 6 * 2 + 2 * var(--grid-gutter));
+  }
+}
+
 /* An article: columns 3 to 10 of 12, 2 to 7 of 8, all 4 on a phone; centred, as the columns are. */
 main[data-layout="article"] > article {
   width: calc((var(--grid-inner) - 11 * var(--grid-gutter)) / 12 * 8 + 7 * var(--grid-gutter));
