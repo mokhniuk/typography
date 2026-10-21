@@ -21,7 +21,7 @@ An apostrophe before a dropped-letter word is not a quotation mark: `'em`, `'til
 |---|---|
 | break in the sentence | spaced em dash |
 | break in the sentence, literary | spaced em dash |
-| dialogue line, literary | not set |
+| line of dialogue (a paragraph opening with a dash) | em dash and a no-break space, in both registers |
 
 ## Spaces
 
@@ -35,8 +35,9 @@ Groups of three are separated by `~`, the decimal mark is `,`.
 
 ## Sources
 
+- https://vitrinelinguistique.oqlf.gouv.qc.ca/23371/la-ponctuation/tiret/le-tiret-dans-les-dialogues
 - https://style-guide.europa.eu/en/content/-/isg/topic?identifier=6.5-punctuation-in-figures
 
 ## Notes
 
-A no-break space is set inside the guillemets. Digits are grouped with a no-break space (number.group), as the Interinstitutional Style Guide sets for all languages; the decimal mark is a comma.
+A no-break space is set inside the guillemets. Digits are grouped with a no-break space (number.group), as the Interinstitutional Style Guide sets for all languages; the decimal mark is a comma. Dialogue: a dash marks each change of speaker, with a no-break space after an opening dash (OQLF Vitrine linguistique, "Le tiret dans les dialogues" and its spacing table); the OQLF accepts the em and the en dash, the engine uses the em dash.

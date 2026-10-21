@@ -290,19 +290,26 @@ describe('literary register', () => {
     expect(t('-5 градусів', 'uk', literary)).toBe('−5~градусів');
   });
 
-  test('the dialogue dash is Ukrainian and literary only', () => {
-    expect(t('- Привіт', 'uk')).toBe('- Привіт');
+  test('the dialogue dash is set in both registers, only where the pack writes dialogue with a dash', () => {
+    expect(t('- Привіт, - сказав він.', 'uk')).toBe('—~Привіт,~— сказав він.');
     expect(t('- Hello', 'en', literary)).toBe('- Hello');
+    expect(t('- Hello', 'en')).toBe('- Hello');
+    expect(t('- Hallo', 'de')).toBe('- Hallo');
+  });
+
+  test('a paragraph whose lines open with dashes is a list, not dialogue', () => {
+    expect(t('- перший\n- другий', 'uk')).toBe('- перший\n- другий');
+    expect(t('- перший\n- другий\n- третій', 'uk', literary)).toBe('- перший\n- другий\n- третій');
+    expect(t('- Привіт,\nсказав він.', 'uk')).toBe('—~Привіт,\nсказав він.');
   });
 
   test('a language with no literary profile keeps its display rules', () => {
     const sample = '“x ‘y’ z” - and 21-26 September';
-    // Every language whose literary register has no marks or dialogue dash of its own.
-    const plain = LANGS.filter((lang) => !LITERARY[lang] && !PACK[lang].dialogueDash);
-    // English and Ukrainian have a literary profile; the rest of the registry grows without this list.
-    expect(plain).toEqual(expect.arrayContaining(['de', 'pl', 'fr', 'ch']));
+    // Every language whose literary register has no marks of its own (the dialogue dash is the same in both).
+    const plain = LANGS.filter((lang) => !LITERARY[lang]);
+    // English has a literary profile; the rest of the registry grows without this list.
+    expect(plain).toEqual(expect.arrayContaining(['de', 'pl', 'fr', 'ch', 'uk']));
     expect(plain).not.toContain('en');
-    expect(plain).not.toContain('uk');
     for (const lang of plain) {
       expect(t(sample, lang, literary)).toBe(t(sample, lang));
     }

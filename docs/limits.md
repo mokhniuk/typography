@@ -49,7 +49,7 @@ Nine rules are off until named in `enable` (`number.group` is described in the r
 
 - A list nested four spaces deep is read as indented code and left as it was; use two.
 - The language is not read from front matter; pass `lang`.
-- A hyphen at the start of a line is a list marker, so a Ukrainian dialogue line must open with an em dash in a Markdown file.
+- A hyphen at the start of a line is a list marker, so a dialogue line must open with an em dash or en dash in a Markdown file.
 
 ## Rehype
 

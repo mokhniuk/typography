@@ -59,4 +59,9 @@ describe('Hungarian numbers', () => {
   test('the number format is a no-break space and a comma (Commission web-writing guide)', () => {
     expect(hu.numbers).toEqual({ group: NBSP, decimal: ',' });
   });
+
+  test('a paragraph that opens with a dash is a line of dialogue, in both registers', () => {
+    expect(t('- Várunk? - kérdezte.')).toBe('–~Várunk?~– kérdezte.');
+    expect(t('- Várunk? - kérdezte.', { register: 'literary' })).toBe('–~Várunk?~– kérdezte.');
+  });
 });

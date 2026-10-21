@@ -19,9 +19,9 @@ The language opens and closes a quotation with the same mark.
 
 | What | Setting |
 |---|---|
-| break in the sentence | spaced em dash |
-| break in the sentence, literary | spaced em dash |
-| dialogue line, literary | not set |
+| break in the sentence | spaced en dash |
+| break in the sentence, literary | spaced en dash |
+| line of dialogue (a paragraph opening with a dash) | en dash and a no-break space, in both registers |
 
 ## Spaces
 
@@ -35,10 +35,11 @@ Groups of three are separated by `~`, the decimal mark is `,`.
 
 ## Sources
 
+- https://frageladan.isof.se/visasvar.py?svar=52014
 - https://op.europa.eu/en/web/eu-vocabularies/formex/physical-specifications/character-encoding/use-of-quotation-marks-in-the-different-languages
 - https://frageladan.isof.se/visasvar.py?svar=46237
 - https://commission.europa.eu/resources/europa-web-guide/design-content-and-development/content/web-writing-guidelines/dates-numbers-and-symbols_en
 
 ## Notes
 
-Quotes: ”…” with ’…’ inside (EU Publications Office table; Frågelådan, Institutet för språk och folkminnen, says an inner quotation takes single marks). The same mark opens and closes, so a quotation is read by where each mark stands, not by pairing. The alternative »…» (same mark both sides) is not implemented. Numbers: a no-break space groups thousands and the decimal mark is a comma (Commission web-writing guide, which names no Swedish rule beyond "all other languages"). Not implemented, not verified: % and currency spacing, abbreviations, one-letter words, the sentence dash; the Interinstitutional Style Guide chapters and Svenska skrivregler could not be read.
+Quotes: ”…” with ’…’ inside (EU Publications Office table; Frågelådan, Institutet för språk och folkminnen, says an inner quotation takes single marks). The same mark opens and closes, so a quotation is read by where each mark stands, not by pairing. The alternative »…» (same mark both sides) is not implemented. Numbers: a no-break space groups thousands and the decimal mark is a comma (Commission web-writing guide, which names no Swedish rule beyond "all other languages"). Not implemented, not verified: % and currency spacing, abbreviations, one-letter words, the sentence dash; the Interinstitutional Style Guide chapters and Svenska skrivregler could not be read. Dialogue and the sentence dash: a tankstreck on a new line opens each turn, common in news and fiction (Isof Frågelådan, "Kan man markera anföring med tankstreck?"); the tankstreck is the en dash.

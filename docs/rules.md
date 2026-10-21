@@ -232,17 +232,33 @@ after   © 2026 Studio ® ™
 
 ## `dash.dialogue`
 
-A Ukrainian dialogue line (literary register) opens with an em dash and a no-break space
+A paragraph opening with a dash is a line of dialogue, in languages that write dialogue that way: their dash and a no-break space (Ukrainian — Привіт)
 
-Why: [sources.md](../resources/sources.md#dashdialogue), `general-knowledge`.
+Why: [sources.md](../resources/sources.md#dashdialogue), `verified`.
 
 ```text
-(uk, literary)
+(uk)
 before  - Привіт, - сказав він.
 after   —~Привіт, - сказав він.
 ```
 
-Only the dash that opens the paragraph; the second one belongs to dash.sentence.
+Only the dash that opens the paragraph; the second one belongs to dash.sentence. Both registers.
+
+```text
+(es)
+before  - ¿Esperamos? - preguntó.
+after   —¿Esperamos? - preguntó.
+```
+
+Spanish writes the raya attached to the turn.
+
+```text
+(fi)
+before  - Odotetaanko? kysyi hän.
+after   –~Odotetaanko? kysyi hän.
+```
+
+An en dash where the language uses one. A paragraph whose later line also opens with a dash is a list and is left alone.
 
 ## `number.group`
 

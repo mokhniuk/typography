@@ -50,9 +50,10 @@ Found in the review of the inch-mark fix (2026-10-21). Each is a limit, listed i
 
 Each is a limit of the pack format or an unverified choice, not a crash:
 
-- **Sentence dash unverified** for nl, sv, hu, sk, ro: the pack uses the spaced em dash; usage there often prefers a spaced en dash.
+- **Sentence dash unverified** for nl: the pack uses the spaced em dash; usage there often prefers a spaced en dash. (sv, hu, sk, ro now use the spaced en dash of their dialogue sources.)
 - **Italian and Maltese truncation apostrophe** (`po'`, `va'`, `da'`, `di'`) inside straight single quotes closes the quotation early. The pack format has no field for trailing apostrophes.
-- **Dialogue dash only in Ukrainian.** `dialogueDash` is set for `uk` alone, so a paragraph that opens with `- ` stays a hyphen in every other language (seen in the playground). [languages.md](languages.md) already names Polish; many European languages open a dialogue line with a dash (likely Spanish, French, Italian, Portuguese, Bulgarian, Croatian, Slovenian, Romanian, Hungarian, Greek, and Finnish and Swedish with an en dash). All unverified: read a style guide per language before setting the field, and decide which dash and which register each gets. English and German do not use one.
+- **Dialogue dash for Greek and Latvian.** The Triantafyllidis dictionary says a dash marks a change of speaker in Greek, but the character and spacing were not confirmed; no Latvian source was found. Read one before setting `dialogueDash`.
+- **The dash before the words of the narrator** in Spanish is attached inside (`—¿Esperamos? —preguntó—.`), and Finnish, Danish, Slovenian and Swedish use a comma there, not a dash; the engine sets a spaced dash wherever one is typed.
 - **Spanish and Greek paired dash** (`—inciso—`, attached inside) cannot be expressed: `sentenceDash` is one symmetric spaced dash.
 - **`percentSpace` is one flag** for `%` and for currency, but the sources treat them differently.
 - **Abbreviations without a full stop** (Estonian `nr`, `lk`; Finnish `klo`, `nro`) are not matched; the abbreviation rule needs the stop.

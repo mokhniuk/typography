@@ -47,4 +47,9 @@ describe('Romanian numbers', () => {
   test('the number format is a no-break space and a comma (Commission web-writing guide)', () => {
     expect(ro.numbers).toEqual({ group: NBSP, decimal: ',' });
   });
+
+  test('a paragraph that opens with a dash is a line of dialogue, in both registers', () => {
+    expect(t('- Așteptăm? - a întrebat.')).toBe('–~Așteptăm?~– a întrebat.');
+    expect(t('- Așteptăm? - a întrebat.', { register: 'literary' })).toBe('–~Așteptăm?~– a întrebat.');
+  });
 });

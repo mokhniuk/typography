@@ -21,7 +21,7 @@ An apostrophe before a dropped-letter word is not a quotation mark: `'em`, `'til
 |---|---|
 | break in the sentence | spaced em dash |
 | break in the sentence, literary | spaced em dash |
-| dialogue line, literary | em dash and a no-break space |
+| line of dialogue (a paragraph opening with a dash) | em dash and a no-break space, in both registers |
 
 ## Spaces
 
@@ -42,8 +42,9 @@ Groups of three are separated by `~`, the decimal mark is `,`.
 
 ## Sources
 
+- https://www.pravopys.net/sections/125/
 - https://style-guide.europa.eu/en/content/-/isg/topic?identifier=6.5-punctuation-in-figures
 
 ## Notes
 
-The literary register keeps the display quotes; what differs is the dialogue dash (an em dash and a no-break space). Digits are grouped with a no-break space (number.group), as the Interinstitutional Style Guide sets for all languages; the decimal mark is a comma.
+The literary register keeps the display quotes; the dialogue dash (an em dash and a no-break space) is set in both registers. Digits are grouped with a no-break space (number.group), as the Interinstitutional Style Guide sets for all languages; the decimal mark is a comma. Dialogue: a paragraph of direct speech opens with тире (Український правопис § 125, the 1993 rules as published on pravopys.net; the 2019 edition could not be read).

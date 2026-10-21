@@ -90,4 +90,9 @@ describe('Italian pack data', () => {
   test('ISG 6.5: comma for decimals, a fixed space between groups of three', () => {
     expect(it.numbers).toEqual({ group: NBSP, decimal: ',' });
   });
+
+  test('a paragraph that opens with a dash is a line of dialogue, in both registers', () => {
+    expect(t('- Aspettiamo? - chiese.')).toBe('—~Aspettiamo?~— chiese.');
+    expect(t('- Aspettiamo? - chiese.', { register: 'literary' })).toBe('—~Aspettiamo?~— chiese.');
+  });
 });

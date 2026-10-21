@@ -70,4 +70,9 @@ describe('Czech', () => {
       expect(typographic(once, 'cs')).toBe(once);
     }
   });
+
+  test('a paragraph that opens with a dash is a line of dialogue, in both registers', () => {
+    expect(t('- Počkáme? - zeptal se.')).toBe('–~Počkáme?~– zeptal se.');
+    expect(t('- Počkáme? - zeptal se.', { register: 'literary' })).toBe('–~Počkáme?~– zeptal se.');
+  });
 });

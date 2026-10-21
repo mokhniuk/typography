@@ -23,7 +23,7 @@ An apostrophe before a dropped-letter word is not a quotation mark: `'em`, `'til
 |---|---|
 | break in the sentence | spaced en dash |
 | break in the sentence, literary | spaced en dash |
-| dialogue line, literary | not set |
+| line of dialogue (a paragraph opening with a dash) | not set (dialogue is quoted) |
 
 ## Spaces
 

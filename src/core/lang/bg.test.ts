@@ -81,4 +81,9 @@ describe('Bulgarian idempotence', () => {
       expect(typographic(once, 'bg', { enable: ['number.group'] })).toBe(once);
     }
   });
+
+  test('a paragraph that opens with a dash is a line of dialogue, in both registers', () => {
+    expect(t('- Ще чакаме ли? - попита той.')).toBe('—~Ще чакаме ли?~— попита той.');
+    expect(t('- Ще чакаме ли? - попита той.', { register: 'literary' })).toBe('—~Ще чакаме ли?~— попита той.');
+  });
 });

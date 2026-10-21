@@ -20,6 +20,13 @@ const levelOf = ([open, close]: Level): string => code(`${open}…${close}`);
 const levels = (list: readonly Level[]): string => list.map(levelOf).join(', ');
 
 /** The letters of a one-letter-word pattern, `([aAI])` → `a A I`; the pattern itself if it is not that shape. */
+function dialogueSetting(pack: LangPack): string {
+  const style = pack.dialogueDash;
+  if (!style) return 'not set (dialogue is quoted)';
+  const dash = style.mark === '—' ? 'em dash' : 'en dash';
+  return `${dash} ${style.attached ? 'attached to the text' : 'and a no-break space'}, in both registers`;
+}
+
 function orphanLetters(pattern: RegExp): string {
   const match = /\(\[([^\]]+)\]\)/.exec(pattern.source);
   return match?.[1] ? [...(match[1] ?? '')].join(' ') : `pattern ${code(pattern.source)}`;
@@ -71,7 +78,7 @@ export function renderPack(pack: LangPack): string {
     '|---|---|',
     `| break in the sentence | spaced ${pack.sentenceDash ? 'en dash' : 'em dash'} |`,
     `| break in the sentence, literary | spaced ${(pack.sentenceDashLiterary ?? pack.sentenceDash) ? 'en dash' : 'em dash'} |`,
-    `| dialogue line, literary | ${pack.dialogueDash ? 'em dash and a no-break space' : 'not set'} |`,
+    `| line of dialogue (a paragraph opening with a dash) | ${dialogueSetting(pack)} |`,
   );
 
   out.push('', '## Spaces', '');

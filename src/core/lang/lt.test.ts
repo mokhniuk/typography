@@ -99,4 +99,9 @@ describe('Lithuanian idempotence', () => {
       expect(typographic(grouped, 'lt', { enable: ['number.group'] })).toBe(grouped);
     }
   });
+
+  test('a paragraph that opens with a dash is a line of dialogue, in both registers', () => {
+    expect(t('- Palauksime? - paklausė.')).toBe('–~Palauksime?~– paklausė.');
+    expect(t('- Palauksime? - paklausė.', { register: 'literary' })).toBe('–~Palauksime?~– paklausė.');
+  });
 });

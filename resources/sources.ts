@@ -242,6 +242,244 @@ export const SOURCES: readonly Source[] = [
     claim:
       'Use exactly one word space between words and one after a sentence-ending period; a thin space is suitable after the periods in initials such as W. A. Dwiggins.',
   },
+  {
+    id: 'pravopys-125',
+    kind: 'orthography',
+    author: 'Ukrainian National Commission on Orthography (the site names no editor)',
+    title: 'Український правопис, § 125 «Розділові знаки при прямій мові»',
+    about:
+      'The Ukrainian orthography rules (the 1993 edition, as published on pravopys.net). The 2019 edition in force has the same section headings, but its text could not be read.',
+    cite: 'Український правопис (1993 rules, labelled the 2015 edition on pravopys.net), § 125, points 1 and 3б.',
+    url: 'https://www.pravopys.net/sections/125/',
+    accessed: '2026-10-21',
+    readVia: 'summary',
+    claim:
+      'When direct speech opens a paragraph, a dash (тире) stands before it (— Ти звідки?), and a dash stands before the words of the author (— Тату! татку! — упізнали діти.).',
+  },
+  {
+    id: 'pwn-pauza-dialogowa',
+    kind: 'orthography',
+    author: 'Adam Wolański, PWN Poradnia Językowa',
+    title: 'Pauza dialogowa a myślnik',
+    about:
+      'An answer in the language advice service of the PWN Polish dictionary, by a typography specialist at the University of Warsaw.',
+    cite: 'A. Wolański, "Pauza dialogowa a myślnik", Poradnia Językowa PWN, 14.09.2018.',
+    url: 'https://sjp.pwn.pl/poradnia/haslo/Pauza-dialogowa-a-myslnik;18816.html',
+    accessed: '2026-10-21',
+    readVia: 'summary',
+    claim:
+      'Polish typography does not tell the dialogue dash from the ordinary dash: the same sign, the pauza (—) or the półpauza (–), is used for both, spaced.',
+  },
+  {
+    id: 'rae-raya-dialogos',
+    kind: 'orthography',
+    author: 'Real Academia Española and ASALE',
+    title: 'Ortografía de la lengua española, § 3.4.7.2.1 «En diálogos»',
+    about:
+      'The orthography of the Spanish academies (2010), online edition; read from a Wayback copy because rae.es refused the fetch.',
+    cite: 'RAE/ASALE, Ortografía de la lengua española (2010), § 3.4.7 and § 3.4.7.2.1.',
+    url: 'https://www.rae.es/ortograf%C3%ADa/otros-usos-de-la-raya',
+    accessed: '2026-10-21',
+    readVia: 'summary',
+    claim:
+      'In dialogue the raya (—) precedes each speaker turn and no space is left between the raya and the start of the turn; list items, unlike dialogue, take a space after it.',
+  },
+  {
+    id: 'oqlf-tiret-dialogues',
+    kind: 'style-guide',
+    author: 'Office québécois de la langue française',
+    title: 'Vitrine linguistique: Le tiret dans les dialogues; Espacement avant et après les signes de ponctuation',
+    about:
+      'The language advice of the Québec language office (successor of the Banque de dépannage linguistique).',
+    cite: 'OQLF, Vitrine linguistique, "Le tiret dans les dialogues" (fiche 23371) and the spacing table (fiche 22039).',
+    url: 'https://vitrinelinguistique.oqlf.gouv.qc.ca/23371/la-ponctuation/tiret/le-tiret-dans-les-dialogues',
+    accessed: '2026-10-21',
+    readVia: 'summary',
+    claim:
+      'A dash marks each change of speaker in a dialogue; an opening dash takes a no-break space after it; the em and the en dash are both accepted.',
+  },
+  {
+    id: 'treccani-lineetta',
+    kind: 'style-guide',
+    author: 'Fiammetta Longo, Treccani Magazine',
+    title: 'I punti della situazione. 9. Lineette doppie e lineetta singola',
+    about:
+      'An article on punctuation in the language section of the Treccani encyclopaedia magazine.',
+    cite: 'F. Longo, "I punti della situazione… 9. Lineette doppie e lineetta singola", Treccani Magazine, 27.02.2020.',
+    url: 'https://www.treccani.it/magazine/lingua_italiana/articoli/scritto_e_parlato/punteggiatura9.html',
+    accessed: '2026-10-21',
+    readVia: 'summary',
+    claim:
+      'Dashes may enclose direct speech in narrative texts as a conventional alternative to quotation marks, spaced, with the same dash before the narrator (– È qui, – disse mia madre.); its examples set the en dash.',
+  },
+  {
+    id: 'ciberduvidas-travessao',
+    kind: 'style-guide',
+    author: 'Ciberdúvidas da Língua Portuguesa',
+    title: 'Travessão no discurso directo',
+    about:
+      'An answer of the Portuguese language advice service of ISCTE (European norm).',
+    cite: 'Ciberdúvidas da Língua Portuguesa, "Travessão no discurso directo" (question of 6.11.2001).',
+    url: 'https://ciberduvidas.iscte-iul.pt/consultorio/perguntas/travessao-no-discurso-directo/8747',
+    accessed: '2026-10-21',
+    readVia: 'summary',
+    claim:
+      'The travessão introduces direct speech and marks a change of speaker, and sets off the narrator, spaced in the examples (— Há um vilarejo… — respondeu o funcionário.); no spacing rule is stated.',
+  },
+  {
+    id: 'indreptar-linia-dialog',
+    kind: 'orthography',
+    author: 'Academia Română, Institutul de Lingvistică (on dexonline)',
+    title: 'Îndreptar ortografic, ortoepic și de punctuație, 5th ed.: Punctuația 09. Linia de dialog și de pauză',
+    about:
+      'The Romanian academy guide to spelling and punctuation, as published on dexonline.',
+    cite: 'Îndreptar ortografic, ortoepic și de punctuație, ediția a V-a, §§ 275–281.',
+    url: 'https://dexonline.ro/article/09._Linia_de_dialog_%C8%99i_de_pauz%C4%83',
+    accessed: '2026-10-21',
+    readVia: 'summary',
+    claim:
+      'The linia de dialog marks the start of each speaker turn, a dash together with quotation marks is wrong, and a linie de pauză sets off the words of the author; the examples set a spaced en dash.',
+  },
+  {
+    id: 'ibl-pryaka-rech',
+    kind: 'orthography',
+    author: 'Институт за български език, БАН',
+    title: 'Езикови справки: При цитиране и пряка реч',
+    about:
+      'A language advice answer of the Institute for Bulgarian Language, citing the Официален правописен речник (2012), т. 131.1 and 131.4.',
+    cite: 'Институт за български език (БАН), Езикови справки, answer 2266.',
+    url: 'https://ibl.bas.bg/ezikovispravki/vaprosi/pri-tsitirane-i-pryaka-rech-10/2266',
+    accessed: '2026-10-21',
+    readVia: 'summary',
+    claim:
+      'Direct speech may be quoted, but is usually set on a new line with a long dash (дълго тире) and a space after it, with a spaced dash before the attribution.',
+  },
+  {
+    id: 'hrvatski-pravopis-8-16',
+    kind: 'orthography',
+    author: 'Institut za hrvatski jezik',
+    title: 'Hrvatski pravopis, § 8.16.1 Pravopisni znakovi u upravnome govoru',
+    about:
+      'The Croatian orthography of the national language institute, online edition.',
+    cite: 'Institut za hrvatski jezik, Hrvatski pravopis, § 8.16.1.',
+    url: 'https://pravopis.hr/pravilo/pravopisni-znakovi-u-upravnome-govoru/72/',
+    accessed: '2026-10-21',
+    readVia: 'summary',
+    claim:
+      'Handwriting quotes direct speech; printed text may use quotation marks or dashes, a spaced en dash opening the line and another before the attribution.',
+  },
+  {
+    id: 'slovenski-pravopis-388',
+    kind: 'orthography',
+    author: 'ZRC SAZU, Inštitut za slovenski jezik Frana Ramovša',
+    title: 'Slovenski pravopis 2001: Pravila, § 388 and § 473',
+    about:
+      'The Slovenian orthography rules (PDF; read as extracted text with damaged č, š, ž).',
+    cite: 'Slovenski pravopis (2001), Pravila, § 388 point 6 and § 473.',
+    url: 'https://www.fran.si/134/slovenski-pravopis/datoteke/Pravopis_Pravila.pdf',
+    accessed: '2026-10-21',
+    readVia: 'summary',
+    claim:
+      'Direct speech is normally in double quotation marks; a dash may replace them only at the start of a paragraph with no lead-in clause, and the dash is spaced on both sides.',
+  },
+  {
+    id: 'akh12-259',
+    kind: 'orthography',
+    author: 'Magyar Tudományos Akadémia',
+    title: 'A magyar helyesírás szabályai, 12th ed., rule 259',
+    about:
+      'The Hungarian spelling rules of the Academy of Sciences, online edition (characters checked in the HTML).',
+    cite: 'A magyar helyesírás szabályai, 12. kiadás (AkH12), 259.',
+    url: 'https://helyesiras.mta.hu/helyesiras/default/akh12',
+    accessed: '2026-10-21',
+    readVia: 'summary',
+    claim:
+      'In fiction dialogue is marked with a gondolatjel (en dash) instead of quotation marks, and a spaced gondolatjel sets off the attribution (– Nem is tudom – mondta.).',
+  },
+  {
+    id: 'kotus-vuorosanaviiva',
+    kind: 'style-guide',
+    author: 'Kotimaisten kielten keskus (Kotus)',
+    title: 'Kielitoimiston ohjepankki: Lainausmerkit ja vuorosanaviiva',
+    about:
+      'The language advice bank of the Institute for the Languages of Finland.',
+    cite: 'Kielitoimiston ohjepankki, "Lainausmerkit ja vuorosanaviiva".',
+    url: 'https://kielitoimistonohjepankki.fi/ohje/lainausmerkit-ja-vuorosanaviiva/',
+    accessed: '2026-10-21',
+    readVia: 'summary',
+    claim:
+      'Instead of quotation marks, the ajatusviiva is often used as a dialogue dash, especially in newspaper interviews and fiction; the attribution follows a comma.',
+  },
+  {
+    id: 'isof-tankstreck',
+    kind: 'style-guide',
+    author: 'Institutet för språk och folkminnen (Språkrådet)',
+    title: 'Frågelådan: Kan man markera anföring med tankstreck?',
+    about:
+      'An answer of the Swedish language council advice service.',
+    cite: 'Isof, Frågelådan, svar 52014.',
+    url: 'https://frageladan.isof.se/visasvar.py?svar=52014',
+    accessed: '2026-10-21',
+    readVia: 'summary',
+    claim:
+      'A tankstreck may mark direct speech, common in news and fiction: each new turn starts on a new line with an indent and a tankstreck, without quotation marks.',
+  },
+  {
+    id: 'ijp-pomlcka',
+    kind: 'orthography',
+    author: 'Ústav pro jazyk český AV ČR',
+    title: 'Internetová jazyková příručka: Pomlčka; Uvozovky',
+    about:
+      'The online Czech language handbook of the Czech Academy of Sciences.',
+    cite: 'Internetová jazyková příručka, "Pomlčka" (id 165) and "Uvozovky" (id 162).',
+    url: 'https://prirucka.ujc.cas.cz/?id=165',
+    accessed: '2026-10-21',
+    readVia: 'summary',
+    claim:
+      'Quotation marks mark direct speech; a pomlčka at the start of a line may also introduce it (– Čím se živíte? – Překládám.).',
+  },
+  {
+    id: 'psp-2000',
+    kind: 'orthography',
+    author: 'Jazykovedný ústav Ľudovíta Štúra SAV',
+    title: 'Pravidlá slovenského pravopisu, 3rd ed. (2000)',
+    about:
+      'The Slovak orthography rules (PDF).',
+    cite: 'Pravidlá slovenského pravopisu, 3. vydanie (2000): úvodzovky; pomlčka, point 10.',
+    url: 'https://www.juls.savba.sk/ediela/psp2000/psp.pdf',
+    accessed: '2026-10-21',
+    readVia: 'summary',
+    claim:
+      'Dashes are the newer alternative to quotation marks at the start and end of direct speech, spaced, with one before the attribution (– Rozviažte mu povrazy, – rozkázal rytier).',
+  },
+  {
+    id: 'dsn-59',
+    kind: 'orthography',
+    author: 'Dansk Sprognævn',
+    title: 'Retskrivningsordbogen 5.1, § 59 Replikgengivelse',
+    about:
+      'The Danish official spelling dictionary and its rules.',
+    cite: 'Retskrivningsordbogen 5.1, § 59.',
+    url: 'https://ro.dsn.dk/?paragraf=59&type=rulesearch',
+    accessed: '2026-10-21',
+    readVia: 'summary',
+    claim:
+      'Dialogue may be given with a replikstreg, quotation marks or no marks; the replikstreg has the same form as the tankestreg and is set especially where a turn starts a new line.',
+  },
+  {
+    id: 'drukteinis-skyryba',
+    kind: 'style-guide',
+    author: 'Antanas Drukteinis',
+    title: 'Lietuvių kalbos skyryba: taisyklės, komentarai, patarimai (2020)',
+    about:
+      'A Lithuanian punctuation handbook funded and endorsed by the State Commission of the Lithuanian Language (PDF).',
+    cite: 'A. Drukteinis, Lietuvių kalbos skyryba (2020), chapter 4, rule 4-1.',
+    url: 'https://emokykla.lt/upload/files/2024/07/08/liet-k-skyryba.pdf',
+    accessed: '2026-10-21',
+    readVia: 'summary',
+    claim:
+      'Direct speech shown as dialogue is set off with dashes (brūkšniai), retold direct speech with quotation marks.',
+  },
 ];
 
 const NOT_YET = 'Not yet researched.';
@@ -290,18 +528,21 @@ export const RULE_SOURCES: Record<string, Decision> = {
     langs: { en: ['butterick-legal'] },
   },
   'dash.dialogue': {
-    ...general('Ukrainian dialogue opens a paragraph with a dash.'),
+    sources: ['pravopys-125', 'pwn-pauza-dialogowa', 'rae-raya-dialogos', 'oqlf-tiret-dialogues', 'treccani-lineetta', 'ciberduvidas-travessao', 'indreptar-linia-dialog', 'ibl-pryaka-rech', 'hrvatski-pravopis-8-16', 'slovenski-pravopis-388', 'akh12-259', 'kotus-vuorosanaviiva', 'isof-tankstreck', 'ijp-pomlcka', 'psp-2000', 'dsn-59', 'drukteinis-skyryba'],
+    why: 'In these languages a line of dialogue opens with a dash, not a quotation mark, so a paragraph that opens with a typed hyphen and a space is such a line. The dash is the one the language uses for it, followed by a no-break space (attached with no space in Spanish), in both registers.',
     alternative:
-      'Not researched to a primary source: the Pravopys 2019 PDF (mon.gov.ua) refused the fetch (HTTP 403). A secondary page names Український правопис 2019, § 161 "Тире" (pp. 230–241) as the dash section; read that section before marking this verified.',
+      'Which dash: the sources set the em dash for uk, es and pt; pl uses whatever dash the text uses (the pack uses the em dash); fr accepts both (em set); bg says long dash but renders the en dash and it shows the en dash, and for both the pack keeps the em dash of its ISG sentence dash so that dialogue and the narrator match; ro, hr, hu, sk, lt, cs, sl, fi and sv set the en dash; da says the same form as the tankestreg, the em dash in the pack. Only the OQLF asks for a no-break space after the dash; the engine sets one everywhere but Spanish so that the dash never ends a line alone. Not set: et (quotes are the norm, EKI), lv and el (the dash is not confirmed by a source read), and en, de, ch, nl, mt, ga (dialogue is quoted). A paragraph whose later line also opens with a dash is read as a list and left alone. The 2019 Ukrainian Pravopys (§ 161) could not be read; § 125 of the earlier edition was. In cs, sl and da a dash is one of several allowed forms.',
+    confidence: 'verified',
+    langs: { uk: ['pravopys-125'], pl: ['pwn-pauza-dialogowa'], es: ['rae-raya-dialogos'], fr: ['oqlf-tiret-dialogues'], it: ['treccani-lineetta'], pt: ['ciberduvidas-travessao'], ro: ['indreptar-linia-dialog'], bg: ['ibl-pryaka-rech'], hr: ['hrvatski-pravopis-8-16'], sl: ['slovenski-pravopis-388'], hu: ['akh12-259'], fi: ['kotus-vuorosanaviiva'], sv: ['isof-tankstreck'], cs: ['ijp-pomlcka'], sk: ['psp-2000'], da: ['dsn-59'], lt: ['drukteinis-skyryba'] },
   },
   'dash.range': general('A range of numbers takes an en dash, not a hyphen.'),
   'dash.sentence': {
     sources: ['butterick-dashes', 'uax14'],
     why: 'A break in a sentence takes a dash, and its form depends on the language. For English the em dash is backed by the source; it is the engine default.',
     alternative:
-      'The source sets the em dash flush against the words and calls spaces acceptable; the engine sets it spaced, with a no-break space before it, which matches neither. A search result quoting Bringhurst (The Elements of Typographic Style, 2nd ed., section 5.2.1, not read here) says he prefers a spaced en dash in English, so the primary guides disagree among themselves. UAX #14 gives the em dash class B2, which allows a break on both sides, hence the no-break space before it. The spaced en dash for German and for British literary English is not backed by any source read yet.',
+      'The source sets the em dash flush against the words and calls spaces acceptable; the engine sets it spaced, with a no-break space before it, which matches neither. A search result quoting Bringhurst (The Elements of Typographic Style, 2nd ed., section 5.2.1, not read here) says he prefers a spaced en dash in English, so the primary guides disagree among themselves. UAX #14 gives the em dash class B2, which allows a break on both sides, hence the no-break space before it. The spaced en dash for German and for British literary English is not backed by any source read yet. For ro, hr, hu, sk and sv the spaced en dash comes from the dialogue sources: each sets the same spaced en dash before the words of the narrator, and the packs had no verified sentence dash before.',
     confidence: 'verified',
-    langs: { en: ['butterick-dashes'] },
+    langs: { en: ['butterick-dashes'], ro: ['indreptar-linia-dialog'], hr: ['hrvatski-pravopis-8-16'], hu: ['akh12-259'], sk: ['psp-2000'], sv: ['isof-tankstreck'] },
   },
   'symbol.minus': {
     sources: ['unicode-names', 'butterick-dashes', 'butterick-math'],

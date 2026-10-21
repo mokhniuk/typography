@@ -1,3 +1,4 @@
+import type { DialogueDash } from './lang/pack';
 import { NBSP } from './types';
 
 /**
@@ -24,14 +25,20 @@ function insideGroups(whole: string, start: number, end: number): boolean {
   return /\d[,\u00A0]$/.test(whole.slice(Math.max(0, start - 2), start)) || /^[,\u00A0]\d{3}(?!\d)/.test(whole.slice(end));
 }
 
+const DIALOGUE = /^[-–—][ \u00A0]+(?=[\p{L}\p{N}«„“"‘'(¿¡])/u;
+/** A later line of the same paragraph that also opens with a dash: the paragraph is a list. */
+const LIST_LINE = /\n[ \t]*[-–—][ \u00A0]/;
+
 /**
- * A Ukrainian dialogue line opens with a dash and a non-breaking space:
- * «— Привіт, — сказав він.» A hyphen, en dash or em dash followed by a space at the
- * very start of the text is taken for it. Only the start: a dash after a line
- * break is as likely a list marker.
+ * A line of dialogue opens with the language's dash: «— Привіт, — сказав він.», «—¿Esperamos?».
+ * A hyphen, en dash or em dash followed by a space at the very start of the text is taken for it,
+ * followed by a no-break space unless the pack has the dash `attached`. Only the start, and not when
+ * another line of the paragraph opens with a dash too: a dash after a line break is as likely a list
+ * marker, and a paragraph of such lines is a list.
  */
-export function dialogue(text: string): string {
-  return text.replace(/^[-–—][ \u00A0]+(?=[\p{L}\p{N}«„“"‘'(])/u, `—${NBSP}`);
+export function dialogue(text: string, { mark, attached }: DialogueDash): string {
+  if (LIST_LINE.test(text)) return text;
+  return text.replace(DIALOGUE, attached ? mark : `${mark}${NBSP}`);
 }
 
 const TIME_RANGE = /(\d{1,2}:\d{2})[ \u00A0]*(?:--|[-–])[ \u00A0]*(?=\d{1,2}:\d{2})/g;

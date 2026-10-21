@@ -22,13 +22,13 @@ These are the options the functions below take. Which function takes which is in
 | Option | Type | Default | Meaning |
 |---|---|---|---|
 | `lang` | `Lang` | `'en'` | Language of the text. `Lang` is `'en' \| 'uk' \| 'de' \| 'pl' \| 'fr' \| 'ch'` (`ch` is Swiss usage), derived from the packs in `src/core/lang/`. See [languages.md](languages.md). |
-| `register` | `Register` | `'display'` | `'display'` (marketing and interface text) or `'literary'` (book-like text). `literary` has its own rules for English (British quotes, spaced en dash) and Ukrainian (dialogue dash); every other language keeps its display rules. |
+| `register` | `Register` | `'display'` | `'display'` (marketing and interface text) or `'literary'` (book-like text). `literary` has its own rules for English (British quotes, spaced en dash); every other language keeps its display rules. The dialogue dash is the same in both registers. |
 | `quoteStyle` | `QuoteStyle` | `'language'` | `'language'` is the language's own quote marks (its literary ones in the literary register). `'us'` is `“…”` with `‘…’` inside for any language, and takes precedence over both the language table and the literary register. The rehype plugin does not read `lang="en-US"` as US quotes: a page's `<html lang="en-US">` must not change its output, so set the option. |
 | `enable` | `readonly string[]` | none | Rules to switch on that are off by default (`Rule.defaultOn: false`): ids or groups, checked like `disable`. Enabling a rule that is already on does nothing; a rule named in both `enable` and `disable` throws. Nine built-in rules are off by default (`space.before-punctuation`, `space.after-comma`, `punctuation.double`, `space.trailing`, `symbol.plusminus`, `symbol.fraction`, `symbol.degree`, `symbol.implies`, `number.group`); see [rules.md](rules.md) and [limits.md](limits.md#opt-in-rules). |
 | `rules` | `readonly Rule[]` | `RULES` | The list of rules to run, in order, instead of the built-in one; build it with `addRule`. `disable` and `enable` are checked against this list, not the built-in one. A rule with `defaultOn: false` in it runs only when named in `enable`. |
 | `disable` | `readonly string[]` | none | Rules to switch off: ids (`'dash.range'`) or groups (`'space'`, or `'space.*'`). A name that matches no rule throws an `Error` that lists the rule ids, so a typo cannot pass for "everything stays on". See [rules.md](rules.md). |
 | `onChange` | `(change: Change) => void` | none | Called with each change a rule makes, in the order the rules ran (not in text order). Costs one word-level diff per rule that changed anything. |
-| `blockStart` | `boolean` | `true` | Whether the text opens its paragraph. Only then can its first dash be read as a Ukrainian literary dialogue dash (`dash.dialogue`). Taken by `typographic` and `explain` only; the text, HTML, Markdown and rehype modes always treat each block as opening a paragraph. |
+| `blockStart` | `boolean` | `true` | Whether the text opens its paragraph. Only then can its first dash be read as a dialogue dash (`dash.dialogue`), in the languages that write dialogue with one. Taken by `typographic` and `explain` only; the text, HTML, Markdown and rehype modes always treat each block as opening a paragraph. |
 | `nbsp` | `'entity' \| 'char'` | `'entity'` | HTML only (`HtmlOptions`, and `--nbsp` on the command line). How a no-break space is written in a block that changed: as `&nbsp;`, or as the character U+00A0. |
 | `early` | `boolean` | `true` | A prop of `TypographyRoot`, not an engine option. Whether the root sends the hanging pass inline (`HangScript`). Set `false` on a page whose content security policy forbids inline scripts. |
 
@@ -99,7 +99,7 @@ explain('He said "hi"... 21-26');
 
 ### `typesetText(text, options = {}): string`
 
-`TextOptions` is `ModeOptions` (`lang`, `register`, `disable`, `onChange`). Typesets plain text a paragraph at a time: paragraphs are separated by blank lines, and each opens a block, so a Ukrainian dialogue dash is read at the start of every paragraph. Line breaks, indentation, trailing spaces and the blank lines between paragraphs are kept exactly; a paragraph that needs no change comes back byte for byte. A paragraph in which a rule would add or remove a line is kept as it came.
+`TextOptions` is `ModeOptions` (`lang`, `register`, `disable`, `onChange`). Typesets plain text a paragraph at a time: paragraphs are separated by blank lines, and each opens a block, so a dialogue dash is read at the start of every paragraph. Line breaks, indentation, trailing spaces and the blank lines between paragraphs are kept exactly; a paragraph that needs no change comes back byte for byte. A paragraph in which a rule would add or remove a line is kept as it came.
 
 ### `typesetBlock(joined, options): { text: string; keep: () => void }`
 

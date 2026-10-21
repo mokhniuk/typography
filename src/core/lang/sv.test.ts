@@ -63,4 +63,9 @@ describe('Swedish numbers', () => {
   test('the number format is a no-break space and a comma (Commission web-writing guide)', () => {
     expect(sv.numbers).toEqual({ group: NBSP, decimal: ',' });
   });
+
+  test('a paragraph that opens with a dash is a line of dialogue, in both registers', () => {
+    expect(t('- Ska vi vänta? frågade han.')).toBe('–~Ska vi vänta? frågade han.');
+    expect(t('- Ska vi vänta? frågade han.', { register: 'literary' })).toBe('–~Ska vi vänta? frågade han.');
+  });
 });

@@ -19,7 +19,7 @@ A quotation nested deeper than the levels listed starts over from the first.
 |---|---|
 | break in the sentence | spaced em dash |
 | break in the sentence, literary | spaced em dash |
-| dialogue line, literary | not set |
+| line of dialogue (a paragraph opening with a dash) | not set (dialogue is quoted) |
 
 ## Spaces
 

@@ -71,4 +71,9 @@ describe('Croatian idempotence', () => {
       expect(typographic(once, 'hr', { enable: ['number.group'] })).toBe(once);
     }
   });
+
+  test('a paragraph that opens with a dash is a line of dialogue, in both registers', () => {
+    expect(t('- Čekamo li? - upitao je.')).toBe('–~Čekamo li?~– upitao je.');
+    expect(t('- Čekamo li? - upitao je.', { register: 'literary' })).toBe('–~Čekamo li?~– upitao je.');
+  });
 });

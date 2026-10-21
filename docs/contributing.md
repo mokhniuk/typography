@@ -73,7 +73,7 @@ The pack:
 | `abbreviations` | `{ together, bind, page }`, short lists, only from a style guide. |
 | `sentenceDash`, `sentenceDashLiterary` | The spaced dash of a break in the sentence, when it is not an em dash. |
 | `percentSpace` | A no-break space between a number and `%` or `€`. |
-| `dialogueDash` | A line opening with a dash is dialogue in the literary register. |
+| `dialogueDash` | `{ mark, attached? }`: a paragraph opening with a dash is a line of dialogue, in both registers; the dash, and no space after it if `attached`. Only where a style guide says the language writes dialogue that way. |
 | `turnedPairs` | Quote pairs written turned the other way (German `»…«`), read by position; they replace the usual pair of that shape. |
 | `elisions` | Words that start with an apostrophe for dropped letters (`'em`, `'til`); `n` reads rock 'n' roll. The five packs other than English list English's, because the list was read for every language before packs existed; dropping it is an output change. |
 | `openers` | Characters that may stand before an opening quote mark, besides a space and a bracket (Spanish `¿¡`). |

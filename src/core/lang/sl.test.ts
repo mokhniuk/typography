@@ -78,4 +78,9 @@ describe('Slovenian idempotence', () => {
       expect(typographic(once, 'sl', { enable: ['number.group'] })).toBe(once);
     }
   });
+
+  test('a paragraph that opens with a dash is a line of dialogue, in both registers', () => {
+    expect(t('- Počakamo? je vprašal.')).toBe('–~Počakamo? je vprašal.');
+    expect(t('- Počakamo? je vprašal.', { register: 'literary' })).toBe('–~Počakamo? je vprašal.');
+  });
 });

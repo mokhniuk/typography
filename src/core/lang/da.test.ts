@@ -90,4 +90,9 @@ describe('Danish idempotence', () => {
       expect(typographic(once, 'da')).toBe(once);
     }
   });
+
+  test('a paragraph that opens with a dash is a line of dialogue, in both registers', () => {
+    expect(t('- Venter vi? spurgte han.')).toBe('—~Venter vi? spurgte han.');
+    expect(t('- Venter vi? spurgte han.', { register: 'literary' })).toBe('—~Venter vi? spurgte han.');
+  });
 });

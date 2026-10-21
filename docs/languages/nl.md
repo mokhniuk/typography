@@ -21,7 +21,7 @@ An apostrophe before a dropped-letter word is not a quotation mark: `'s`, `'m`, 
 |---|---|
 | break in the sentence | spaced em dash |
 | break in the sentence, literary | spaced em dash |
-| dialogue line, literary | not set |
+| line of dialogue (a paragraph opening with a dash) | not set (dialogue is quoted) |
 
 ## Spaces
 

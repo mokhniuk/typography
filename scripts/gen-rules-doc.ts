@@ -70,8 +70,13 @@ export const EXAMPLES: Record<string, readonly Example[]> = {
     {
       input: '- Привіт, - сказав він.',
       lang: 'uk',
-      register: 'literary',
-      note: 'Only the dash that opens the paragraph; the second one belongs to dash.sentence.',
+      note: 'Only the dash that opens the paragraph; the second one belongs to dash.sentence. Both registers.',
+    },
+    { input: '- ¿Esperamos? - preguntó.', lang: 'es', note: 'Spanish writes the raya attached to the turn.' },
+    {
+      input: '- Odotetaanko? kysyi hän.',
+      lang: 'fi',
+      note: 'An en dash where the language uses one. A paragraph whose later line also opens with a dash is a list and is left alone.',
     },
   ],
   'dash.range': [

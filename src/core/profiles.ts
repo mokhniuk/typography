@@ -22,8 +22,7 @@ export const PROFILES = Object.fromEntries(
 
 /**
  * Literary quotation. British English: ‘outer “inner” outer’ (a third level reopens
- * with ‘). Ukrainian quotes are the same as on display; what differs there is the
- * dialogue dash (`dialogueDash` on the pack).
+ * with ‘). The dialogue dash (`dialogueDash` on the pack) is the same in both registers.
  */
 export const LITERARY: Partial<Record<Lang, readonly Level[]>> = table((p) => p.literary);
 

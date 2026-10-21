@@ -23,6 +23,9 @@ export type NumberFormat = { group: string; decimal: string };
  * (`PROFILES`, `LITERARY`, `ORPHANS`, ...) is derived from the packs, and no rule
  * names a language: it reads a field of the pack.
  */
+/** The dash that opens a line of dialogue, and whether the text follows it with no space. */
+export type DialogueDash = { mark: '—' | '–'; attached?: boolean };
+
 export type LangPack = {
   /** The language code (`en`, `uk`, ...). `Lang` is the union of every pack's code. */
   code: string;
@@ -43,8 +46,12 @@ export type LangPack = {
   sentenceDashLiterary?: string;
   /** A no-break space between a number and % or € (5 %, 49 €). */
   percentSpace?: boolean;
-  /** A line that opens with a dash is dialogue (literary register): em dash, no-break space. */
-  dialogueDash?: boolean;
+  /**
+   * How a line of dialogue opens, where the language writes dialogue with a dash rather than in quotes:
+   * the dash (`mark`) and, unless `attached` (Spanish), a no-break space after it. A paragraph that opens
+   * with a hyphen or dash and a space is read as such a line, in both registers.
+   */
+  dialogueDash?: DialogueDash;
   /**
    * Quote pairs written the other way round (German »…« and ›…‹), as [open, close]. Read as the
    * usual «…», the « that ends one quotation and the » that opens the next would pair, so these

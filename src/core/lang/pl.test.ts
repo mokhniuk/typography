@@ -21,4 +21,9 @@ describe('Polish', () => {
   test('ul. stays with the street', () => {
     expect(t('ul. Marszałkowska 5')).toBe('ul.~Marszałkowska 5');
   });
+
+  test('a paragraph that opens with a dash is a line of dialogue, in both registers', () => {
+    expect(t('- Poczekamy? - zapytał.')).toBe('—~Poczekamy?~— zapytał.');
+    expect(t('- Poczekamy? - zapytał.', { register: 'literary' })).toBe('—~Poczekamy?~— zapytał.');
+  });
 });

@@ -47,4 +47,9 @@ describe('Slovak', () => {
       expect(typographic(once, 'sk')).toBe(once);
     }
   });
+
+  test('a paragraph that opens with a dash is a line of dialogue, in both registers', () => {
+    expect(t('- Počkáme? - spýtal sa.')).toBe('–~Počkáme?~– spýtal sa.');
+    expect(t('- Počkáme? - spýtal sa.', { register: 'literary' })).toBe('–~Počkáme?~– spýtal sa.');
+  });
 });

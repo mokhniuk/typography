@@ -17,8 +17,10 @@ export const cs = {
   sentenceDashLiterary: '–',
   percentSpace: true,
   numbers: { group: NBSP, decimal: ',' },
+  dialogueDash: { mark: '–' },
   reviewed: false,
   sources: [
+    'https://prirucka.ujc.cas.cz/?id=165',
     'https://prirucka.ujc.cas.cz/?slovo=uvozovky',
     'https://prirucka.ujc.cas.cz/?id=880',
     'https://prirucka.ujc.cas.cz/?slovo=procento',
@@ -32,5 +34,6 @@ export const cs = {
     '% and currency: the příručka writes a space between number and symbol (14 %) and bars a line break there; a currency sign other than € (Kč) is bound by the number-unit rule, not by this pack. ' +
     'Sentence dash: the příručka sets a spaced pomlčka (–). ' +
     'Number format: group by three with a space, decimal comma (příručka, ?slovo=procento); carried only, the engine does not read it yet. ' +
-    'Not implemented, not verified: the EU Interinstitutional Style Guide could not be read (its pages are scripted and gave no text), so none of its Czech rules were used; no abbreviation list (no list was read); dialogue dash.',
+    'Not implemented, not verified: the EU Interinstitutional Style Guide could not be read (its pages are scripted and gave no text), so none of its Czech rules were used; no abbreviation list (no list was read). ' +
+    'Dialogue: quotes are the main form, but a pomlčka at the start of a line may open direct speech (Internetová jazyková příručka, "Pomlčka" and "Uvozovky").',
 } as const satisfies LangPack;

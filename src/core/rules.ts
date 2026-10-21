@@ -131,9 +131,11 @@ export const RULES: readonly Rule[] = [
   {
     id: 'dash.dialogue',
     about:
-      'A Ukrainian dialogue line (literary register) opens with an em dash and a no-break space',
-    apply: (text, { lang, register, blockStart }) =>
-      register === 'literary' && PACK[lang].dialogueDash && blockStart ? dialogue(text) : text,
+      'A paragraph opening with a dash is a line of dialogue, in languages that write dialogue that way: their dash and a no-break space (Ukrainian — Привіт)',
+    apply: (text, { lang, blockStart }) => {
+      const style = PACK[lang].dialogueDash;
+      return style && blockStart ? dialogue(text, style) : text;
+    },
   },
   {
     id: 'number.group',

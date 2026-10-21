@@ -103,4 +103,9 @@ describe('Finnish letters ä ö å are never touched', () => {
       'Hän sanoi ”yöllä äänestäjät älähtivät åbo”',
     );
   });
+
+  test('a paragraph that opens with a dash is a line of dialogue, in both registers', () => {
+    expect(t('- Odotetaanko? kysyi hän.')).toBe('–~Odotetaanko? kysyi hän.');
+    expect(t('- Odotetaanko? kysyi hän.', { register: 'literary' })).toBe('–~Odotetaanko? kysyi hän.');
+  });
 });

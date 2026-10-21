@@ -105,11 +105,31 @@ Sources: [butterick-legal](#src-butterick-legal)
 
 ### `dash.dialogue`
 
-Confidence: `general-knowledge`.
+Confidence: `verified`.
 
-Why: Ukrainian dialogue opens a paragraph with a dash.
+Why: In these languages a line of dialogue opens with a dash, not a quotation mark, so a paragraph that opens with a typed hyphen and a space is such a line. The dash is the one the language uses for it, followed by a no-break space (attached with no space in Spanish), in both registers.
 
-Alternative: Not researched to a primary source: the Pravopys 2019 PDF (mon.gov.ua) refused the fetch (HTTP 403). A secondary page names Український правопис 2019, § 161 "Тире" (pp. 230–241) as the dash section; read that section before marking this verified.
+Alternative: Which dash: the sources set the em dash for uk, es and pt; pl uses whatever dash the text uses (the pack uses the em dash); fr accepts both (em set); bg says long dash but renders the en dash and it shows the en dash, and for both the pack keeps the em dash of its ISG sentence dash so that dialogue and the narrator match; ro, hr, hu, sk, lt, cs, sl, fi and sv set the en dash; da says the same form as the tankestreg, the em dash in the pack. Only the OQLF asks for a no-break space after the dash; the engine sets one everywhere but Spanish so that the dash never ends a line alone. Not set: et (quotes are the norm, EKI), lv and el (the dash is not confirmed by a source read), and en, de, ch, nl, mt, ga (dialogue is quoted). A paragraph whose later line also opens with a dash is read as a list and left alone. The 2019 Ukrainian Pravopys (§ 161) could not be read; § 125 of the earlier edition was. In cs, sl and da a dash is one of several allowed forms.
+
+Sources: [pravopys-125](#src-pravopys-125), [pwn-pauza-dialogowa](#src-pwn-pauza-dialogowa), [rae-raya-dialogos](#src-rae-raya-dialogos), [oqlf-tiret-dialogues](#src-oqlf-tiret-dialogues), [treccani-lineetta](#src-treccani-lineetta), [ciberduvidas-travessao](#src-ciberduvidas-travessao), [indreptar-linia-dialog](#src-indreptar-linia-dialog), [ibl-pryaka-rech](#src-ibl-pryaka-rech), [hrvatski-pravopis-8-16](#src-hrvatski-pravopis-8-16), [slovenski-pravopis-388](#src-slovenski-pravopis-388), [akh12-259](#src-akh12-259), [kotus-vuorosanaviiva](#src-kotus-vuorosanaviiva), [isof-tankstreck](#src-isof-tankstreck), [ijp-pomlcka](#src-ijp-pomlcka), [psp-2000](#src-psp-2000), [dsn-59](#src-dsn-59), [drukteinis-skyryba](#src-drukteinis-skyryba)
+
+- `uk`: [pravopys-125](#src-pravopys-125)
+- `pl`: [pwn-pauza-dialogowa](#src-pwn-pauza-dialogowa)
+- `es`: [rae-raya-dialogos](#src-rae-raya-dialogos)
+- `fr`: [oqlf-tiret-dialogues](#src-oqlf-tiret-dialogues)
+- `it`: [treccani-lineetta](#src-treccani-lineetta)
+- `pt`: [ciberduvidas-travessao](#src-ciberduvidas-travessao)
+- `ro`: [indreptar-linia-dialog](#src-indreptar-linia-dialog)
+- `bg`: [ibl-pryaka-rech](#src-ibl-pryaka-rech)
+- `hr`: [hrvatski-pravopis-8-16](#src-hrvatski-pravopis-8-16)
+- `sl`: [slovenski-pravopis-388](#src-slovenski-pravopis-388)
+- `hu`: [akh12-259](#src-akh12-259)
+- `fi`: [kotus-vuorosanaviiva](#src-kotus-vuorosanaviiva)
+- `sv`: [isof-tankstreck](#src-isof-tankstreck)
+- `cs`: [ijp-pomlcka](#src-ijp-pomlcka)
+- `sk`: [psp-2000](#src-psp-2000)
+- `da`: [dsn-59](#src-dsn-59)
+- `lt`: [drukteinis-skyryba](#src-drukteinis-skyryba)
 
 ### `number.group`
 
@@ -133,11 +153,16 @@ Confidence: `verified`.
 
 Why: A break in a sentence takes a dash, and its form depends on the language. For English the em dash is backed by the source; it is the engine default.
 
-Alternative: The source sets the em dash flush against the words and calls spaces acceptable; the engine sets it spaced, with a no-break space before it, which matches neither. A search result quoting Bringhurst (The Elements of Typographic Style, 2nd ed., section 5.2.1, not read here) says he prefers a spaced en dash in English, so the primary guides disagree among themselves. UAX #14 gives the em dash class B2, which allows a break on both sides, hence the no-break space before it. The spaced en dash for German and for British literary English is not backed by any source read yet.
+Alternative: The source sets the em dash flush against the words and calls spaces acceptable; the engine sets it spaced, with a no-break space before it, which matches neither. A search result quoting Bringhurst (The Elements of Typographic Style, 2nd ed., section 5.2.1, not read here) says he prefers a spaced en dash in English, so the primary guides disagree among themselves. UAX #14 gives the em dash class B2, which allows a break on both sides, hence the no-break space before it. The spaced en dash for German and for British literary English is not backed by any source read yet. For ro, hr, hu, sk and sv the spaced en dash comes from the dialogue sources: each sets the same spaced en dash before the words of the narrator, and the packs had no verified sentence dash before.
 
 Sources: [butterick-dashes](#src-butterick-dashes), [uax14](#src-uax14)
 
 - `en`: [butterick-dashes](#src-butterick-dashes)
+- `ro`: [indreptar-linia-dialog](#src-indreptar-linia-dialog)
+- `hr`: [hrvatski-pravopis-8-16](#src-hrvatski-pravopis-8-16)
+- `hu`: [akh12-259](#src-akh12-259)
+- `sk`: [psp-2000](#src-psp-2000)
+- `sv`: [isof-tankstreck](#src-isof-tankstreck)
 
 ### `symbol.plusminus`
 
@@ -395,3 +420,124 @@ Relied on: Use × instead of the letter x for multiplication, dimensions such as
 <https://practicaltypography.com/word-spaces.html>, read as a summary by a fetch tool, check it by hand on 2026-10-20.
 
 Relied on: Use exactly one word space between words and one after a sentence-ending period; a thin space is suitable after the periods in initials such as W. A. Dwiggins.
+
+<a id="src-oqlf-tiret-dialogues"></a>
+**oqlf-tiret-dialogues**. OQLF, Vitrine linguistique, "Le tiret dans les dialogues" (fiche 23371) and the spacing table (fiche 22039).
+
+<https://vitrinelinguistique.oqlf.gouv.qc.ca/23371/la-ponctuation/tiret/le-tiret-dans-les-dialogues>, read as a summary by a fetch tool, check it by hand on 2026-10-21.
+
+Relied on: A dash marks each change of speaker in a dialogue; an opening dash takes a no-break space after it; the em and the en dash are both accepted.
+
+<a id="src-treccani-lineetta"></a>
+**treccani-lineetta**. F. Longo, "I punti della situazione… 9. Lineette doppie e lineetta singola", Treccani Magazine, 27.02.2020.
+
+<https://www.treccani.it/magazine/lingua_italiana/articoli/scritto_e_parlato/punteggiatura9.html>, read as a summary by a fetch tool, check it by hand on 2026-10-21.
+
+Relied on: Dashes may enclose direct speech in narrative texts as a conventional alternative to quotation marks, spaced, with the same dash before the narrator (– È qui, – disse mia madre.); its examples set the en dash.
+
+<a id="src-ciberduvidas-travessao"></a>
+**ciberduvidas-travessao**. Ciberdúvidas da Língua Portuguesa, "Travessão no discurso directo" (question of 6.11.2001).
+
+<https://ciberduvidas.iscte-iul.pt/consultorio/perguntas/travessao-no-discurso-directo/8747>, read as a summary by a fetch tool, check it by hand on 2026-10-21.
+
+Relied on: The travessão introduces direct speech and marks a change of speaker, and sets off the narrator, spaced in the examples (— Há um vilarejo… — respondeu o funcionário.); no spacing rule is stated.
+
+<a id="src-kotus-vuorosanaviiva"></a>
+**kotus-vuorosanaviiva**. Kielitoimiston ohjepankki, "Lainausmerkit ja vuorosanaviiva".
+
+<https://kielitoimistonohjepankki.fi/ohje/lainausmerkit-ja-vuorosanaviiva/>, read as a summary by a fetch tool, check it by hand on 2026-10-21.
+
+Relied on: Instead of quotation marks, the ajatusviiva is often used as a dialogue dash, especially in newspaper interviews and fiction; the attribution follows a comma.
+
+<a id="src-isof-tankstreck"></a>
+**isof-tankstreck**. Isof, Frågelådan, svar 52014.
+
+<https://frageladan.isof.se/visasvar.py?svar=52014>, read as a summary by a fetch tool, check it by hand on 2026-10-21.
+
+Relied on: A tankstreck may mark direct speech, common in news and fiction: each new turn starts on a new line with an indent and a tankstreck, without quotation marks.
+
+<a id="src-drukteinis-skyryba"></a>
+**drukteinis-skyryba**. A. Drukteinis, Lietuvių kalbos skyryba (2020), chapter 4, rule 4-1.
+
+<https://emokykla.lt/upload/files/2024/07/08/liet-k-skyryba.pdf>, read as a summary by a fetch tool, check it by hand on 2026-10-21.
+
+Relied on: Direct speech shown as dialogue is set off with dashes (brūkšniai), retold direct speech with quotation marks.
+
+### Orthography
+
+<a id="src-pravopys-125"></a>
+**pravopys-125**. Український правопис (1993 rules, labelled the 2015 edition on pravopys.net), § 125, points 1 and 3б.
+
+<https://www.pravopys.net/sections/125/>, read as a summary by a fetch tool, check it by hand on 2026-10-21.
+
+Relied on: When direct speech opens a paragraph, a dash (тире) stands before it (— Ти звідки?), and a dash stands before the words of the author (— Тату! татку! — упізнали діти.).
+
+<a id="src-pwn-pauza-dialogowa"></a>
+**pwn-pauza-dialogowa**. A. Wolański, "Pauza dialogowa a myślnik", Poradnia Językowa PWN, 14.09.2018.
+
+<https://sjp.pwn.pl/poradnia/haslo/Pauza-dialogowa-a-myslnik;18816.html>, read as a summary by a fetch tool, check it by hand on 2026-10-21.
+
+Relied on: Polish typography does not tell the dialogue dash from the ordinary dash: the same sign, the pauza (—) or the półpauza (–), is used for both, spaced.
+
+<a id="src-rae-raya-dialogos"></a>
+**rae-raya-dialogos**. RAE/ASALE, Ortografía de la lengua española (2010), § 3.4.7 and § 3.4.7.2.1.
+
+<https://www.rae.es/ortograf%C3%ADa/otros-usos-de-la-raya>, read as a summary by a fetch tool, check it by hand on 2026-10-21.
+
+Relied on: In dialogue the raya (—) precedes each speaker turn and no space is left between the raya and the start of the turn; list items, unlike dialogue, take a space after it.
+
+<a id="src-indreptar-linia-dialog"></a>
+**indreptar-linia-dialog**. Îndreptar ortografic, ortoepic și de punctuație, ediția a V-a, §§ 275–281.
+
+<https://dexonline.ro/article/09._Linia_de_dialog_%C8%99i_de_pauz%C4%83>, read as a summary by a fetch tool, check it by hand on 2026-10-21.
+
+Relied on: The linia de dialog marks the start of each speaker turn, a dash together with quotation marks is wrong, and a linie de pauză sets off the words of the author; the examples set a spaced en dash.
+
+<a id="src-ibl-pryaka-rech"></a>
+**ibl-pryaka-rech**. Институт за български език (БАН), Езикови справки, answer 2266.
+
+<https://ibl.bas.bg/ezikovispravki/vaprosi/pri-tsitirane-i-pryaka-rech-10/2266>, read as a summary by a fetch tool, check it by hand on 2026-10-21.
+
+Relied on: Direct speech may be quoted, but is usually set on a new line with a long dash (дълго тире) and a space after it, with a spaced dash before the attribution.
+
+<a id="src-hrvatski-pravopis-8-16"></a>
+**hrvatski-pravopis-8-16**. Institut za hrvatski jezik, Hrvatski pravopis, § 8.16.1.
+
+<https://pravopis.hr/pravilo/pravopisni-znakovi-u-upravnome-govoru/72/>, read as a summary by a fetch tool, check it by hand on 2026-10-21.
+
+Relied on: Handwriting quotes direct speech; printed text may use quotation marks or dashes, a spaced en dash opening the line and another before the attribution.
+
+<a id="src-slovenski-pravopis-388"></a>
+**slovenski-pravopis-388**. Slovenski pravopis (2001), Pravila, § 388 point 6 and § 473.
+
+<https://www.fran.si/134/slovenski-pravopis/datoteke/Pravopis_Pravila.pdf>, read as a summary by a fetch tool, check it by hand on 2026-10-21.
+
+Relied on: Direct speech is normally in double quotation marks; a dash may replace them only at the start of a paragraph with no lead-in clause, and the dash is spaced on both sides.
+
+<a id="src-akh12-259"></a>
+**akh12-259**. A magyar helyesírás szabályai, 12. kiadás (AkH12), 259.
+
+<https://helyesiras.mta.hu/helyesiras/default/akh12>, read as a summary by a fetch tool, check it by hand on 2026-10-21.
+
+Relied on: In fiction dialogue is marked with a gondolatjel (en dash) instead of quotation marks, and a spaced gondolatjel sets off the attribution (– Nem is tudom – mondta.).
+
+<a id="src-ijp-pomlcka"></a>
+**ijp-pomlcka**. Internetová jazyková příručka, "Pomlčka" (id 165) and "Uvozovky" (id 162).
+
+<https://prirucka.ujc.cas.cz/?id=165>, read as a summary by a fetch tool, check it by hand on 2026-10-21.
+
+Relied on: Quotation marks mark direct speech; a pomlčka at the start of a line may also introduce it (– Čím se živíte? – Překládám.).
+
+<a id="src-psp-2000"></a>
+**psp-2000**. Pravidlá slovenského pravopisu, 3. vydanie (2000): úvodzovky; pomlčka, point 10.
+
+<https://www.juls.savba.sk/ediela/psp2000/psp.pdf>, read as a summary by a fetch tool, check it by hand on 2026-10-21.
+
+Relied on: Dashes are the newer alternative to quotation marks at the start and end of direct speech, spaced, with one before the attribution (– Rozviažte mu povrazy, – rozkázal rytier).
+
+<a id="src-dsn-59"></a>
+**dsn-59**. Retskrivningsordbogen 5.1, § 59.
+
+<https://ro.dsn.dk/?paragraf=59&type=rulesearch>, read as a summary by a fetch tool, check it by hand on 2026-10-21.
+
+Relied on: Dialogue may be given with a replikstreg, quotation marks or no marks; the replikstreg has the same form as the tankestreg and is set especially where a turn starts a new line.

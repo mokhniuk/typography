@@ -14,10 +14,10 @@ describe('Ukrainian', () => {
     expect(t('“x ‘y’ z”')).toBe('«x „y“ z»');
   });
 
-  test('the literary register keeps the quotes and sets the dialogue dash', () => {
+  test('the literary register keeps the quotes; the dialogue dash is set in both registers', () => {
     expect(t('“x ‘y’ z”', { register: 'literary' })).toBe('«x „y“ z»');
     expect(t('- Привіт', { register: 'literary' })).toBe('—~Привіт');
-    expect(t('- Привіт')).toBe('- Привіт');
+    expect(t('- Привіт')).toBe('—~Привіт');
   });
 
   test('one-letter words stay with the next word', () => {

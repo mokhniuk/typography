@@ -21,7 +21,7 @@ An apostrophe before a dropped-letter word is not a quotation mark: `'em`, `'til
 |---|---|
 | break in the sentence | spaced em dash |
 | break in the sentence, literary | spaced em dash |
-| dialogue line, literary | not set |
+| line of dialogue (a paragraph opening with a dash) | em dash and a no-break space, in both registers |
 
 ## Spaces
 
@@ -41,8 +41,9 @@ Groups of three are separated by `~`, the decimal mark is `,`.
 
 ## Sources
 
+- https://sjp.pwn.pl/poradnia/haslo/Pauza-dialogowa-a-myslnik;18816.html
 - https://style-guide.europa.eu/en/content/-/isg/topic?identifier=6.5-punctuation-in-figures
 
 ## Notes
 
-One-letter conjunctions and prepositions are bound to the next word. Digits are grouped with a no-break space (number.group), as the Interinstitutional Style Guide sets for all languages; the decimal mark is a comma.
+One-letter conjunctions and prepositions are bound to the next word. Digits are grouped with a no-break space (number.group), as the Interinstitutional Style Guide sets for all languages; the decimal mark is a comma. Dialogue: a line of dialogue opens with the same dash as a break in the sentence, pauza or półpauza, spaced (PWN Poradnia, A. Wolański, "Pauza dialogowa a myślnik"); the engine uses the em dash it uses for a break.
