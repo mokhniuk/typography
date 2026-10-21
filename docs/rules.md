@@ -541,7 +541,7 @@ after   On 21~September, 15~people paid 5~%.
 
 ## `space.percent`
 
-German, French, Czech, Spanish, Italian, Portuguese, Irish, Maltese, Bulgarian, Croatian, Slovenian, Lithuanian, Latvian, Estonian, Danish, Finnish and Greek: a no-break space between a number and % or € (5 %, 49 €)
+German, French, Czech, Spanish, Italian, Portuguese, Irish, Maltese, Bulgarian, Croatian, Slovenian, Lithuanian, Latvian, Estonian, Danish, Finnish and Greek: a no-break space between a number and % (5 %); German, French, Czech, Spanish, Italian, Bulgarian, Croatian, Slovenian, Danish, Finnish and Greek: also before € after the number (49 €)
 
 Category: `data`.
 

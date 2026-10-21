@@ -51,8 +51,10 @@ describe('Portuguese apostrophe', () => {
 });
 
 describe('Portuguese spaces', () => {
-  test('ISG 6.4: a fixed space before %', () => {
-    expect(t('os 5% e 49€')).toBe('os 5~% e 49~€');
+  test('ISG 6.4: a fixed space before %; currencySpace is off, so none is added before €', () => {
+    expect(t('os 5% e 49€')).toBe('os 5~% e 49€');
+    expect(t('30€')).toBe('30€');
+    expect(t('€30')).toBe('€30');
   });
 
   test('ISG A3: an abbreviation is not split across lines', () => {

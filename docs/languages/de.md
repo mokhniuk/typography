@@ -28,7 +28,8 @@ An apostrophe before a dropped-letter word is not a quotation mark: `'em`, `'til
 ## Spaces
 
 - One-letter words kept with the next word: none.
-- A no-break space between a number and % or €: yes.
+- A no-break space between a number and %: yes.
+- A no-break space between a number and € after it: yes.
 
 ### Abbreviations
 

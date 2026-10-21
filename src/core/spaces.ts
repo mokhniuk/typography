@@ -163,15 +163,27 @@ export const abbreviations = (text: string, lang: Lang): string => {
   return out;
 };
 
-/** In a language with `percentSpace` (German, French) a percent or euro sign stands apart from its number by a no-break space: 5 %, 49 €. */
-export const unitSymbol = (text: string, lang: Lang): string =>
-  PACK[lang].percentSpace
+/** The marks `unitSymbol` spaces in a language: `%` with `percentSpace`, `€` with `currencySpace`. */
+const unitMarks = (lang: Lang): RegExp | undefined => {
+  const { percentSpace, currencySpace } = PACK[lang];
+  if (percentSpace) return currencySpace ? /[%€]/g : /%/g;
+  return currencySpace ? /€/g : undefined;
+};
+
+/**
+ * A percent sign (in a language with `percentSpace`: German, French) or a euro sign after the number
+ * (with `currencySpace`) stands apart from its number by a no-break space: 5 %, 49 €.
+ */
+export const unitSymbol = (text: string, lang: Lang): string => {
+  const marks = unitMarks(lang);
+  return marks
     ? // Was `(?<=\d)(?=[%€])`, tried at every position: the mark is found first, a digit before it read here.
-      text.replace(/[%€]/g, (mark, offset: number, whole: string) => {
+      text.replace(marks, (mark, offset: number, whole: string) => {
         const prev = whole.charCodeAt(offset - 1);
         return prev >= 0x30 && prev <= 0x39 ? `${NBSP}${mark}` : mark;
       })
     : text;
+};
 
 /** An arrow stays with the word it points from or to: «Read more →», «← Back». */
 const ARROW_RIGHT = /→/g;

@@ -16,6 +16,7 @@ export const da = {
   },
   // ISG 6.4: a fixed space between the figure and %; 10.2: 15 %.
   percentSpace: true,
+  currencySpace: true,
   // ISG 4.2.3 and 6.5: a comma for the decimals, a fixed space between groups of three digits.
   numbers: { group: NBSP, decimal: ',' },
   dialogueDash: { mark: '—' },

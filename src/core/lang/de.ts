@@ -23,6 +23,7 @@ export const de = {
   sentenceDash: '–',
   sentenceDashLiterary: '–',
   percentSpace: true,
+  currencySpace: true,
   elisions: ELISIONS_EN,
   numbers: { group: ' ', decimal: ',' },
   reviewed: false,

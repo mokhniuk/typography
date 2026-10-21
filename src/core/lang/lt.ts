@@ -19,6 +19,7 @@ export const lt = {
   sentenceDash: '–',
   // ISG 6.4: a fixed space between the figure and %; the example 10.1.5 is "100 %".
   percentSpace: true,
+  currencySpace: false,
   // ISG 6.5: a comma for the decimals, a space between groups of three digits (a fixed one, 10.1.5).
   numbers: { group: NBSP, decimal: ',' },
   dialogueDash: { mark: '–' },
@@ -33,7 +34,7 @@ export const lt = {
     'Quotation: the ISG (4.2.3: "Visi lygmenys „…“", and the Publications Office table) writes „…“ at every level, so a quotation inside a quotation is „…„…“…“ here. Wikipedia and some Lithuanian publishers write ‚…‘ for the inner level; that was not read in a Lithuanian authority and is not implemented. The ISG note that cultivar names take single quotes (‘…’) is not implemented: the engine cannot tell a cultivar name from a nested quotation. The ISG example 10.1.7 that drops the inner closing mark at the end of a sentence („kilo ginčų dėl bendrovės „Microsoft“.) is a punctuation choice the engine leaves alone.',
     'The Lithuanian State Commission (Valstybinė lietuvių kalbos komisija) was not consulted: nothing here comes from it, and the ISG is the only source read. Lithuanian is not covered by the other typography tools compared in bench/, so nothing was cross-checked against them.',
     'Dash: ISG 10.1.4 says Lithuanian institutional texts use the en dash, not the em dash, spaced on both sides; the pack sets sentenceDash to U+2013. Dialogue lines that start with a dash (10.1.4 d) take the dialogue dash, set from Drukteinis above.',
-    'Not implemented, not verified: the ISG gives no list of one-letter words (į, o, ir is not one letter) to keep off the end of a line, so there are no orphans; elisions: none read; the abbreviation lists are those of ISG 10.3.9 and 10.1.5 that are written in several parts (t. y., t. t., š. m., a. k., b. k., l. e. p., e. p., A. V.) or that introduce a number or name (Nr., dr., p., pav., tel.), and are only a part of the list; a number before its measure (40 mln., 17 val., 100 m.) is not bound because the abbreviation field only binds what follows an abbreviation; the ISG shows € only as the code EUR (5 000 EUR), and the single percentSpace flag also sets a space before €.',
+    'Not implemented, not verified: the ISG gives no list of one-letter words (į, o, ir is not one letter) to keep off the end of a line, so there are no orphans; elisions: none read; the abbreviation lists are those of ISG 10.3.9 and 10.1.5 that are written in several parts (t. y., t. t., š. m., a. k., b. k., l. e. p., e. p., A. V.) or that introduce a number or name (Nr., dr., p., pav., tel.), and are only a part of the list; a number before its measure (40 mln., 17 val., 100 m.) is not bound because the abbreviation field only binds what follows an abbreviation; the ISG shows € only as the code EUR (5 000 EUR), so the pack sets percentSpace and not currencySpace (49€ stays 49€).',
     'Numbers: ISG 6.5 and 4.2.3 give a comma for decimals and a space between groups of three; 10.1.5 says the space is a fixed one; the ISG groups from four digits in the table of budget data (1 326,1) but the engine groups from five digits, as it does in every language.',
   ].join(' '),
 } as const satisfies LangPack;

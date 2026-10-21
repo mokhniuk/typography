@@ -14,6 +14,7 @@ export const mt = {
   abbreviations: { page: ['p', 'pp'] },
   // ISG 6.4 table: a fixed space before %.
   percentSpace: true,
+  currencySpace: false,
   // ISG 6.5: in Maltese, English and Irish publications a point separates the decimals; a space
   // (not a comma) marks the thousands.
   numbers: { group: NBSP, decimal: '.' },
@@ -28,7 +29,7 @@ export const mt = {
     "Apostrophe: ISG 4.2.3 asks for the typographic apostrophe ’, not the keyboard one. ta', m'hu, x'inhu and the hyphenated articles (l-ħobż, taċ-ċikkulata) stand inside a word or before a space, and the goldens in mt.test.ts pin that they round-trip inside and outside a quotation, including a quotation written with straight single marks around m'hu. Known limit: a quotation written with straight single marks that holds a word ending in an apostrophe, 'il-ktieb ta' Mario', is closed at ta' (it comes out as “il-ktieb ta” Mario’), because the pack has no field for a trailing apostrophe; double quotes are not affected. The elisions field is empty: no Maltese word starts with an apostrophe in any source read.",
     'Numbers: ISG 6.5 gives a point for the decimals and a space between groups of three digits in Maltese (the Official Journal uses a comma, for technical reasons); the group separator is a no-break space, the fixed space of the ISG.',
     "Abbreviations: only p. and pp. before a page number, shown with a fixed space in 4.2.3 (p.• ĠU C) and used in 5.10 (pp. 71–98). Nru is written without a full stop and is followed by a fixed space in 4.2.3 (Nru• ĠU L), but the engine's abbreviation fields need the dot, so it is not implemented.",
-    "Euro: ISG 7 writes the euro sign before the amount without a space in Maltese (€30). The engine's percentSpace field also puts a no-break space between a number and €, so 30€ becomes 30 €, which the ISG does not use; the pack has no separate flag for % alone. €30 is untouched.",
+    'Euro: ISG 7 writes the euro sign before the amount without a space in Maltese (€30). The pack sets percentSpace (5% becomes 5 %) but not currencySpace, so no space is added before €: 30€ stays 30€ and €30 is untouched.',
     'Not implemented, not verified: one-letter words to keep off the end of a line (none sourced), the dash conventions of the language (not read), longer abbreviation lists, the national rules of the Kunsill Nazzjonali tal-Ilsien Malti. No other typography tool read covers Maltese.',
   ].join(' '),
 } as const satisfies LangPack;

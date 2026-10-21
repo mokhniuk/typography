@@ -53,7 +53,6 @@ Each is a limit of the pack format or an unverified choice, not a crash:
 - **Dialogue dash for Greek and Latvian.** The Triantafyllidis dictionary says a dash marks a change of speaker in Greek, but the character and spacing were not confirmed; no Latvian source was found. Read one before setting `dialogueDash`.
 - **The dash before the words of the narrator** in Spanish is attached inside (`—¿Esperamos? —preguntó—.`), and Finnish, Danish, Slovenian and Swedish use a comma there, not a dash; the engine sets a spaced dash wherever one is typed.
 - **Spanish and Greek paired dash** (`—inciso—`, attached inside) cannot be expressed: `sentenceDash` is one symmetric spaced dash.
-- **`percentSpace` is one flag** for `%` and for currency, but the sources treat them differently.
 - **Abbreviations without a full stop** (Estonian `nr`, `lk`; Finnish `klo`, `nro`) are not matched; the abbreviation rule needs the stop.
 - **Per-level quote shapes** (Latvian and Lithuanian use single quotes at a level) are one pair per level in the pack.
 - **Dotted time ranges** (`9.00-18.30`, Latvian and others) are read as numbers, not as a time range.
@@ -104,11 +103,11 @@ Today the engine only protects them: a hyphenated phone number is not read as a 
 
 ### Currencies
 
-Partly there: `space.number` binds a number to the symbol or code after it (`49~€`, `100~USD`, `5~$`, `20~zł`, `100~грн`), and `space.percent` adds a no-break space before `%` and `€` in the 18 packs with `percentSpace` (`$ £ ₴ zł` are never spaced by it). Gaps found on 0.2.1:
+Partly there: `space.number` binds a number to the symbol or code after it (`49~€`, `100~USD`, `5~$`, `20~zł`, `100~грн`), and `space.percent` adds a no-break space before `%` in the 17 packs with `percentSpace` and before `€` in the 11 with `currencySpace` (`$ £ ₴ zł` are never spaced by it). Gaps found on 0.2.1:
 
 - **Code or symbol before the amount** is not bound: `USD 5 000` and `€ 49.99` can wrap between the code and the number.
 - **Grouped amounts** keep plain spaces between the groups unless `number.group` (opt-in) is on: `1 000 грн` becomes `1 000~грн`, so the number can still break in the middle.
-- **Placement and spacing per locale** (`€49.99` in en, `49,99 €` in de, fr and uk, `49,99 zł` in pl) is not applied: the engine never moves a symbol, which is right, but the pack has no field that says whether a space belongs between amount and symbol. `percentSpace` is one flag for both `%` and currency (see the language gaps above); split it into `percentSpace` and `currencySpace`.
+- **Placement and spacing per locale** (`€49.99` in en, `49,99 €` in de, fr and uk, `49,99 zł` in pl) is not applied: the engine never moves a symbol, which is right, but only `€` has a pack field (`currencySpace`) that says whether a space belongs between amount and symbol.
 - **Swiss apostrophe grouping** (`CHF 1'000`) is not read as a number group, and the apostrophe is not a quote.
 - **Symbols and codes** are an inline list; a code list (ISO 4217) and the symbols of the audience's currencies (`€ $ £ ₴ zł Kč Ft lei лв kr`) should be one table in `src/core`, not in two rules.
 - Done when: golden tests per locale for the amount, the symbol and the code before and after; `space.number` and `number.group` agree on grouped amounts; no rule moves or adds a currency symbol.
@@ -121,7 +120,6 @@ The pack exists but is thin, because the Irish edition of the Interinstitutional
 - **Sentence dash and ranges:** not read; the pack defaults to the spaced em dash.
 - **Short words and abbreviations:** none (`orphans`, `abbreviations` empty). Candidates to source: `a`, `i`, `is`, `ar`, `le`, `go`, `de`, `do`; abbreviations such as `m.sh.`, `srl.`, `lch.` (Foras na Gaeilge's lists).
 - **Initial mutations:** the hyphen and apostrophe forms (`an t-athair`, `na h-oibrithe`, `d'fhág`, `b'fhéidir`) pass through unchanged today and a test pins `d'`, `b'`, `m'`; add goldens for `t-`, `n-` and `h-` prefixes (`an t-uisce`, `i n-Éirinn`, `go h-álainn`) inside and outside quotes, since a hyphen after a single letter must never read as a range or a dash.
-- **`€`:** the pack puts a no-break space before `€` through `percentSpace`, but Irish writes `€30`. Needs the split of `percentSpace` into `percentSpace` and `currencySpace` (see Currencies).
 - **Review:** `reviewed: false`; get an Irish reader to check the page.
 
 ### Short words, conjunctions and the end of the line

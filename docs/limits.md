@@ -21,7 +21,7 @@ What the engine deliberately leaves alone, what it knowingly does not do, and wh
 - **`symbol.minus` reads `-5` as a minus after a space or a parenthesis**, so a command-line flag in prose (`use -9`) becomes `−9`. Switch the rule off for that text, or put the flag in a code span.
 - **The last words of a paragraph are not kept together** (widows and runts): a no-break space is a line-break constraint, and what looks right depends on the column width, which a string rule cannot see. Use CSS `text-wrap: pretty` (or `balance` for headings) on the page instead.
 - **A number range can break after its en dash** (`21–` then `26 September` on the next line). A word joiner after the dash would stop it; it is not done because it changes the characters that are copied out of the text.
-- **`%` and `€` get a no-break space in German and French only** (`space.percent`). Ukrainian and Polish usage was not checked, and English puts the euro sign first.
+- **`%` and `€` get a no-break space only where the pack says so** (`space.percent`, pack fields `percentSpace` and `currencySpace`; each language page in [languages/](languages/index.md) says which). Ukrainian and Polish usage was not checked, and English puts the euro sign first.
 - **The abbreviation lists are short and have not been read by a native speaker.** See [languages.md](languages.md).
 - **Dash profiles beyond German and literary British English were not checked.** Every other language gets the spaced em dash.
 - **German has only the guillemet nesting** (`»outer ›inner‹ outer«`). The more common `„outer ‚inner‘ outer“` is not implemented.

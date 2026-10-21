@@ -16,6 +16,7 @@ export const cs = {
   sentenceDash: '–',
   sentenceDashLiterary: '–',
   percentSpace: true,
+  currencySpace: true,
   numbers: { group: NBSP, decimal: ',' },
   dialogueDash: { mark: '–' },
   reviewed: false,

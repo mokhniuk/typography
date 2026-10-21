@@ -22,6 +22,7 @@ export const es = {
   },
   // ISG 10.3.1.4: a fixed space between the figure and % ; ISG 7.3.3: between the figure and the code EUR.
   percentSpace: true,
+  currencySpace: true,
   // ISG 6.5: a comma for the decimals, a fixed space between groups of three digits.
   numbers: { group: NBSP, decimal: ',' },
   dialogueDash: { mark: '—', attached: true },

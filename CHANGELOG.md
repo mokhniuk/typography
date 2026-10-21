@@ -5,6 +5,7 @@ Versions follow semver while the package is below 1.0.0: a **minor** release may
 ## Unreleased
 
 - Rule categories: every rule has a `category` that says what it is for, `tradition` (quotes, the apostrophe, dashes, the ellipsis, punctuation and the spaces of prose), `symbols` (arrows, ©, ®, ™), `math` (minus, ×, ±, fractions, ⇒) or `data` (digit groups, ranges, units, percentages and currencies, dates). `typo --rules` and `docs/rules.md` show it as a column, and the playground groups its rule switches by it. New exports: `RULE_CATEGORIES`, `RuleCategory`; `Rule` has an optional `category` (every built-in rule sets it; a custom rule may leave it out). Rule ids are unchanged, so `disable` and `enable` take the same names; a category is not a name they take. Can change existing output: no (the engine's output is unchanged; the `typo --rules` listing has a new column).
+- The pack field `percentSpace` no longer covers `€`: a new field, `currencySpace`, says whether a `€` typed after a number gets a no-break space (`49€` becomes `49~€`). The rule is still `space.percent`. Irish, Maltese, Portuguese, Latvian, Lithuanian and Estonian set `percentSpace` and not `currencySpace`, because their style guides write `€30` with no space or show money only as the code `EUR`; the other packs that spaced `€` keep doing it. `€30` is never touched, and a typed space (`30 €`) is still bound by `space.number`. Can change existing output: yes, in ga, mt, pt, lv, lt and et only: `30€` stays `30€` instead of becoming `30~€`; `%` is spaced as before.
 
 ## 0.5.0 (2026-10-21)
 

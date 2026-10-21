@@ -20,6 +20,7 @@ export const it = {
   },
   // ISG 6.4 (common to all languages): a fixed space before %.
   percentSpace: true,
+  currencySpace: true,
   // ISG 6.5: a comma for the decimals, a fixed space between groups of three digits.
   numbers: { group: NBSP, decimal: ',' },
   dialogueDash: { mark: '—' },

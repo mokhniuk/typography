@@ -15,6 +15,7 @@ export const ga = {
   ],
   // ISG 6.4 table (read in the Maltese edition, common to all languages): a fixed space before %.
   percentSpace: true,
+  currencySpace: false,
   // ISG 6.5 (Maltese edition): in Maltese, English and Irish publications a point separates the
   // decimals; a space (not a comma) marks the thousands.
   numbers: { group: NBSP, decimal: '.' },
@@ -29,7 +30,7 @@ export const ga = {
     "Quotation: the pack follows the Publications Office table (‘…’ then “…” then ‘…’, the English order). The Irish edition of the Interinstitutional Style Guide (Treoir Stíle Idirinstitiúideach, section 4.2.3) could not be read: style-guide.europa.eu is script-rendered, and the Cellar lists the Irish PDF (manifestations 0018.01 to 0018.03 of 01ed788a-d266-11ec-a95f-01aa75ed71a1) but serves no file for it (404 on DOC_1 and DOC_2). Wikipedia gives “…” first for Irish; quoteStyle: 'us' gives that order.",
     "Apostrophe: d', b', m' (d'fhág, b'fhéidir, m'athair) stand inside a word, which the engine already reads as an apostrophe, not a quote mark; the goldens in ga.test.ts pin that inside and outside a quotation, including a quotation written with straight single marks. The elisions field is empty: no Irish word starts with an apostrophe in any source read.",
     'Numbers: a point for decimals and a space between groups of three digits are read in the Maltese edition of the ISG, which states it for Irish; the Irish edition was not read. The group separator is a no-break space.',
-    "Euro: the Maltese edition says Irish writes the euro sign before the amount without a space (€30). The engine's percentSpace field also puts a no-break space between a number and €, so 30€ becomes 30 €, which the ISG does not use for Irish; the pack has no separate flag for % alone. €30 is untouched.",
+    'Euro: the Maltese edition says Irish writes the euro sign before the amount without a space (€30). The pack sets percentSpace (5% becomes 5 %) but not currencySpace, so no space is added before €: 30€ stays 30€ and €30 is untouched.',
     'Not implemented, not verified: one-letter words to keep off the end of a line (none sourced), abbreviation lists (none read), the dot-above letters of the old orthography and the fada need no rule (they are letters; tests pin that they are kept), the Irish dash conventions (not read), and everything in the Irish edition of the ISG. The task brief says typograf covers Irish; this pack was not compared with it.',
   ].join(' '),
 } as const satisfies LangPack;

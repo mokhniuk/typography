@@ -87,7 +87,8 @@ export function renderPack(pack: LangPack): string {
   out.push('', '## Spaces', '');
   out.push(
     `- One-letter words kept with the next word: ${pack.orphans ? orphanLetters(pack.orphans) : 'none'}.`,
-    `- A no-break space between a number and % or €: ${pack.percentSpace ? 'yes' : 'no'}.`,
+    `- A no-break space between a number and %: ${pack.percentSpace ? 'yes' : 'no'}.`,
+    `- A no-break space between a number and € after it: ${pack.currencySpace ? 'yes' : 'no'}.`,
   );
   const lists = pack.abbreviations;
   if (lists && (lists.together || lists.bind || lists.page)) {

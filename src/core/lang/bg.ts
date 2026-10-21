@@ -12,6 +12,7 @@ export const bg = {
   abbreviations: { page: ['стр'] },
   // ISG 6.4: a fixed space between the figure and %; ISG 7.3.3: between the amount and the euro sign.
   percentSpace: true,
+  currencySpace: true,
   // ISG 4.2.3 and 6.5: a comma for decimals, a fixed space between groups of three digits.
   numbers: { group: NBSP, decimal: ',' },
   dialogueDash: { mark: '—' },

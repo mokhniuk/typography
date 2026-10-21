@@ -12,6 +12,7 @@ export const et = {
   sentenceDash: '–',
   // ISG 6.4: a fixed space between the figure and %.
   percentSpace: true,
+  currencySpace: false,
   // ISG 6.5: a comma for the decimals; groups of three, a space, from five digits (and 4.2.3: a no-break space).
   numbers: { group: NBSP, decimal: ',' },
   reviewed: false,
@@ -24,6 +25,6 @@ export const et = {
     'Dash: ISG 10.1.7 names the en dash (U+2013) as the dash of ELT texts and does not give the spacing; its examples in 10.7 (tähtaeg – ajavahemik) set it with a space on each side, as the engine does.',
     'Numbers: ISG 6.5 gives a comma for decimals and a space between groups of three digits for numbers of five digits or more, counted from the right; 4.2.3 says the space is a no-break one and that codes, postal codes and years (1961. aastal, lk 2064) are not grouped; the engine groups from five digits, which is the same threshold.',
     'Known engine gap, not a pack field: the omission mark [---] that the ISG writes in quotations (5.10, 10.1.6) is rewritten by the dash rules to [ – -] in every language; et.test.ts holds a test marked failing for it.',
-    'Not implemented, not verified: abbreviations. The ISG sets a fixed space after nr and lk (4.2.3: "nr• ELT L•", "lk• ELT C•") but these are written without a full stop, and the engine binds an abbreviation only when its name is followed by a full stop; the other abbreviations of annex A3 (s.o, k.a, v.a, n-ö, et al.) are written without a space inside. No orphans: the ISG gives no list of one-letter words to keep off the end of a line. No elisions read. The percentSpace flag also sets a space before €, which the ISG shows only as the code EUR.',
+    'Not implemented, not verified: abbreviations. The ISG sets a fixed space after nr and lk (4.2.3: "nr• ELT L•", "lk• ELT C•") but these are written without a full stop, and the engine binds an abbreviation only when its name is followed by a full stop; the other abbreviations of annex A3 (s.o, k.a, v.a, n-ö, et al.) are written without a space inside. No orphans: the ISG gives no list of one-letter words to keep off the end of a line. No elisions read. The ISG shows € only as the code EUR, so the pack sets percentSpace and not currencySpace (49€ stays 49€).',
   ].join(' '),
 } as const satisfies LangPack;

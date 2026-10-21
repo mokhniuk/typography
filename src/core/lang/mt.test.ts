@@ -69,6 +69,12 @@ describe('Maltese spaces (ISG 6.4 table, common to all languages)', () => {
     expect(t('somma ta’ €30')).toBe('somma ta’ €30');
   });
 
+  test('ISG 7: currencySpace is off, so no space is added before € (percentSpace still spaces %)', () => {
+    expect(t('30€')).toBe('30€');
+    expect(t('5%')).toBe('5~%');
+    expect(t('€30')).toBe('€30');
+  });
+
   test('ISG 6.4: p. stays with the number after it', () => {
     expect(t('ara p. 12, pp. 71–98')).toBe('ara p.~12, pp.~71–98');
   });

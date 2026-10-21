@@ -26,7 +26,8 @@ Read by where each mark stands, not only by shape: `»…«` (turned the other w
 ## Spaces
 
 - One-letter words kept with the next word: none.
-- A no-break space between a number and % or €: yes.
+- A no-break space between a number and %: yes.
+- A no-break space between a number and € after it: yes.
 
 ### Abbreviations
 
