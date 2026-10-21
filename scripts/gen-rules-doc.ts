@@ -10,7 +10,16 @@
 import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { RULE_SOURCES } from '../resources/sources';
-import { type Lang, NBSP, type Register, RULES, type Rule, typographic } from '../src';
+import {
+  type Lang,
+  NBSP,
+  type Register,
+  RULE_CATEGORIES,
+  RULES,
+  type Rule,
+  type RuleCategory,
+  typographic,
+} from '../src';
 
 export type Example = {
   input: string;
@@ -167,6 +176,15 @@ export const EXAMPLES: Record<string, readonly Example[]> = {
   ],
 };
 
+/** What each category holds, for the rules page. */
+const CATEGORY_ABOUT: Record<RuleCategory, string> = {
+  tradition:
+    'the conventions of setting prose: quotation marks, the apostrophe, dashes, the ellipsis, punctuation and the spaces around it, and what must not be split at a line end',
+  symbols: 'signs typed as ASCII stand-ins that have a character of their own: arrows, ©, ®, ™',
+  math: 'signs of arithmetic and logic: minus, ×, ±, fractions, ⇒',
+  data: 'numbers with what they measure: digit groups, ranges, units, percentages and currencies, dates',
+};
+
 const show = (text: string): string => text.replaceAll(NBSP, '~');
 
 /** The engine's output with only `id` switched on (a rule that is off by default is enabled). */
@@ -202,15 +220,25 @@ export function render(rules: readonly Rule[] = RULES): string {
     '',
     'Each example runs the engine with every rule except the one shown switched off, so it shows what that rule does and nothing else. In a full run the other rules also act (an English `"` is turned into a quote by `quote` before anything else sees it). The text of each example is plain; a no-break space is shown as `~` (the character U+00A0 in the real output; an ordinary space stays a space). Text in a code span, a web address and an email are never changed by any rule.',
     '',
+    '## Categories',
+    '',
+    'Each rule has a category that says what it is for; the id names the mechanism and is what `disable` and `enable` take. A category is a label only: it is not a group name for `disable`.',
+    '',
+    ...RULE_CATEGORIES.map((category) => `- \`${category}\`: ${CATEGORY_ABOUT[category]}`),
+    '',
     '## Order',
     '',
+    '| # | Rule | Category | Default |',
+    '|---|---|---|---|',
     ...rules.map(
-      (rule, i) => `${i + 1}. \`${rule.id}\`${rule.defaultOn === false ? ' (off by default)' : ''}`,
+      (rule, i) =>
+        `| ${i + 1} | \`${rule.id}\` | ${rule.category ?? ''} | ${rule.defaultOn === false ? 'off' : 'on'} |`,
     ),
   ];
   for (const rule of rules) {
     const confidence = RULE_SOURCES[rule.id]?.confidence ?? 'general-knowledge';
     out.push('', `## \`${rule.id}\``, '', rule.about, '');
+    if (rule.category) out.push(`Category: \`${rule.category}\`.`, '');
     out.push(
       `Why: [sources.md](../resources/sources.md#${rule.id.replaceAll('.', '')}), \`${confidence}\`.`,
       '',

@@ -115,10 +115,6 @@ Partly there: `space.number` binds a number to the symbol or code after it (`49~
 - **Symbols and codes** are an inline list; a code list (ISO 4217) and the symbols of the audience's currencies (`€ $ £ ₴ zł Kč Ft lei лв kr`) should be one table in `src/core`, not in two rules.
 - Done when: golden tests per locale for the amount, the symbol and the code before and after; `space.number` and `number.group` agree on grouped amounts; no rule moves or adds a currency symbol.
 
-### Rule categories
-
-The rules are a flat list with dotted group names (`dash`, `space`, `symbol`, `number`, ...) that describe the mechanism, not why a reader would want a rule. Plan: a `category` tag on `Rule` (`tradition`, `symbols`, `math`, `data` for phone numbers, currencies, units and dates), the ids unchanged so `disable` and `enable` keep working; shown as a column in `typo --rules`, `docs/rules.md` and as groups in the playground. Half a day; no output change.
-
 ### Irish (`ga`): make the pack real
 
 The pack exists but is thin, because the Irish edition of the Interinstitutional Style Guide (`style-guide.europa.eu/ga`, section 4.2.3) could not be read; what is there comes from the Publications Office quotation table and from statements about Irish in the Maltese edition. Open:

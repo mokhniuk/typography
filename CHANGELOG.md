@@ -2,6 +2,10 @@
 
 Versions follow semver while the package is below 1.0.0: a **minor** release may change the output of the engine or the API (every entry says whether it can change output you already have), a **patch** release fixes a bug without changing output you rely on. If you depend on exact output, pin a tag and read this file before you move it.
 
+## Unreleased
+
+- Rule categories: every rule has a `category` that says what it is for, `tradition` (quotes, the apostrophe, dashes, the ellipsis, punctuation and the spaces of prose), `symbols` (arrows, ©, ®, ™), `math` (minus, ×, ±, fractions, ⇒) or `data` (digit groups, ranges, units, percentages and currencies, dates). `typo --rules` and `docs/rules.md` show it as a column, and the playground groups its rule switches by it. New exports: `RULE_CATEGORIES`, `RuleCategory`; `Rule` has an optional `category` (every built-in rule sets it; a custom rule may leave it out). Rule ids are unchanged, so `disable` and `enable` take the same names; a category is not a name they take. Can change existing output: no (the engine's output is unchanged; the `typo --rules` listing has a new column).
+
 ## 0.5.0 (2026-10-21)
 
 ### Fixes

@@ -1,4 +1,4 @@
-import type { Rule } from '../../src/core';
+import { RULE_CATEGORIES, type Rule, type RuleCategory } from '../../src/core';
 
 /**
  * Which rules the playground has switched away from their defaults: `disable` holds rules that are
@@ -54,4 +54,16 @@ export function readSaved(saved: unknown, rules: readonly Rule[]): RuleState {
     disable: ids(record.disable, (id) => on.has(id)),
     enable: ids(record.enable, (id) => off.has(id)),
   };
+}
+
+/** A heading of the rule list: a category, or `other` for rules that have none. */
+export type RuleGroup = { category: RuleCategory | 'other'; rules: Rule[] };
+
+/** The rules by category, in the order of `RULE_CATEGORIES`, run order kept inside a group; empty groups are left out. */
+export function groupRules(rules: readonly Rule[]): RuleGroup[] {
+  const groups: RuleGroup[] = [...RULE_CATEGORIES, 'other' as const].map((category) => ({
+    category,
+    rules: rules.filter((rule) => (rule.category ?? 'other') === category),
+  }));
+  return groups.filter((group) => group.rules.length > 0);
 }

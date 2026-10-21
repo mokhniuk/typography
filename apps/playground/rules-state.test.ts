@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
 import type { Rule } from '../../src/core';
-import { isOn, readSaved, reset, ruleBadge, setRule } from './rules-state';
+import { groupRules, isOn, readSaved, reset, ruleBadge, setRule } from './rules-state';
 
 const noop = (t: string) => t;
 const rules: readonly Rule[] = [
@@ -64,5 +64,25 @@ describe('playground rule state', () => {
   test('nonsense loads as the defaults', () => {
     expect(readSaved(null, rules)).toEqual(fresh);
     expect(readSaved({ disable: 'a.one', enable: 3 }, rules)).toEqual(fresh);
+  });
+});
+
+describe('playground rule groups', () => {
+  test('rules are grouped by category in the order of RULE_CATEGORIES, run order kept inside a group', () => {
+    const list: readonly Rule[] = [
+      { id: 'n.one', about: '', category: 'data', apply: noop },
+      { id: 'q', about: '', category: 'tradition', apply: noop },
+      { id: 'n.two', about: '', category: 'data', apply: noop },
+      { id: 'custom', about: '', apply: noop },
+      { id: 'pm', about: '', category: 'math', apply: noop },
+    ];
+    expect(
+      groupRules(list).map(({ category, rules }) => [category, rules.map((r) => r.id)]),
+    ).toEqual([
+      ['tradition', ['q']],
+      ['math', ['pm']],
+      ['data', ['n.one', 'n.two']],
+      ['other', ['custom']],
+    ]);
   });
 });

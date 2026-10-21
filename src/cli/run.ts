@@ -43,7 +43,7 @@ Options
                                   (e.g. dash.range,space); see --rules
   -e, --enable <rules>            switch on rules that are off by default, same form
                                   (--rules marks them); a rule in both is an error
-      --rules                     list the rules and exit
+      --rules                     list the rules (id, category, description) and exit
       --explain                   list every change and the rule that made it, instead
                                   of the typeset text; with --json as a JSON array
       --json                      JSON output for --explain
@@ -58,13 +58,14 @@ change (--check), 2 a usage or read error.`;
 
 const VERSION = pkg.version;
 
-/** One line per rule: id, description, and a note on a rule that is off unless enabled. */
+/** One line per rule: id, category (blank for a rule without one), description, and a note on a rule that is off unless enabled. */
 export function formatRules(rules: readonly Rule[]): string {
   const width = Math.max(...rules.map((r) => r.id.length));
+  const categoryWidth = Math.max(0, ...rules.map((r) => r.category?.length ?? 0));
   return rules
     .map(
       (r) =>
-        `${r.id.padEnd(width)}  ${r.about}${r.defaultOn === false ? ` (off by default; --enable ${r.id})` : ''}`,
+        `${r.id.padEnd(width)}  ${(r.category ?? '').padEnd(categoryWidth)}  ${r.about}${r.defaultOn === false ? ` (off by default; --enable ${r.id})` : ''}`,
     )
     .join('\n');
 }

@@ -5,9 +5,11 @@ export { LANGS, REGISTERS } from './profiles';
 export {
   addRule,
   DEFAULT_RULES,
+  RULE_CATEGORIES,
   RULE_IDS,
   RULES,
   type Rule,
+  type RuleCategory,
   type RulePosition,
   selectRules,
   without,

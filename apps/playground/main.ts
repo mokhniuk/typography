@@ -9,13 +9,22 @@ import {
   REGISTERS,
   type Register,
   RULES,
+  type Rule,
 } from '../../src/core';
 import { hangPunctuation, markHangs } from '../../src/dom';
 import { typesetHtml } from '../../src/html';
 import { typesetMarkdown } from '../../src/markdown';
 import { typesetText } from '../../src/text';
 import { example, exampleIn, type Mode, type Size } from './examples';
-import { isOn, readSaved, reset, ruleBadge, setRule } from './rules-state';
+import {
+  groupRules,
+  isOn,
+  type RuleGroup,
+  readSaved,
+  reset,
+  ruleBadge,
+  setRule,
+} from './rules-state';
 
 type View = 'result' | 'changes' | 'preview';
 /** The amounts the hanging slider stops at; its value is the index. */
@@ -148,7 +157,23 @@ const state = load();
 
 const ruleList = el<HTMLDivElement>('ruleList');
 const ruleCount = el<HTMLSpanElement>('ruleCount');
-for (const rule of RULES) {
+const CATEGORY_NAMES: Record<RuleGroup['category'], string> = {
+  tradition: 'Tradition: quotes, dashes, punctuation, spaces',
+  symbols: 'Symbols: arrows, ©, ®, ™',
+  math: 'Math: minus, ×, ±, fractions',
+  data: 'Data: numbers, ranges, units, currencies, dates',
+  other: 'Other',
+};
+for (const group of groupRules(RULES)) {
+  const set = document.createElement('fieldset');
+  set.dataset.category = group.category;
+  const legend = document.createElement('legend');
+  legend.textContent = CATEGORY_NAMES[group.category];
+  set.append(legend);
+  ruleList.append(set);
+  for (const rule of group.rules) addRuleBox(set, rule);
+}
+function addRuleBox(set: HTMLFieldSetElement, rule: Rule) {
   const label = document.createElement('label');
   const box = document.createElement('input');
   box.type = 'checkbox';
@@ -158,7 +183,7 @@ for (const rule of RULES) {
   const about = document.createElement('small');
   about.textContent = rule.defaultOn === false ? `${rule.about} (off by default)` : rule.about;
   label.append(box, name, about);
-  ruleList.append(label);
+  set.append(label);
   box.addEventListener('change', () => {
     Object.assign(state, setRule(state, rule, box.checked));
     schedule();

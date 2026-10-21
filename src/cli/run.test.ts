@@ -192,6 +192,15 @@ describe('formatRules', () => {
     expect(lines.length).toBe(RULES.length + 1);
   });
 
+  test('shows the category of each rule as a column, blank for a rule without one', () => {
+    const lines = formatRules(addRule(RULES, shout, { last: true })).split('\n');
+    expect(lines[0]).toMatch(/^quote +tradition +Quotation marks/);
+    expect(lines.find((line) => line.startsWith('symbol.minus '))).toMatch(
+      /^symbol\.minus +math +/,
+    );
+    expect(lines.at(-1)).toMatch(/^extra\.shout {2,}Upper case/);
+  });
+
   test('is unchanged for the built-in list', () => {
     expect(formatRules(DEFAULT_RULES)).not.toContain('off by default');
   });

@@ -29,11 +29,28 @@ import {
 } from './spaces';
 import type { Context } from './types';
 
+/**
+ * Why a reader would want a rule, as opposed to its id, which names the mechanism:
+ * - `tradition`: the conventions of setting prose (quotes, dashes, the ellipsis, punctuation and
+ *   the spaces around it, what must not be split at a line end);
+ * - `symbols`: signs typed as ASCII stand-ins that have a character of their own (arrows, ©, ®, ™);
+ * - `math`: signs of arithmetic and logic (minus, ×, ±, fractions, ⇒);
+ * - `data`: numbers with what they measure: groups of digits, ranges, units, currencies, dates.
+ */
+export const RULE_CATEGORIES = ['tradition', 'symbols', 'math', 'data'] as const;
+export type RuleCategory = (typeof RULE_CATEGORIES)[number];
+
 /** One step of the typography, with a name that can be switched off or reported. */
 export type Rule = {
   /** `group.name`, or a single word for a rule that stands alone. */
   id: string;
   about: string;
+  /**
+   * What the rule is for (see `RULE_CATEGORIES`), shown by `typo --rules`, `docs/rules.md` and the
+   * playground. Every built-in rule has one; a custom rule may leave it out. It does not change what
+   * the rule does, and `disable` and `enable` still take ids and groups of ids.
+   */
+  category?: RuleCategory;
   /** Whether the rule runs unless it is switched off. `false`: it runs only when named in `enable`. Default `true`. */
   defaultOn?: boolean;
   /**
@@ -83,23 +100,27 @@ function names(packs: readonly { name: string }[]): string {
 export const RULES: readonly Rule[] = [
   {
     id: 'quote',
+    category: 'tradition',
     about: 'Quotation marks by language, register and nesting level, from any source style',
     apply: (text, { lang, register, quoteStyle }) => quotes(text, lang, register, quoteStyle),
   },
   {
     id: 'apostrophe',
+    category: 'tradition',
     about: "A straight ' in a word or before a year becomes ’",
     when: has("'"),
     apply: apostrophe,
   },
   {
     id: 'ellipsis',
+    category: 'tradition',
     about: '... becomes …',
     when: has('...'),
     apply: ellipsis,
   },
   {
     id: 'space.before-punctuation',
+    category: 'tradition',
     about: 'Removes a space before , . ; : ! ? ) (French keeps the space before : ; ! ?)',
     defaultOn: false,
     when: hasAny(' ', '\t'),
@@ -107,6 +128,7 @@ export const RULES: readonly Rule[] = [
   },
   {
     id: 'space.after-comma',
+    category: 'tradition',
     about: 'A comma followed directly by a letter gets a space (a,b becomes a, b)',
     defaultOn: false,
     when: has(','),
@@ -114,22 +136,30 @@ export const RULES: readonly Rule[] = [
   },
   {
     id: 'punctuation.double',
+    category: 'tradition',
     about: 'A run of ! or ? becomes one mark (Wow!!! becomes Wow!); ?! and !? stay',
     defaultOn: false,
     when: hasAny('!!', '??'),
     apply: doubleMarks,
   },
-  { id: 'arrow', about: '-> and <- become → and ←', apply: arrows },
+  { id: 'arrow', category: 'symbols', about: '-> and <- become → and ←', apply: arrows },
   {
     id: 'symbol.implies',
+    category: 'math',
     about: '=> becomes ⇒',
     defaultOn: false,
     when: has('=>'),
     apply: implies,
   },
-  { id: 'symbol.legal', about: '(c) before a year, (C), (R) and (TM) become © ® ™', apply: legal },
+  {
+    id: 'symbol.legal',
+    category: 'symbols',
+    about: '(c) before a year, (C), (R) and (TM) become © ® ™',
+    apply: legal,
+  },
   {
     id: 'dash.dialogue',
+    category: 'tradition',
     about:
       'A paragraph opening with a dash is a line of dialogue, in languages that write dialogue that way: their dash and a no-break space (Ukrainian — Привіт)',
     apply: (text, { lang, blockStart }) => {
@@ -139,6 +169,7 @@ export const RULES: readonly Rule[] = [
   },
   {
     id: 'number.group',
+    category: 'data',
     about:
       'Digits of an integer of five or more are grouped in threes with the language separator (1,000,000; 1 000 000)',
     defaultOn: false,
@@ -146,12 +177,14 @@ export const RULES: readonly Rule[] = [
   },
   {
     id: 'dash.range',
+    category: 'data',
     about: 'A hyphen between two numbers (21-26, 10:00-12:00) becomes an unspaced en dash',
     when: hasAny('-', '–'),
     apply: dashRange,
   },
   {
     id: 'dash.sentence',
+    category: 'tradition',
     about:
       'A spaced hyphen, dash or double hyphen becomes a spaced dash (em; en in German and literary British English), no-break before it',
     when: hasAny('-', '–', '—'),
@@ -165,6 +198,7 @@ export const RULES: readonly Rule[] = [
   },
   {
     id: 'symbol.plusminus',
+    category: 'math',
     about: '+- before a digit becomes ± (+-5 becomes ±5)',
     defaultOn: false,
     when: has('+-'),
@@ -172,18 +206,21 @@ export const RULES: readonly Rule[] = [
   },
   {
     id: 'symbol.minus',
+    category: 'math',
     about: 'A hyphen before a digit (-5) becomes a minus sign (−5)',
     when: has('-'),
     apply: minus,
   },
   {
     id: 'symbol.multiply',
+    category: 'math',
     about: 'The letter x between numbers (1920x1080, 3 x 4) becomes ×',
     when: has('x'),
     apply: multiply,
   },
   {
     id: 'symbol.fraction',
+    category: 'math',
     about: '1/2, 1/4 and 3/4 become ½ ¼ ¾, as whole numbers only (not 11/2, 1/20 or a date)',
     defaultOn: false,
     when: has('/'),
@@ -191,24 +228,28 @@ export const RULES: readonly Rule[] = [
   },
   {
     id: 'space.collapse',
+    category: 'tradition',
     about: 'A run of spaces becomes one',
     when: has('  '),
     apply: collapse,
   },
   {
     id: 'space.title',
+    category: 'tradition',
     about: 'No-break space after Prof., Dr., Mr. …',
     when: has('.'),
     apply: titles,
   },
   {
     id: 'space.initial',
+    category: 'tradition',
     about: 'No-break space after an initial (K. Słoboda)',
     when: has('.'),
     apply: initials,
   },
   {
     id: 'space.abbreviation',
+    category: 'tradition',
     about:
       'Parts of an abbreviation stay together (z. B.), and Nr., ul., S. stay with what follows',
     when: (text, { lang }) => mayAbbreviate(text, lang),
@@ -216,18 +257,21 @@ export const RULES: readonly Rule[] = [
   },
   {
     id: 'space.number',
+    category: 'data',
     about:
       'No-break space between a number and a short word or unit after it, up to nine letters (21 September, 5 %)',
     apply: numberUnit,
   },
   {
     id: 'space.percent',
+    category: 'data',
     about: `${names(PACKS.filter((pack) => 'percentSpace' in pack && pack.percentSpace))}: a no-break space between a number and % or € (5 %, 49 €)`,
     when: (text, { lang }) => !!PACK[lang].percentSpace && hasAny('%', '€')(text),
     apply: (text, { lang }) => unitSymbol(text, lang),
   },
   {
     id: 'symbol.degree',
+    category: 'data',
     about: '20 C, 20°C and 20 °C become 20 °C, with a no-break space before the unit',
     defaultOn: false,
     when: hasAny('C', 'F'),
@@ -235,36 +279,41 @@ export const RULES: readonly Rule[] = [
   },
   {
     id: 'space.association',
+    category: 'tradition',
     about: 'No-break space before e.V.',
     when: has('e.V.'),
     apply: association,
   },
   {
     id: 'space.copyright',
+    category: 'symbols',
     about: 'No-break space after ©',
     when: has('©'),
     apply: copyright,
   },
   {
     id: 'space.orphan',
+    category: 'tradition',
     about: 'No-break space after a one-letter word the language must not strand at a line end',
     when: (_text, { lang }) => ORPHANS[lang] !== undefined,
     apply: (text, { lang }) => orphans(text, lang),
   },
   {
     id: 'space.arrow',
+    category: 'symbols',
     about: 'No-break space before → and after ←',
     when: hasAny('→', '←'),
     apply: arrowSpace,
   },
   {
     id: 'space.trailing',
+    category: 'tradition',
     about: 'Spaces and tabs at the end of a line are removed',
     defaultOn: false,
     when: hasAny(' ', '\t'),
     apply: trailingSpace,
   },
-];
+] satisfies readonly (Rule & { category: RuleCategory })[];
 
 export const RULE_IDS: readonly string[] = RULES.map((rule) => rule.id);
 

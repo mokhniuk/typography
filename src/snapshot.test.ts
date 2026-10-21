@@ -149,13 +149,13 @@ describe('the harness catches a change to the engine', () => {
       const swapped = copy();
       swapped.edit(
         'core/rules.ts',
-        "{ id: 'arrow', about: '-> and <- become → and ←', apply: arrows }",
-        "{ id: 'symbol.legal', about: '-> and <- become → and ←', apply: arrows }",
+        "{ id: 'arrow', category: 'symbols', about: '-> and <- become → and ←', apply: arrows }",
+        "{ id: 'symbol.legal', category: 'symbols', about: '-> and <- become → and ←', apply: arrows }",
       );
       swapped.edit(
         'core/rules.ts',
-        "{ id: 'symbol.legal', about: '(c) before a year, (C), (R) and (TM) become © ® ™', apply: legal }",
-        "{ id: 'arrow', about: '(c) before a year, (C), (R) and (TM) become © ® ™', apply: legal }",
+        "id: 'symbol.legal',\n    category: 'symbols',\n    about: '(c) before a year, (C), (R) and (TM) become © ® ™',\n    apply: legal,",
+        "id: 'arrow',\n    category: 'symbols',\n    about: '(c) before a year, (C), (R) and (TM) become © ® ™',\n    apply: legal,",
       );
       expect(compare(SRC, swapped.dir).status).toBe(1);
     },

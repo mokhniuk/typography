@@ -45,7 +45,7 @@ describe('docs/rules.md with a rule that is off by default', () => {
     expect(page).toContain(
       `The engine has ${RULES.length + 1} rules, ${DEFAULT_RULES.length} on by default`,
     );
-    expect(page).toContain(`${RULES.length + 1}. \`extra.shout\` (off by default)`);
+    expect(page).toContain(`| ${RULES.length + 1} | \`extra.shout\` |  | off |`);
   });
 
   test('with every rule on by default the wording is the plain one', () => {

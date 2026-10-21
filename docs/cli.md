@@ -18,7 +18,7 @@ It typesets text, HTML or Markdown with the same engine as the library functions
 | `--quotes` | | `language`, `us` | `language` | `language`: the quote marks of the language. `us`: `“…”` and `‘…’` in any language and register. |
 | `--disable` | `-d` | rule ids or groups, comma separated | none | Switch rules off, for example `dash.range,space`. The flag may be given more than once. |
 | `--enable` | `-e` | rule ids or groups, comma separated | none | Switch on rules that are off by default (`--rules` marks them). A rule named in both `--enable` and `--disable` is a usage error. |
-| `--rules` | | | | List the rules with their descriptions and exit 0. A rule that is off by default is marked `(off by default; --enable <id>)`. |
+| `--rules` | | | | List the rules, one per line: id, category (`tradition`, `symbols`, `math` or `data`, see [rules.md](rules.md#categories)) and description, and exit 0. A rule that is off by default is marked `(off by default; --enable <id>)`. |
 | `--explain` | | | | Print every change and the rule behind it, instead of the typeset text. |
 | `--json` | | | | JSON output for `--explain`. An error without `--explain`. |
 | `--write` | `-w` | | | Rewrite the files in place. |
@@ -87,7 +87,7 @@ typo -w docs/*.md                   # rewrite Markdown files in place
 typo -r literary -l en story.txt    # British quotes, spaced en dash
 typo -d dash.range,space page.html  # a rule and a whole group off
 typo -f html --nbsp char < page.txt # read as HTML, write a real no-break space
-typo --rules                        # the rule ids and what each does
+typo --rules                        # the rule ids, their categories and what each does
 typo --explain note.txt             # what would change, and why
 typo --explain --json -l de < note.txt
 ```
@@ -104,4 +104,4 @@ Exit 1 means "would change", exit 2 means the command was misused or a file is m
 
 ## Rules and groups
 
-`--disable`, `--enable` and `--rules` use the ids in [rules.md](rules.md). A name that matches no rule is a usage error (exit 2) and the message lists the ids.
+`--disable`, `--enable` and `--rules` use the ids in [rules.md](rules.md). A name that matches no rule is a usage error (exit 2) and the message lists the ids. The category `--rules` shows (`tradition`, `symbols`, `math`, `data`) is a label, not a name `--disable` takes.
