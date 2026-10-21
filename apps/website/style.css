@@ -1413,6 +1413,29 @@ ul[data-plain] li:last-child {
   border-bottom: 1px solid var(--color-line);
 }
 
+/* The support band: the one inverted section, set apart from the page */
+
+section[data-support] {
+  background: var(--color-rule);
+  color: var(--color-bg);
+  border-bottom: none;
+}
+section[data-support] a {
+  color: inherit;
+}
+section[data-support] [data-lede] {
+  color: inherit;
+}
+section[data-support] [data-actions] {
+  margin-top: var(--space-6);
+}
+section[data-support] a.primary {
+  gap: var(--space-2);
+  background: var(--color-bg);
+  border-color: var(--color-bg);
+  color: var(--color-text);
+}
+
 /* Rule samples */
 
 table[data-samples] td {
