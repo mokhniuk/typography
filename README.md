@@ -32,7 +32,7 @@ Nothing in the package imports anything outside the folder except `react` (the `
 | `@podiia/typography/html` | An HTML string | `typesetHtml` |
 | `@podiia/typography/markdown` | A Markdown document | `typesetMarkdown` |
 | `@podiia/typography/rehype` | A unified/rehype pipeline, or any hast tree | default `rehypeTypography`, `typesetHast` |
-| `@podiia/typography/dom` | Hanging punctuation in the browser, no framework | `hangPunctuation`, `hangScript` |
+| `@podiia/typography/dom` | Hanging punctuation in the browser, no framework | `hangPunctuation`, `hangScript`, `markHangs` |
 | `@podiia/typography/react` | React pages | `Typeset`, `TypographyRoot`, `HangText`, `HangScript`, `useHangingPunctuation`, `TypographyContext` |
 | `typo` (bin) | The command line; needs Bun | see [docs/cli.md](docs/cli.md) |
 
@@ -149,7 +149,7 @@ Run it as `bun run src/cli/main.ts` before the `typo` bin is linked.
 
 ## Hanging punctuation without a jump on a prerendered page
 
-Hanging uses push and pull, so where lines break never needs measuring; but a mark's exact width is measured, and before that the marks carry a rough width (0.4em). On a prerendered page without the inline pass the marks would shift by the difference once the bundle has loaded. `TypographyRoot` (and `<HangScript />`, for a page that wires the hook itself; put it last inside the element that holds the text) sends the same pass inline, so it runs as the page is parsed. The cost is the length of `hangScript()`, about 1.5 kB of HTML (`hangScript().length` prints it). `early={false}` turns it off.
+Hanging never measures where lines break (the space beside each mark carries its width and goes away at a break); but a mark's exact width is measured, and before that the marks carry a rough width (0.4em). On a prerendered page without the inline pass the marks would shift by the difference once the bundle has loaded. `TypographyRoot` (and `<HangScript />`, for a page that wires the hook itself; put it last inside the element that holds the text) sends the same pass inline, so it runs as the page is parsed. The cost is the length of `hangScript()`, about 1.5 kB of HTML (`hangScript().length` prints it). `early={false}` turns it off.
 
 To check this on your own page: block the JavaScript bundle (for example in the browser's developer tools), load the page at a narrow width, and count the marks that start a wrapped line and are already hung at first paint; then let the bundle load and count the marks that move. The rough width hangs every line-start mark at first paint; the inline script makes the small correction to the exact width before the page is shown. This is a method, not a result: it has not been measured on any page that ships with this package, and it needs a production build (the inline script has not been looked at in a dev server; see [docs/limits.md](docs/limits.md)).
 

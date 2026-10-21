@@ -38,33 +38,69 @@ export function splitHangs(text: string, atStart = true): TextPart[] {
   return parts;
 }
 
-/** A piece of the push/pull markup: plain text, the push before the space ahead of a hung run, or the run. */
-export type HangPiece = { kind: 'text' | 'push' | 'mark'; text: string; lead: boolean };
+/** Closing punctuation, as found at the end of a word. */
+const CLOSERS = '»›«‹”“’‘)]}';
+/** Sentence punctuation that may follow a closing run and hangs with it: `(AGS).` */
+const TRAILING = '.,;:!?…';
 
 /**
- * `splitHangs` laid out for push/pull hanging. A hung run that follows a space gets a `push`
- * (no text) just before that space: the run is pulled left by its own width and the push holds
- * the same width open, so in the middle of a line the two cancel, and only where the line breaks
- * at that space, leaving the push at the end of the line above, does the run hang. Line breaks
- * then never depend on hanging, and nothing has to be measured per layout. The run that opens the
- * paragraph (`lead`) has nothing before it to push.
+ * A piece of hanging markup: plain text, the space before an opening run, an opening run, or a
+ * closing run together with the space after it.
+ */
+export type HangPiece = { kind: 'text' | 'space' | 'open' | 'close'; text: string };
+
+/**
+ * Cuts `text` for hanging on both sides. An opening run (`« ( „ ¿ …` starting a word, followed by
+ * a letter or digit) hangs left where it starts a line; a closing run (`» ) “ ’ …` ending a word,
+ * with any `.,;:!?…` after it) hangs right where it ends one. The whitespace around them is what
+ * makes it work without measuring lines: the space before an opening run and the space after a
+ * closing run carry the marks' widths as extra word spacing, which cancels the marks' negative
+ * margins in the middle of a line and goes away with the space wherever the line breaks there.
+ * So the space before an opener is its own `space` piece, and a closer keeps the space after it in
+ * its own piece (a closer and an opener around one space share it). `atStart` says whether `text`
+ * begins a paragraph; a text that continues another starts mid-word. The texts joined give `text`.
  */
 export function hangPieces(text: string, atStart = true): HangPiece[] {
   const out: HangPiece[] = [];
-  for (const part of splitHangs(text, atStart)) {
-    if (!part.hang) {
-      out.push({ kind: 'text', text: part.text, lead: false });
+  const space = (ch: string | undefined) => ch !== undefined && /\s/.test(ch);
+  let plain = 0;
+  const flush = (end: number) => {
+    if (end > plain) out.push({ kind: 'text', text: text.slice(plain, end) });
+  };
+  let i = 0;
+  while (i < text.length) {
+    const ch = text.charAt(i);
+    const startsWord = i === 0 ? atStart : space(text.charAt(i - 1));
+    if (OPENERS.includes(ch) && startsWord) {
+      let end = i;
+      while (end < text.length && OPENERS.includes(text.charAt(end))) end++;
+      if (end < text.length && !space(text.charAt(end))) {
+        let cut = i;
+        while (cut > plain && space(text.charAt(cut - 1))) cut--;
+        flush(cut);
+        if (cut < i) out.push({ kind: 'space', text: text.slice(cut, i) });
+        out.push({ kind: 'open', text: text.slice(i, end) });
+        plain = end;
+      }
+      i = end;
       continue;
     }
-    const prev = out[out.length - 1];
-    const space = prev?.kind === 'text' ? (/\s+$/.exec(prev.text)?.[0] ?? '') : '';
-    if (prev && space) {
-      out.pop();
-      const before = prev.text.slice(0, -space.length);
-      if (before) out.push({ kind: 'text', text: before, lead: false });
-      out.push({ kind: 'push', text: '', lead: false }, { kind: 'text', text: space, lead: false });
+    const endsWord = i === 0 ? !atStart : !space(text.charAt(i - 1));
+    if (CLOSERS.includes(ch) && endsWord) {
+      let end = i;
+      while (end < text.length && (CLOSERS.includes(text.charAt(end)) || TRAILING.includes(text.charAt(end)))) end++;
+      if (end === text.length || space(text.charAt(end))) {
+        let after = end;
+        while (after < text.length && space(text.charAt(after))) after++;
+        flush(i);
+        out.push({ kind: 'close', text: text.slice(i, after) });
+        plain = after;
+        i = after;
+        continue;
+      }
     }
-    out.push({ kind: 'mark', text: part.text, lead: part.lead });
+    i++;
   }
+  flush(text.length);
   return out;
 }

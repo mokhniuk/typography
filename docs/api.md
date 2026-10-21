@@ -9,7 +9,7 @@ Every entry point in `package.json` `exports`, plus the `typo` command (see [cli
 | `./html` | `src/html/index.ts` | `typesetHtml`, `HtmlOptions` |
 | `./markdown` | `src/markdown/index.ts` | `typesetMarkdown`, `MarkdownOptions` |
 | `./rehype` | `src/rehype/index.ts` | default `rehypeTypography`, `typesetHast`, `RehypeOptions` |
-| `./dom` | `src/dom/index.ts` | `hangPunctuation`, `hangScript` |
+| `./dom` | `src/dom/index.ts` | `hangPunctuation`, `hangScript`, `markHangs`, `hangStyle` |
 | `./react` | `src/react/index.ts` | `Typeset`, `TypographyRoot`, `HangText`, `HangScript`, `useHangingPunctuation`, `TypographyContext`, `TypographySetting` |
 | bin `typo` | `src/cli/main.ts` | the command line; needs Bun |
 
@@ -193,13 +193,23 @@ Framework-free, browser only (it needs `getComputedStyle`, `ResizeObserver`, `Mu
 
 ### `hangPunctuation(el: HTMLElement): () => void`
 
-Hangs the opening punctuation marked with a `data-hang` attribute under `el` wherever a line starts with it, at any width and in any alignment. It uses push and pull: each mark is pulled left by its own width (an inline `margin-left`), and a push, an empty `<span data-hang-push>` just before the space ahead of the mark, holds the same width open (`margin-right`). In the middle of a line the two cancel, so the mark sits where it would without hanging and the line breaks are the text's own; where a line breaks at that space, the push stays at the end of the line above and the mark hangs. Since nothing depends on where lines break, nothing is re-measured when they move (a narrower window, a dialog that opens, a scrollbar that appears). Only each mark's width is measured, once, and stored in em as `--hang-w` on the mark and its push, so it follows the text size.
+Hangs the punctuation marked by `HangText` or `markHangs` under `el`, at any width and in any alignment: an opening run (`« ( „ ¿`…, in `<span data-hang>`) hangs into the left margin wherever it starts a line, and a closing run (`» ) “ ’`…, with any `.,;:!?…` after it, in `<span data-hang-close>`) hangs into the right margin wherever it ends one, which shows in right-aligned, centred and (in Chrome and Firefox) justified text.
 
-`HangText` renders the push; for marks you wrap yourself, the pass inserts it before the space ahead of the mark (also when the mark opens an inline element such as `<em>«x</em>`). A mark with nothing before it opens its paragraph and always hangs; a mark glued to the text before it is left alone. One cost: a push at the end of a line counts toward that line's width, so a line can break a word earlier than it would without hanging. This is the same at every width, never a jump.
+How: each mark gets a negative margin of its own width, and the space beside it carries the same width as extra `word-spacing`: the space before an opening run (`<span data-hang-space>`), and the space a closing span holds after its mark. In the middle of a line the two cancel, so every letter sits where it would without hanging. Where a line breaks at that space, the browser drops the space, its extra spacing goes with it, and the mark hangs. Nothing depends on where lines break, so nothing is re-measured when they move (a narrower window, a dialog that opens, a scrollbar that appears). Only each mark's width is measured, once, and stored in em (`--hang-w` on the mark, `--hang-open` on the space before an opening run), so it follows the text size.
 
-How far a mark hangs is the CSS custom property `--hang-amount` on the mark or any ancestor: a share of its width from `0` to `1` (`0.3` hangs it by 30%, `0` not at all); unset is `1`. The margins read it in CSS (`calc(var(--hang-w) * var(--hang-amount, 1))`), so changing it takes effect at once, with no new pass.
+An opening mark wrapped by the page with nothing before it opens its paragraph and always hangs; one glued to the text before it is left alone; for one with a plain space before it, the pass wraps that space itself. A closing span that does not hold the space after it (it ends an inline element, so the space is outside) hangs only where its block ends.
 
-It runs once now, again when web fonts are ready (all marks are re-measured), when `el` or a `<dialog>` inside it is resized, and when text or elements under `el` change (new marks are measured). It returns a function that stops all of that. It marks the spans it has measured with `data-measured`. A mark with no width (a closed dialog) is left until it has one.
+How far marks hang is the CSS custom property `--hang-amount` on the mark or any ancestor: a share of the width from `0` to `1` (`0.3` hangs by 30%, `0` not at all); unset is `1`. The margins and spacing read it in CSS, so changing it takes effect at once, with no new pass.
+
+It runs once now, again when web fonts are ready (every mark is re-measured), when `el` or a `<dialog>` inside it is resized, and when text or elements under `el` change (new marks are measured). It returns a function that stops all of that. It marks the spans it has measured with `data-measured`. A mark with no width (a closed dialog) is left until it has one.
+
+### `markHangs(el: HTMLElement): void`
+
+Wraps the punctuation under `el` that should hang in the spans `hangPunctuation` reads, for markup that did not come from `HangText`: the output of the HTML, Markdown or rehype modes, or any page. A text node opens a word where it begins its block or follows text that ended in a space. Text in `pre`, `code`, `kbd`, `samp`, `script`, `style` and `textarea`, and text already wrapped, is left alone. Every span gets a rough width (0.4em per mark) so the text hangs at once; call `hangPunctuation(el)` after it for the exact widths.
+
+### `hangStyle(piece, next)`
+
+The attribute and inline style (`{ attr, style }`, style as CSS property names) of one `HangPiece`, with rough widths, as `HangText` and `markHangs` use them. For a renderer of your own.
 
 This is measured on purpose. CSS `hanging-punctuation: first` covers only the first line and is supported only in Safari; using both would hang a mark twice.
 
@@ -233,20 +243,20 @@ splitHangs('«Hello» he said');
 // [{ text: '«', hang: true, lead: true }, { text: 'Hello» he said', hang: false, lead: false }]
 ```
 
-Hanging covers opening marks only. Closing quotes, commas and full stops hang at the end of a line, which shows only in justified text.
+`splitHangs` covers opening marks only; `hangPieces` adds closing ones.
 
 ### `hangPieces(text, atStart = true): HangPiece[]`
 
 ```ts
-type HangPiece = { kind: 'text' | 'push' | 'mark'; text: string; lead: boolean };
+type HangPiece = { kind: 'text' | 'space' | 'open' | 'close'; text: string };
 ```
 
-`splitHangs` laid out for push and pull: every hung run that follows a space gets a `push` piece (empty text) just before that space, which is what `HangText` renders. The pieces' texts joined give `text` back.
+Cuts `text` for hanging on both sides: `open` is an opening run that starts a word and is followed by a letter or digit; `space` is the whitespace before it; `close` is a closing run (`» › « ‹ ” “ ’ ‘ ) ] }`) that ends a word, with any `.,;:!?…` after it, together with the whitespace after it (a closing run and an opening run around one space share it). `atStart` says whether a word starts at the first character (a paragraph start, or text after a space); a text that continues a word starts mid-word. The pieces' texts joined give `text` back. This is what `HangText` renders and `markHangs` wraps.
 
 ```ts
-hangPieces('Grass (Camden House)');
-// [{ kind: 'text', text: 'Grass' }, { kind: 'push', text: '' }, { kind: 'text', text: ' ' },
-//  { kind: 'mark', text: '(' }, { kind: 'text', text: 'Camden House)' }]   (lead: false on each)
+hangPieces('Grass (Camden House, 2027). He');
+// [{ kind: 'text', text: 'Grass' }, { kind: 'space', text: ' ' }, { kind: 'open', text: '(' },
+//  { kind: 'text', text: 'Camden House, 2027' }, { kind: 'close', text: '). ' }, { kind: 'text', text: 'He' }]
 ```
 
 ## `./react`
@@ -284,7 +294,7 @@ import { Typeset, TypographyRoot } from '@podiia/typography/react';
 
 ### `<HangText text atStart?>`
 
-Text that has already been through `typographic`, with its hanging marks wrapped in `<span data-hang>` and a `<span data-hang-push>` before the space ahead of each (see `hangPunctuation`). Use it where you cut the text up yourself and so must typeset before you cut. Every mark and push carries a rough width (`--hang-w`, 0.4em per mark) from the first paint, so a prerendered page hangs its marks before any script runs; the measuring then sets the exact width, a change of a fraction of a pixel.
+Text that has already been through `typographic`, with the punctuation that hangs wrapped in spans (see `hangPieces` and `hangPunctuation`): an opening run in `<span data-hang>`, the space before it in `<span data-hang-space>`, a closing run with the space after it in `<span data-hang-close>`. Use it where you cut the text up yourself and so must typeset before you cut. Every span carries a rough width (0.4em per mark) from the first paint, so a prerendered page hangs before any script runs; the measuring then sets the exact width, a change of a fraction of a pixel.
 
 ### `<HangScript />`
 

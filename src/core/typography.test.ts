@@ -571,17 +571,32 @@ describe('explain', () => {
 describe('hangPieces', () => {
   const show = (text: string, atStart = true) =>
     hangPieces(text, atStart)
-      .map((p) => (p.kind === 'push' ? '<push>' : p.kind === 'mark' ? `[${p.text}]` : p.text))
+      .map((p) => (p.kind === 'space' ? `<${p.text}>` : p.kind === 'open' ? `[${p.text}` : p.kind === 'close' ? `${p.text}]` : p.text))
       .join('');
 
-  test('a mark after a space gets a push before that space; one that opens the paragraph does not', () => {
-    expect(show('«a» then (b)')).toBe('[«]a» then<push> [(]b)');
-    expect(hangPieces('«a»')[0]).toEqual({ kind: 'mark', text: '«', lead: true });
+  test('the space before an opening run is its own piece; a closing run takes the space after it', () => {
+    expect(show('«a» then (b)')).toBe('[«a» ]then< >[(b)]');
+    expect(show('Grass (Camden House, 2027). He')).toBe('Grass< >[(Camden House, 2027). ]He');
   });
 
-  test('the text round-trips, and a continuation that opens with a space pushes before it', () => {
+  test('a closing run may end in sentence punctuation; a word with no closer does not hang', () => {
+    expect(show('Ireland (AGS).')).toBe('Ireland< >[(AGS).]');
+    expect(show('the end. Next')).toBe('the end. Next');
+  });
+
+  test('marks inside a word, or opening and closing nothing, stay plain', () => {
+    expect(show('a«b»c and « x » and ( )')).toBe('a«b»c and « x » and ( )');
+  });
+
+  test('a closing run followed by an opening one shares the space', () => {
+    expect(show('(a) (b)')).toBe('[(a) ][(b)]');
+    expect(hangPieces('(a) (b)').map((p) => p.kind)).toEqual(['open', 'text', 'close', 'open', 'text', 'close']);
+  });
+
+  test('the text round-trips, and a continuation is read from its first character', () => {
     const text = 'Grass (Camden House, 2027) and «x»';
     expect(hangPieces(text).map((p) => p.text).join('')).toBe(text);
-    expect(show(' (x', false)).toBe('<push> [(]x');
+    expect(show('(x', false)).toBe('(x');
+    expect(show(' (x', false)).toBe('< >[(x');
   });
 });

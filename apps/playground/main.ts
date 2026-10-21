@@ -9,9 +9,8 @@ import {
   type Register,
   REGISTERS,
   RULES,
-  splitHangs,
 } from '../../src/core';
-import { hangPunctuation } from '../../src/dom';
+import { hangPunctuation, markHangs } from '../../src/dom';
 import { typesetHtml } from '../../src/html';
 import { typesetMarkdown } from '../../src/markdown';
 import { typesetText } from '../../src/text';
@@ -185,46 +184,6 @@ function convert(): { output: string; changes: Change[] } {
   return { output, changes };
 }
 
-/** Text that is never typeset, so its marks never hang. */
-const NO_HANG = new Set(['PRE', 'CODE', 'KBD', 'SAMP', 'SCRIPT', 'STYLE', 'TEXTAREA']);
-
-/**
- * Wraps the opening marks of the HTML preview in `data-hang` spans, as the text and Markdown
- * previews get them from `splitHangs`. A text node opens its block when no text came before
- * it in the nearest ancestor that is not inline.
- */
-function markHangs(body: HTMLElement) {
-  const view = body.ownerDocument.defaultView;
-  if (!view) return;
-  const blockOf = (node: Node): Element => {
-    let box = node.parentElement;
-    while (box && box !== body && view.getComputedStyle(box).display === 'inline') box = box.parentElement;
-    return box ?? body;
-  };
-  const walker = body.ownerDocument.createTreeWalker(body, NodeFilter.SHOW_TEXT);
-  const nodes: Text[] = [];
-  for (let node = walker.nextNode(); node; node = walker.nextNode()) nodes.push(node as Text);
-  const started = new Set<Element>();
-  for (const node of nodes) {
-    if (!/\S/.test(node.data) || node.parentElement?.closest([...NO_HANG].join(','))) continue;
-    const block = blockOf(node);
-    const atStart = !started.has(block);
-    started.add(block);
-    const parts = splitHangs(node.data, atStart);
-    if (!parts.some((part) => part.hang)) continue;
-    const doc = body.ownerDocument;
-    node.replaceWith(
-      ...parts.map((part) => {
-        if (!part.hang) return doc.createTextNode(part.text);
-        const span = doc.createElement('span');
-        span.dataset.hang = '';
-        span.textContent = part.text;
-        return span;
-      }),
-    );
-  }
-}
-
 let stopHanging: (() => void) | null = null;
 /** The element the hanging pass runs on: the preview, or the body of the HTML preview frame. */
 let hangRoot: HTMLElement | null = null;
@@ -270,18 +229,10 @@ function renderPreview(output: string) {
   for (const block of output.split(/\r?\n[ \t]*\r?\n/)) {
     if (!/\S/.test(block)) continue;
     const p = document.createElement('p');
-    for (const part of splitHangs(block, true)) {
-      if (part.hang) {
-        const span = document.createElement('span');
-        span.dataset.hang = '';
-        span.textContent = part.text;
-        p.append(span);
-      } else {
-        p.append(part.text);
-      }
-    }
+    p.textContent = block;
     preview.append(p);
   }
+  markHangs(preview);
   hangRoot = preview;
   applyHang();
 }
