@@ -1,6 +1,7 @@
 ---
 title: Quotation marks differ, and so should your software
 date: 2026-10-20
+glyph: „“
 summary: Twenty-six languages, a dozen ways to open and close a quotation. What the engine sets, and why a straight " is never the right answer.
 ---
 

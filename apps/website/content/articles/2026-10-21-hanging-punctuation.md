@@ -1,6 +1,7 @@
 ---
 title: Hanging punctuation without measuring line breaks
 date: 2026-10-21
+glyph: “
 summary: A quotation mark at the start of a line should hang in the margin so the letters line up. Finding out which marks start a line sounds like it needs measuring. It does not.
 ---
 

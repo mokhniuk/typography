@@ -134,9 +134,13 @@ function articlesIndex(all: Article[]): string {
     .map(
       (article) => `<li>
   <article>
-    <time datetime="${article.date}">${when(article.date)}</time>
-    <h2><a href="${root}${article.path}">${esc(article.title)}</a></h2>
-    <p>${esc(article.summary)}</p>
+    <div data-cover data-glyph="${esc(article.glyph)}" aria-hidden="true"></div>
+    <div>
+      <p data-meta><time datetime="${article.date}">${when(article.date)}</time> · ${article.minutes} min read</p>
+      <h2><a href="${root}${article.path}">${esc(article.title)}</a></h2>
+      <p>${esc(article.summary)}</p>
+      <p data-more aria-hidden="true">Read →</p>
+    </div>
   </article>
 </li>`,
     )

@@ -21,6 +21,10 @@ export type Article = {
   title: string;
   summary: string;
   date: string;
+  /** The mark on the article's card (front matter `glyph`); the title's first letter without one. */
+  glyph: string;
+  /** Reading time in minutes, at 220 words a minute. */
+  minutes: number;
   html: string;
   headings: Heading[];
 };
@@ -126,6 +130,8 @@ export function articles(): Article[] {
         title: data.title ?? out.title,
         summary: data.summary ?? out.lead,
         date: data.date ?? '',
+        glyph: data.glyph ?? (data.title ?? out.title).charAt(0),
+        minutes: Math.max(1, Math.round(body.split(/\s+/).filter(Boolean).length / 220)),
         html: out.html,
         headings: out.headings,
       };

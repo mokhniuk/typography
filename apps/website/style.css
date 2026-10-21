@@ -974,32 +974,98 @@ main[data-layout="index"] > .container > header p {
   text-transform: uppercase;
   color: var(--color-accent);
 }
+/* Articles: a card each, its cover a mark hanging past the text edge (the site's own motif). */
 ol[data-articles] {
   list-style: none;
   margin: 0;
   padding: 0;
-  max-width: 46rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr));
+  gap: var(--space-6);
 }
-ol[data-articles] li {
-  padding: var(--space-6) 0;
-  border-top: 1px solid var(--color-line);
+ol[data-articles] article {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  height: 100%;
+  border: 1px solid var(--color-line);
+  background: var(--color-surface);
+  transition: border-color 0.15s;
+}
+ol[data-articles] article:hover {
+  border-color: var(--color-text);
+}
+ol[data-articles] [data-cover] {
+  position: relative;
+  height: 11rem;
+  overflow: hidden;
+  border-bottom: 1px solid var(--color-line);
+  background: var(--color-paper);
+}
+/* The text edge: a thin rule, with the mark hanging to its left. */
+ol[data-articles] [data-cover]::before {
+  content: "";
+  position: absolute;
+  inset: var(--space-5) auto var(--space-5) 40%;
+  border-left: 1px solid var(--color-text);
+}
+/* The mark is an attribute drawn by CSS: the page's English typesetting would turn „“ into “”. */
+ol[data-articles] [data-cover]::after {
+  content: attr(data-glyph);
+  white-space: nowrap;
+  position: absolute;
+  top: 50%;
+  right: 60%;
+  /* Raised enough that a low mark („) sits inside the cover as well as a high one. */
+  transform: translateY(-62%);
+  font: 600 9rem / 1 var(--font-text);
+  color: var(--color-text);
+}
+ol[data-articles] article > div:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-5) var(--space-6) var(--space-6);
+}
+ol[data-articles] [data-meta] {
+  font: var(--size-xs) var(--font-ui);
+  color: var(--color-muted);
 }
 ol[data-articles] h2 {
-  margin: var(--space-3) 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
   font-size: var(--size-xl);
+  line-height: 1.25;
 }
 ol[data-articles] h2 a {
   color: var(--color-text);
   text-decoration: none;
 }
-ol[data-articles] h2 a:hover {
-  color: var(--color-accent);
+/* The whole card is the link. */
+ol[data-articles] h2 a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+ol[data-articles] h2 a:focus-visible {
+  outline: none;
+}
+ol[data-articles] article:has(h2 a:focus-visible) {
+  outline: 2px solid var(--color-text);
+  outline-offset: 2px;
 }
 ol[data-articles] p {
   margin: 0;
   color: var(--color-muted);
   font-family: var(--font-text);
   font-size: var(--size-md);
+}
+ol[data-articles] [data-more] {
+  margin-top: auto;
+  padding-top: var(--space-2);
+  font: 500 var(--size-sm) var(--font-ui);
+  color: var(--color-text);
 }
 
 /* Landing */
