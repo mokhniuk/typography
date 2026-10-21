@@ -1,7 +1,7 @@
 /**
- * Writes docs/sources.md, docs/sources.html and docs/bibliography.html from scripts/sources.ts.
+ * Writes resources/sources.md, resources/sources.html and resources/bibliography.html from resources/sources.ts.
  *
- *     bun scripts/gen-sources.ts        (or: bun run docs:sources)
+ *     bun resources/gen-sources.ts        (or: bun run docs:sources)
  */
 import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -9,7 +9,7 @@ import { renderBibliographyHtml } from './bibliography-html';
 import { render } from './sources';
 import { renderHtml } from './sources-html';
 
-const docs = join(import.meta.dir, '..', 'docs');
+const docs = import.meta.dir;
 writeFileSync(join(docs, 'sources.md'), render());
 writeFileSync(join(docs, 'sources.html'), renderHtml());
 writeFileSync(join(docs, 'bibliography.html'), renderBibliographyHtml());

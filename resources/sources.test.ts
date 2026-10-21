@@ -1,30 +1,30 @@
 import { describe, expect, test } from 'bun:test';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { RULE_IDS } from './core';
-import { render, RULE_SOURCES, SOURCES } from '../scripts/sources';
-import { renderBibliographyHtml } from '../scripts/bibliography-html';
-import { renderHtml } from '../scripts/sources-html';
+import { RULE_IDS } from '../src/core';
+import { render, RULE_SOURCES, SOURCES } from './sources';
+import { renderBibliographyHtml } from './bibliography-html';
+import { renderHtml } from './sources-html';
 
 const known = new Set(SOURCES.map((source) => source.id));
 
-describe('docs/sources.md', () => {
+describe('resources/sources.md', () => {
   test('is what `bun run docs:sources` writes', () => {
-    const written = readFileSync(join(import.meta.dir, '..', 'docs', 'sources.md'), 'utf8');
+    const written = readFileSync(join(import.meta.dir, 'sources.md'), 'utf8');
     expect(written).toBe(render());
   });
 });
 
-describe('docs/sources.html', () => {
+describe('resources/sources.html', () => {
   test('is what `bun run docs:sources` writes', () => {
-    const written = readFileSync(join(import.meta.dir, '..', 'docs', 'sources.html'), 'utf8');
+    const written = readFileSync(join(import.meta.dir, 'sources.html'), 'utf8');
     expect(written).toBe(renderHtml());
   });
 });
 
-describe('docs/bibliography.html', () => {
+describe('resources/bibliography.html', () => {
   test('is what `bun run docs:sources` writes', () => {
-    const written = readFileSync(join(import.meta.dir, '..', 'docs', 'bibliography.html'), 'utf8');
+    const written = readFileSync(join(import.meta.dir, 'bibliography.html'), 'utf8');
     expect(written).toBe(renderBibliographyHtml());
   });
 });

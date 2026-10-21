@@ -5,7 +5,7 @@ Everything here runs from the project folder with Bun.
 ## Checks
 
 ```sh
-bun test src apps/playground      # every test; this is the package's `test` script
+bun test src apps/playground resources      # every test; this is the package's `test` script
 bun run typecheck            # tsc -p tsconfig.json; tests are typechecked too
 ```
 
@@ -29,8 +29,9 @@ bun run docs:languages       # writes docs/languages/*.md from the packs
 | `src/dom`, `src/react` | Hanging punctuation, framework-free and React |
 | `src/cli` | The `typo` command; `run.ts` takes an `Io` object so it can be tested without a process |
 | `scripts/gen-rules-doc.ts` | Generates `docs/rules.md` |
-| `scripts/sources.ts` | The sources registry. `bun run docs:sources` generates `docs/sources.md`, `docs/sources.html` (decisions, with a filter) and `docs/bibliography.html` (every source in one table: author, link, what it is, where it is used); open the HTML ones in a browser |
+| `resources/sources.ts` | The sources registry. `bun run docs:sources` generates `resources/sources.md`, `resources/sources.html` (decisions, with a filter) and `resources/bibliography.html` (every source in one table: author, link, what it is, where it is used); open the HTML ones in a browser |
 | `scripts/gen-languages-doc.ts` | Generates `docs/languages/<code>.md` and `docs/languages/index.md` from the packs |
+| `resources/` | The sources registry (below) and the pages generated from it; not part of the package |
 | `apps/bench/` | The benchmark: a separate project, not tracked except `RESULTS.md` (see below) |
 | `apps/playground/` | The web page (its own `package.json` for `dev`/`build`; uses the root's `vite`) |
 | `docs/` | These pages. `rules.md` and `languages/` are generated; the others are written by hand |
@@ -41,7 +42,7 @@ bun run docs:languages       # writes docs/languages/*.md from the packs
 2. Add one entry to `RULES` in `src/core/rules.ts`, in the place in the order where it should run: `{ id, about, apply }`, and `defaultOn: false` if the rule must run only when asked for (`enable`, `--enable`, a checkbox in the playground). Several places are reserved for planned rules (the comment block above `RULES`; `src/core/rules-order.test.ts` pins the order and checks a planned rule against its place). The id is `group.name`, or one word for a rule that stands alone. `about` is the one-line description that `typo --rules` prints and `docs/rules.md` shows.
 3. Do not add a step inside `typographic()`. It only loops over `RULES`, which is what makes a rule switchable (`disable`) and reportable (`explain`, `onChange`).
 4. Add examples to `EXAMPLES` in `scripts/gen-rules-doc.ts` (at least one, each of which must change its text when only that rule runs), then `bun run docs:rules`. For a `defaultOn: false` rule the example is run with the rule enabled. `src/docs.test.ts` fails if a rule has no examples, if an example changes nothing, or if `docs/rules.md` is out of date.
-5. Add an entry for the rule to `RULE_SOURCES` in `scripts/sources.ts` (sources read, why, what others do instead, confidence), then `bun run docs:sources`. Read every source before you enter it; a rule with no source read is `general-knowledge`. `src/sources.test.ts` fails if the entry is missing or the page is stale.
+5. Add an entry for the rule to `RULE_SOURCES` in `resources/sources.ts` (sources read, why, what others do instead, confidence), then `bun run docs:sources`. Read every source before you enter it; a rule with no source read is `general-knowledge`. `resources/sources.test.ts` fails if the entry is missing or the page is stale.
 6. Add tests in `src/core/typography.test.ts`. Run the property tests (below): a new rule must not lose or add a letter or digit, and must be stable on its own output.
 7. Update [limits.md](limits.md) if the rule has a known limit, and add an entry to [../CHANGELOG.md](../CHANGELOG.md) saying whether it can change existing output (a new rule almost always can).
 
@@ -85,7 +86,7 @@ Abbreviation lists and the like come from a style guide, not from memory; say in
 
 - **Golden tests** sit beside each module (`*.test.ts`).
 - **Property tests** (`src/properties.test.ts`) run on seeded random strings built from characters the rules care about, for every language and register: no letter or digit is lost or added; a second pass changes nothing, on text as it is written; addresses, emails and code spans come back exactly; HTML tags, attributes and `<pre>`/`<code>` are kept byte for byte; Markdown code is kept; the text mode keeps the number of lines; and nothing throws. A failure prints the input, so it can be turned into a golden case.
-- **The boundary test** (`src/boundary.test.ts`) scans `src` and `apps/playground` and fails if a file imports from outside the package (a relative path that leaves it, a monorepo alias, a workspace package) or from anything but `react`, `react/jsx-runtime` and `bun:test`. Test files may also import `node:` modules and the unified/remark/rehype dev dependencies; the command line may import `node:` modules. The playground's `vite.config.ts` is not scanned. `scripts/` is not scanned either, so keep it to imports from `../src` and `node:`.
+- **The boundary test** (`src/boundary.test.ts`) scans `src` and `apps/playground` and fails if a file imports from outside the package (a relative path that leaves it, a monorepo alias, a workspace package) or from anything but `react`, `react/jsx-runtime` and `bun:test`. Test files may also import `node:` modules and the unified/remark/rehype dev dependencies; the command line may import `node:` modules. The playground's `vite.config.ts` is not scanned. `scripts/` and `resources/` are not scanned either, so keep them to imports from `../src` and `node:`.
 - **The docs tests** (`src/docs.test.ts` for the rules page, `src/lang-docs.test.ts` for the language pages) are described above.
 - **Quote style** (`src/core/quote-style.test.ts`, `src/properties.quotestyle.test.ts`): `quoteStyle: 'us'` goldens and the properties of `properties.test.ts` run for every language. The generators there are copied, not shared, so the seeded streams of `properties.test.ts` do not move.
 
@@ -102,7 +103,7 @@ bun scripts/stress.ts [srcDir]   # every rule on long runs of one character at 2
 ```
 
 - `bun run compare` extracts `src/` of the base ref into a temp directory with `git archive`, then, for every language, register (`display`, `literary`), `quoteStyle` (`language`, `us`), rule set (default; every opt-in rule enabled) and mode (`typographic` with `explain`, text, HTML, Markdown, hast), compares the output and every change record (rule id, `from`, `to`, order), the rule table and a thrown error. It prints the first ten differences with input, mode, language and both results, exits 1 on any difference, and ends with a timing table (best of 3, on a 1 MB paragraph and on 1000 paragraphs of 1 KB). Languages that exist here but not in the base are skipped. Expect `0 differences`.
-- `src/snapshot.test.ts` (part of `bun test src apps/playground`) holds a SHA-256 per language and variant in `src/snapshot.digests.json` and fails on any change. A language without a digest fails with `run: bun run snapshot`. Never run `bun run snapshot` to make a speed change pass: a speed change must pass without it. The same test mutates a temp copy of `src/` to prove that both tools notice a changed regex and a changed rule attribution.
+- `src/snapshot.test.ts` (part of `bun test src apps/playground resources`) holds a SHA-256 per language and variant in `src/snapshot.digests.json` and fails on any change. A language without a digest fails with `run: bun run snapshot`. Never run `bun run snapshot` to make a speed change pass: a speed change must pass without it. The same test mutates a temp copy of `src/` to prove that both tools notice a changed regex and a changed rule attribution.
 - What they cannot see: the React hooks and `HangText`, the DOM measuring, the CLI, inputs far outside the corpus (very long runs of one mark, megabyte inputs with changes, lone surrogates, text in scripts the rules do not know), and timing noise on a busy machine. Run the whole suite as well.
 
 ## The benchmark
@@ -139,7 +140,7 @@ To release:
 
 1. Move the new entries of `CHANGELOG.md` under a heading `## X.Y.Z (date)`.
 2. Set `version` in `package.json` (`typo --version` reads it).
-3. Run `bun test src apps/playground`, `bun run typecheck`, `bun run docs:rules`, `bun run docs:languages` and, if `src/dom/hang.ts` changed, `bun run gen:script`, and commit with the message `release: X.Y.Z`.
+3. Run `bun test src apps/playground resources`, `bun run typecheck`, `bun run docs:rules`, `bun run docs:languages` and, if `src/dom/hang.ts` changed, `bun run gen:script`, and commit with the message `release: X.Y.Z`.
 4. Push or merge to `main`. `.github/workflows/release.yml` runs the tests and creates the plain tag `vX.Y.Z` from `version` in `package.json` if it does not exist yet. Do not tag by hand; if you must, use a plain `git tag vX.Y.Z` (not `-a`, see below) and `git push origin vX.Y.Z`.
 
 ## Using it from another project

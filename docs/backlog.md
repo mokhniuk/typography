@@ -24,7 +24,7 @@ Every pack has `reviewed: false`: bg cs da el es et fi ga hr hu it lt lv mt nl p
 
 ### Finish the sources registry
 
-[sources.md](sources.md) has 17 of 29 decisions still `general-knowledge` (the nine opt-in rules have no source read), one `disputed`, 11 `verified` for the cases and languages named in each entry (mostly English). Read the sources and upgrade them, and have a native speaker check each language. Found while building it (2026-10-20, CLDR 46):
+[sources.md](../resources/sources.md) has 17 of 29 decisions still `general-knowledge` (the nine opt-in rules have no source read), one `disputed`, 11 `verified` for the cases and languages named in each entry (mostly English). Read the sources and upgrade them, and have a native speaker check each language. Found while building it (2026-10-20, CLDR 46):
 
 - `quote` is `disputed`: CLDR has English `“ ” ‘ ’` (see the American quotes item above), German `„ “ ‚ ‘` (the engine sets `» « › ‹`), French `« »` with `« »` inside (the engine uses `“ ”`), and de-CH `„ “ ‚ ‘` (the engine's `ch` profile is the fr-CH one: `« » ‹ ›`). Decide per language whether the engine or CLDR is right, citing a guide.
 - `space.percent` / currency: CLDR sets a no-break space before the currency sign in `uk`, `pl` and `fr-CH`; the engine leaves `49€` alone there.
@@ -137,10 +137,10 @@ Nothing superlinear is known (0.2.1). Typical text costs 30 to 60 ms per MB; the
 
 Found in the review (2026-10-21), none changes output:
 
-- `scripts/bibliography-html.ts` `usage()` repeats `usedBy()` of `scripts/sources-html.ts` (which rules cite a source), and `esc` is defined in both. Export one of each (from `sources.ts`) so the two pages cannot disagree.
+- `resources/bibliography-html.ts` `usage()` repeats `usedBy()` of `resources/sources-html.ts` (which rules cite a source), and `esc` is defined in both. Export one of each (from `sources.ts`) so the two pages cannot disagree.
 - The anchor slug is written two ways (`slug()` and `rule.replaceAll('.', '-')`, and `replaceAll('.', '')` in `gen-rules-doc.ts`). One function, one anchor format, checked by a test that every `docs/rules.md` link lands on an anchor in `sources.md`.
 - `sources.html` prints an empty "Used by:" for a source no decision cites, `bibliography.html` says "unused". Say "unused" in both.
-- `render()` in `sources.ts` and `sources-html.ts` skip a rule with no decision, while `gen-rules-doc.ts` links it as `general-knowledge`. `src/sources.test.ts` stops that from shipping today; make the generators fail loudly instead of skipping, so a run outside the test cannot write a page that disagrees with its counts.
+- `render()` in `sources.ts` and `sources-html.ts` skip a rule with no decision, while `gen-rules-doc.ts` links it as `general-knowledge`. `resources/sources.test.ts` stops that from shipping today; make the generators fail loudly instead of skipping, so a run outside the test cannot write a page that disagrees with its counts.
 - The nine opt-in rules have `general-knowledge` entries with no source (`space.before-punctuation`, `space.after-comma`, `punctuation.double`, `symbol.implies`, `number.group`, `symbol.plusminus`, `symbol.fraction`, `symbol.degree`, `space.trailing`). Read a source for each and upgrade; the SI brochure for `symbol.degree`, a guide for the grouping separator of each language for `number.group`. Counted in "Finish the sources registry" above.
 - `compare-engines.ts` fails with `ENOBUFS` when given a git ref whose `src/` archive is large (`bun run compare main`): the `git archive` output exceeds `execFileSync`'s buffer. Raise `maxBuffer` or extract to a file; `--base-dir` is the workaround.
 

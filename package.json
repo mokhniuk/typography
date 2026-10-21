@@ -18,12 +18,12 @@
     "typo": "./src/cli/main.ts"
   },
   "scripts": {
-    "test": "bun test src apps/playground",
+    "test": "bun test src apps/playground resources",
     "typecheck": "tsc -p tsconfig.json",
     "playground": "vite --config apps/playground/vite.config.ts",
     "playground:build": "vite build --config apps/playground/vite.config.ts",
     "docs:rules": "bun scripts/gen-rules-doc.ts",
-    "docs:sources": "bun scripts/gen-sources.ts",
+    "docs:sources": "bun resources/gen-sources.ts",
     "docs:languages": "bun scripts/gen-languages-doc.ts",
     "gen:script": "bun scripts/gen-hang-script.ts",
     "compare": "bun scripts/compare-engines.ts",

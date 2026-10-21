@@ -42,7 +42,7 @@ Each example runs the engine with every rule except the one shown switched off, 
 
 Quotation marks by language, register and nesting level, from any source style
 
-Why: [sources.md](sources.md#quote), `disputed`.
+Why: [sources.md](../resources/sources.md#quote), `disputed`.
 
 ```text
 (en)
@@ -78,7 +78,7 @@ after   Er sagte »Sie rief ›Haus‹ laut« und ging.
 
 A straight ' in a word or before a year becomes ’
 
-Why: [sources.md](sources.md#apostrophe), `verified`.
+Why: [sources.md](../resources/sources.md#apostrophe), `verified`.
 
 ```text
 (en)
@@ -100,7 +100,7 @@ Before a year.
 
 ... becomes …
 
-Why: [sources.md](sources.md#ellipsis), `verified`.
+Why: [sources.md](../resources/sources.md#ellipsis), `verified`.
 
 ```text
 (en)
@@ -112,7 +112,7 @@ after   Wait… what?
 
 Removes a space before , . ; : ! ? ) (French keeps the space before : ; ! ?)
 
-Why: [sources.md](sources.md#spacebefore-punctuation), `general-knowledge`.
+Why: [sources.md](../resources/sources.md#spacebefore-punctuation), `general-knowledge`.
 
 Off by default: switch it on with `enable` (`--enable` on the command line).
 
@@ -136,7 +136,7 @@ French keeps its space before : ; ! ?, the rest is tidied.
 
 A comma followed directly by a letter gets a space (a,b becomes a, b)
 
-Why: [sources.md](sources.md#spaceafter-comma), `general-knowledge`.
+Why: [sources.md](../resources/sources.md#spaceafter-comma), `general-knowledge`.
 
 Off by default: switch it on with `enable` (`--enable` on the command line).
 
@@ -158,7 +158,7 @@ after   Hallo, Welt und 3,14
 
 A run of ! or ? becomes one mark (Wow!!! becomes Wow!); ?! and !? stay
 
-Why: [sources.md](sources.md#punctuationdouble), `general-knowledge`.
+Why: [sources.md](../resources/sources.md#punctuationdouble), `general-knowledge`.
 
 Off by default: switch it on with `enable` (`--enable` on the command line).
 
@@ -180,7 +180,7 @@ after   What?!! No!? Stop!
 
 -> and <- become → and ←
 
-Why: [sources.md](sources.md#arrow), `general-knowledge`.
+Why: [sources.md](../resources/sources.md#arrow), `general-knowledge`.
 
 ```text
 (en)
@@ -198,7 +198,7 @@ after   ← Back
 
 => becomes ⇒
 
-Why: [sources.md](sources.md#symbolimplies), `general-knowledge`.
+Why: [sources.md](../resources/sources.md#symbolimplies), `general-knowledge`.
 
 Off by default: switch it on with `enable` (`--enable` on the command line).
 
@@ -220,7 +220,7 @@ Not =>>, ==>, =>= or <=>.
 
 (c) before a year, (C), (R) and (TM) become © ® ™
 
-Why: [sources.md](sources.md#symbollegal), `verified`.
+Why: [sources.md](../resources/sources.md#symbollegal), `verified`.
 
 ```text
 (en)
@@ -234,7 +234,7 @@ after   © 2026 Studio ® ™
 
 A Ukrainian dialogue line (literary register) opens with an em dash and a no-break space
 
-Why: [sources.md](sources.md#dashdialogue), `general-knowledge`.
+Why: [sources.md](../resources/sources.md#dashdialogue), `general-knowledge`.
 
 ```text
 (uk, literary)
@@ -248,7 +248,7 @@ Only the dash that opens the paragraph; the second one belongs to dash.sentence.
 
 Digits of an integer of five or more are grouped in threes with the language separator (1,000,000; 1 000 000)
 
-Why: [sources.md](sources.md#numbergroup), `general-knowledge`.
+Why: [sources.md](../resources/sources.md#numbergroup), `general-knowledge`.
 
 Off by default: switch it on with `enable` (`--enable` on the command line).
 
@@ -280,7 +280,7 @@ A name glued to digits is left.
 
 A hyphen between two numbers (21-26, 10:00-12:00) becomes an unspaced en dash
 
-Why: [sources.md](sources.md#dashrange), `general-knowledge`.
+Why: [sources.md](../resources/sources.md#dashrange), `general-knowledge`.
 
 ```text
 (en)
@@ -300,7 +300,7 @@ Spaced, too.
 
 A spaced hyphen, dash or double hyphen becomes a spaced dash (em; en in German and literary British English), no-break before it
 
-Why: [sources.md](sources.md#dashsentence), `verified`.
+Why: [sources.md](../resources/sources.md#dashsentence), `verified`.
 
 ```text
 (en)
@@ -330,7 +330,7 @@ A spaced en dash in British English, literary register.
 
 +- before a digit becomes ± (+-5 becomes ±5)
 
-Why: [sources.md](sources.md#symbolplusminus), `general-knowledge`.
+Why: [sources.md](../resources/sources.md#symbolplusminus), `general-knowledge`.
 
 Off by default: switch it on with `enable` (`--enable` on the command line).
 
@@ -352,7 +352,7 @@ Not a+-b or 1+-5.
 
 A hyphen before a digit (-5) becomes a minus sign (−5)
 
-Why: [sources.md](sources.md#symbolminus), `general-knowledge`.
+Why: [sources.md](../resources/sources.md#symbolminus), `general-knowledge`.
 
 ```text
 (en)
@@ -364,7 +364,7 @@ after   It was −5 degrees (−3 inside).
 
 The letter x between numbers (1920x1080, 3 x 4) becomes ×
 
-Why: [sources.md](sources.md#symbolmultiply), `verified`.
+Why: [sources.md](../resources/sources.md#symbolmultiply), `verified`.
 
 ```text
 (en)
@@ -376,7 +376,7 @@ after   A 1920×1080 screen, a 3~× 4 grid.
 
 1/2, 1/4 and 3/4 become ½ ¼ ¾, as whole numbers only (not 11/2, 1/20 or a date)
 
-Why: [sources.md](sources.md#symbolfraction), `general-knowledge`.
+Why: [sources.md](../resources/sources.md#symbolfraction), `general-knowledge`.
 
 Off by default: switch it on with `enable` (`--enable` on the command line).
 
@@ -400,7 +400,7 @@ A mixed number keeps its integer: 2 ½.
 
 A run of spaces becomes one
 
-Why: [sources.md](sources.md#spacecollapse), `verified`.
+Why: [sources.md](../resources/sources.md#spacecollapse), `verified`.
 
 ```text
 (en)
@@ -412,7 +412,7 @@ after   Two spaces, four.
 
 No-break space after Prof., Dr., Mr. …
 
-Why: [sources.md](sources.md#spacetitle), `verified`.
+Why: [sources.md](../resources/sources.md#spacetitle), `verified`.
 
 ```text
 (en)
@@ -424,7 +424,7 @@ after   Prof.~Dr.~Oksana opens.
 
 No-break space after an initial (K. Słoboda)
 
-Why: [sources.md](sources.md#spaceinitial), `general-knowledge`.
+Why: [sources.md](../resources/sources.md#spaceinitial), `general-knowledge`.
 
 ```text
 (en)
@@ -436,7 +436,7 @@ after   Written by K.~Słoboda.
 
 Parts of an abbreviation stay together (z. B.), and Nr., ul., S. stay with what follows
 
-Why: [sources.md](sources.md#spaceabbreviation), `verified`.
+Why: [sources.md](../resources/sources.md#spaceabbreviation), `verified`.
 
 ```text
 (de)
@@ -460,7 +460,7 @@ after   See Fig.~2 and p.~14.
 
 No-break space between a number and a short word or unit after it, up to nine letters (21 September, 5 %)
 
-Why: [sources.md](sources.md#spacenumber), `verified`.
+Why: [sources.md](../resources/sources.md#spacenumber), `verified`.
 
 ```text
 (en)
@@ -472,7 +472,7 @@ after   On 21~September, 15~people paid 5~%.
 
 German, French, Czech, Spanish, Italian, Portuguese, Irish, Maltese, Bulgarian, Croatian, Slovenian, Lithuanian, Latvian, Estonian, Danish, Finnish and Greek: a no-break space between a number and % or € (5 %, 49 €)
 
-Why: [sources.md](sources.md#spacepercent), `verified`.
+Why: [sources.md](../resources/sources.md#spacepercent), `verified`.
 
 ```text
 (de)
@@ -492,7 +492,7 @@ after   5~% and 49~€
 
 20 C, 20°C and 20 °C become 20 °C, with a no-break space before the unit
 
-Why: [sources.md](sources.md#symboldegree), `general-knowledge`.
+Why: [sources.md](../resources/sources.md#symboldegree), `general-knowledge`.
 
 Off by default: switch it on with `enable` (`--enable` on the command line).
 
@@ -516,7 +516,7 @@ A bare C or F after a label or a single letter is not a temperature.
 
 No-break space before e.V.
 
-Why: [sources.md](sources.md#spaceassociation), `general-knowledge`.
+Why: [sources.md](../resources/sources.md#spaceassociation), `general-knowledge`.
 
 ```text
 (de)
@@ -528,7 +528,7 @@ after   Kulturverein~e.V.
 
 No-break space after ©
 
-Why: [sources.md](sources.md#spacecopyright), `verified`.
+Why: [sources.md](../resources/sources.md#spacecopyright), `verified`.
 
 ```text
 (en)
@@ -540,7 +540,7 @@ after   ©~2026 Studio
 
 No-break space after a one-letter word the language must not strand at a line end
 
-Why: [sources.md](sources.md#spaceorphan), `general-knowledge`.
+Why: [sources.md](../resources/sources.md#spaceorphan), `general-knowledge`.
 
 ```text
 (en)
@@ -564,7 +564,7 @@ after   Idę w~las i~z~nim
 
 No-break space before → and after ←
 
-Why: [sources.md](sources.md#spacearrow), `general-knowledge`.
+Why: [sources.md](../resources/sources.md#spacearrow), `general-knowledge`.
 
 ```text
 (en)
@@ -582,7 +582,7 @@ after   ←~Back
 
 Spaces and tabs at the end of a line are removed
 
-Why: [sources.md](sources.md#spacetrailing), `general-knowledge`.
+Why: [sources.md](../resources/sources.md#spacetrailing), `general-knowledge`.
 
 Off by default: switch it on with `enable` (`--enable` on the command line).
 

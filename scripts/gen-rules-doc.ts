@@ -10,7 +10,7 @@
 import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { type Lang, NBSP, type Register, RULES, type Rule, typographic } from '../src';
-import { RULE_SOURCES } from './sources';
+import { RULE_SOURCES } from '../resources/sources';
 
 export type Example = {
   input: string;
@@ -170,7 +170,7 @@ export function render(rules: readonly Rule[] = RULES): string {
   for (const rule of rules) {
     const confidence = RULE_SOURCES[rule.id]?.confidence ?? 'general-knowledge';
     out.push('', `## \`${rule.id}\``, '', rule.about, '');
-    out.push(`Why: [sources.md](sources.md#${rule.id.replaceAll('.', '')}), \`${confidence}\`.`, '');
+    out.push(`Why: [sources.md](../resources/sources.md#${rule.id.replaceAll('.', '')}), \`${confidence}\`.`, '');
     if (rule.defaultOn === false) {
       out.push('Off by default: switch it on with `enable` (`--enable` on the command line).', '');
     }

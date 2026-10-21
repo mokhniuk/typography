@@ -9,7 +9,7 @@ There are 29 rules, 20 on by default and 9 you switch on (see [docs/rules.md](do
 - Private (`"private": true`), not published to any registry.
 - Ships `.ts` sources with no build step. It needs Bun or a TypeScript-aware bundler.
 - The core has no dependencies. `react` (18 or later) is an optional peer dependency, needed only by `./react`.
-- The abbreviation lists are short and have not been read by a native speaker, and some language conventions were not checked. Read [docs/limits.md](docs/limits.md) and [docs/languages.md](docs/languages.md) before relying on a language. What each rule rests on, and which decisions are still unchecked, is in [docs/sources.md](docs/sources.md) (also as a page to open in a browser: `docs/sources.html`).
+- The abbreviation lists are short and have not been read by a native speaker, and some language conventions were not checked. Read [docs/limits.md](docs/limits.md) and [docs/languages.md](docs/languages.md) before relying on a language. What each rule rests on, and which decisions are still unchecked, is in [resources/sources.md](resources/sources.md) (also as a page to open in a browser: `resources/sources.html`).
 
 ## Install and use
 
@@ -164,7 +164,7 @@ To check this on your own page: block the JavaScript bundle (for example in the 
 ## Develop
 
 ```sh
-bun test src apps/playground
+bun test src apps/playground resources
 bun run typecheck
 bun run docs:rules     # regenerate docs/rules.md
 ```

@@ -7,7 +7,7 @@ The engine has 26 language packs, `src/core/lang/<code>.ts`: the 24 official lan
 ## Read this first
 
 - **No pack has been read by a native speaker.** Every pack has `reviewed: false`. The five oldest (`en uk de pl fr`) and `ch` came from general knowledge; the other twenty were written from published style guides (the EU Interinstitutional Style Guide first, then the national guide), and each page names its sources. Some of those sources could only be read in part, so a pack is a defensible style, not a certified one. Have a native reader check a language before you rely on it, then set `reviewed: true`.
-- Which decisions have a source read, and which are still general knowledge, is recorded per rule in [sources.md](sources.md). Quote marks are `disputed` there: CLDR 46 differs from the engine for English, German, French level two and de-CH.
+- Which decisions have a source read, and which are still general knowledge, is recorded per rule in [sources.md](../resources/sources.md). Quote marks are `disputed` there: CLDR 46 differs from the engine for English, German, French level two and de-CH.
 - The abbreviation lists are short on purpose: a list is only as long as its source. Add to a list only from a style guide.
 - Dash profiles: German and literary British English use a spaced en dash for a break in the sentence; the packs written from the Interinstitutional Style Guide use the em dash where it says so. Dutch, Swedish, Hungarian, Slovak and Romanian default to the spaced em dash, but usage there often prefers a spaced en dash; this was not verified.
 - The package's benchmark has a few cases per language and mostly tests English. They check that the output is a defensible style, not that a native reader approves it.
