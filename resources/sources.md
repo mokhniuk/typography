@@ -275,6 +275,18 @@ Why: A temperature or angle unit gets a no-break space before it (20 °C), and t
 
 Alternative: Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge. The SI brochure rule on the space before a unit and its plane-angle exception are in the backlog reading list, not read.
 
+### `space.section`
+
+Confidence: `verified`.
+
+Why: A § or ¶ stays on the line of the number it cites. Butterick: a mark "should always be followed by a nonbreaking space"; the page shows the break between § and the number as the error. The nonbreaking-spaces page repeats it for § and ¶.
+
+Alternative: The source says "always" and so would also have a space inserted in §5; the engine only turns a typed space into a no-break space, in the same way as ©2026 and €30 are left as typed. The page says to double the mark for several references and to spell the word out at a sentence start; the engine does neither, it only keeps the mark with its number. English only: the source does not cover how other languages set § (German and French practice, for one, is not checked). Read as a fetch-tool summary with quotes; not compared with other tools.
+
+Sources: [butterick-section-marks](#src-butterick-section-marks), [butterick-nbsp](#src-butterick-nbsp)
+
+- `en`: [butterick-section-marks](#src-butterick-section-marks)
+
 ### `space.association`
 
 Confidence: `general-knowledge`.
@@ -371,6 +383,13 @@ Relied on: The em dash marks a break within a sentence; em and en dashes are nor
 <https://practicaltypography.com/nonbreaking-spaces.html>, read as a summary by a fetch tool, check it by hand on 2026-10-20.
 
 Relied on: Use a nonbreaking space after § and ¶, after abbreviations such as "Ex." and "Fig." before a letter or number, between a title and a name ("Ms."), and with the trademark and copyright symbols.
+
+<a id="src-butterick-section-marks"></a>
+**butterick-section-marks**. Matthew Butterick, Practical Typography, "Paragraph and section marks" (web page; no edition or year on the page).
+
+<https://practicaltypography.com/paragraph-and-section-marks.html>, read as a summary by a fetch tool, check it by hand on 2026-10-22.
+
+Relied on: "A paragraph mark or section mark should always be followed by a nonbreaking space", which "acts like glue that keeps the mark joined with the numeric reference that follows"; "In a reference to multiple paragraphs or sections, double the mark (¶¶ or §§)"; at the start of a sentence, spell the word out instead of using the mark.
 
 <a id="src-oqlf-espacement"></a>
 **oqlf-espacement**. OQLF, Banque de dépannage linguistique, "Espacement avant et après les signes de ponctuation et les symboles" (web page, updated 2024).

@@ -89,6 +89,20 @@ export const SOURCES: readonly Source[] = [
       'Use a nonbreaking space after § and ¶, after abbreviations such as "Ex." and "Fig." before a letter or number, between a title and a name ("Ms."), and with the trademark and copyright symbols.',
   },
   {
+    id: 'butterick-section-marks',
+    kind: 'style-guide',
+    author: 'Matthew Butterick (the page itself names no author)',
+    title: 'Practical Typography: Paragraph and section marks',
+    about:
+      "The handbook on citing numbered paragraphs and sections with ¶ and §. English only; it says nothing about other languages' conventions for citing statutes, and nothing about a mark typed with no space before the number.",
+    cite: 'Matthew Butterick, Practical Typography, "Paragraph and section marks" (web page; no edition or year on the page).',
+    url: 'https://practicaltypography.com/paragraph-and-section-marks.html',
+    accessed: '2026-10-22',
+    readVia: 'summary',
+    claim:
+      '"A paragraph mark or section mark should always be followed by a nonbreaking space", which "acts like glue that keeps the mark joined with the numeric reference that follows"; "In a reference to multiple paragraphs or sections, double the mark (¶¶ or §§)"; at the start of a sentence, spell the word out instead of using the mark.',
+  },
+  {
     id: 'nist-si-checklist',
     kind: 'standard',
     author: 'Not named on the page (hosted by NIST at physics.nist.gov)',
@@ -639,6 +653,14 @@ export const RULE_SOURCES: Record<string, Decision> = {
       "The space before % and the space before € are two pack fields, percentSpace and currencySpace: Irish, Maltese, Portuguese, Latvian, Lithuanian and Estonian set the first and not the second, because their ISG editions write €30 with no space or show money only as the code EUR (see each pack's notes). CLDR also puts a no-break space before the currency sign in uk, pl and fr-CH; the engine leaves 49€ alone there (a gap, in the backlog). OQLF also asks for a no-break space before a French colon, and none or a fine space before ; ! and ?, which the engine does not set (a gap, in the backlog). OQLF is a Quebec source; a France or Swiss guide may differ (a fine space). The German side rests on CLDR only; no Duden page was read.",
     confidence: 'verified',
     langs: { de: ['cldr-numbers'], fr: ['cldr-numbers', 'oqlf-espacement'] },
+  },
+  'space.section': {
+    sources: ['butterick-section-marks', 'butterick-nbsp'],
+    why: 'A § or ¶ stays on the line of the number it cites. Butterick: a mark "should always be followed by a nonbreaking space"; the page shows the break between § and the number as the error. The nonbreaking-spaces page repeats it for § and ¶.',
+    alternative:
+      'The source says "always" and so would also have a space inserted in §5; the engine only turns a typed space into a no-break space, in the same way as ©2026 and €30 are left as typed. The page says to double the mark for several references and to spell the word out at a sentence start; the engine does neither, it only keeps the mark with its number. English only: the source does not cover how other languages set § (German and French practice, for one, is not checked). Read as a fetch-tool summary with quotes; not compared with other tools.',
+    confidence: 'verified',
+    langs: { en: ['butterick-section-marks'] },
   },
   'space.association': general('e.V. stays on the line of the name it follows.'),
   'space.copyright': {

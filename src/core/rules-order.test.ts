@@ -32,6 +32,7 @@ const ORDER = [
   'space.number',
   'space.percent',
   'symbol.degree',
+  'space.section',
   'space.association',
   'space.copyright',
   'space.orphan',

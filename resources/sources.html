@@ -41,16 +41,16 @@ p{margin:6px 0}
 <body>
 <main>
 <h1>Typography sources</h1>
-<p class="lead">Why each of the 29 rules exists, which source backs it, and what is not checked yet. Generated from <code>resources/sources.ts</code> by <code>bun run docs:sources</code>; do not edit by hand. All sources in one table, with authors: <a href="bibliography.html">bibliography</a>.</p>
+<p class="lead">Why each of the 30 rules exists, which source backs it, and what is not checked yet. Generated from <code>resources/sources.ts</code> by <code>bun run docs:sources</code>; do not edit by hand. All sources in one table, with authors: <a href="bibliography.html">bibliography</a>.</p>
 <div class="summary-row">
-<span class="pill verified">12 verified</span>
+<span class="pill verified">13 verified</span>
 <span class="pill disputed">1 disputed</span>
 <span class="pill general-knowledge">16 unchecked</span>
 </div>
 <p>To check a rule, open its sources and confirm the “Relied on” line is in the text. “Verified” means a source read says what the rule does for the cases named; read the gaps in each entry. Sources marked in red were read as summaries and need a look by hand.</p>
 <h2>Rules</h2>
 <div class="filters" role="group" aria-label="Filter rules by confidence">
-<button type="button" data-f="all" aria-pressed="true">All 29</button>
+<button type="button" data-f="all" aria-pressed="true">All 30</button>
 <button type="button" data-f="verified" aria-pressed="false">Verified</button>
 <button type="button" data-f="disputed" aria-pressed="false">Disputed</button>
 <button type="button" data-f="general-knowledge" aria-pressed="false">Unchecked</button>
@@ -223,6 +223,13 @@ p{margin:6px 0}
 <p><b>Others, gaps, unread:</b> Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge. The SI brochure rule on the space before a unit and its plane-angle exception are in the backlog reading list, not read.</p>
 <p class="meta">Sources: <span class="none">none read</span></p>
 </article>
+<article class="rule" id="rule-space-section" data-c="verified">
+<div class="head"><h3>space.section</h3><span class="pill verified">Verified</span></div>
+<p class="about">No-break space after § and ¶, doubled or not, before a number</p>
+<p><b>Why:</b> A § or ¶ stays on the line of the number it cites. Butterick: a mark &quot;should always be followed by a nonbreaking space&quot;; the page shows the break between § and the number as the error. The nonbreaking-spaces page repeats it for § and ¶.</p>
+<p><b>Others, gaps, unread:</b> The source says &quot;always&quot; and so would also have a space inserted in §5; the engine only turns a typed space into a no-break space, in the same way as ©2026 and €30 are left as typed. The page says to double the mark for several references and to spell the word out at a sentence start; the engine does neither, it only keeps the mark with its number. English only: the source does not cover how other languages set § (German and French practice, for one, is not checked). Read as a fetch-tool summary with quotes; not compared with other tools.</p>
+<p class="meta">Sources: <a class="chip" href="#src-butterick-section-marks">butterick-section-marks</a> <a class="chip" href="#src-butterick-nbsp">butterick-nbsp</a><br>By language: <span class="lang"><b>en</b> <a class="chip" href="#src-butterick-section-marks">butterick-section-marks</a></span></p>
+</article>
 <article class="rule" id="rule-space-association" data-c="general-knowledge">
 <div class="head"><h3>space.association</h3><span class="pill general-knowledge">Unchecked</span></div>
 <p class="about">No-break space before e.V.</p>
@@ -278,7 +285,14 @@ p{margin:6px 0}
 <p>Matthew Butterick, Practical Typography, &quot;Nonbreaking spaces&quot; (web page; no edition or year on the page).</p>
 <p><b>Relied on:</b> Use a nonbreaking space after § and ¶, after abbreviations such as &quot;Ex.&quot; and &quot;Fig.&quot; before a letter or number, between a title and a name (&quot;Ms.&quot;), and with the trademark and copyright symbols.</p>
 <p class="via summary">Read as a summary by a fetch tool. Check it by hand.</p>
-<p class="meta">Read 2026-10-20 · <a href="https://practicaltypography.com/nonbreaking-spaces.html" target="_blank" rel="noopener">open source ↗</a><br>Used by: <a class="chip" href="#rule-space-title">space.title</a> <a class="chip" href="#rule-space-abbreviation">space.abbreviation</a> <a class="chip" href="#rule-space-copyright">space.copyright</a></p>
+<p class="meta">Read 2026-10-20 · <a href="https://practicaltypography.com/nonbreaking-spaces.html" target="_blank" rel="noopener">open source ↗</a><br>Used by: <a class="chip" href="#rule-space-title">space.title</a> <a class="chip" href="#rule-space-abbreviation">space.abbreviation</a> <a class="chip" href="#rule-space-section">space.section</a> <a class="chip" href="#rule-space-copyright">space.copyright</a></p>
+</article>
+<article class="src" id="src-butterick-section-marks">
+<div class="head"><h3>butterick-section-marks</h3><span class="kind">style-guide</span></div>
+<p>Matthew Butterick, Practical Typography, &quot;Paragraph and section marks&quot; (web page; no edition or year on the page).</p>
+<p><b>Relied on:</b> &quot;A paragraph mark or section mark should always be followed by a nonbreaking space&quot;, which &quot;acts like glue that keeps the mark joined with the numeric reference that follows&quot;; &quot;In a reference to multiple paragraphs or sections, double the mark (¶¶ or §§)&quot;; at the start of a sentence, spell the word out instead of using the mark.</p>
+<p class="via summary">Read as a summary by a fetch tool. Check it by hand.</p>
+<p class="meta">Read 2026-10-22 · <a href="https://practicaltypography.com/paragraph-and-section-marks.html" target="_blank" rel="noopener">open source ↗</a><br>Used by: <a class="chip" href="#rule-space-section">space.section</a></p>
 </article>
 <article class="src" id="src-nist-si-checklist">
 <div class="head"><h3>nist-si-checklist</h3><span class="kind">standard</span></div>

@@ -24,6 +24,7 @@ import {
   mayAbbreviate,
   numberUnit,
   orphans,
+  section,
   titles,
   unitSymbol,
 } from './spaces';
@@ -278,6 +279,13 @@ export const RULES: readonly Rule[] = [
     defaultOn: false,
     when: hasAny('C', 'F'),
     apply: (text, { lang }) => degrees(text, lang),
+  },
+  {
+    id: 'space.section',
+    category: 'symbols',
+    about: 'No-break space after § and ¶, doubled or not, before a number',
+    when: hasAny('§', '¶'),
+    apply: section,
   },
   {
     id: 'space.association',

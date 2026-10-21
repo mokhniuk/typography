@@ -2,7 +2,7 @@
 
 A typography engine for running text. Plain strings in, typeset strings out; nothing is marked up in the source. It sets quotation marks by language, nesting level and register, dashes and number ranges, apostrophes, ellipses, arrows and symbols, and no-break spaces. It also has modes that typeset HTML, Markdown and hast trees without touching markup or code, a command line, and a way to hang opening punctuation in the margin.
 
-There are 29 rules, 20 on by default and 9 you switch on (see [docs/rules.md](docs/rules.md)), and 26 languages: the 24 official languages of the EU, `uk` and `ch`; `en` is the default (see [docs/languages.md](docs/languages.md); no language has been read by a native speaker yet). American quotes are an option, `quoteStyle: 'us'`. Two registers: `display` (the default, for marketing and interface text) and `literary` (book-like text; it has its own rules for English and Ukrainian only).
+There are 30 rules, 21 on by default and 9 you switch on (see [docs/rules.md](docs/rules.md)), and 26 languages: the 24 official languages of the EU, `uk` and `ch`; `en` is the default (see [docs/languages.md](docs/languages.md); no language has been read by a native speaker yet). American quotes are an option, `quoteStyle: 'us'`. Two registers: `display` (the default, for marketing and interface text) and `literary` (book-like text; it has its own rules for English and Ukrainian only).
 
 ## Status
 

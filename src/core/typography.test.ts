@@ -170,6 +170,28 @@ describe('spaces', () => {
     expect(t('Vitsche e.V.')).toBe('Vitsche~e.V.');
   });
 
+  test('§ and ¶ stay with the number after them', () => {
+    expect(t('see § 5')).toBe('see §~5');
+    expect(t('§§ 5–7')).toBe('§§~5–7');
+    expect(t('see ¶ 12')).toBe('see ¶~12');
+    expect(t('¶¶ 3, 4')).toBe('¶¶~3, 4');
+    expect(t('see §  5')).toBe('see §~5');
+  });
+
+  test('§ and ¶ are left alone where there is no typed space before a number', () => {
+    expect(t('see §5')).toBe('see §5');
+    expect(t('the § sign')).toBe('the § sign');
+    expect(t('Model T ¶')).toBe('Model T ¶');
+    expect(t('¶ and §')).toBe('¶ and §');
+  });
+
+  test('§ and ¶ spacing is stable and recorded by explain', () => {
+    const once = typographic('see § 5 and ¶ 12');
+    expect(typographic(once)).toBe(once);
+    expect(explain('see § 5').changes).toEqual([{ rule: 'space.section', from: ' ', to: NBSP }]);
+    expect(t('see § 5', 'en', { disable: ['space.section'] })).toBe('see § 5');
+  });
+
   test('one-letter words by language', () => {
     expect(t('a stone and I', 'en')).toBe('a~stone and I');
     expect(t('pamięć w kamieniu', 'pl')).toBe('pamięć w~kamieniu');

@@ -49,6 +49,7 @@ describe('Rule.when', () => {
       'space.abbreviation',
       'space.percent',
       'symbol.degree',
+      'space.section',
       'space.association',
       'space.copyright',
       'space.orphan',
