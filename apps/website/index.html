@@ -14,104 +14,118 @@
 <!--header-->
 <main id="content" data-page="home">
 
-  <section data-hero data-hanging>
+  <!-- Draft copy: written for review, not final. -->
+  <section data-hero>
     <div class="container">
-      <p data-eyebrow>Typography engine · {{langs}} languages · {{rules}} rules</p>
-      <h1>Plain text in. Typeset text out.</h1>
-      <p data-lede>Podiia Typography sets quotation marks by language and nesting level, dashes and number ranges, apostrophes, ellipses and no-break spaces, so the text you ship reads like text a typesetter touched. Nothing is marked up in your source.</p>
+      <div data-intro>
+        <p data-status-line><code>@podiia/typography {{version}}</code> · pre-release</p>
+        <h1>Real quotation marks, dashes and spaces, in {{langs}} languages.</h1>
+        <p data-lede>A library that fixes the typography of running text. Give it a string and a language. It gives the string back with the right quotation marks, dashes where there were hyphens, an ellipsis, and no-break spaces where a line should not break. Tags, links and code are left alone.</p>
 
-      <section aria-labelledby="install" data-install>
-        <h2 id="install" class="sr-only">Install</h2>
-        <form>
-          <fieldset>
-            <legend class="sr-only">Package manager</legend>
-            <label><input type="radio" name="pm" value="npm install @podiia/typography" checked /><span>npm</span></label>
-            <label><input type="radio" name="pm" value="pnpm add @podiia/typography" /><span>pnpm</span></label>
-            <label><input type="radio" name="pm" value="bun add @podiia/typography" /><span>bun</span></label>
-            <label><input type="radio" name="pm" value="yarn add @podiia/typography" /><span>yarn</span></label>
-            <label><input type="radio" name="pm" value="bun add {{git}}" data-today /><span>git <small>(today)</small></span></label>
-          </fieldset>
-        </form>
-        <div data-command>
-          <pre><code>npm install @podiia/typography</code></pre>
-          <button type="button" data-copy aria-label="Copy the install command">Copy</button>
-        </div>
-        <p data-status><strong>Pre-release, {{version}}.</strong> The package reaches npm with 1.0. Until then, install a release tag from git (<em>git</em> above); the repository is private, so the machine needs SSH access to it.</p>
-      </section>
+        <section aria-labelledby="install" data-install>
+          <h2 id="install" class="sr-only">Install</h2>
+          <form>
+            <fieldset>
+              <legend class="sr-only">Package manager</legend>
+              <label><input type="radio" name="pm" value="npm install @podiia/typography" checked /><span>npm</span></label>
+              <label><input type="radio" name="pm" value="pnpm add @podiia/typography" /><span>pnpm</span></label>
+              <label><input type="radio" name="pm" value="bun add @podiia/typography" /><span>bun</span></label>
+              <label><input type="radio" name="pm" value="yarn add @podiia/typography" /><span>yarn</span></label>
+              <label><input type="radio" name="pm" value="bun add {{git}}" /><span>git <small>today</small></span></label>
+            </fieldset>
+          </form>
+          <div data-command>
+            <pre><code>npm install @podiia/typography</code></pre>
+            <button type="button" data-copy aria-label="Copy the install command">Copy</button>
+          </div>
+          <p data-status>Not on npm yet; it will be there at 1.0. Until then, pick <em>git</em> and install a release tag. The repository is private, so the machine needs SSH access.</p>
+        </section>
 
-      <p data-actions>
-        <a href="./docs/getting-started/" class="primary">Get started</a>
-        <a href="./playground/">Open the playground</a>
-      </p>
+        <p data-actions>
+          <a href="./docs/getting-started/" class="primary">Read the docs</a>
+          <a href="./playground/">Try it in the playground</a>
+        </p>
+      </div>
+      <!--specimen-->
     </div>
   </section>
 
-  <section aria-labelledby="results" data-section>
+  <section aria-labelledby="languages" data-section>
     <div class="container">
       <header>
-        <h2 id="results">What comes out</h2>
-        <p>Straight quotes, hyphens used as dashes, three dots, a space where a line must not break. Every sentence below went through the engine, in its own language.</p>
+        <p data-index>01</p>
+        <h2 id="languages">Other languages</h2>
       </header>
-      <!--examples-->
+      <div>
+        <p data-lede>Each language has its own pack: its quotation marks and how they nest, its dash, its habits with spaces. These four are not translations of one sentence; each is written the way that language is.</p>
+        <!--examples-->
+      </div>
     </div>
   </section>
 
-  <section aria-labelledby="usage" data-section data-tone="paper">
-    <div class="container" data-split>
+  <section aria-labelledby="rules" data-section>
+    <div class="container">
       <header>
-        <h2 id="usage">One function, or the whole pipeline</h2>
-        <p>Give it a string and a language. It returns the string, set. It can also say what it did, rule by rule, so a change is never a mystery.</p>
-        <p><a href="./docs/api/">Read the API</a></p>
+        <p data-index>02</p>
+        <h2 id="rules">What it changes</h2>
       </header>
-      <figure>
-        <pre><code>import { typographic, explain } from '@podiia/typography';
+      <div>
+        <p data-lede>{{rulesOn}} rules run by default, and {{rulesOff}} more you switch on. Here are some of them on one line each. A boxed space is a no-break space.</p>
+        <!--samples-->
+        <p><a href="./docs/rules/">All {{rules}} rules, with their reasons</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="use" data-section>
+    <div class="container">
+      <header>
+        <p data-index>03</p>
+        <h2 id="use">Using it</h2>
+      </header>
+      <div>
+        <p data-lede>One function takes a string and a language. The other entry points do the same for HTML, Markdown, rehype trees, React and the DOM.</p>
+<pre><code>import { typographic, explain } from '@podiia/typography';
 
 typographic('He said "we\'re here" - and left.', 'en', { quoteStyle: 'us' });
 // He said “we’re here” — and left.
 
 explain('He said "hi"... 21-26', 'en', { quoteStyle: 'us' }).changes;
-// quote “  ·  quote ”  ·  ellipsis …  ·  dash.range –</code></pre>
-        <figcaption>The dash is preceded by a no-break space, so it never starts a line.</figcaption>
-      </figure>
+// quote “ · quote ” · ellipsis … · dash.range –</code></pre>
+        <div data-scroll tabindex="0" role="region" aria-label="Entry points">
+        <table>
+          <thead><tr><th scope="col">Import</th><th scope="col">For</th></tr></thead>
+          <tbody>
+            <tr><th scope="row"><code>@podiia/typography</code></th><td>A string. <code>explain</code> lists each change and the rule behind it.</td></tr>
+            <tr><th scope="row"><code>…/html</code></th><td>An HTML string. Tags and code are untouched.</td></tr>
+            <tr><th scope="row"><code>…/markdown</code></th><td>A Markdown document.</td></tr>
+            <tr><th scope="row"><code>…/rehype</code></th><td>A unified or rehype pipeline, or any hast tree.</td></tr>
+            <tr><th scope="row"><code>…/react</code></th><td><code>Typeset</code> and <code>TypographyRoot</code>, with hanging punctuation.</td></tr>
+            <tr><th scope="row"><code>…/dom</code></th><td>Hanging punctuation in the browser, without a framework.</td></tr>
+            <tr><th scope="row"><code>typo</code></th><td>The command line, for files and CI.</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p><a href="./docs/api/">The API reference</a></p>
+      </div>
     </div>
   </section>
 
-  <section aria-labelledby="does" data-section>
+  <section aria-labelledby="gaps" data-section>
     <div class="container">
       <header>
-        <h2 id="does">What it takes care of</h2>
-        <p>{{rulesOn}} rules run by default and {{rulesOff}} more you switch on. Each has a page that says what it does and why.</p>
+        <p data-index>04</p>
+        <h2 id="gaps">What isn't finished</h2>
       </header>
-      <dl data-features>
-        <div><dt>Quotation marks</dt><dd>By language, nesting level and register, in all {{langs}} packs: the 24 official languages of the EU, Ukrainian and Swiss usage. American quotes are an option.</dd></div>
-        <div><dt>Dashes and ranges</dt><dd>Dialogue dashes, sentence dashes and en dashes in ranges such as 21–26 and 10:00–12:00.</dd></div>
-        <div><dt>No-break spaces</dt><dd>Between a number and its unit, initials and surnames, abbreviations, one-letter words, and before a dash.</dd></div>
-        <div><dt>Symbols</dt><dd>Arrows, ©, the minus sign, ×, degrees and fractions, where you asked for them.</dd></div>
-        <div><dt>Hanging punctuation</dt><dd>Opening and closing marks hang in the margin at any width, without measuring where lines break.</dd></div>
-        <div><dt>Markup aware</dt><dd>HTML, Markdown and rehype modes leave tags, attributes, links and code exactly as they were.</dd></div>
-      </dl>
-    </div>
-  </section>
-
-  <section aria-labelledby="where" data-section data-tone="paper">
-    <div class="container">
-      <header>
-        <h2 id="where">Wherever your text already is</h2>
-        <p>Seven entry points, one engine. No runtime dependencies; React is an optional peer.</p>
-      </header>
-      <div data-scroll tabindex="0" role="region" aria-label="Entry points">
-      <table>
-        <thead><tr><th scope="col">Import</th><th scope="col">For</th></tr></thead>
-        <tbody>
-          <tr><th scope="row"><code>@podiia/typography</code></th><td>A string, with <code>explain</code> for the record of changes</td></tr>
-          <tr><th scope="row"><code>…/html</code></th><td>An HTML string; tags and code untouched</td></tr>
-          <tr><th scope="row"><code>…/markdown</code></th><td>A Markdown document</td></tr>
-          <tr><th scope="row"><code>…/rehype</code></th><td>A unified or rehype pipeline, or any hast tree</td></tr>
-          <tr><th scope="row"><code>…/react</code></th><td><code>Typeset</code> and <code>TypographyRoot</code>, with hanging punctuation</td></tr>
-          <tr><th scope="row"><code>…/dom</code></th><td>Hanging punctuation in the browser, no framework</td></tr>
-          <tr><th scope="row"><code>typo</code></th><td>The command line, for files and CI (<code>typo -c docs/*.md</code>)</td></tr>
-        </tbody>
-      </table>
+      <div>
+        <p data-lede>Before you depend on it, you should know where it is weak.</p>
+        <ul data-plain>
+          <li><strong>No language has been read by a native speaker.</strong> The packs follow published style guides, and some of those we could only read in part. Each language page lists what it was written from.</li>
+          <li><strong>Where the engine and Unicode's CLDR disagree about quotation marks</strong> (English, German, French, Swiss German), the decision record says so, instead of choosing quietly.</li>
+          <li><strong>English sets « » by default.</strong> That is this project's house style. Pass <code>quoteStyle: 'us'</code> for “ ”.</li>
+          <li><strong>Some input can't be read with certainty.</strong> An inch mark inside a quotation (<code>a 5" hole</code>) is one. Such cases are listed as limits, not guessed at.</li>
+        </ul>
+        <p><a href="./docs/limits/">Known limits</a> · <a href="./docs/languages/">Languages and their review status</a></p>
       </div>
     </div>
   </section>
@@ -119,22 +133,25 @@ explain('He said "hi"... 21-26', 'en', { quoteStyle: 'us' }).changes;
   <section aria-labelledby="try" data-section>
     <div class="container">
       <header>
+        <p data-index>05</p>
         <h2 id="try">Try it</h2>
-        <p>Type or paste. It runs in your browser; nothing leaves it.</p>
       </header>
-      <form data-demo-options>
-        <label>Language <select id="demo-lang"></select></label>
-        <label><input type="checkbox" id="demo-us" /> American quotes</label>
-        <a href="./playground/">More options in the playground</a>
-      </form>
-      <div data-demo>
-        <div>
-          <label for="demo-in">Your text</label>
-          <textarea id="demo-in" spellcheck="false" rows="6">"Typography is the craft," she said - "of making text read well..." Pages 21-26, room 4B, 15% off.</textarea>
-        </div>
-        <div>
-          <p id="demo-label">Typeset</p>
-          <div id="demo-out" role="region" aria-labelledby="demo-label" aria-live="polite"></div>
+      <div>
+        <p data-lede>Type or paste. It runs in your browser and nothing leaves it.</p>
+        <form data-demo-options>
+          <label>Language <select id="demo-lang"></select></label>
+          <label><input type="checkbox" id="demo-us" /> American quotes</label>
+          <a href="./playground/">More options in the playground</a>
+        </form>
+        <div data-demo>
+          <div>
+            <label for="demo-in">Your text</label>
+            <textarea id="demo-in" spellcheck="false" rows="6">"Typography is the craft," she said - "of making text read well..." Pages 21-26, room 4B, 15% off.</textarea>
+          </div>
+          <div>
+            <p id="demo-label">Typeset</p>
+            <div id="demo-out" role="region" aria-labelledby="demo-label" aria-live="polite"></div>
+          </div>
         </div>
       </div>
     </div>

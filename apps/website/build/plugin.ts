@@ -3,7 +3,7 @@ import { join, relative } from 'node:path';
 import type { Plugin } from 'vite';
 import { typesetHtml } from '../../../src/html';
 import { footer, header } from './chrome';
-import { examplesFigure } from './examples';
+import { examplesFigure, samplesTable, specimenFigure } from './examples';
 import { generatedPages } from './pages';
 import { fill, SITE_ROOT, TYPESET } from './site';
 
@@ -18,7 +18,9 @@ function finish(html: string, path: string): string {
   const filled = fill(html)
     .replace('<!--header-->', () => header(path))
     .replace('<!--footer-->', () => footer(path))
-    .replace('<!--examples-->', () => examplesFigure());
+    .replace('<!--examples-->', () => examplesFigure())
+    .replace('<!--specimen-->', () => specimenFigure())
+    .replace('<!--samples-->', () => samplesTable());
   return typesetHtml(filled, TYPESET);
 }
 

@@ -6,8 +6,6 @@ export const rootOf = (path: string): string => {
   return depth === 0 ? './' : '../'.repeat(depth);
 };
 
-const MARK = `<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><path d="M4 18v-5.2C4 8.7 6.2 6.2 9.6 5.6l.5 1.9C8.3 8 7.3 9.2 7.2 11H10v7zm10 0v-5.2c0-4.1 2.2-6.6 5.6-7.2l.5 1.9c-1.8.5-2.8 1.7-2.9 3.5H20v7z" fill="currentColor"/></svg>`;
-
 export function header(path: string): string {
   const root = rootOf(path);
   const current = (href: string) => (path.startsWith(href) ? ' aria-current="page"' : '');
@@ -16,7 +14,7 @@ export function header(path: string): string {
   ).join('');
   return `<header>
   <nav aria-label="Main">
-    <a href="${root}" data-brand>${MARK}<span>${NAME}</span></a>
+    <a href="${root}" data-brand><b>Podiia</b> Typography</a>
     <ul>${links}<li><a href="${GITHUB}" rel="noopener">GitHub</a></li></ul>
     <button type="button" data-theme-toggle aria-label="Switch between light and dark">
       <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor"/></svg>

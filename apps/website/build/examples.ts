@@ -1,4 +1,4 @@
-import { diff, type Lang, type QuoteStyle, typographic } from '../../../src/core';
+import { diff, type Lang, type QuoteStyle, RULES, typographic } from '../../../src/core';
 
 type Example = { lang: Lang; label: string; note: string; input: string; quoteStyle?: QuoteStyle };
 
@@ -76,7 +76,7 @@ export function examplesFigure(): string {
   <div data-pane>
     <p data-note>${example.note}</p>
     <dl>
-      <div><dt>Before</dt><dd lang="${example.lang}">${before}</dd></div>
+      <div><dt>Before</dt><dd lang="${example.lang}"><code data-raw>${before}</code></dd></div>
       <div><dt>After <output>${changes} ${changes === 1 ? 'change' : 'changes'}</output></dt><dd lang="${example.lang}">${after}</dd></div>
     </dl>
   </div>
@@ -86,4 +86,80 @@ export function examplesFigure(): string {
 ${items}
 <figcaption>Set by the engine when this page was built. Green is what it added, red is what it replaced; a boxed space is a no-break space.</figcaption>
 </figure>`;
+}
+
+/** A real paragraph (Carroll, 1865, public domain), as an e-text would have it: straight quotes and a hyphen for a dash. */
+export const SPECIMEN = `"Curiouser and curiouser!" cried Alice (she was so much surprised, that for the moment she quite forgot how to speak good English); "now I'm opening out like the largest telescope that ever was! Good-bye, feet!" - for when she looked down at her feet, they seemed to be almost out of sight...`;
+
+/** The specimen set by the engine, the changed runs wrapped in `ins`, for the toggles on the landing page. */
+export function specimenFigure(): string {
+  const output = typographic(SPECIMEN, 'en', { quoteStyle: 'us' });
+  let after = '';
+  for (const run of diff(SPECIMEN, output)) {
+    if (run.kind === 'same') after += esc(run.text);
+    else if (run.kind === 'ins') after += mark('ins', run.text);
+  }
+  return `<figure data-specimen>
+  <p data-before><small>What you have</small><code data-raw>${esc(SPECIMEN)}</code></p>
+  <blockquote data-hanging data-after><p>${after}</p></blockquote>
+  <form>
+    <label><input type="checkbox" name="marks" /> Mark what changed</label>
+    <label><input type="checkbox" name="hang" checked /> Hang the punctuation</label>
+  </form>
+  <figcaption>From <cite>Alice's Adventures in Wonderland</cite>. The line on the left is the text edge.</figcaption>
+</figure>`;
+}
+
+type Sample = {
+  rule: string;
+  lang: Lang;
+  input: string;
+  options?: { enable?: string[]; quoteStyle?: QuoteStyle };
+};
+
+/** One row per rule worth showing: what you write, and what you get, from the engine. */
+export const SAMPLES: Sample[] = [
+  { rule: 'quote', lang: 'en', input: '"Hello"', options: { quoteStyle: 'us' } },
+  { rule: 'apostrophe', lang: 'en', input: "don't" },
+  { rule: 'ellipsis', lang: 'en', input: 'Wait...' },
+  { rule: 'dash.range', lang: 'en', input: 'pages 21-26' },
+  { rule: 'dash.sentence', lang: 'en', input: 'Wait - what?' },
+  { rule: 'dash.dialogue', lang: 'uk', input: '- Привіт, - сказала вона.' },
+  { rule: 'space.number', lang: 'en', input: '10 km' },
+  { rule: 'space.initial', lang: 'en', input: 'T. H. Shevchenko' },
+  { rule: 'space.orphan', lang: 'pl', input: 'Jadę z Anią w góry' },
+  { rule: 'symbol.legal', lang: 'en', input: '(c) 2026' },
+  { rule: 'symbol.multiply', lang: 'en', input: '1920x1080' },
+  { rule: 'symbol.minus', lang: 'en', input: '-5 C' },
+  { rule: 'number.group', lang: 'en', input: '1000000', options: { enable: ['number.group'] } },
+];
+
+export function sampleResult(sample: Sample): { changed: boolean; html: string } {
+  const output = typographic(sample.input, sample.lang, sample.options ?? {});
+  let html = '';
+  for (const run of diff(sample.input, output)) {
+    if (run.kind === 'same') html += esc(run.text);
+    else if (run.kind === 'ins') html += mark('ins', run.text);
+  }
+  return { changed: output !== sample.input, html };
+}
+
+export function samplesTable(): string {
+  const rows = SAMPLES.map((sample) => {
+    const { html } = sampleResult(sample);
+    const off = RULES.find((rule) => rule.id === sample.rule)?.defaultOn === false;
+    return `<tr>
+  <th scope="row"><code>${sample.rule}</code>${off ? ' <small>opt-in</small>' : ''}</th>
+  <td lang="${sample.lang}"><code data-raw>${esc(sample.input)}</code></td>
+  <td lang="${sample.lang}">${html}</td>
+</tr>`;
+  }).join('\n');
+  return `<div data-scroll tabindex="0" role="region" aria-label="Rules with examples">
+<table data-samples>
+<thead><tr><th scope="col">Rule</th><th scope="col">You write</th><th scope="col">You get</th></tr></thead>
+<tbody>
+${rows}
+</tbody>
+</table>
+</div>`;
 }

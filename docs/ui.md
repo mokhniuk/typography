@@ -24,11 +24,11 @@ These apply to every page this project ships: the playground (`apps/playground/`
 | Corners | `--radius-sm`, `--radius-md`, `--radius-lg`, `--radius-pill` |
 | Spacing | `--space-1` … `--space-6` (the website adds `--space-7`, `--space-8`) |
 | Type size | `--size-xs`, `--size-sm`, `--size-md`, `--size-lg`, `--size-xl` (the website adds `--size-2xl`, `--size-3xl`, `--size-display`, fluid with `clamp()`) |
-| Fonts | `--font-ui`, `--font-text` (reading text, a serif), `--font-mono` |
+| Fonts | `--font-ui`, `--font-text` (reading text; a serif in the playground, the same sans as the UI on the website), `--font-mono` |
 | Measure | `--measure` (reading line length), `--control-height`, `--container` (page width) |
 | Controls | `--select-arrow`: the drawn arrow of a `select` (`appearance: none`), an SVG data URI in `--color-muted`, set again for the dark theme because a data URI cannot read a variable |
 
-The website also has `--color-paper` (a second background), `--color-code-bg`, `--color-code-text`, `--color-code-muted`, `--color-code-line` (code blocks are dark in both themes), `--header-height` and `--pane-height`. A page may add its own tokens (the comparison page has chart colors). Name them in the same groups (`--color-good`), never as one-off literals.
+The website is black and white (near-black on near-white, no tint; the diff colours are neutral greys). It also has `--color-rule` (the strong line), `--color-paper` (a second background), `--color-code-bg`, `--color-code-text`, `--color-code-muted`, `--color-code-line` (code blocks are dark in both themes; `--color-ins`/`--color-del` are greys, not green and red), `--header-height` and `--pane-height`. A page may add its own tokens (the comparison page has chart colors). Name them in the same groups (`--color-good`), never as one-off literals.
 
 ### Theme
 
@@ -58,3 +58,5 @@ The comparison page is published as an Artifact, so it is one self-contained fil
 - The playground page reuses `apps/playground/main.ts` and its markup; its CSS lives in the website's `style.css` under `[data-page="playground"]`.
 - Every page is typeset by the engine at build (`build/plugin.ts`, options in `TYPESET` in `build/site.ts`: English with American quotes), and the browser hangs punctuation in `[data-hanging]` text.
 - `404.html` is rewritten to root-relative links so it works at any depth; deploy the site at the root of its host.
+- Fonts: Poppins is self-hosted in `apps/website/fonts/` (Latin and Latin Extended, SIL OFL). It has no Cyrillic, so add a Cyrillic face (KyivType Sans is the plan) as described in `fonts/README.md`.
+- Landing copy is a draft for the author to review; `data-raw` marks text that must show exactly as written, so the build's own typesetting skips it.
