@@ -27,6 +27,7 @@ What the engine deliberately leaves alone, what it knowingly does not do, and wh
 - **German has only the guillemet nesting** (`»outer ›inner‹ outer«`). The more common `„outer ‚inner‘ outer“` is not implemented.
 - **Literary exists for `en` and `uk` only.** The other languages fall back to display. Not implemented: literary profiles for `de`, `pl`, `fr` and `ch`, and American English.
 - **The literary register has been tested but not looked at on a real page.** It has unit tests and a rendered check of the British quotes and the hanging marks, not of a Ukrainian dialogue page.
+- **`space.operator` binds chains end to end.** A lone `&`, `+` or `=` between two letter words is bound on both sides, so a chain (`Tom & Jerry & Co`, `one + two + three + four + five`) binds end to end into one unbreakable unit; a pathological chain could bind a whole line. It does not bind an operator next to an inline tag in HTML or Markdown (`Tom &amp; <em>Jerry</em>`: the tag placeholder is not a letter), after a word ending in a combining mark (decomposed `café & bar`), or between numbers (`2 + 2`, `x = 5`).
 
 ## Opt-in rules
 

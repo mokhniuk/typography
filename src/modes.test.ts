@@ -46,6 +46,7 @@ const CASES = [
   '<pre>"raw" -> raw</pre><p>"set" -> set</p>',
   '<p>R&amp;D "x" &lt;tag&gt; 5 &euro; 10%</p>',
   '<p>"one" <!-- "comment" --> "two"</p>',
+  '<p>Tom &amp; Jerry + rock</p>',
   '<ul><li>"a" - b</li><li>"c" - d</li></ul>',
   '<div><p>"outer"</p><blockquote><p>"inner" - x</p></blockquote></div>',
   '<p>Prof. Dr. K. Słoboda z. B. Nr. 5 e.V. (c) 2026 Read more -></p>',

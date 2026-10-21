@@ -106,7 +106,7 @@ function decode(text: string, kept: string[]): string {
 
 function encode(text: string, nbsp: 'entity' | 'char'): string {
   const escaped = text
-    // A no-break space follows an `&` that `space.operator` bound (`&nbsp;` in the default mode).
+    // Any `&` before a no-break space is escaped (`&nbsp;` in the default mode), so `&&nbsp;` is never written; `space.operator` is what puts one there.
     .replace(/&(?=[#A-Za-z\u00a0])/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;');
