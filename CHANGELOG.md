@@ -2,6 +2,8 @@
 
 Versions follow semver while the package is below 1.0.0: a **minor** release may change the output of the engine or the API (every entry says whether it can change output you already have), a **patch** release fixes a bug without changing output you rely on. If you depend on exact output, pin a tag and read this file before you move it.
 
+## 0.7.0 (2026-10-21)
+
 ### Fixes
 
 - A lone quotation mark reads the text past a tag beside it: in the HTML, Markdown and rehype modes `said; <ins>“</ins>now` kept its `“` (it was turned to `”`, the tag read as a letter before the mark), and `</a>»n't«` is `«n’t»`. A page whose changed marks are wrapped in tags is now stable when typeset again. Can change existing output: yes, for HTML and Markdown with a lone mark next to a tag.
@@ -9,6 +11,7 @@ Versions follow semver while the package is below 1.0.0: a **minor** release may
 
 ### Tooling and docs
 
+- A website in `apps/website`: landing page, the docs and changelog built from this repository's Markdown, articles, and the playground; every page is typeset by the engine and hangs its punctuation from the first paint. Not part of the package. The playground runs without its config panel on a page that has none. No output change.
 - The language pages (`docs/languages/*.md`) put every pattern of quotation marks in a code span (`„…“`, `«outer ‹inner› outer»`, and the examples quoted in a pack's notes), so a page that typesets its text in another language cannot turn them into its own. No output change.
 
 ## 0.6.0 (2026-10-21)
