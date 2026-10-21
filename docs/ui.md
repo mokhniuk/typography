@@ -26,6 +26,7 @@ These apply to every page this project ships: the playground (`apps/playground/`
 | Type size | `--size-xs`, `--size-sm`, `--size-md`, `--size-lg`, `--size-xl` |
 | Fonts | `--font-ui`, `--font-text` (reading text, a serif), `--font-mono` |
 | Measure | `--measure` (reading line length), `--control-height`, `--container` (page width) |
+| Controls | `--select-arrow`: the drawn arrow of a `select` (`appearance: none`), an SVG data URI in `--color-muted`, set again for the dark theme because a data URI cannot read a variable |
 
 A page may add its own tokens (the comparison page has chart colors). Name them in the same groups (`--color-good`), never as one-off literals.
 

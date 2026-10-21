@@ -13,6 +13,8 @@
   --color-del: #fbdcd8;
   --color-del-text: #7a1c12;
   --color-frame: #ffffff;
+  /* The select arrow, drawn in --color-muted (a data URI cannot read a variable). */
+  --select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%236b6a66' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 
   --radius-sm: 3px;
   --radius-md: 6px;
@@ -56,6 +58,7 @@
     --color-ins-text: #a8e6b8;
     --color-del: #4a201b;
     --color-del-text: #f1b1a8;
+    --select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%239b9a93' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
     color-scheme: dark;
   }
 }
@@ -71,6 +74,7 @@
   --color-ins-text: #a8e6b8;
   --color-del: #4a201b;
   --color-del-text: #f1b1a8;
+  --select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%239b9a93' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   color-scheme: dark;
 }
 
@@ -123,9 +127,15 @@ button {
   border-radius: var(--radius-md);
   padding: var(--space-2) var(--space-4);
 }
+/* The native arrow sits at the browser's own inset; this one is drawn, so it has room and follows the theme. */
 select {
-  padding-inline: var(--space-3);
+  appearance: none;
+  padding-inline: var(--space-3) calc(var(--space-6) + var(--space-4));
   min-width: 9rem;
+  background-image: var(--select-arrow);
+  background-position: right var(--space-4) center;
+  background-size: 10px 6px;
+  background-repeat: no-repeat;
 }
 button {
   cursor: pointer;
