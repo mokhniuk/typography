@@ -2,7 +2,12 @@
 
 Versions follow semver while the package is below 1.0.0: a **minor** release may change the output of the engine or the API (every entry says whether it can change output you already have), a **patch** release fixes a bug without changing output you rely on. If you depend on exact output, pin a tag and read this file before you move it.
 
-## Unreleased
+## 0.12.0 (2026-10-22)
+
+### Fixes
+
+- `avoid` on a long paragraph dropped every change of a rule, not only the avoided one: the word-level diff that `avoid` and `explain` share gave the middle of a text up as one deletion and one insertion above four million table cells (about two thousand tokens on each side, a paragraph of twenty kilobytes that one rule changed at both ends), so one avoided character anywhere in it made the text keep the whole paragraph as typed for that rule (`(c) 2026 … (TM)` with `™` avoided lost its `©`), and `explain` reported one change the size of the paragraph. Above the limit the diff now aligns the middle change by change, running the same table on a window around each change (`src/core/diff.ts`), so a long paragraph gets the records a short one gets; below it nothing changes (the differential run against the engine as it was reports 0 differences). A plain-text file with no blank line is one paragraph, and `TypographyRoot` sets `avoid` by default in a browser, so this was reachable. Can change existing output: yes, only where `avoid` is set and a paragraph above about twenty kilobytes was changed by one rule at places far apart; that output was wrong.
+- The zone scan (code spans, web addresses, emails, set aside before the rules run) cost 300 ms per MB of text with lone backticks and no line break, where the rules together cost 50: its regex carried the `u` flag, which nothing in it needs, and under that flag JavaScriptCore reads a negated class in a slow path from each lone backtick on to the next. The flag is gone; the matches are the same (checked on the corpus and on addresses with characters outside the BMP), and the scan costs under 1 ms per MB. The benchmark text has no backticks, so its speed table does not move. No output change.
 
 ### Tooling and docs
 
