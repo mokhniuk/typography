@@ -2,6 +2,12 @@
 
 Versions follow semver while the package is below 1.0.0: a **minor** release may change the output of the engine or the API (every entry says whether it can change output you already have), a **patch** release fixes a bug without changing output you rely on. If you depend on exact output, pin a tag and read this file before you move it.
 
+## Unreleased
+
+### Tooling and docs
+
+- The no-break-space and numbers articles and `practices.md` show `rock~’n’~roll` and `3~×~4`, the 0.13.0 outputs. No output change.
+
 ## 0.13.0 (2026-10-22)
 
 ### Changes

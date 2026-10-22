@@ -63,11 +63,11 @@ A no-break space keeps two words on one line. Bind a pair when a line that ends 
 
   Titles and the English abbreviation case are backed by a source read ([space.title](../resources/sources.md#spacetitle), [space.abbreviation](../resources/sources.md#spaceabbreviation)). The German, Ukrainian and Polish abbreviation lists, and the initial rule ([space.initial](../resources/sources.md#spaceinitial)), are general knowledge.
 
-- **An operator between two words** (`space.operator`). A line should neither end on `&` nor start with it.
+- **An operator between two words** (`space.operator`). A line should neither end on `&` nor start with it; the `’n’` of rock ’n’ roll is an "and" with its letters dropped and is bound the same way.
 
   ```text
-  (en)  before  Tom & Jerry, rock + roll
-        after   Tom~&~Jerry, rock~+~roll
+  (en)  before  Tom & Jerry, rock + roll, rock ’n’ roll
+        after   Tom~&~Jerry, rock~+~roll, rock~’n’~roll
   ```
 
   General knowledge: no style guide that speaks of operators between words was found ([space.operator](../resources/sources.md#spaceoperator)). Numbers (`2 + 2`) and unspaced forms (`R&D`) are left alone.

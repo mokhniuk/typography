@@ -32,7 +32,7 @@ Temperatures get their own rule, `symbol.degree` (off by default): `20 C`, `20°
 ## True signs
 
 - `symbol.minus`: a hyphen before a digit becomes a real minus, `−5` (U+2212) — same width as the digits, aligned with the horizontal bar of `+`.
-- `symbol.multiply`: the letter x between numbers becomes `×`: `1920×1080`, `3 × 4`.
+- `symbol.multiply`: the letter x between numbers becomes `×`: `1920×1080`, and `3 x 4` becomes `3~×~4`, with a no-break space on each side so the product stays on one line.
 - `symbol.plusminus` (off by default): `+-5` becomes `±5`.
 - `symbol.fraction` (off by default): `1/2`, `1/4` and `3/4` become `½ ¼ ¾` — whole numbers only, so `11/2`, `1/20` and the date `1/2/2026` are left alone.
 

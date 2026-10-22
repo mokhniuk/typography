@@ -19,7 +19,7 @@ Eighteen of the engine's 33 rules can place this one character:
 - **One-letter words.** Polish, Czech, Slovak and Ukrainian typography does not let `i`, `w`, `z` end a line; English keeps `A~cat` together. Which words count comes from the language pack (`space.orphan`).
 - **Percent and euro, by language.** German, French, Czech and fourteen other languages set `5~%` and most of them `49~€`; English `5%` is left alone (`space.percent`).
 - **After ©** (`©~2026 Studio`), **after § and ¶** (`§~5`), **before a sentence dash** (`word~— word`, so a line never opens with the dash), **before →**, and **after the dialogue dash** in the languages that space it.
-- **Around a lone operator** between words: `Tom~&~Jerry` (`space.operator`).
+- **Around a lone operator** between words: `Tom~&~Jerry`, and around the `’n’` of `rock~’n’~roll`, an "and" with its letters dropped (`space.operator`).
 - **Money.** A sign or code stays with its amount, and a number grouped by hand stays whole: `USD~5~000` (`space.number`).
 - **Two opt-in rules** go further: `phone.bind` keeps an international phone number on one line (`+380~44~123~45~67`), and `space.short-word` binds a short word to the next one in titles (`in~the house`).
 
