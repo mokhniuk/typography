@@ -1,0 +1,28 @@
+{
+  "name": "typography-bench",
+  "private": true,
+  "type": "module",
+  "description": "Compares @mokhniuk/typography with other typography tools. Not part of the package; kept out of git except RESULTS.md.",
+  "scripts": {
+    "bench": "bun run.ts",
+    "features": "bun features.ts",
+    "latency": "bun latency.ts",
+    "profile": "bun profile.ts",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "devDependencies": {
+    "typograf": "^7.8.0",
+    "typopo": "^3.1.0",
+    "richtypo": "^8.0.0",
+    "tipograph": "^0.7.4",
+    "smartypants": "^0.2.2",
+    "retext-english": "^5.0.0",
+    "retext-smartypants": "^6.2.0",
+    "retext-stringify": "^4.0.0",
+    "unified": "^11.0.5",
+    "@types/react": "^19.0.0",
+    "bun-types": "^1.3.14",
+    "react": "^19.0.0",
+    "typescript": "^7.0.2"
+  }
+}

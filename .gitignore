@@ -4,9 +4,15 @@ apps/playground/dist
 apps/website/dist
 .DS_Store
 
-# The benchmark is a separate project (its own package.json); only its results are kept.
+# The benchmark is a separate project with its own dependencies: its sources, cases and results are
+# tracked, its node_modules and lockfile are not (bun install inside apps/bench).
 apps/bench/*
 !apps/bench/RESULTS.md
+!apps/bench/*.ts
+!apps/bench/*.d.ts
+!apps/bench/cases/
+!apps/bench/package.json
+!apps/bench/tsconfig.json
 
 # Agent worktrees
 .claude/worktrees/

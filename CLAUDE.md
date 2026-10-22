@@ -11,7 +11,7 @@ Bun project, TypeScript sources shipped as they are (no build step). Details: `R
 - `bun run docs:languages`: regenerate `docs/languages/*.md` from the language packs (generated; `src/lang-docs.test.ts` fails if stale).
 - `bun run gen:script`: regenerate `src/dom/script.ts` (generated) after changing `src/dom/hang.ts`.
 - Speed changes must keep output and `explain` records identical: `bun run compare` against a git ref of the previous engine (tag it `speed-baseline`) must report 0 differences, and `src/snapshot.test.ts` must pass without `bun run snapshot` (run that only for an intentional output change); see "Checking a speed change" in `docs/contributing.md`. A rule may carry `when` (a cheap trigger; false means `apply` returns the text unchanged, proved by `src/core/rules.when.test.ts`); prefer a forward regex plus `src/core/scan.ts` to a regex that opens with a lookbehind.
-- Benchmark: a separate project in `apps/bench/`, ignored by git except `apps/bench/RESULTS.md`. `cd apps/bench && bun install`, then `bun run bench` (regenerates `RESULTS.md`; commit it if it changes), `latency`, `profile`, `features`. Not part of `bun test` or the root `typecheck`; `bun run typecheck` inside `apps/bench/` checks it.
+- Benchmark: a separate project in `apps/bench/`; its sources, cases and `RESULTS.md` are tracked, its `node_modules` and lockfile are not (`comparison.html`, the comparison page source, is tracked too). `cd apps/bench && bun install`, then `bun run bench` (regenerates `RESULTS.md`; commit it if it changes), `latency`, `profile`, `features`. Not part of `bun test` or the root `typecheck`; `bun run typecheck` inside `apps/bench/` checks it.
 
 ## Rules of the codebase
 

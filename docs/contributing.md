@@ -32,7 +32,7 @@ bun run docs:languages       # writes docs/languages/*.md from the packs
 | `resources/sources.ts` | The sources registry. `bun run docs:sources` generates `resources/sources.md`, `resources/sources.html` (decisions, with a filter) and `resources/bibliography.html` (every source in one table: author, link, what it is, where it is used); open the HTML ones in a browser |
 | `scripts/gen-languages-doc.ts` | Generates `docs/languages/<code>.md` and `docs/languages/index.md` from the packs |
 | `resources/` | The sources registry (below) and the pages generated from it; not part of the package |
-| `apps/bench/` | The benchmark: a separate project, not tracked except `RESULTS.md` (see below) |
+| `apps/bench/` | The benchmark: a separate project with its own dependencies; sources, cases and `RESULTS.md` tracked, `node_modules` and lockfile not (see below) |
 | `apps/playground/` | The web page (its own `package.json` for `dev`/`build`; uses the root's `vite`) |
 | `apps/website/` | The website: landing, docs, articles, playground; see [ui.md](ui.md#the-website). The docs it publishes are the files listed in `DOC_FILES` in `apps/website/build/content.ts` (`apps/website/content/docs/getting-started.md`, `docs/api.md`, `cli.md`, `rules.md`, `languages.md`, `limits.md`, `practices.md`, `contributing.md` and `CHANGELOG.md`, in that order) plus the generated `docs/languages/*.md`; `README.md`, `ui.md`, `backlog.md` and `ideas.md` are not published |
 | `docs/` | These pages. `rules.md` and `languages/` are generated; the others are written by hand |
@@ -115,7 +115,7 @@ bun scripts/stress.ts [srcDir]   # every rule on long runs of one character at 2
 
 ## The benchmark
 
-The benchmark is a separate project in `apps/bench/` with its own `package.json` and dependencies. Git ignores it except `apps/bench/RESULTS.md`, so it lives on one machine (move it to its own repository when it needs to be shared). To run it: `cd apps/bench && bun install && bun run bench`. Its own checks: `cd apps/bench && bun run typecheck`.
+The benchmark is a separate project in `apps/bench/` with its own `package.json` and dependencies. Its sources, cases, `package.json`, `tsconfig.json` and `RESULTS.md` are tracked; `node_modules` and the lockfile are not (`comparison.html`, the comparison page, is tracked as well). To run it: `cd apps/bench && bun install && bun run bench`. Its own checks: `cd apps/bench && bun run typecheck`.
 
 ```sh
 cd apps/bench
