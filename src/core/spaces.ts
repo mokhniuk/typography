@@ -71,7 +71,7 @@ function currencyEndsAt(text: string, end: number): boolean {
  * after it (555 123 4567). Tried where a run of digits starts (sticky), the only place it can match
  * once `groupsStandFree` is asked: a start inside a run has a digit before it.
  */
-const GROUP_RUN = /[1-9]\d{0,2}(?:[ ]\d{3})+(?![\d\p{L}])(?![  ]\d)/yu;
+const GROUP_RUN = /[1-9]\d{0,2}(?:[ ]\d{3})+(?![\d\p{L}])(?![  ]\d)/uy;
 const NOT_BEFORE_GROUPS = /[\d\p{L}+,.:/'’‑-]/u;
 const isSpace = (code: number): boolean => code === 0x20 || code === 0xa0;
 
