@@ -7,13 +7,21 @@ import { examplesFigure, samplesTable, specimenFigure } from './examples';
 import { markHangsInPage } from './hang';
 import { highlightHtml } from './highlight';
 import { generatedPages } from './pages';
-import { fill, SITE_ROOT, TYPESET } from './site';
+import { BASE, fill, SITE_ROOT, TYPESET } from './site';
 
 /** The path of a page on the site: "docs/api/", "" for the landing page. */
 const pathOf = (file: string): string => {
   const rel = relative(SITE_ROOT, file).replaceAll('\\', '/');
   return /(^|\/)index\.html$/.test(rel) ? rel.replace(/index\.html$/, '') : '';
 };
+
+/**
+ * Every relative link and asset of a page made absolute from the site root (`BASE`). `404.html` is
+ * served for any missing address, at any depth, so a relative link in it would resolve against that
+ * address: `/docs/typo/` would load `/docs/assets/style.css`. Only this one page needs it.
+ */
+export const rootLinks = (html: string, base: string = BASE): string =>
+  html.replace(/(href|src)="(?:\.\.?\/)+/g, `$1="${base}`);
 
 /** A link to another site opens in a new tab; one that already says where it opens is left alone. */
 export function externalLinks(html: string): string {
@@ -112,11 +120,15 @@ export function website(): Plugin {
         res.end(out);
       });
     },
-    // 404.html is served for any missing address, at any depth, so its links must start at the root.
-    generateBundle(_options, bundle) {
-      const notFound = bundle['404.html'];
-      if (notFound?.type === 'asset' && typeof notFound.source === 'string')
-        notFound.source = notFound.source.replace(/(href|src)="\.\.?\//g, '$1="/');
+    // Vite's own HTML plugin emits the page in its `generateBundle`, so this one runs after it
+    // (`order: 'post'`); before the asset names are rewritten there is nothing to fix up.
+    generateBundle: {
+      order: 'post',
+      handler(_options, bundle) {
+        const notFound = bundle['404.html'];
+        if (notFound?.type === 'asset' && typeof notFound.source === 'string')
+          notFound.source = rootLinks(notFound.source);
+      },
     },
     transformIndexHtml: {
       order: 'pre',

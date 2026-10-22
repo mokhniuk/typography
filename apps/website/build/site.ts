@@ -9,6 +9,14 @@ const pkg = JSON.parse(readFileSync(join(REPO_ROOT, 'package.json'), 'utf8')) as
   version: string;
 };
 
+/**
+ * Where the site is served from. Every page links relatively, so the site works at any depth without
+ * this; the one exception is `404.html`, which GitHub Pages serves for a missing address at any
+ * depth, so its links must start at the site root. `/` unless `SITE_BASE` says otherwise (the Pages
+ * workflow sets `/typography/`, the repository's project page).
+ */
+export const BASE = (process.env.SITE_BASE ?? '/').replace(/\/*$/, '/');
+
 export const GITHUB = 'https://github.com/mokhniuk/typography';
 export const NAME = 'Podiia Typography';
 /** Where a reader reports a problem: a new GitHub issue. */

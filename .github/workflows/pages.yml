@@ -1,0 +1,58 @@
+name: pages
+
+# The website, built by the engine itself and published to the repository's project page,
+# https://mokhniuk.github.io/typography/. Every page links relatively, so the site needs no base
+# path; SITE_BASE is for 404.html alone, whose links must start at the site root (see build/site.ts).
+#
+# Turn it on once in Settings -> Pages -> Build and deployment -> Source: GitHub Actions. A private
+# repository needs a paid plan for Pages; on the free plan the setting is not offered.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/website/**'
+      - 'apps/playground/**'
+      - 'docs/**'
+      - 'CHANGELOG.md'
+      - 'src/**'
+      - 'package.json'
+      - 'bun.lock'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deployment at a time, and a newer push wins: the site is a snapshot of main.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile
+      - name: Build the site
+        run: bun run website:build
+        env:
+          SITE_BASE: /typography/
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: apps/website/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

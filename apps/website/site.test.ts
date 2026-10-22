@@ -3,7 +3,7 @@ import { posix } from 'node:path';
 import { latestDateOnly } from './build/content';
 import { EXAMPLES, exampleResult } from './build/examples';
 import { generatedPages } from './build/pages';
-import { externalLinks } from './build/plugin';
+import { externalLinks, rootLinks } from './build/plugin';
 import { FACTS, fill } from './build/site';
 
 const pages = generatedPages();
@@ -57,6 +57,21 @@ describe('landing examples', () => {
 });
 
 describe('page details', () => {
+  test('the 404 page links from the site root, so it works at any depth', () => {
+    // GitHub Pages serves 404.html for a missing address at any depth, and a relative link there
+    // would resolve against that address (`/docs/typo/` loading `/docs/assets/style.css`).
+    expect(
+      rootLinks('<a href="./docs/api/">x</a><script src="./assets/m.js">', '/typography/'),
+    ).toBe('<a href="/typography/docs/api/">x</a><script src="/typography/assets/m.js">');
+    expect(rootLinks('<link href="../../assets/style.css">', '/')).toBe(
+      '<link href="/assets/style.css">',
+    );
+    expect(rootLinks('<a href="https://x.y/">x</a>', '/typography/')).toBe(
+      '<a href="https://x.y/">x</a>',
+    );
+    expect(rootLinks('<a href="#top">x</a>', '/typography/')).toBe('<a href="#top">x</a>');
+  });
+
   test('a link to another site opens in a new tab, keeping its rel', () => {
     expect(externalLinks('<a href="https://github.com/x" rel="noopener">G</a>')).toBe(
       '<a href="https://github.com/x" target="_blank" rel="noopener">G</a>',
