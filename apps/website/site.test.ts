@@ -5,7 +5,7 @@ import { articles, latestDateOnly } from './build/content';
 import { EXAMPLES, exampleResult } from './build/examples';
 import { generatedPages, latestArticles } from './build/pages';
 import { externalLinks, rootLinks, source } from './build/plugin';
-import { FACTS, fill } from './build/site';
+import { FACTS, fill, SITE_URL } from './build/site';
 
 const pages = generatedPages();
 
@@ -128,6 +128,12 @@ describe('page details', () => {
     expect(externalLinks('<a href="https://x.y" target="_self">X</a>')).toBe(
       '<a href="https://x.y" target="_self">X</a>',
     );
+  });
+
+  test("a link in the docs to the site's own address is a page of the site", () => {
+    const api = pages.get('docs/api/') ?? '';
+    expect(api).toContain('href="../../font-checker/"');
+    expect(api).not.toContain(`href="${SITE_URL}`);
   });
 
   test('the changelog dates only its latest release', () => {

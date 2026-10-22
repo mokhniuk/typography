@@ -61,7 +61,7 @@ typographic('He said "wait..." - 1/2 of it', 'en', { avoid: '…½' });
 - It costs one word-level diff per rule that changed anything, the same cost as `onChange`, and only
   while it is set.
 - In a browser you need not write the list: `TypographyRoot` measures the page's own font and fills
-  it in (`avoidMissing`, on by default). The website's font checker page
+  it in (`avoidMissing`, on by default). The [font checker](https://typography.mokhni.uk/font-checker/)
   (`apps/website/font-checker/`) writes the list for a font file, and the playground has a field for it.
 
 `quoteStyle`, `enable`, `rules` and `avoid` go wherever `register` and `disable` go (every function and component in the table, including `TypographyRoot` and `Typeset`, and `--quotes`, `--enable` and `--avoid` on the command line; `rules` reaches the command line only through `--config`). `TypographyRoot` and `Typeset` also take `disable` and `onChange`.

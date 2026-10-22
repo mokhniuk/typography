@@ -1,7 +1,7 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { join, posix, relative } from 'node:path';
 import { frontMatter, type Heading, render } from './markdown';
-import { GITHUB, REPO_ROOT, SITE_ROOT } from './site';
+import { GITHUB, REPO_ROOT, SITE_ROOT, SITE_URL } from './site';
 
 export type Doc = {
   /** The page's path on the site, with a trailing slash: `docs/api/`. */
@@ -62,7 +62,9 @@ function sitePaths(): Map<string, string> {
 /** Maps a link found in `source` (a repository path) to a link valid from the page at `from`. */
 function linker(source: string, from: string): (href: string) => string {
   const paths = sitePaths();
-  return (href) => {
+  return (raw) => {
+    // The site's own address, written so the link also works on GitHub, is a page of the site here.
+    const href = raw.startsWith(`${SITE_URL}/`) ? raw.slice(SITE_URL.length) : raw;
     if (/^([a-z]+:|#|\/\/)/i.test(href)) return href;
     // A link that starts with a slash is a page of the site: `/docs/api/#options`.
     if (href.startsWith('/')) {

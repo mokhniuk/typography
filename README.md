@@ -1,6 +1,6 @@
 # Typography Engine
 
-The package is `@mokhniuk/typography`.
+The package is `@mokhniuk/typography`. Website, docs and playground: [typography.mokhni.uk](https://typography.mokhni.uk).
 
 **Real quotation marks, dashes and spaces, in 26 languages.** A typography engine for running text: plain strings in, typeset strings out, nothing marked up in the source. Tags, links and code are left alone.
 

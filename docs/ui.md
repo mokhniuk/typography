@@ -76,7 +76,7 @@ docker run --rm -p 8080:80 typography-website
 ```
 
 On a Docker host (this project deploys to Coolify) the settings are: build pack **Dockerfile**, base
-directory `/`, Dockerfile `/Dockerfile`, exposed port **80**, then the domain. Nothing else is
+directory `/`, Dockerfile `/Dockerfile`, exposed port **80**, then the domain (`typography.mokhni.uk`). Nothing else is
 needed: the image holds a finished static site, so there is no runtime configuration, no environment
 variable and no volume. For a site served under a path rather than at the root of a host, pass the
 build argument `SITE_BASE=/path/` (it reaches `BASE` above; only the 404 page reads it).

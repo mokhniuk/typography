@@ -11,12 +11,14 @@ const pkg = JSON.parse(readFileSync(join(REPO_ROOT, 'package.json'), 'utf8')) as
 
 /**
  * Where the site is served from. Every page links relatively, so the site works at any depth without
- * this; the one exception is `404.html`, which GitHub Pages serves for a missing address at any
- * depth, so its links must start at the site root. `/` unless `SITE_BASE` says otherwise (the Pages
- * workflow sets `/typography/`, the repository's project page).
+ * this; the one exception is `404.html`, which the host serves for a missing address at any depth,
+ * so its links must start at the site root. `/` unless `SITE_BASE` says otherwise: the site is served
+ * at the root of `typography.mokhni.uk`.
  */
 export const BASE = (process.env.SITE_BASE ?? '/').replace(/\/*$/, '/');
 
+/** The site's own address. A link to it in the repository's Markdown becomes a link inside the site. */
+export const SITE_URL = 'https://typography.mokhni.uk';
 export const GITHUB = 'https://github.com/mokhniuk/typography';
 export const NAME = 'Typography Engine';
 /** Where a reader reports a problem: a new GitHub issue. */
