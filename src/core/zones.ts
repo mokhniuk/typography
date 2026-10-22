@@ -12,7 +12,11 @@ const LITERAL_ZONES = new RegExp(
     // the zone itself): set aside as a zone of its own, so text that holds one is not misread.
     '[\\uE000-\\uE003]',
   ].join('|'),
-  'gu',
+  // No `u` flag: nothing here needs one (no `\p{…}`, no literal outside the BMP, and a negated class
+  // consumes an astral character as two halves, which is the same span), and under it JavaScriptCore
+  // runs a negated class in a slow path: a lone backtick, whose `[^`\n]+` reads on to the next one,
+  // cost 300 ms per MB of text without a line break where it costs under 1 ms now.
+  'g',
 );
 
 /**

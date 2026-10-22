@@ -101,7 +101,7 @@ Shipped in 0.10.0: the opt-in rule `space.short-word` and the pack field `shortW
 
 ### Speed: what is left
 
-Nothing superlinear is known (0.2.1). Typical text costs 60 ms per MB on the machine of the run above (30 on a quieter one); with every rule on, the biggest are `space.short-word` (16%, opt-in), `quote`, `space.number` and `space.abbreviation` at about 10 ms per MB each, then `space.title` at 6. `space.number` doubled in 0.10.0 when money and hand-grouped numbers were added to it; it is three linear passes and could be one. Further gains would be constant-factor work on those; tipograph and smartypants (10 to 20 ms) do much less. React already memoises per component (`useMemo` in `Typeset`), so no paragraph cache is needed.
+Nothing superlinear is known (0.2.1). Typical text costs 60 ms per MB on the machine of the run above (30 on a quieter one); with every rule on, the biggest are `space.short-word` (16%, opt-in), `quote`, `space.number` and `space.abbreviation` at about 10 ms per MB each, then `space.title` at 6. `space.number` doubled in 0.10.0 when money and hand-grouped numbers were added to it; it is three linear passes and could be one. Further gains would be constant-factor work on those; tipograph and smartypants (10 to 20 ms) do much less. The profile (`apps/bench/profile.ts`) and `scripts/stress.ts` time the rules only, on prose with no backtick or address: the zone scan (`shield`, zones.ts) is outside both, which is how a 300 ms per MB cost in it went unseen until 0.12.0; a `shield` row in both, run on `scripts/corpus.ts` text, would close that. React already memoises per component (`useMemo` in `Typeset`), so no paragraph cache is needed.
 
 ## P2 (deferred by choice)
 

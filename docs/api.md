@@ -133,7 +133,7 @@ type Change = {
 
 A change is a stretch that one rule replaced, found by a word-level diff of the text before and after that rule ran (words, single spaces and single punctuation marks are compared; a no-break space is a different token from a space). One rule can report several changes. In the HTML, Markdown, text and rehype modes, a block that the mode could not map back onto its markup is kept as it came and reports nothing.
 
-`diff(before, after): DiffRun[]` (with `type DiffRun = { kind: 'same' | 'del' | 'ins'; text: string }`) is the same diff, exported from the main entry. Above four million table cells it returns the middle as one deletion and one insertion.
+`diff(before, after): DiffRun[]` (with `type DiffRun = { kind: 'same' | 'del' | 'ins'; text: string }`) is the same diff, exported from the main entry. Above four million table cells (about two thousand tokens on each side between the first and the last change) it aligns the middle change by change, with the same table on a window around each change, so a long paragraph gets the same records as a short one.
 
 ## Main entry, `.`
 

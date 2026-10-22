@@ -841,3 +841,13 @@ describe('arrows that are not arrows', () => {
     expect(t('a->b and c<-d')).toBe('a→b and c←d');
   });
 });
+
+describe('avoid on a long paragraph', () => {
+  test('only the avoided change is dropped, however long the paragraph (the diff above its table limit)', () => {
+    // One rule (symbol.legal) changes both ends of a 20 KB paragraph; ™ is avoided, © must still arrive.
+    const text = `(c) 2026 Company. ${'plain words here '.repeat(1200)} Brand(TM) rocks.`;
+    const out = t(text, 'en', { avoid: '™' });
+    expect(out.startsWith('©~2026')).toBe(true);
+    expect(out.endsWith('Brand(TM) rocks.')).toBe(true);
+  });
+});

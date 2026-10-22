@@ -35,3 +35,13 @@ test('40 KB of inch marks with no closing quote is typeset in under 100 ms (no r
   typographic(text, 'en'); // warm the regex caches
   expect(best(text)).toBeLessThan(100);
 });
+
+// A lone backtick makes the code-span zone read on to the next backtick or line break. Under the `u`
+// flag JavaScriptCore ran that read in a slow path: 300 ms per MB of text without a line break, now
+// under 1 ms (the zone regex needs no `u`, see core/zones.ts).
+test('1 MB with 400 lone backticks and no line break is typeset in under 150 ms (the zone scan is cheap)', () => {
+  const unit = `${'plain words here '.repeat(150)}\` `;
+  const text = unit.repeat(Math.ceil(1_000_000 / unit.length));
+  typographic(text, 'en'); // warm the regex caches
+  expect(best(text)).toBeLessThan(150);
+});
