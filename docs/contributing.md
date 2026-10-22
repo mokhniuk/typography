@@ -119,13 +119,17 @@ The benchmark is a separate project in `apps/bench/` with its own `package.json`
 
 ```sh
 cd apps/bench
-bun run bench       # every tool over every case; writes RESULTS.md
+bun run bench       # every tool over every case, and every table below; writes RESULTS.md
+bun run size        # bundle of one call per tool: minified, gzip, brotli; our entry points one by one
+bun run deps        # packages installed, size on disk, licence, types, format, publish date
+bun run engines     # the bundles under Bun, Node and Deno: load, speed, memory (Node and Deno skipped if absent)
+bun run probes      # hard inputs (long runs of one mark, deep HTML) in their own processes, with a time limit
 bun run latency     # time per call on a paragraph
 bun run profile     # our own rules one by one, with their share of the time
 bun run features    # the same English inputs through every tool
 ```
 
-`bun run bench` runs this package, typograf, typopo, richtypo, tipograph, smartypants and retext-smartypants over the same style-neutral checks and writes every case, check and output to `RESULTS.md`, with a speed table. The cases were written by the package author, so read them in `RESULTS.md` and contest them. Do not tune a rule to a case: a case says what is right, not what one tool produces. Commit `RESULTS.md` when it changes, and update the numbers in [limits.md](limits.md) and [backlog.md](backlog.md) if the speed table moved. What the other scripts showed, and what to build because of it, is in [backlog.md](backlog.md).
+`bun run bench` runs this package, typograf, typopo, richtypo, tipograph, smartypants and retext-smartypants over the same style-neutral checks and writes every case, check and output to `RESULTS.md`, with speed tables (in process under Bun, and by language and format), the engines, bundle size, dependency and hard-input tables. The bundles and the driver are built into `apps/bench/out/` (not tracked); `bun run deps` asks the npm registry for publish dates and prints `?` offline. The cases were written by the package author, so read them in `RESULTS.md` and contest them. Do not tune a rule to a case: a case says what is right, not what one tool produces. Commit `RESULTS.md` when it changes, and update the numbers in [limits.md](limits.md) and [backlog.md](backlog.md) if the speed table moved. What the other scripts showed, and what to build because of it, is in [backlog.md](backlog.md).
 
 ## The playground
 

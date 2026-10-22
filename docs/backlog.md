@@ -9,7 +9,7 @@ Priorities: **P0** blocks the audience, **P1** closes a gap other tools do not h
 | | typography-engine | best other | Source |
 |---|---|---|---|
 | Benchmark checks passed (default / literary register) | 242 / 250, 250 / 250 | typograf 131 / 226 | `apps/bench/RESULTS.md` |
-| 1 MB of English, text mode | 30 ms | typograf 58 ms, tipograph 13 ms, smartypants 10 ms | `cd apps/bench && bun run bench` (one run; the ratios are what count) |
+| 1 MB of English, text mode | 30 ms (0.12.0 run); 56 ms (2026-10-22 run, median of three, a machine about twice as slow for every tool) | typograf 58 / 112 ms, tipograph 13 / 23 ms, smartypants 10 / 18 ms | `cd apps/bench && bun run bench` (the ratios are what count) |
 | Target languages covered (26) | 26 | typograf 21 of 26, tipograph 11 | [languages/index.md](languages/index.md) |
 
 The 26 target languages are the 24 official languages of the EU, Ukrainian and Swiss German (`ch`); US English is not a pack but the option `quoteStyle: 'us'`. This engine's 8 default-run misses are all the house `«…»` for English, which the checks count as a failure; the literary register passes every check. The cases were written by this package's author; read the caveats in [limits.md](limits.md). The cases for the twenty new languages come from the same style guides as the packs, so they are not an independent test.
@@ -21,6 +21,15 @@ The 26 target languages are the 24 official languages of the EU, Ukrainian and S
 Every pack has `reviewed: false`: bg cs da el es et fi ga hr hu it lt lv mt nl pt ro sk sl sv (plus the older uk de pl fr ch en, never reviewed either). They were written from style guides, and several sources (Pravidla 2000, Svenska skrivregler, the RAE, the Maltese Language Council, DOOM) could only be read in part. For each language: a native reader goes through its generated page ([languages/index.md](languages/index.md)), corrects the pack, and flips `reviewed` to `true`.
 
 ## P1
+
+### Two quadratic inputs found by the hard-input probes
+
+The probes table in `apps/bench/RESULTS.md` (`bun run probes`, 2026-10-22) found two inputs that grow with the square of their length; `scripts/stress.ts` misses both because it times the rules, not the modes around them.
+
+- **A long run of spaces inside a line, text mode.** `a` + 40 000 spaces + `b` takes 1.3 s (10 000: 90 ms, 20 000: 350 ms); `typesetBlock` on the same string takes 2 ms. The cause is `/[ \t]+$/` in `setParagraph` (`src/text/index.ts`), tried from every space. Strip the trailing run with a backward scan instead.
+- **Unclosed `<` repeated, HTML mode.** `<a ` × 4 000 (12 KB) takes 200 ms, × 8 000 takes 800 ms. Most likely the tag token (`TOKEN_SOURCE`, `src/html/index.ts`) scanning to the end for every `<` that never closes; confirm, then fix so a `<` with no `>` is read once.
+
+Add both to `scripts/stress.ts` (or a test in `src/speed.test.ts`) when fixing, so they stay linear.
 
 ### Finish the sources registry
 
@@ -101,7 +110,7 @@ Shipped in 0.13.0: `rock ’n’ roll` is bound on both sides of the `’n’` (
 
 ### Speed: what is left
 
-Nothing superlinear is known (0.2.1). Typical text costs 30 ms per MB on the machine of the run above (60 on a busier one); with every rule on, the biggest are `space.short-word` (17%, opt-in), `quote`, `space.abbreviation` at about 5 ms per MB each, then `space.title` at 3. `space.number` doubled in 0.10.0 when money and hand-grouped numbers were added to it, and is one scan since 0.12.0 (about 3 ms per MB). Further gains would be constant-factor work on those; tipograph and smartypants (10 to 20 ms) do much less. The zone scan (`shield`, zones.ts) is timed as a row of its own by the profile and `scripts/stress.ts` since 0.12.0, and the profile runs on the fuzz corpus as well as on prose; a 300 ms per MB cost in the scan went unseen until then because both tools timed the rules only, on prose with no backtick or address. React already memoises per component (`useMemo` in `Typeset`), so no paragraph cache is needed.
+Two quadratic inputs in the text and HTML modes are known (see the P1 item above); nothing superlinear is known in the rules (0.2.1). Typical text costs 30 ms per MB on the machine of the run above (60 on a busier one); with every rule on, the biggest are `space.short-word` (17%, opt-in), `quote`, `space.abbreviation` at about 5 ms per MB each, then `space.title` at 3. `space.number` doubled in 0.10.0 when money and hand-grouped numbers were added to it, and is one scan since 0.12.0 (about 3 ms per MB). Further gains would be constant-factor work on those; tipograph and smartypants (10 to 20 ms) do much less. The zone scan (`shield`, zones.ts) is timed as a row of its own by the profile and `scripts/stress.ts` since 0.12.0, and the profile runs on the fuzz corpus as well as on prose; a 300 ms per MB cost in the scan went unseen until then because both tools timed the rules only, on prose with no backtick or address. React already memoises per component (`useMemo` in `Typeset`), so no paragraph cache is needed. German prose costs about three times English, French or Ukrainian (19 ms against 6 to 8 per 100 KB, the "Speed by input" table, 2026-10-22) where typograf costs the same in all four; profile `de` to find the rule.
 
 ## P2 (deferred by choice)
 
@@ -111,7 +120,7 @@ Nothing superlinear is known (0.2.1). Typical text costs 30 ms per MB on the mac
 
 ### Publish to npm, with a licence and compiled output (1.0.0)
 
-The package ships `.ts` sources, is private, installs from a git tag, and has no licence. A consumer needs Bun or a TypeScript-aware bundler. This is the last step of 1.0.0, after the website, the open bugs and the docs: ship JavaScript with `.d.ts` files (ESM) so Node and plain tooling work, a `LICENSE`, a CI matrix with Node, then publish. Output changes stay minor releases after 1.0.0 (see [contributing.md](contributing.md#releasing)); only API breaks are major, so an API change such as the `ch` code or a renamed option is best made before it.
+The package ships `.ts` sources, is private, installs from a git tag, and has no licence. A consumer needs Bun or a TypeScript-aware bundler. This is the last step of 1.0.0, after the website, the open bugs and the docs: ship JavaScript with `.d.ts` files (ESM) so Node and plain tooling work, a `LICENSE`, a CI matrix with Node, then publish. Two numbers from `bun run size` and `bun run deps` (2026-10-22) belong to this step. A git install gets every tracked file (3.6 MB, 297 files) where the sources are 272 KB: a `files` list in `package.json` fixes that, and could come before 1.0.0. Every entry point carries all 26 language packs, 57 KB of the 87 KB minified bundle of `/text` (16 of 26 KB brotli), and `/dom` weighs 89 KB as well (check what of the engine hanging punctuation really pulls in). A way to load only the languages used (a pack registry the caller fills, or one entry per language) would bring a one-language bundle near typograf's 15 KB brotli. Output changes stay minor releases after 1.0.0 (see [contributing.md](contributing.md#releasing)); only API breaks are major, so an API change such as the `ch` code or a renamed option is best made before it.
 
 ### A larger real-text benchmark
 
@@ -123,4 +132,4 @@ English has 96 cases and each other language six. Add a real-text corpus per lan
 
 ## How this was measured
 
-Everything above can be regenerated from the separate benchmark project in `apps/bench/` (see [contributing.md](contributing.md#the-benchmark)): `bun run bench` (quality and large-text speed), `bun run latency` (a paragraph), `bun run profile` (our rules, one by one) and `bun run features` (the same English inputs through every tool). The comparison page that draws on them is a snapshot; update this file when the numbers move.
+Everything above can be regenerated from the separate benchmark project in `apps/bench/` (see [contributing.md](contributing.md#the-benchmark)): `bun run bench` (quality, speed, engines, bundle size, dependencies and hard inputs; each table also runs alone as `size`, `deps`, `engines`, `probes`), `bun run latency` (a paragraph), `bun run profile` (our rules, one by one) and `bun run features` (the same English inputs through every tool). The comparison page that draws on them is a snapshot; update this file when the numbers move.

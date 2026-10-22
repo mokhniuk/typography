@@ -44,19 +44,143 @@ A language a tool does not support is not scored, so the totals compare differen
 
 ## Speed
 
-English text in one piece, best of three (one run at 1 MB), text mode. "not run" means the tool had slowed down so fast that the next size would have taken minutes (the estimate is a quadratic extrapolation).
+In process under Bun 1.3.11 on Apple M5 (darwin 27.0.0). Timings move between runs and machines; read the order, not the digits. Under Node and Deno, see [Engines](#engines).
+
+English text in one piece, text mode: the median of seven runs (three at 1 MB), the slowest run in brackets; a run expected to take seconds is made once. "not run" means the tool had slowed down so fast that the next size would have taken minutes (the estimate is a quadratic extrapolation).
 
 | Tool | 10 KB | 100 KB | 1000 KB |
 |---|---|---|---|
-| typography-engine | 0 ms | 3 ms | 30 ms |
-| typography-engine literary | 0 ms | 3 ms | 29 ms |
-| typograf | 1 ms | 6 ms | 61 ms |
-| typograf +nbsp | 1 ms | 5 ms | 57 ms |
-| typopo | 20 ms | 1081 ms | 99292 ms |
-| richtypo | 2537 ms | not run (~253 s) | not run (~25213 s) |
-| tipograph | 0 ms | 1 ms | 14 ms |
-| smartypants | 0 ms | 1 ms | 10 ms |
-| retext-smartypants | 4 ms | 28 ms | 554 ms |
+| typography-engine | 1 ms (3) | 6 ms (9) | 56 ms (57) |
+| typography-engine literary | 1 ms (1) | 6 ms (6) | 56 ms (58) |
+| typograf | 1 ms (2) | 11 ms (14) | 112 ms (112) |
+| typograf +nbsp | 1 ms (1) | 11 ms (13) | 112 ms (115) |
+| typopo | 40 ms (400) | 2122 ms (2706) | not run (~212 s) |
+| richtypo | 4992 ms (5121) | not run (~497 s) | not run (~49607 s) |
+| tipograph | 0 ms (1) | 2 ms (2) | 23 ms (27) |
+| smartypants | 0 ms (3) | 2 ms (2) | 18 ms (18) |
+| retext-smartypants | 5 ms (10) | 51 ms (57) | 2074 ms (2082) |
+
+### Speed by input
+
+About 100 KB of each language's prose from `scripts/corpus.ts` (paragraphs, with a fuzz line now and then), and the English as HTML with inline elements, entities, comments and `<pre>`. "–" is a language or format the tool does not take; "not run" is a tool too slow for 100 KB of English.
+
+| Tool | en text | de text | fr text | uk text | en HTML |
+|---|---|---|---|---|---|
+| typography-engine | 7 ms (8) | 19 ms (21) | 6 ms (17) | 8 ms (8) | 7 ms (7) |
+| typography-engine literary | 7 ms (8) | 18 ms (19) | 6 ms (6) | 8 ms (8) | 7 ms (7) |
+| typograf | 13 ms (15) | 13 ms (15) | 10 ms (10) | 13 ms (18) | 13 ms (22) |
+| typograf +nbsp | 12 ms (13) | 13 ms (13) | 11 ms (14) | 12 ms (13) | 13 ms (13) |
+| typopo | 854 ms | 682 ms | – | – | – |
+| richtypo | not run | not run | not run | not run | not run |
+| tipograph | 3 ms (3) | 3 ms (3) | 3 ms (3) | – | 3 ms (4) |
+| smartypants | 2 ms (3) | – | – | – | – |
+| retext-smartypants | 50 ms (65) | – | – | – | – |
+
+## Engines
+
+The bundles of [Bundle size](#bundle-size) run under Bun (1.3.11), Node (24.14.1), Deno (2.9.3), each measurement in a fresh process (`apps/bench/driver.ts`). Bun runs JavaScriptCore, as Safari does; Node and Deno run V8, as Chrome does. Timings are on one machine and move between runs; read the order, not the digits.
+
+### Load
+
+Time to import the bundle, and the first call on 1 KB of English (it includes the engine compiling the code it meets): what a command-line run or a cold serverless start pays once. Median of 5 processes.
+
+| Tool | Bun import | Bun first call | Node import | Node first call | Deno import | Deno first call |
+|---|---|---|---|---|---|---|
+| typography-engine | 6.0 ms | 4.5 ms | 6.5 ms | 6.2 ms | 3.9 ms | 6.0 ms |
+| typograf | 7.3 ms | 2.2 ms | 4.3 ms | 4.0 ms | 3.6 ms | 4.4 ms |
+| typopo | 3.2 ms | 342 ms | 1.0 ms | 258 ms | 0.8 ms | 571 ms |
+| richtypo | 1.5 ms | 52 ms | 0.6 ms | 3.3 ms | 0.7 ms | 4.2 ms |
+| tipograph | 8.0 ms | 0.4 ms | 11 ms | 0.8 ms | 8.0 ms | 1.2 ms |
+| smartypants | 1.1 ms | 0.7 ms | 0.5 ms | 0.6 ms | 0.5 ms | 0.7 ms |
+| retext-smartypants | 3.0 ms | 5.7 ms | 2.0 ms | 5.9 ms | 1.3 ms | 5.2 ms |
+
+### Speed
+
+A warm call on 1 KB of English (median of 300, p95 in brackets): what a page pays per paragraph. Then 100 KB in one piece (median of 7, p95 in brackets); a tool whose 10 KB run predicts more than a second at 100 KB (as if it grew with the square of the size) is run once, with no p95, and "not run" when it predicts more than a minute.
+
+| Tool | Bun 1 KB | Node 1 KB | Deno 1 KB | Bun 100 KB | Node 100 KB | Deno 100 KB |
+|---|---|---|---|---|---|---|
+| typography-engine | 73 µs (94 µs) | 55 µs (81 µs) | 50 µs (86 µs) | 5.9 ms (6.7 ms) | 5.0 ms (5.5 ms) | 5.5 ms (7.7 ms) |
+| typograf | 136 µs (162 µs) | 115 µs (174 µs) | 91 µs (132 µs) | 11 ms (13 ms) | 10 ms (13 ms) | 8.3 ms (9.2 ms) |
+| typopo | 2.4 ms (3.0 ms) | 2.3 ms (2.9 ms) | 1.6 ms (1.7 ms) | 2090 ms | 2706 ms | 2890 ms |
+| richtypo | 50 ms (54 ms) | 2.1 ms (2.4 ms) | 1.3 ms (1.7 ms) | not run | 8826 ms | 8909 ms |
+| tipograph | 26 µs (30 µs) | 20 µs (24 µs) | 20 µs (24 µs) | 2.2 ms (2.2 ms) | 1.5 ms (1.7 ms) | 1.4 ms (1.6 ms) |
+| smartypants | 23 µs (31 µs) | 21 µs (27 µs) | 20 µs (29 µs) | 1.9 ms (1.9 ms) | 1.8 ms (1.9 ms) | 1.6 ms (1.8 ms) |
+| retext-smartypants | 339 µs (517 µs) | 521 µs (714 µs) | 586 µs (748 µs) | 47 ms (64 ms) | 70 ms (81 ms) | 80 ms (186 ms) |
+
+### Memory
+
+Peak resident memory of the process that typesets 1 MB of English in one call, and in brackets what that call added to the peak (the engine, the bundle and the input are counted before it). A tool that takes more than 20 s is measured at 100 KB instead, and stopped again after 20 s.
+
+| Tool | Bun | Node | Deno |
+|---|---|---|---|
+| typography-engine | 80 MB (+49) | 87 MB (+40) | 88 MB (+40) |
+| typograf | 103 MB (+66) | 134 MB (+85) | 133 MB (+83) |
+| typopo | 50 MB (+19) at 100 KB | 64 MB (+18) at 100 KB | 92 MB (+45) at 100 KB |
+| richtypo | > 20 s | 48 MB (+2) at 100 KB | 48 MB (+1) at 100 KB |
+| tipograph | 47 MB (+14) | 68 MB (+18) | 64 MB (+15) |
+| smartypants | 44 MB (+14) | 62 MB (+16) | 62 MB (+15) |
+| retext-smartypants | 366 MB (+337) | 379 MB (+333) | 294 MB (+247) |
+
+## Bundle size
+
+One call that typesets English text, bundled for the browser with `Bun.build` (ESM, minified, every dependency inlined), then compressed (gzip level 9, brotli quality 11). This package, typograf, typopo and tipograph carry every language they ship whichever one is asked for; richtypo is imported with the English rules only, and smartypants and retext-smartypants know English alone. The entries are in `apps/bench/bundle.ts`.
+
+| Bundle | Minified | gzip | brotli |
+|---|---|---|---|
+| typography-engine | 86.9 KB | 30.4 KB | 25.9 KB |
+| typograf | 49.3 KB | 17.2 KB | 14.7 KB |
+| typopo | 29.3 KB | 7.4 KB | 6.5 KB |
+| richtypo | 3.2 KB | 1.4 KB | 1.2 KB |
+| tipograph | 143.2 KB | 43.9 KB | 38.6 KB |
+| smartypants | 3.8 KB | 1.3 KB | 1.1 KB |
+| retext-smartypants | 50.4 KB | 18.2 KB | 13.6 KB |
+
+This package's entry points one by one (`react` is a peer dependency, left out of its bundle). The last row is the language packs on their own: every entry point carries all of them.
+
+| Bundle | Minified | gzip | brotli |
+|---|---|---|---|
+| typography-engine (everything, `.`) | 91.4 KB | 32.1 KB | 27.4 KB |
+| typography-engine/text | 86.8 KB | 30.4 KB | 25.9 KB |
+| typography-engine/html | 89.0 KB | 31.5 KB | 26.9 KB |
+| typography-engine/markdown | 88.6 KB | 31.3 KB | 26.8 KB |
+| typography-engine/rehype | 87.8 KB | 30.9 KB | 26.3 KB |
+| typography-engine/dom | 89.3 KB | 31.1 KB | 26.4 KB |
+| typography-engine/react | 95.9 KB | 33.5 KB | 28.6 KB |
+| typography-engine: the language packs alone | 57.4 KB | 19.1 KB | 15.9 KB |
+
+## Dependencies
+
+What `npm install` (or a git dependency) puts on disk for one tool: its package and everything it depends on, counted once each, read from `apps/bench/node_modules`. The licence, types and format are those of the tool's own package; the date is when the installed version was published to npm.
+
+| Tool | Packages installed | On disk | Licence | Types | Format | Version published |
+|---|---|---|---|---|---|---|
+| typography-engine | 1 (react is an optional peer) | 3.6 MB (297 files; the shipped sources are 272 KB) | none | TypeScript sources | ESM, TypeScript (needs Bun or a bundler) | git tag only |
+| typograf | 1 | 604 KB | MIT | yes | ESM and CommonJS | 2026-08-14 (7.8.0) |
+| typopo | 1 | 105 KB | MIT | yes | ESM and CommonJS | 2026-05-25 (3.1.0) |
+| richtypo | 1 | 22 KB | MIT | yes | ESM | 2026-04-27 (8.0.0) |
+| tipograph | 27 | 655 KB | MIT | no | CommonJS | 2022-04-12 (0.7.4) |
+| smartypants | 1 | 109 KB | BSD-3-Clause | no | ESM and CommonJS | 2023-05-18 (0.2.2) |
+| retext-smartypants | 24 | 700 KB | MIT | yes | ESM | 2024-10-10 (6.2.0) |
+
+## Hard inputs
+
+About 10 KB built to find a slow path (a regex that backtracks, a loop that rescans), each run once in its own process and stopped after 10 s; a time of a second or more is in bold. For scale, 10 KB of prose is in [Speed](#speed). "–" is a format the tool does not take; "error" is a throw. The probes are in `apps/bench/probes.ts`.
+
+| Probe | typography-engine | typograf | typopo | richtypo | tipograph | smartypants | retext-smartypants |
+|---|---|---|---|---|---|---|---|
+| double quotes: `"` repeated | 5.1 ms | 6.3 ms | 604 ms | **6.2 s** | 0.8 ms | 1.6 ms | 2.7 ms |
+| single quotes: `'` repeated | 5.6 ms | 2.4 ms | > 10 s | **6.2 s** | 0.8 ms | 1.8 ms | 2.8 ms |
+| quoted words: `"a ` repeated | 6.6 ms | 5.2 ms | > 10 s | **5.1 s** | 0.8 ms | 1.1 ms | 23 ms |
+| hyphens: `-` repeated | 2.9 ms | 2.4 ms | 174 ms | **1.8 s** | 0.8 ms | 0.9 ms | 2.7 ms |
+| spaced hyphens: `a - ` repeated | 2.8 ms | 3.1 ms | 354 ms | **5.0 s** | 0.9 ms | 0.8 ms | 23 ms |
+| digit ranges: `1-2-` repeated | 3.8 ms | 2.5 ms | 457 ms | **6.0 s** | 1.3 ms | 0.6 ms | 21 ms |
+| dots: `.` repeated | 2.3 ms | 2.4 ms | 341 ms | **3.7 s** | 0.7 ms | 0.8 ms | 2.8 ms |
+| spaces: spaces between two words | 78 ms | 78 ms | 164 ms | 0.7 ms | 209 ms | 0.7 ms | 2.7 ms |
+| one word: one word of 10 000 letters | 1.8 ms | 2.4 ms | 680 ms | **6.2 s** | 0.7 ms | 0.5 ms | 2.9 ms |
+| initials: `A. ` repeated | 3.0 ms | 2.7 ms | 172 ms | **4.0 s** | 0.8 ms | 0.6 ms | 23 ms |
+| nested HTML: 1 000 nested `<b>` | 6.5 ms | 8.7 ms | – | 443 ms | 3.2 ms | – | – |
+| open tags: `<a` repeated, never closed | 106 ms | 33 ms | – | **1.4 s** | 1.4 ms | – | – |
 
 ## Every case
 

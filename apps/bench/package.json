@@ -5,6 +5,10 @@
   "description": "Compares @mokhniuk/typography with other typography tools. Not part of the package; kept out of git except RESULTS.md.",
   "scripts": {
     "bench": "bun run.ts",
+    "size": "bun size.ts",
+    "deps": "bun deps.ts",
+    "engines": "bun engines.ts",
+    "probes": "bun probes.ts",
     "features": "bun features.ts",
     "latency": "bun latency.ts",
     "profile": "bun profile.ts",

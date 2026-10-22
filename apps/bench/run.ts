@@ -1,7 +1,15 @@
 import { writeFileSync } from 'node:fs';
+import { cpus, platform, release } from 'node:os';
+import { htmlOf, longText } from '../../scripts/corpus';
 import { type Lang, NBSP } from '../../src/core';
+import { buildAll } from './bundle';
 import { CASES, STABILITY } from './cases';
-import { TOOLS, type Tool } from './tools';
+import { depsSection } from './deps';
+import { enginesSection } from './engines';
+import { spread, text } from './inputs';
+import { probesSection } from './probes';
+import { sizeSection } from './size';
+import { type Format, TOOLS, type Tool } from './tools';
 
 /**
  * Runs every tool over every case, prints a summary and writes apps/bench/RESULTS.md.
@@ -88,18 +96,33 @@ const cell = (tool: Tool, subset: Row[]) => {
 
 // Speed on growing text. A tool is not run at a size it would take minutes to reach, judged from
 // how it scaled so far (some tools slow down faster than the text grows).
-const PARAGRAPH =
-  'He said "we\'re here" - and left... The lab runs 21-26 September, 10:00-12:00, Prof. Dr. K. Smith opens it (c) 2026. ' +
-  'It is 5 km from a quiet stone house in the old town, and the "memory walk" starts there at 9:30 - bring a coat. ';
 const SIZES = [10_000, 100_000, 1_000_000];
 const BUDGET_MS = 15_000;
-const text = (size: number) => PARAGRAPH.repeat(Math.ceil(size / PARAGRAPH.length));
-type Timing = { size: number; ms: number | null; skipped?: number };
+type Timing = { size: number; ms: number | null; slowest?: number; skipped?: number };
+
+/** Median and slowest of a few runs; one run when a run is expected to take seconds. */
+function time(tool: Tool, input: string, lang: Lang, format: Format, expectMs: number): Timing | null {
+  const runs = expectMs > 2000 ? 1 : input.length >= 1_000_000 ? 3 : 7;
+  const ms: number[] = [];
+  for (let i = 0; i < runs; i++) {
+    const start = performance.now();
+    try {
+      if (tool.run(input, lang, format) === null) return null;
+    } catch {
+      return null;
+    }
+    ms.push(performance.now() - start);
+  }
+  const { median } = spread(ms);
+  return runs > 1 ? { size: input.length, ms: median, slowest: Math.max(...ms) } : { size: input.length, ms: median };
+}
+
 const perf = TOOLS.map((tool) => {
   const timings: Timing[] = [];
   let last: { size: number; ms: number } | null = null;
   for (const size of SIZES) {
     const input = text(size);
+    let expect = 0;
     if (last) {
       // Assume it grows with the square of the size, the worst of the tools seen.
       const guess = last.ms * (input.length / last.size) ** 2;
@@ -108,27 +131,58 @@ const perf = TOOLS.map((tool) => {
         timings.push({ size, ms: null, skipped: Math.round(guess / 1000) });
         continue;
       }
+      expect = linear;
     }
-    let best = Number.POSITIVE_INFINITY;
-    let ok = true;
-    for (let i = 0; i < (size <= 100_000 ? 3 : 1); i++) {
-      const start = performance.now();
-      try {
-        if (tool.run(input, 'en', 'text') === null) ok = false;
-      } catch {
-        ok = false;
-      }
-      best = Math.min(best, performance.now() - start);
-    }
-    if (!ok) {
+    const t = time(tool, input, 'en', 'text', expect);
+    if (!t || t.ms === null) {
       timings.push({ size, ms: null });
       continue;
     }
-    timings.push({ size, ms: best });
-    last = { size: input.length, ms: best };
+    timings.push({ ...t, size });
+    last = { size: input.length, ms: t.ms };
   }
   return { name: tool.name, timings };
 });
+
+const msOf = (t: Timing) =>
+  t.ms === null
+    ? t.skipped
+      ? `not run (~${t.skipped} s)`
+      : '–'
+    : `${Math.round(t.ms)} ms${t.slowest !== undefined ? ` (${Math.round(t.slowest)})` : ''}`;
+
+// The same 100 KB in other languages and as HTML. A tool too slow for 100 KB of English is not run.
+const BY_INPUT: { label: string; lang: Lang; format: Format; make: () => string }[] = [
+  { label: 'en text', lang: 'en', format: 'text', make: () => longText(100_000, 1, 'en') },
+  { label: 'de text', lang: 'de', format: 'text', make: () => longText(100_000, 1, 'de') },
+  { label: 'fr text', lang: 'fr', format: 'text', make: () => longText(100_000, 1, 'fr') },
+  { label: 'uk text', lang: 'uk', format: 'text', make: () => longText(100_000, 1, 'uk') },
+  {
+    label: 'en HTML',
+    lang: 'en',
+    format: 'html',
+    make: () => {
+      const paragraphs = longText(100_000, 1, 'en').split(/\n+/);
+      return paragraphs.map((p, i) => htmlOf(p, i)).join('\n');
+    },
+  },
+];
+const byInput = TOOLS.map((tool) => {
+  const at100 = perf.find((p) => p.name === tool.name)?.timings[1];
+  return {
+    name: tool.name,
+    cells: BY_INPUT.map((b) => {
+      if (!at100 || at100.ms === null) return 'not run';
+      const t = time(tool, b.make(), b.lang, b.format, at100.ms);
+      return t ? msOf(t) : '–';
+    }),
+  };
+});
+
+const [size, deps, engines, probes] = await (async () => {
+  const paths = await buildAll();
+  return [await sizeSection(paths), await depsSection(), await enginesSection(paths), probesSection()];
+})();
 
 const lines: string[] = [];
 const out = (s = '') => lines.push(s);
@@ -176,21 +230,28 @@ out();
 out('## Speed');
 out();
 out(
-  'English text in one piece, best of three (one run at 1 MB), text mode. "not run" means the tool had slowed down so fast that the next size would have taken minutes (the estimate is a quadratic extrapolation).',
+  `In process under Bun ${Bun.version} on ${cpus()[0]?.model ?? 'an unknown CPU'} (${platform()} ${release()}). Timings move between runs and machines; read the order, not the digits. Under Node and Deno, see [Engines](#engines).`,
+);
+out();
+out(
+  'English text in one piece, text mode: the median of seven runs (three at 1 MB), the slowest run in brackets; a run expected to take seconds is made once. "not run" means the tool had slowed down so fast that the next size would have taken minutes (the estimate is a quadratic extrapolation).',
 );
 out();
 out(`| Tool | ${SIZES.map((s) => `${s / 1000} KB`).join(' | ')} |`);
 out(`|---|${SIZES.map(() => '---').join('|')}|`);
-for (const p of perf) {
-  out(
-    `| ${p.name} | ${p.timings
-      .map((t) =>
-        t.ms !== null ? `${Math.round(t.ms)} ms` : t.skipped ? `not run (~${t.skipped} s)` : '–',
-      )
-      .join(' | ')} |`,
-  );
-}
+for (const p of perf) out(`| ${p.name} | ${p.timings.map(msOf).join(' | ')} |`);
 out();
+out('### Speed by input');
+out();
+out(
+  "About 100 KB of each language's prose from `scripts/corpus.ts` (paragraphs, with a fuzz line now and then), and the English as HTML with inline elements, entities, comments and `<pre>`. \"–\" is a language or format the tool does not take; \"not run\" is a tool too slow for 100 KB of English.",
+);
+out();
+out(`| Tool | ${BY_INPUT.map((b) => b.label).join(' | ')} |`);
+out(`|---|${BY_INPUT.map(() => '---').join('|')}|`);
+for (const r of byInput) out(`| ${r.name} | ${r.cells.join(' | ')} |`);
+out();
+for (const section of [engines, size, deps, probes]) for (const line of section) out(line);
 out('## Every case');
 out();
 out('✓ pass, ✗ fail, – not scored. Outputs show a no-break space as `~` and a line break as `⏎`.');
