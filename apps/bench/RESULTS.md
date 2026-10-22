@@ -48,15 +48,15 @@ English text in one piece, best of three (one run at 1 MB), text mode. "not run"
 
 | Tool | 10 KB | 100 KB | 1000 KB |
 |---|---|---|---|
-| typography-engine | 1 ms | 6 ms | 63 ms |
-| typography-engine literary | 1 ms | 6 ms | 62 ms |
-| typograf | 1 ms | 12 ms | 118 ms |
-| typograf +nbsp | 1 ms | 11 ms | 117 ms |
-| typopo | 39 ms | 2104 ms | not run (~210 s) |
-| richtypo | 4876 ms | not run (~485 s) | not run (~48449 s) |
-| tipograph | 0 ms | 2 ms | 22 ms |
-| smartypants | 0 ms | 2 ms | 18 ms |
-| retext-smartypants | 5 ms | 52 ms | 2075 ms |
+| typography-engine | 0 ms | 3 ms | 30 ms |
+| typography-engine literary | 0 ms | 3 ms | 28 ms |
+| typograf | 1 ms | 6 ms | 58 ms |
+| typograf +nbsp | 1 ms | 5 ms | 59 ms |
+| typopo | 20 ms | 1053 ms | 99056 ms |
+| richtypo | 2493 ms | not run (~248 s) | not run (~24774 s) |
+| tipograph | 0 ms | 1 ms | 13 ms |
+| smartypants | 0 ms | 1 ms | 10 ms |
+| retext-smartypants | 4 ms | 28 ms | 545 ms |
 
 ## Every case
 
@@ -2156,12 +2156,12 @@ Input: `See Fig. 2 on p. 12`
 
 Input: `(c) 2026 Typography Engine`
 
-- ✓ typography-engine: `©~2026~Typography Engine`
-- ✓ typography-engine literary: `©~2026~Typography Engine`
+- ✓ typography-engine: `©~2026 Typography Engine`
+- ✓ typography-engine literary: `©~2026 Typography Engine`
 - ✓ typograf: `© 2026 Typography Engine`
 - ✓ typograf +nbsp: `© 2026~Typography Engine`
 - ✓ typopo: `©~2026 Typography Engine`
-- ✗ richtypo: `(c) 2026~Typography Engine`
+- ✗ richtypo: `(c) 2026~Typography~Engine`
 - ✓ tipograph: `©~2026 Typography Engine`
 - ✗ smartypants: `(c) 2026 Typography Engine`
 - ✗ retext-smartypants: `(c) 2026 Typography Engine`

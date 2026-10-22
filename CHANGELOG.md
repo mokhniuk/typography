@@ -12,6 +12,7 @@ Versions follow semver while the package is below 1.0.0: a **minor** release may
 
 ### Tooling and docs
 
+- The benchmark was re-run (`apps/bench/RESULTS.md`): every score is unchanged (242/250, and 250/250 in the literary register; the fixes touch no scored case). The speed table is from a quieter machine than the 0.10.0 run, so every tool is about half its earlier figure (this package 30 ms per MB, typograf 58, tipograph 13, smartypants 10) and typopo ran in full at 1 MB (99 s); the ratios hold. README, limits.md, backlog.md and the comparison page quote this run. No output change.
 - The profile (`apps/bench/profile.ts`) and `scripts/stress.ts` time the zone scan (`shield`, zones.ts) as a row of its own, and the profile runs on the fuzz corpus of `scripts/corpus.ts` as well as on prose: the scan was outside both, on a text with no backtick or address, which is how its cost went unseen. No output change.
 
 - The landing page, the articles and the hand-written docs say what the engine does today: only English has a literary register, twelve packs set a spaced en dash, closing marks hang too, `avoid` keeps one stretch (a quotation whole), a lone mark is read by position, git is the install that works until 1.0, and the counts of sources and cases are the current ones. The landing shows `space.section`, `space.operator`, money, `phone.bind` and `space.short-word`, and a test runs its code sample. `docs/languages/uk.md` prints its one-letter words instead of escaped code points. No output change.

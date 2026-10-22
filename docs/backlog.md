@@ -9,7 +9,7 @@ Priorities: **P0** blocks the audience, **P1** closes a gap other tools do not h
 | | typography-engine | best other | Source |
 |---|---|---|---|
 | Benchmark checks passed (default / literary register) | 242 / 250, 250 / 250 | typograf 131 / 226 | `apps/bench/RESULTS.md` |
-| 1 MB of English, text mode | 63 ms | typograf 118 ms, tipograph 22 ms, smartypants 18 ms | `cd apps/bench && bun run bench` (one run; the ratios are what count) |
+| 1 MB of English, text mode | 30 ms | typograf 58 ms, tipograph 13 ms, smartypants 10 ms | `cd apps/bench && bun run bench` (one run; the ratios are what count) |
 | Target languages covered (26) | 26 | typograf 21 of 26, tipograph 11 | [languages/index.md](languages/index.md) |
 
 The 26 target languages are the 24 official languages of the EU, Ukrainian and Swiss German (`ch`); US English is not a pack but the option `quoteStyle: 'us'`. This engine's 8 default-run misses are all the house `«…»` for English, which the checks count as a failure; the literary register passes every check. The cases were written by this package's author; read the caveats in [limits.md](limits.md). The cases for the twenty new languages come from the same style guides as the packs, so they are not an independent test.
@@ -101,7 +101,7 @@ Shipped in 0.10.0: the opt-in rule `space.short-word` and the pack field `shortW
 
 ### Speed: what is left
 
-Nothing superlinear is known (0.2.1). Typical text costs 60 ms per MB on the machine of the run above (30 on a quieter one); with every rule on, the biggest are `space.short-word` (16%, opt-in), `quote`, `space.number` and `space.abbreviation` at about 10 ms per MB each, then `space.title` at 6. `space.number` doubled in 0.10.0 when money and hand-grouped numbers were added to it, and is one scan since 0.12.0 (about 3 ms per MB). Further gains would be constant-factor work on those; tipograph and smartypants (10 to 20 ms) do much less. The zone scan (`shield`, zones.ts) is timed as a row of its own by the profile and `scripts/stress.ts` since 0.12.0, and the profile runs on the fuzz corpus as well as on prose; a 300 ms per MB cost in the scan went unseen until then because both tools timed the rules only, on prose with no backtick or address. React already memoises per component (`useMemo` in `Typeset`), so no paragraph cache is needed.
+Nothing superlinear is known (0.2.1). Typical text costs 30 ms per MB on the machine of the run above (60 on a busier one); with every rule on, the biggest are `space.short-word` (17%, opt-in), `quote`, `space.abbreviation` at about 5 ms per MB each, then `space.title` at 3. `space.number` doubled in 0.10.0 when money and hand-grouped numbers were added to it, and is one scan since 0.12.0 (about 3 ms per MB). Further gains would be constant-factor work on those; tipograph and smartypants (10 to 20 ms) do much less. The zone scan (`shield`, zones.ts) is timed as a row of its own by the profile and `scripts/stress.ts` since 0.12.0, and the profile runs on the fuzz corpus as well as on prose; a 300 ms per MB cost in the scan went unseen until then because both tools timed the rules only, on prose with no backtick or address. React already memoises per component (`useMemo` in `Typeset`), so no paragraph cache is needed.
 
 ## P2 (deferred by choice)
 
