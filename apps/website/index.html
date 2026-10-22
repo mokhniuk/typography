@@ -26,18 +26,18 @@
           <form>
             <fieldset>
               <legend class="sr-only">Package manager</legend>
-              <label><input type="radio" name="pm" value="npm install @mokhniuk/typography" checked /><span>npm</span></label>
-              <label><input type="radio" name="pm" value="pnpm add @mokhniuk/typography" /><span>pnpm</span></label>
-              <label><input type="radio" name="pm" value="bun add @mokhniuk/typography" /><span>bun</span></label>
-              <label><input type="radio" name="pm" value="yarn add @mokhniuk/typography" /><span>yarn</span></label>
-              <label><input type="radio" name="pm" value="bun add {{git}}" /><span>git <small>today</small></span></label>
+              <label><input type="radio" name="pm" value="npm install @mokhniuk/typography" /><span>npm <small>at 1.0</small></span></label>
+              <label><input type="radio" name="pm" value="pnpm add @mokhniuk/typography" /><span>pnpm <small>at 1.0</small></span></label>
+              <label><input type="radio" name="pm" value="bun add @mokhniuk/typography" /><span>bun <small>at 1.0</small></span></label>
+              <label><input type="radio" name="pm" value="yarn add @mokhniuk/typography" /><span>yarn <small>at 1.0</small></span></label>
+              <label><input type="radio" name="pm" value="bun add {{git}}" checked /><span>git <small>today</small></span></label>
             </fieldset>
           </form>
           <div data-command>
-            <pre><code>npm install @mokhniuk/typography</code></pre>
+            <pre><code>bun add {{git}}</code></pre>
             <button type="button" data-copy aria-label="Copy the install command">Copy</button>
           </div>
-          <p data-status>Version {{version}}, a pre-release. Not on npm yet; it will be there at 1.0. Until then, pick <em>git</em> and install a release tag. The repository is private, so the machine needs SSH access.</p>
+          <p data-status>Version {{version}}, a pre-release. Not on npm yet; it will be there at 1.0. Until then, install a release tag from git. The repository is private, so the machine needs SSH access. The package ships TypeScript sources, so it needs Bun or a bundler that reads TypeScript.</p>
         </section>
 
         <p data-actions>
@@ -59,15 +59,15 @@
         <dl data-features>
           <div>
             <dt>Every format your text lives in</dt>
-            <dd>Plain text, an HTML string, a Markdown document, a rehype or hast tree, React components, the DOM, and a command line for files and CI. One engine under all of them. <a href="./docs/api/">The API</a></dd>
+            <dd>Plain text, an HTML string, a Markdown document, a rehype or hast tree, React components, and a command line for files and CI. One engine under all of them. For the browser, a DOM entry hangs the punctuation and checks which characters the page's font can draw. <a href="./docs/api/">The API</a></dd>
           </div>
           <div>
-            <dt>A pack per language, and no rule that names one</dt>
-            <dd>Quotation marks and how they nest, the dash, the spacing habits, the one-letter words that may not end a line: each is data in a language pack, which is why adding a language is writing one file. <a href="./docs/languages/">The languages</a></dd>
+            <dt>A pack per language, and no default rule that names one</dt>
+            <dd>Quotation marks and how they nest, the dash, the spacing habits, the one-letter words that may not end a line: each is data in a language pack, which is why adding a language is one pack file. Two opt-in rules still have a case for one language: the space before French punctuation, and the English temperature labels of the degree sign. <a href="./docs/languages/">The languages</a></dd>
           </div>
           <div>
             <dt>Two registers</dt>
-            <dd>Display text is the default: interfaces, marketing, event pages. The literary register sets book-like text — British quotes in English, a dash for a line of dialogue where the language writes dialogue that way.</dd>
+            <dd>Display text is the default: interfaces, marketing, event pages. The literary register sets book-like text, and so far only English has one: British quotes, ‘…’ with “…” inside, and a spaced en dash. A dash for a line of dialogue is set in both registers, where the language writes dialogue that way.</dd>
           </div>
           <div>
             <dt>It tells you what it changed</dt>
@@ -75,11 +75,11 @@
           </div>
           <div>
             <dt>Hanging punctuation, measured</dt>
-            <dd>An opening mark hangs in the margin so the first letter lines up with the lines under it. Each mark's width is measured in the browser once; nothing re-measures when lines move. <a href="./articles/hanging-punctuation/">How it works</a></dd>
+            <dd>An opening mark hangs into the left margin so the first letter lines up with the lines under it, and a closing mark hangs into the right. Each mark's width is measured in the browser once, and again when the web fonts load. Line breaks are never measured. <a href="./articles/hanging-punctuation/">How it works</a></dd>
           </div>
           <div>
             <dt>It knows what your font cannot draw</dt>
-            <dd>A rule that would insert a character the font has no glyph for leaves the text as you typed it — better a straight quote than a box. In a browser the list writes itself from the page's own font. <a href="./font-checker/">The font checker</a></dd>
+            <dd>A rule that would insert a character the font has no glyph for leaves that stretch of text as you typed it, and the rest of the line is still set: better a straight quote than a box. A quotation keeps both its marks or neither. In React the list fills itself from the page's own font (<code>TypographyRoot</code>, <code>avoidMissing</code>); <code>…/dom</code> exposes the measure. <a href="./font-checker/">The font checker</a></dd>
           </div>
           <div>
             <dt>Safe on what is not prose</dt>
@@ -125,11 +125,11 @@
         <h2 id="use">Using it</h2>
       </header>
       <div>
-        <p data-lede>One function takes a string and a language. The other entry points do the same for HTML, Markdown, rehype trees, React and the DOM.</p>
+        <p data-lede>One function takes a string and a language. The other entry points do the same for plain text, HTML, Markdown, rehype trees and React, and bring the browser side: hanging punctuation and font checks.</p>
 <pre><code class="language-ts">import { typographic, explain } from '@mokhniuk/typography';
 
 typographic('He said "we\'re here" - and left.', 'en', { quoteStyle: 'us' });
-// He said “we’re here” — and left.
+// He said “we’re here” — and left.  (a no-break space before the dash)
 
 explain('He said "hi"... 21-26', 'en', { quoteStyle: 'us' }).changes;
 // quote “ · quote ” · ellipsis … · dash.range –</code></pre>
@@ -138,12 +138,13 @@ explain('He said "hi"... 21-26', 'en', { quoteStyle: 'us' }).changes;
           <thead><tr><th scope="col">Import</th><th scope="col">For</th></tr></thead>
           <tbody>
             <tr><th scope="row"><code>@mokhniuk/typography</code></th><td>A string. <code>explain</code> lists each change and the rule behind it.</td></tr>
+            <tr><th scope="row"><code>…/text</code></th><td>Plain text, a paragraph at a time. Line breaks are kept.</td></tr>
             <tr><th scope="row"><code>…/html</code></th><td>An HTML string. Tags and code are untouched.</td></tr>
             <tr><th scope="row"><code>…/markdown</code></th><td>A Markdown document.</td></tr>
             <tr><th scope="row"><code>…/rehype</code></th><td>A unified or rehype pipeline, or any hast tree.</td></tr>
-            <tr><th scope="row"><code>…/react</code></th><td><code>Typeset</code> and <code>TypographyRoot</code>, with hanging punctuation.</td></tr>
-            <tr><th scope="row"><code>…/dom</code></th><td>Hanging punctuation in the browser, without a framework.</td></tr>
-            <tr><th scope="row"><code>typo</code></th><td>The command line, for files and CI.</td></tr>
+            <tr><th scope="row"><code>…/react</code></th><td><code>Typeset</code> and <code>TypographyRoot</code>, with hanging punctuation. <code>TypographyRoot</code> measures the page's font and fills <code>avoid</code>.</td></tr>
+            <tr><th scope="row"><code>…/dom</code></th><td>Hanging punctuation in the browser, without a framework, and which characters the page's font can draw.</td></tr>
+            <tr><th scope="row"><code>typo</code></th><td>The command line, for files and CI. Needs Bun.</td></tr>
           </tbody>
         </table>
         </div>
@@ -160,10 +161,10 @@ explain('He said "hi"... 21-26', 'en', { quoteStyle: 'us' }).changes;
       <div>
         <p data-lede>Before you depend on it, you should know where it is weak.</p>
         <ul data-plain>
-          <li><strong>No language has been read by a native speaker.</strong> The packs follow published style guides, and some of those we could only read in part. Each language page lists what it was written from.</li>
+          <li><strong>No language has been read by a native speaker.</strong> Twenty packs follow published style guides, and some of those we could only read in part. English, Ukrainian, German, Polish, French and Swiss German come from general knowledge. Each language page lists what it was written from.</li>
           <li><strong>Where the engine and Unicode's CLDR disagree about quotation marks</strong> (English, German, French, Swiss German), the decision record says so, instead of choosing quietly.</li>
           <li><strong>English sets « » by default.</strong> That is this project's house style. Pass <code>quoteStyle: 'us'</code> for “ ”.</li>
-          <li><strong>Some input can't be read with certainty.</strong> An inch mark inside a quotation (<code>a 5" hole</code>) is one. Such cases are listed as limits, not guessed at.</li>
+          <li><strong>Some input can't be read with certainty.</strong> An inch mark inside a quotation (<code>"a 5" hole"</code>) is one: the engine closes the quotation early, at the inch mark. Such cases are listed in the known limits.</li>
         </ul>
         <p><a href="./docs/limits/">Known limits</a> · <a href="./docs/languages/">Languages and their review status</a></p>
       </div>

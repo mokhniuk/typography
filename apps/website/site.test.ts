@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'bun:test';
 import { posix } from 'node:path';
+import { explain, typographic } from '../../src';
 import { articles, latestDateOnly } from './build/content';
 import { EXAMPLES, exampleResult } from './build/examples';
 import { generatedPages, latestArticles } from './build/pages';
@@ -62,6 +63,25 @@ describe('website pages', () => {
     const first = articles()[0];
     expect(notes).toContain(`./${first?.path}`);
     expect(pages.has(first?.path ?? '')).toBe(true);
+  });
+
+  test('the code sample on the landing shows what the engine returns', () => {
+    // The sample shows a no-break space as a plain one and says so in its comment.
+    const code =
+      /<code class="language-ts">([\s\S]*?)<\/code>/.exec(source('index.html'))?.[1] ?? '';
+    const shown = (call: string) => code.split(`${call}\n// `)[1]?.split('\n')[0] ?? '';
+    const output = typographic('He said "we\'re here" - and left.', 'en', { quoteStyle: 'us' });
+    expect(code).toContain(
+      `typographic('He said "we\\'re here" - and left.', 'en', { quoteStyle: 'us' });`,
+    );
+    expect(output).toContain('\u00a0—');
+    expect(
+      shown(`typographic('He said "we\\'re here" - and left.', 'en', { quoteStyle: 'us' });`),
+    ).toBe(`${output.replace(/\u00a0/g, ' ')}  (a no-break space before the dash)`);
+    const changes = explain('He said "hi"... 21-26', 'en', { quoteStyle: 'us' }).changes;
+    expect(shown(`explain('He said "hi"... 21-26', 'en', { quoteStyle: 'us' }).changes;`)).toBe(
+      changes.map((change) => `${change.rule} ${change.to}`).join(' · '),
+    );
   });
 
   test('the numbers come from the engine', () => {

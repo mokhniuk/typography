@@ -137,12 +137,27 @@ export const SAMPLES: Sample[] = [
   { rule: 'dash.sentence', lang: 'en', input: 'Wait - what?' },
   { rule: 'dash.dialogue', lang: 'uk', input: '- Привіт, - сказала вона.' },
   { rule: 'space.number', lang: 'en', input: '10 km' },
+  { rule: 'space.number', lang: 'en', input: 'USD 5 000' },
+  { rule: 'space.section', lang: 'en', input: '§ 5' },
+  { rule: 'space.operator', lang: 'en', input: 'Tom & Jerry' },
   { rule: 'space.initial', lang: 'en', input: 'T. H. Shevchenko' },
   { rule: 'space.orphan', lang: 'pl', input: 'Jadę z Anią w góry' },
   { rule: 'symbol.legal', lang: 'en', input: '(c) 2026' },
   { rule: 'symbol.multiply', lang: 'en', input: '1920x1080' },
   { rule: 'symbol.minus', lang: 'en', input: '-5 C' },
   { rule: 'number.group', lang: 'en', input: '1000000', options: { enable: ['number.group'] } },
+  {
+    rule: 'phone.bind',
+    lang: 'en',
+    input: '+380 44 123 45 67',
+    options: { enable: ['phone.bind'] },
+  },
+  {
+    rule: 'space.short-word',
+    lang: 'en',
+    input: 'Welcome to the city',
+    options: { enable: ['space.short-word'] },
+  },
 ];
 
 export function sampleResult(sample: Sample): { changed: boolean; html: string } {

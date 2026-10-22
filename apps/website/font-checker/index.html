@@ -74,7 +74,7 @@
 
   <section aria-labelledby="config-title">
     <h2 id="config-title">The config for this font</h2>
-    <p>Paste this into the <code>typography</code> key of your <code>package.json</code>, or into a <code>typo --config</code> file. Every rule that would insert one of these characters leaves the text as it was typed.</p>
+    <p>Paste this into the <code>typography</code> key of your <code>package.json</code>, or into a <code>typo --config</code> file. A rule that would insert one of these characters leaves only that stretch of text as it was typed, and a quotation keeps both its marks or neither.</p>
     <textarea id="configText" rows="6" spellcheck="false" readonly></textarea>
     <button type="button" id="configCopy">Copy</button>
     <p><small>In a browser you can leave <code>avoid</code> out: <code>TypographyRoot</code> measures the page's own font and fills it in (<code>avoidMissing</code>).</small></p>
