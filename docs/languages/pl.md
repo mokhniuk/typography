@@ -43,6 +43,7 @@ Groups of three are separated by `~`, the decimal mark is `,`.
 ## Sources
 
 - https://sjp.pwn.pl/poradnia/haslo/Pauza-dialogowa-a-myslnik;18816.html
+- https://sjp.pwn.pl/poradnia/haslo/Sieroty-na-koncu-wiersza;18684.html
 - https://style-guide.europa.eu/en/content/-/isg/topic?identifier=6.5-punctuation-in-figures
 
 ## Notes

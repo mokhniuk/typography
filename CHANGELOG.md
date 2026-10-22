@@ -10,7 +10,7 @@ Versions follow semver while the package is below 1.0.0: a **minor** release may
 
 ### Tooling and docs
 
-- The `space.orphan` decision record now cites more sources. Polish: Wolański in the PWN Poradnia lists `a i o u w z` (capitals too) as a recommendation for lines over about 40 characters; the list is unchanged. Czech: the ÚJČ Jazyková poradna (read raw) and the ČSN 01 6910 mention, with the nuance that the norm lists `k s v z o u` and the poradna recommends `a i` as well; the engine still binds all eight. Ukrainian: a Zhytomyr typesetting handbook backs the class (one-letter prepositions and conjunctions in books, "не слід"); the letter list is the engine's own, so Ukrainian stays `general-knowledge`. Two-letter words stay unbound everywhere (PWN and ÚJČ both let them stay in body text). No output change.
+- The `space.orphan` decision record now cites more sources. Polish: Wolański in the PWN Poradnia lists `a i o u w z` (capitals too) as a recommendation for lines over about 40 characters; the list is unchanged, and the Polish list is now registry-verified from that entry (scoped per language in the registry). Czech: the ÚJČ Jazyková poradna (read raw) and the ČSN 01 6910 mention, with the nuance that the norm lists `k s v z o u` and the poradna recommends `a i` as well; the engine still binds all eight. Ukrainian: a Zhytomyr typesetting handbook backs the class (one-letter prepositions and conjunctions in books, "не слід"); the letter list is the engine's own, so Ukrainian stays `general-knowledge`. Two-letter words stay unbound everywhere (PWN and ÚJČ both let them stay in body text). No output change.
 
 ## 0.8.0 (2026-10-22)
 
