@@ -21,7 +21,12 @@ Eighteen of the engine's 33 rules can place this one character:
 - **After ©** (`©~2026 Studio`), **after § and ¶** (`§~5`), **before a sentence dash** (`word~— word`, so a line never opens with the dash), **before →**, and **after the dialogue dash** in the languages that space it.
 - **Around a lone operator** between words: `Tom~&~Jerry`, and around the `’n’` of `rock~’n’~roll`, an "and" with its letters dropped (`space.operator`).
 - **Money.** A sign or code stays with its amount, and a number grouped by hand stays whole: `USD~5~000` (`space.number`).
-- **Two opt-in rules** go further: `phone.bind` keeps an international phone number on one line (`+380~44~123~45~67`), and `space.short-word` binds a short word to the next one in titles (`in~the house`).
+- **A short word and the word after it.** `Welcome to~the city`, `Zapraszamy do~Gdańska` (`space.short-word`). On by default since 0.14.0, and worth a paragraph of its own below.
+- **One opt-in rule** goes further: `phone.bind` keeps an international phone number on one line (`+380~44~123~45~67`).
+
+## Short words, and why they bind everywhere
+
+Polish and Czech typography has a name for a preposition left at the end of a line, and two sources read for this engine say the same two things about it: in a title or a heading a two- or three-letter word must travel with the word it belongs to, and in body text it may stay where it is. "May" is a permission, not a recommendation. This engine sets display text, pages, headings, short copy, where a line that ends on `to` or `of` is the stumble a reader notices, so `space.short-word` runs unless you switch it off. Three limits keep it honest: it never binds more than two words in a row, so a chain cannot grow into a whole line; it binds only the words a language pack lists, and five packs have a list (Czech, English, Polish, Slovak, Ukrainian), this package's own enumeration, not read from a guide; and it leaves the other 21 languages to the one-letter rule. For long body text in a narrow column, or where a native reader prefers the body-text convention, `disable: ['space.short-word']` restores it.
 
 ## Why CSS cannot do this
 

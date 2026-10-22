@@ -7,7 +7,7 @@ const t = (text: string, lang: Parameters<typeof typographic>[1] = 'en', options
 
 describe("quoteStyle: 'us'", () => {
   test('en: “…” with ‘…’ inside, from any source style', () => {
-    expect(t('He said "stone" and left.')).toBe('He said “stone” and left.');
+    expect(t('He said "stone" and left.')).toBe('He said “stone” and~left.');
     expect(t('"x \'y\' z"')).toBe('“x ‘y’ z”');
     expect(t('«x „y“ z»')).toBe('“x ‘y’ z”');
   });
@@ -46,7 +46,7 @@ describe("quoteStyle: 'us'", () => {
 
   test('the closer of level two is also an apostrophe: ‘don’t’ and a trailing possessive', () => {
     expect(t('She said ‘don’t’ twice')).toBe('She said “don’t” twice');
-    expect(t('the dogs’ bowl and “x ‘b’ c”')).toBe('the dogs’ bowl and “x ‘b’ c”');
+    expect(t('the dogs’ bowl and “x ‘b’ c”')).toBe('the~dogs’ bowl and~“x ‘b’ c”');
     expect(t("'twas 'til dawn, “x”")).toBe('’twas ’til dawn, “x”');
   });
 

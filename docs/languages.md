@@ -9,7 +9,7 @@ The engine has 26 language packs, `src/core/lang/<code>.ts`: the 24 official lan
 - **No pack has been read by a native speaker.** Every pack has `reviewed: false`. The five oldest (`en uk de pl fr`) and `ch` came from general knowledge; the other twenty were written from published style guides (the EU Interinstitutional Style Guide first, then the national guide), and each page names its sources. Some of those sources could only be read in part, so a pack is a defensible style, not a certified one. Have a native reader check a language before you rely on it, then set `reviewed: true`.
 - Which decisions have a source read, and which are still general knowledge, is recorded per rule in [sources.md](../resources/sources.md). Quote marks are `disputed` there: CLDR 46 differs from the engine for English, German, French level two and de-CH.
 - The abbreviation lists are short on purpose: a list is only as long as its source. Add to a list only from a style guide.
-- The short-word lists (`shortWords`, for the opt-in rule `space.short-word`) are the exception, and they say so: five packs have one (`cs en pl sk uk`), the words are this package's own enumeration of two- and three-letter prepositions, conjunctions and the English article, and the rule is off by default. What the sources do back is where such binding belongs: Wolański (PWN) and the ÚJČ advice service both say a short word may stay at a line end in body text and must travel with what it belongs to in a title. Use the rule for titles and headings, and read [sources.md](../resources/sources.md#spaceshort-word) before trusting a list.
+- The short-word lists (`shortWords`, for `space.short-word`) are the exception, and they say so: five packs have one (`cs en pl sk uk`), the words are this package's own enumeration of two- and three-letter prepositions, conjunctions and the English article. The rule is on by default since 0.14.0. What the sources do back is where such binding belongs: Wolański (PWN) and the ÚJČ advice service both say a short word may stay at a line end in body text and must travel with what it belongs to in a title; the engine binds everywhere because it sets display text, and `disable: ['space.short-word']` restores the body-text convention. Read [sources.md](../resources/sources.md#spaceshort-word) before trusting a list.
 - Dash profiles: twelve packs use a spaced en dash for a break in the sentence (`cs de et fi hr hu lt lv ro sk sl sv`), as the Interinstitutional Style Guide and their national guides set it, and so does English in the literary register only; every other pack uses the spaced em dash. Dutch defaults to the spaced em dash, but usage there often prefers a spaced en dash; this was not verified.
 - The package's benchmark has a few cases per language and mostly tests English. They check that the output is a defensible style, not that a native reader approves it.
 
@@ -33,10 +33,10 @@ Only the start of the text (`blockStart`), and not when a later line of the same
 
 ## Short words and one-letter words
 
-Two things keep a short word off the end of a line, and only the first runs by default:
+Two things keep a short word off the end of a line, both on by default:
 
 - `space.orphan` binds the one-letter words a pack lists (`cs en pl sk uk`), in any text. The letters are in each language page.
-- `space.short-word` binds the two- and three-letter words a pack lists, and is off until named in `enable`. It never binds more than two words in a row.
+- `space.short-word` binds the two- and three-letter words a pack lists (the same five packs). It never binds more than two words in a row, and `disable: ['space.short-word']` turns it off for body text set the way the Polish and Czech sources allow.
 
 ## Not implemented
 

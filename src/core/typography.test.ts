@@ -22,8 +22,8 @@ const literary = { register: 'literary' } as const;
 
 describe('quotes', () => {
   test('sets the site style «outer „inner“» from any source style', () => {
-    expect(t('the “Polish-Soviet friendship”')).toBe('the «Polish-Soviet friendship»');
-    expect(t('so "referendum of memory," then')).toBe('so «referendum of memory,» then');
+    expect(t('the “Polish-Soviet friendship”')).toBe('the~«Polish-Soviet friendship»');
+    expect(t('so "referendum of memory," then')).toBe('so «referendum of~memory,» then');
     expect(t('„Erinnerung“ heute')).toBe('«Erinnerung» heute');
   });
 
@@ -48,7 +48,7 @@ describe('quotes', () => {
   });
 
   test('converts a quoted single word and leaves apostrophes alone', () => {
-    expect(t("as 'ours' — and Maria's stone")).toBe('as «ours»~— and Maria’s stone');
+    expect(t("as 'ours' — and Maria's stone")).toBe('as~«ours»~— and~Maria’s stone');
   });
 
   test('has a profile per language', () => {
@@ -96,8 +96,8 @@ describe('dashes', () => {
 
   test('leaves dates, chains and compounds alone', () => {
     expect(t('2026-10-19')).toBe('2026-10-19');
-    expect(t('one-week, value-based, 20th- and 21st-century')).toBe(
-      'one-week, value-based, 20th- and 21st-century',
+    expect(t('one-week, value-based, 20th- and~21st-century')).toBe(
+      'one-week, value-based, 20th- and~21st-century',
     );
   });
 
@@ -129,8 +129,8 @@ describe('dashes', () => {
 
 describe('marks and symbols', () => {
   test('apostrophe, ellipsis, arrows', () => {
-    expect(t("societies' complicity and don't")).toBe('societies’ complicity and don’t');
-    expect(t("the '90s")).toBe('the ’90s');
+    expect(t("societies' complicity and don't")).toBe('societies’ complicity and~don’t');
+    expect(t("the '90s")).toBe('the~’90s');
     expect(t('wait...')).toBe('wait…');
     expect(t('a -> b <- c')).toBe('a~→ b ←~c');
   });
@@ -138,7 +138,7 @@ describe('marks and symbols', () => {
   test('© ® ™', () => {
     expect(t('(c) 2026 Vitsche')).toBe('©~2026~Vitsche');
     expect(t('(C) Vitsche')).toBe('© Vitsche');
-    expect(t('Brand(R) and Brand(TM)')).toBe('Brand® and Brand™');
+    expect(t('Brand(R) and Brand(TM)')).toBe('Brand® and~Brand™');
   });
 
   test('(c) as a list marker is left alone', () => {
@@ -149,7 +149,7 @@ describe('marks and symbols', () => {
 describe('arrows', () => {
   test('an arrow stays with the word it points from or to', () => {
     expect(t('Read more ->')).toBe('Read more~→');
-    expect(t('<- Back to events')).toBe('←~Back to events');
+    expect(t('<- Back to events')).toBe('←~Back to~events');
     expect(t('Read more →')).toBe('Read more~→');
   });
 });
@@ -287,14 +287,14 @@ describe('spaces', () => {
   });
 
   test('one-letter words by language', () => {
-    expect(t('a stone and I', 'en')).toBe('a~stone and I');
+    expect(t('a stone and I', 'en')).toBe('a~stone and~I');
     expect(t('pamięć w kamieniu', 'pl')).toBe('pamięć w~kamieniu');
     expect(t('пам’ять в камені', 'uk')).toBe('пам’ять в~камені');
     expect(t('z. B. das', 'de')).toBe('z.~B. das');
   });
 
   test('collapses runs of spaces', () => {
-    expect(t('stone   and  memory')).toBe('stone and memory');
+    expect(t('stone   and  memory')).toBe('stone and~memory');
   });
 });
 
@@ -306,7 +306,7 @@ describe('text that is left alone', () => {
     expect(t('write to a-b@example.org -> now')).toBe('write to a-b@example.org~→ now');
     expect(t('run `cmd -> out --force` now')).toBe('run `cmd -> out --force` now');
     expect(t('go to www.example.com/a--b and wait...')).toBe(
-      'go to www.example.com/a--b and wait…',
+      'go to www.example.com/a--b and~wait…',
     );
   });
 
@@ -316,11 +316,11 @@ describe('text that is left alone', () => {
     expect(t('at https://en.wikipedia.org/wiki/Foo_(bar).')).toBe(
       'at https://en.wikipedia.org/wiki/Foo_(bar).',
     );
-    expect(t("at 'https://example.com'")).toBe('at «https://example.com»');
+    expect(t("at 'https://example.com'")).toBe('at~«https://example.com»');
   });
 
   test('the text around them is still typeset', () => {
-    expect(t('“quoted” https://a.b/c-d - and more')).toBe('«quoted» https://a.b/c-d~— and more');
+    expect(t('“quoted” https://a.b/c-d - and more')).toBe('«quoted» https://a.b/c-d~— and~more');
   });
 });
 
@@ -332,13 +332,13 @@ describe('an apostrophe that stands for dropped letters', () => {
   });
 
   test("a leading apostrophe on 'til, 'em and 'cause is an apostrophe", () => {
-    expect(t("'til dawn and 'em all")).toBe('’til dawn and ’em all');
+    expect(t("'til dawn and 'em all")).toBe('’til dawn and~’em all');
     expect(t("Wait 'cause it's late, 'Til then")).toBe('Wait ’cause it’s late, ’Til then');
   });
 
   test('a quoted word that starts like one is still a quotation', () => {
-    expect(t("the 'emergency' exit")).toBe('the «emergency» exit');
-    expect(t("the 'til' button")).toBe('the «til» button');
+    expect(t("the 'emergency' exit")).toBe('the~«emergency» exit');
+    expect(t("the 'til' button")).toBe('the~«til» button');
   });
 
   test('is stable on its own output', () => {
@@ -369,13 +369,13 @@ describe('an apostrophe that opens a quotation is still an apostrophe', () => {
 
 describe('a leading apostrophe on a year', () => {
   test('does not stop a quotation from pairing', () => {
-    expect(t('“the ’90s were loud”')).toBe('«the ’90s were loud»');
-    expect(t('"the \'90s were loud"')).toBe('«the ’90s were loud»');
-    expect(t('“we left in ’24”')).toBe('«we left in ’24»');
+    expect(t('“the ’90s were loud”')).toBe('«the~’90s were loud»');
+    expect(t('"the \'90s were loud"')).toBe('«the~’90s were loud»');
+    expect(t('“we left in ’24”')).toBe('«we left in~’24»');
   });
 
   test('a quoted number is still a quotation', () => {
-    expect(t("as '12' says")).toBe('as «12» says');
+    expect(t("as '12' says")).toBe('as~«12» says');
   });
 });
 
@@ -392,14 +392,14 @@ describe('literary register', () => {
   });
 
   test('apostrophes survive inside a quotation', () => {
-    expect(t('“we’re in Maria’s house”', 'en', literary)).toBe('‘we’re in Maria’s house’');
+    expect(t('“we’re in Maria’s house”', 'en', literary)).toBe('‘we’re in~Maria’s house’');
     expect(t('"don\'t panic"', 'en', literary)).toBe('‘don’t panic’');
   });
 
   test('a plural possessive inside a single-quoted source ends the quotation (known limit)', () => {
     // Write the quotation in double quotes and the engine sets the level.
     expect(t('‘the dogs’ bone’')).not.toBe('«the dogs’ bone»');
-    expect(t('"the dogs\' bone"', 'en', literary)).toBe('‘the dogs’ bone’');
+    expect(t('"the dogs\' bone"', 'en', literary)).toBe('‘the~dogs’ bone’');
   });
 
   test('Ukrainian keeps its quotes and sets a dialogue line with a dash', () => {
@@ -559,7 +559,7 @@ describe('abbreviations', () => {
     expect(t('siehe S. 12', 'de')).toBe('siehe S.~12');
     expect(t('see Fig. 2 and p. 5', 'en')).toBe('see Fig.~2~and p.~5');
     expect(t('Er ging. S. war da', 'de')).toBe('Er ging. S. war da');
-    expect(t('the end. Fig. next', 'en')).toBe('the end. Fig. next');
+    expect(t('the end. Fig. next', 'en')).toBe('the~end. Fig. next');
   });
 
   test('a language with no list keeps its text', () => {
@@ -569,12 +569,12 @@ describe('abbreviations', () => {
 
 describe('symbols between numbers and with them', () => {
   test('a minus sign before a number', () => {
-    expect(t('-5 °C and (-3)')).toBe('−5~°C and (−3)');
+    expect(t('-5 °C and (-3)')).toBe('−5~°C and~(−3)');
     expect(t('2026-10-19, a-5, tracking-[-0.01em]')).toBe('2026-10-19, a-5, tracking-[-0.01em]');
   });
 
   test('the letter x between numbers is a multiplication sign', () => {
-    expect(t('1920x1080 and 10x15cm and 1x2x3')).toBe('1920×1080~and 10×15cm and 1×2×3');
+    expect(t('1920x1080 and 10x15cm and 1x2x3')).toBe('1920×1080~and 10×15cm and~1×2×3');
     expect(t('3 x 4')).toBe('3~×~4');
     expect(t('12.5x3,5')).toBe('12.5×3,5');
   });
@@ -586,7 +586,7 @@ describe('symbols between numbers and with them', () => {
   test('German and French set % and € apart from the number', () => {
     expect(t('5% und 49€', 'de')).toBe('5~% und 49~€');
     expect(t('5% et 49€', 'fr')).toBe('5~% et 49~€');
-    expect(t('5% and 49€', 'en')).toBe('5% and 49€');
+    expect(t('5% and 49€', 'en')).toBe('5% and~49€');
     expect(t('5% i 49€', 'pl')).toBe('5% i~49€');
   });
 });
@@ -595,11 +595,11 @@ describe('a quote with no partner', () => {
   test('an opening one after a space, a closing one after a word', () => {
     expect(t('"first paragraph')).toBe('«first paragraph');
     expect(t('last words."')).toBe('last words.»');
-    expect(t('and then "more')).toBe('and then «more');
+    expect(t('and then "more')).toBe('and~then «more');
   });
 
   test('a lone quote opens the level for the quotation inside it', () => {
-    expect(t('"he said “yes” and left')).toBe('«he said „yes“ and left');
+    expect(t('"he said “yes” and left')).toBe('«he said „yes“ and~left');
   });
 
   test('an inch mark is left alone', () => {
@@ -607,14 +607,14 @@ describe('a quote with no partner', () => {
   });
 
   test('two inch marks in one text are not read as a quotation', () => {
-    expect(t('A 2" pipe and a 4" pipe.')).toBe('A~2" pipe and a~4" pipe.');
-    expect(t('He is 5\'10" and she is 5\'6" tall.')).toBe('He is 5\'10" and she is 5\'6" tall.');
+    expect(t('A 2" pipe and a 4" pipe.')).toBe('A~2" pipe and~a~4" pipe.');
+    expect(t('He is 5\'10" and she is 5\'6" tall.')).toBe('He is 5\'10" and~she is 5\'6" tall.');
     expect(t('Cut 2" off, then 3" more.', 'de')).toBe('Cut 2" off, then 3" more.');
   });
 
   test('a digit of any script before the mark keeps it an inch mark', () => {
     expect(t('𝟐" pipe')).toBe('𝟐" pipe');
-    expect(t('a ٢" bolt and a ٤" bolt')).toBe('a~٢" bolt and a~٤" bolt');
+    expect(t('a ٢" bolt and a ٤" bolt')).toBe('a~٢" bolt and~a~٤" bolt');
     for (const text of ['𝟐" pipe', 'a ٢" bolt and a ٤" bolt']) expect(t(t(text))).toBe(t(text));
   });
 
@@ -622,8 +622,8 @@ describe('a quote with no partner', () => {
     expect(t('5"a"')).toBe('5"a"');
     expect(t('5"ab cd"')).toBe('5"ab cd"');
     for (const text of ['5"a"', '5"ab cd"']) expect(t(t(text))).toBe(t(text));
-    expect(t('He said, "stop and left.')).toBe('He said, «stop and left.');
-    expect(t('and so said he" to all')).toBe('and so said he» to all');
+    expect(t('He said, "stop and left.')).toBe('He said, «stop and~left.');
+    expect(t('and so said he" to all')).toBe('and~so said he» to~all');
     expect(t('Tallinn"ä"')).toBe('Tallinn«ä»');
   });
 
@@ -642,7 +642,7 @@ describe('a quote with no partner', () => {
   });
 
   test('a quotation that ends in a digit still closes, and one opens after a dash or a colon', () => {
-    expect(t('He said "call 911" and left.')).toBe('He said «call 911» and left.');
+    expect(t('He said "call 911" and left.')).toBe('He said «call 911» and~left.');
     expect(t('He said: "stop"')).toBe('He said: «stop»');
     expect(t('Stop—"now"—he said.')).toBe('Stop—«now»—he said.');
   });
@@ -792,12 +792,12 @@ describe('a straight quote whose next mark opens another quotation', () => {
   test('is a lone opener, and the pair after it keeps its spaces and nests', () => {
     expect(t('"a then "b" c')).toBe('«a~then „b“ c');
     expect(t('He said "first line\nThen "x" and "y"')).toBe(
-      'He said «first line\nThen „x“ and „y“',
+      'He said «first line\nThen „x“ and~„y“',
     );
   });
 
   test('a quotation with spaces inside its marks still pairs', () => {
-    expect(t('He said " stone " and left')).toBe('He said «stone» and left');
+    expect(t('He said " stone " and left')).toBe('He said «stone» and~left');
   });
 });
 
@@ -805,8 +805,8 @@ describe('a space inside a quotation next to a mark glued to the outside word mo
   const twice = (text: string) => t(t(text));
 
   test('an opener glued to the word before it gives the space to the outside', () => {
-    expect(t('km‘ z and 10’')).toBe('km «z and 10»');
-    expect(twice('km‘ z and 10’')).toBe('km «z and 10»');
+    expect(t('km‘ z and 10’')).toBe('km «z and~10»');
+    expect(twice('km‘ z and 10’')).toBe('km «z and~10»');
   });
 
   test('a closer glued to the word after it gives the space to the outside', () => {
@@ -838,7 +838,7 @@ describe('arrows that are not arrows', () => {
   });
 
   test('an arrow against a word is still an arrow', () => {
-    expect(t('a->b and c<-d')).toBe('a→b and c←d');
+    expect(t('a->b and c<-d')).toBe('a→b and~c←d');
   });
 });
 
@@ -864,7 +864,7 @@ describe("rock 'n' roll and short words before a mark", () => {
     ]);
     // Not an operator: no letter on one side, or the n of a word.
     expect(t("'n' roll")).toBe('’n’ roll');
-    expect(t('an n roll')).toBe('an n roll');
+    expect(t('an n roll')).toBe('an~n roll');
   });
 
   test('a short word stays with a word that opens with a quotation mark, an apostrophe or a bracket', () => {

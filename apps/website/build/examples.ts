@@ -156,7 +156,6 @@ export const SAMPLES: Sample[] = [
     rule: 'space.short-word',
     lang: 'en',
     input: 'Welcome to the city',
-    options: { enable: ['space.short-word'] },
   },
 ];
 

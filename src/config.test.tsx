@@ -48,7 +48,7 @@ const CASES = [
     name: 'book',
     config: book,
     input: 'He said "yes" - and left, 21-26 +-3...',
-    expected: 'He said ‘yes’~– and left, 21–26 +-3…',
+    expected: 'He said ‘yes’~– and~left, 21–26 +-3…',
   },
 ] as const;
 

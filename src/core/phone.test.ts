@@ -25,7 +25,7 @@ describe('phone.bind', () => {
     // The word after the number is bound by space.number, as it is for any number.
     expect(on('Call +380 44 123 45 67 today.')).toBe('Call +380~44~123~45~67~today.');
     expect(on('(+49 30 1234567)')).toBe('(+49~30~1234567)');
-    expect(on('+380 44 123 45 67, or write')).toBe('+380~44~123~45~67, or write');
+    expect(on('+380 44 123 45 67, or write')).toBe('+380~44~123~45~67, or~write');
   });
 
   test('leaves a number that is not an international one', () => {

@@ -7,13 +7,13 @@ const m = (md: string, options?: MarkdownOptions) =>
 
 describe('typesetMarkdown', () => {
   test('typesets a heading and keeps its marker', () => {
-    expect(m('# He said "hi" - and left\n')).toBe('# He said «hi»~— and left\n');
+    expect(m('# He said "hi" - and left\n')).toBe('# He said «hi»~— and~left\n');
   });
 
   test('a quotation pairs across emphasis, a link and a wrapped line; the link target is kept', () => {
     expect(
       m('The "quote *with* [the link](https://x.y/1-2 "t - u")" runs on\nover the line - ok.\n'),
-    ).toBe('The «quote *with* [the link](https://x.y/1-2 "t - u")» runs on\nover the line~— ok.\n');
+    ).toBe('The~«quote *with* [the~link](https://x.y/1-2 "t - u")» runs on\nover the~line~— ok.\n');
   });
 
   test('leaves inline code and escapes alone', () => {
@@ -110,7 +110,7 @@ describe('typesetMarkdown', () => {
       disable: ['dash.range'],
       onChange: (c) => seen.push(c.rule),
     });
-    expect(out.replaceAll(NBSP, '~')).toBe('# «x»~— 1-2\n\n`"c"` and «y»\n');
-    expect(seen).toEqual(['quote', 'quote', 'dash.sentence', 'quote', 'quote']);
+    expect(out.replaceAll(NBSP, '~')).toBe('# «x»~— 1-2\n\n`"c"` and~«y»\n');
+    expect(seen).toEqual(['quote', 'quote', 'dash.sentence', 'quote', 'quote', 'space.short-word']);
   });
 });

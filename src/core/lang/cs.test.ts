@@ -46,9 +46,10 @@ describe('Czech', () => {
     expect(t('Dnes. V lese A on')).toBe('Dnes. V~lese A~on');
   });
 
-  test('a longer word is not bound: the source names only one-letter words', () => {
-    expect(t('do lesa')).toBe('do lesa');
-    expect(t('na lese ve vsi')).toBe('na lese ve vsi');
+  test('a two-letter preposition is bound by the short-word rule, not the orphan rule', () => {
+    expect(t('do lesa')).toBe('do~lesa');
+    expect(t('na lese ve vsi')).toBe('na~lese ve~vsi');
+    expect(t('do lesa', { disable: ['space.short-word'] })).toBe('do lesa');
   });
 
   test('a one-letter word inside another word is untouched, and the output is stable', () => {
@@ -87,8 +88,8 @@ describe('Czech', () => {
     expect(t('- Počkáme? - zeptal se.', { register: 'literary' })).toBe('–~Počkáme?~– zeptal se.');
   });
 
-  test('short words stay with the next word when space.short-word is on', () => {
+  test('short words stay with the next word, by default and when enabled', () => {
     expect(t('Vítejte na náměstí', { enable: ['space.short-word'] })).toBe('Vítejte na~náměstí');
-    expect(t('Vítejte na náměstí')).toBe('Vítejte na náměstí');
+    expect(t('Vítejte na náměstí')).toBe('Vítejte na~náměstí');
   });
 });

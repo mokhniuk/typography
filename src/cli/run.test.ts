@@ -31,7 +31,7 @@ describe('typo', () => {
   test('typesets standard input to standard output', async () => {
     const t = fake({}, 'He said "hi" - and left.\n');
     expect(await run([], t.io)).toBe(0);
-    expect(nb(t.out())).toBe('He said «hi»~— and left.\n');
+    expect(nb(t.out())).toBe('He said «hi»~— and~left.\n');
   });
 
   test('reads the language and register from the options', async () => {

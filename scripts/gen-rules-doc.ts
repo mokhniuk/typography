@@ -199,7 +199,7 @@ export const EXAMPLES: Record<string, readonly Example[]> = {
   'space.short-word': [
     {
       input: 'Welcome to the city of light',
-      note: 'For titles and headings; off by default. Never more than two words in a row, so a chain cannot grow into a line.',
+      note: 'On by default since 0.14.0, where it was an opt-in rule for titles. The sources read (PWN Poradnia, the ÚJČ advice service) say such a word MAY stay at a line end in body text and must not in a title or heading; this engine is for display text, where a line that ends on "to" reads as a stumble, so the rule runs unless you switch it off (`disable: [\'space.short-word\']`) for long body text in a narrow column. Never more than two words in a row, so a chain cannot grow into a line; only the words a pack lists, and five packs have a list (cs, en, pl, sk, uk).',
     },
     { input: 'Zapraszamy do Gdańska', lang: 'pl' },
     { input: 'Ласкаво просимо до міста', lang: 'uk' },

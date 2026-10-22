@@ -153,7 +153,7 @@ describe('symbol.degree', () => {
   test('is idempotent on its own output and after space.number', () => {
     expect(run(out)).toBe(out);
     expect(typographic('20 °C and 20 C', 'en', { enable: ['symbol.degree'] })).toBe(
-      `${out} and ${out}`,
+      `${out} and\u00A0${out}`,
     );
   });
   test('only a standalone C or F: not 20 Celsius, 20 Cat, 20C, 20 F1, a bare degree', () => {

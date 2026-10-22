@@ -73,7 +73,7 @@ The pack:
 | `quotes` | Quote marks per nesting level, `[open, close][]`; deeper nesting starts over. |
 | `literary` | The same for the literary register, if it differs. |
 | `orphans` | A global regex with one capture group: one-letter words kept with the next word. |
-| `shortWords` | Two- and three-letter words kept with the next word in a title, for the opt-in rule `space.short-word`. Lower case, each once; the rule matches the capitalised form too. Editorial by nature (no guide read lists them), so say so in `notes`. |
+| `shortWords` | Two- and three-letter words kept with the next word, for the rule `space.short-word` (on by default). Lower case, each once; the rule matches the capitalised form too. Editorial by nature (no guide read lists them), so say so in `notes`. |
 | `abbreviations` | `{ together, bind, page }`, short lists, only from a style guide. |
 | `sentenceDash`, `sentenceDashLiterary` | The spaced dash of a break in the sentence, when it is not an em dash. |
 | `percentSpace` | A no-break space between a number and a `%` typed against it (`5%` becomes `5~%`). |

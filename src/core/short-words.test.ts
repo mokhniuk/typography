@@ -7,8 +7,11 @@ const on = (text: string, lang: Parameters<typeof typographic>[1] = 'en') =>
   typographic(text, lang, { enable: ['space.short-word'] }).replaceAll(NBSP, '~');
 
 describe('space.short-word', () => {
-  test('is off by default', () => {
-    expect(typographic('Welcome to the show')).toBe('Welcome to the show');
+  test('is on by default (since 0.14.0), and off with disable', () => {
+    expect(typographic('Welcome to the show')).toBe(`Welcome to${NBSP}the show`);
+    expect(typographic('Welcome to the show', 'en', { disable: ['space.short-word'] })).toBe(
+      'Welcome to the show',
+    );
   });
 
   test('a short word stays with the word after it', () => {

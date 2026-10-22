@@ -53,9 +53,9 @@ describe('Slovak', () => {
     expect(t('Slovensko v Európe')).toBe('Slovensko v~Európe');
   });
 
-  test('a letter inside a word and longer words are left alone', () => {
+  test("a letter inside a word is left alone; a two-letter preposition is the short-word rule's", () => {
     expect(t('kôň sa učí')).toBe('kôň sa učí');
-    expect(t('do lesa')).toBe('do lesa');
+    expect(t('do lesa')).toBe('do~lesa');
   });
 
   test('the goldens are idempotent', () => {
@@ -75,8 +75,8 @@ describe('Slovak', () => {
     expect(t('- Počkáme? - spýtal sa.', { register: 'literary' })).toBe('–~Počkáme?~– spýtal sa.');
   });
 
-  test('short words stay with the next word when space.short-word is on', () => {
+  test('short words stay with the next word, by default and when enabled', () => {
     expect(t('Vitajte na námestí', { enable: ['space.short-word'] })).toBe('Vitajte na~námestí');
-    expect(t('Vitajte na námestí')).toBe('Vitajte na námestí');
+    expect(t('Vitajte na námestí')).toBe('Vitajte na~námestí');
   });
 });

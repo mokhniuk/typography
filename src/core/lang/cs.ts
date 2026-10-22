@@ -13,7 +13,7 @@ export const cs = {
   ],
   // k, s, v, z (non-syllabic prepositions), o, u (syllabic prepositions), a, i (conjunctions); both cases.
   orphans: /(?<![\p{L}\p{N}])([kKsSvVzZoOuUaAiI])[ ]+(?=\S)/gu,
-  // Two- and three-letter prepositions, for the opt-in rule space.short-word (titles and headings):
+  // Two- and three-letter prepositions, for the rule space.short-word:
   // the příručka and the Jazyková poradna both say such a word MAY stay at a line end in body text.
   shortWords: ['do', 'od', 've', 'na', 'se', 'za', 'po', 'pro', 'při', 'nad', 'pod', 'bez'],
   sentenceDash: '–',

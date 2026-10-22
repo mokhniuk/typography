@@ -26,7 +26,7 @@ An apostrophe before a dropped-letter word is not a quotation mark: `'em`, `'til
 ## Spaces
 
 - One-letter words kept with the next word: a A I.
-- Short words kept with the next word, in a title (the opt-in rule `space.short-word`): `to` `of` `in` `on` `at` `by` `as` `or` `if` `an` `the` `and` `for`.
+- Short words kept with the next word (`space.short-word`, on by default; the pack's own list): `to` `of` `in` `on` `at` `by` `as` `or` `if` `an` `the` `and` `for`.
 - A no-break space between a number and %: no.
 - A no-break space between a number and € after it: no.
 

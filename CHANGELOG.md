@@ -2,6 +2,12 @@
 
 Versions follow semver while the package is below 1.0.0: a **minor** release may change the output of the engine or the API (every entry says whether it can change output you already have), a **patch** release fixes a bug without changing output you rely on. If you depend on exact output, pin a tag and read this file before you move it.
 
+## Unreleased
+
+### Changes
+
+- `space.short-word` is on by default. A two- or three-letter word from the pack's list stays with the word after it in any text (`Welcome to~the city`, `Zapraszamy do~Gdańska`), where it used to need `enable`. The sources read (PWN Poradnia, the ÚJČ advice service) say such a word must travel with what it belongs to in a title and may stay at a line end in body text; "may" is a permission, and this engine sets display text, where a line ending on `to` is the stumble readers notice, so the default is on, as it is in typograf and typopo. `disable: ['space.short-word']` (`--disable space.short-word`) restores the body-text convention. Nothing else about the rule changed: never more than two words in a row, only the words a pack lists, five packs have a list (cs, en, pl, sk, uk). Ten rules are opt-in now, not eleven. The practices page, the limits page and the no-break-space article each have a paragraph on it. The benchmark was re-run: every score is unchanged (two HTML checks that spelled `the docs` with a plain space now accept the no-break space, which also credits typograf and richtypo one case each), and the rule costs about 8 ms per MB of English, so the engine is about 1.5× faster than typograf at 1 MB instead of 1.9× (74 ms against 115 in this run; README, limits.md and the comparison page quote it). Can change existing output: yes, in cs, en, pl, sk and uk text with such words.
+
 ## 0.13.1 (2026-10-22)
 
 ### Changes

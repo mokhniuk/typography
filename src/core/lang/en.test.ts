@@ -24,19 +24,19 @@ describe('English', () => {
   });
 
   test('a, A and I are not left at the end of a line', () => {
-    expect(t('A cat and I')).toBe('A~cat and I');
+    expect(t('A cat and I')).toBe('A~cat and~I');
   });
 
   test('% and € keep their usual place', () => {
-    expect(t('5% and 49€')).toBe('5% and 49€');
+    expect(t('5% and 49€')).toBe('5% and~49€');
   });
 
   test('elided words are apostrophes, not quotation marks', () => {
-    expect(t("rock 'n' roll and 'til dawn, 'em all")).toBe('rock~’n’~roll and ’til dawn, ’em all');
+    expect(t("rock 'n' roll and 'til dawn, 'em all")).toBe('rock~’n’~roll and~’til dawn, ’em all');
   });
 
-  test('short words stay with the next word when space.short-word is on', () => {
+  test('short words stay with the next word, by default and when enabled', () => {
     expect(t('Welcome to the city', { enable: ['space.short-word'] })).toBe('Welcome to~the city');
-    expect(t('Welcome to the city')).toBe('Welcome to the city');
+    expect(t('Welcome to the city')).toBe('Welcome to~the city');
   });
 });

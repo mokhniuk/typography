@@ -27,8 +27,8 @@ describe('Polish', () => {
     expect(t('- Poczekamy? - zapytał.', { register: 'literary' })).toBe('—~Poczekamy?~— zapytał.');
   });
 
-  test('short words stay with the next word when space.short-word is on', () => {
+  test('short words stay with the next word, by default and when enabled', () => {
     expect(t('Zapraszamy na rynek', { enable: ['space.short-word'] })).toBe('Zapraszamy na~rynek');
-    expect(t('Zapraszamy na rynek')).toBe('Zapraszamy na rynek');
+    expect(t('Zapraszamy na rynek')).toBe('Zapraszamy na~rynek');
   });
 });

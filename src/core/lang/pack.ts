@@ -41,12 +41,11 @@ export type LangPack = {
   orphans?: RegExp;
   /**
    * Short words (two or three letters: prepositions, conjunctions, articles) that travel with the
-   * word after them in a title or a heading, for the opt-in rule `space.short-word`. Written in
-   * lower case; the rule also matches the capitalised form, and never binds more than two words in
-   * a row. The read sources (PWN Poradnia for Polish, the ÚJČ advice service for Czech) say such a
-   * word MAY stay at a line end in body text and must travel with what it belongs to in a title,
-   * which is why the rule is off by default; the entries themselves are editorial, not read from a
-   * list in a style guide.
+   * word after them, for the rule `space.short-word` (on by default since 0.14.0; `disable` turns
+   * it off). Written in lower case; the rule also matches the capitalised form, and never binds more
+   * than two words in a row. The read sources (PWN Poradnia for Polish, the ÚJČ advice service for
+   * Czech) say such a word MAY stay at a line end in body text and must travel with what it belongs
+   * to in a title; the entries themselves are editorial, not read from a list in a style guide.
    */
   shortWords?: readonly string[];
   abbreviations?: Abbreviations;

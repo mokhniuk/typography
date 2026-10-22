@@ -39,7 +39,7 @@ describe('avoid', () => {
   test('the other changes of the same rule still happen', () => {
     expect(
       typographic('A 1/2 cup and 1/4', 'en', { avoid: '¼', enable: ['symbol.fraction'] }),
-    ).toBe(`A${NBSP}½${NBSP}cup and 1/4`);
+    ).toBe(`A${NBSP}½${NBSP}cup and${NBSP}1/4`);
   });
 
   test('the quotation rule keeps every mark as typed when one of them is avoided', () => {
@@ -48,7 +48,7 @@ describe('avoid', () => {
       `Řekl "dům" a${NBSP}odešel`,
     );
     expect(typographic('He said "x" and "y"...', 'en', { avoid: '«' })).toBe(
-      'He said "x" and "y"…',
+      `He said "x" and${NBSP}"y"…`,
     );
     // Avoiding the inner level keeps the outer pair too: they are one rule's work. The straight
     // marks then stay as typed, and the apostrophe rule claims the single one, as it does whenever
@@ -59,7 +59,7 @@ describe('avoid', () => {
     // A rule whose changes stand on their own still drops one change at a time.
     expect(
       typographic('A 1/2 cup and 1/4', 'en', { avoid: '¼', enable: ['symbol.fraction'] }),
-    ).toBe(`A${NBSP}½${NBSP}cup and 1/4`);
+    ).toBe(`A${NBSP}½${NBSP}cup and${NBSP}1/4`);
   });
 
   test('nothing is reported for a change that was dropped', () => {

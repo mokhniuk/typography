@@ -12,7 +12,7 @@ export const uk = {
     ['‚', '‘'],
   ],
   orphans: /(?<![\p{L}\p{N}])([аАвВіІїЇйЙзЗуУоО])[ ]+(?=\S)/gu,
-  // Two- and three-letter prepositions and conjunctions, for the opt-in rule space.short-word
+  // Two- and three-letter prepositions and conjunctions, for the rule space.short-word
   // (titles and headings). Editorial, as the orphan letters are.
   shortWords: ['до', 'на', 'за', 'по', 'із', 'від', 'під', 'над', 'при', 'без', 'для', 'та', 'що'],
   abbreviations: {

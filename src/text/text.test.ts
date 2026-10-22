@@ -7,7 +7,7 @@ const x = (text: string, options?: TextOptions) => typesetText(text, options).re
 describe('typesetText', () => {
   test('typesets each paragraph and keeps the blank lines between them', () => {
     expect(x('He said "hi".\n\n\n  Then "bye" - and left.\n')).toBe(
-      'He said «hi».\n\n\n  Then «bye»~— and left.\n',
+      'He said «hi».\n\n\n  Then «bye»~— and~left.\n',
     );
   });
 

@@ -7,7 +7,7 @@ const h = (html: string, options?: HtmlOptions) =>
 
 describe('typesetHtml', () => {
   test('typesets the text of a block', () => {
-    expect(h('<p>He said "hi" - and left.</p>')).toBe('<p>He said «hi»~— and left.</p>');
+    expect(h('<p>He said "hi" - and left.</p>')).toBe('<p>He said «hi»~— and~left.</p>');
   });
 
   test('an operator between two words is bound, written as &amp; or as a raw &', () => {
@@ -96,7 +96,7 @@ describe('typesetHtml', () => {
 
   test('a named entity for a printable sign is read by the rules and written as its character', () => {
     expect(h('<p>5 &euro; and 10 &deg;C, (c) 2026 &copy; 2026</p>')).toBe(
-      '<p>5~€ and 10~°C, ©~2026 ©~2026</p>',
+      '<p>5~€ and~10~°C, ©~2026 ©~2026</p>',
     );
   });
 

@@ -14,7 +14,7 @@ export const sk = {
   // v, k, s, u, z (prepositions), o, a, i; both cases. Editorial convention from secondary sources
   // (tvorim.net and sk.wikibooks name the words, grafeon.sk states the class); no Slovak authority could be read, so this is not a verified list.
   orphans: /(?<![\p{L}\p{N}])([kKsSvVzZoOuUaAiI])[ ]+(?=\S)/gu,
-  // Two- and three-letter prepositions, for the opt-in rule space.short-word (titles and headings).
+  // Two- and three-letter prepositions, for the rule space.short-word.
   // Editorial, like the orphan list: no Slovak authority could be read.
   shortWords: ['do', 'od', 'vo', 'na', 'so', 'za', 'po', 'pre', 'pri', 'nad', 'pod', 'bez'],
   numbers: { group: NBSP, decimal: ',' },

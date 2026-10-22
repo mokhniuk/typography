@@ -29,10 +29,10 @@ describe('Ukrainian', () => {
     expect(t('вул. Хрещатик, м. Київ')).toBe('вул.~Хрещатик, м.~Київ');
   });
 
-  test('short words stay with the next word when space.short-word is on', () => {
+  test('short words stay with the next word, by default and when enabled', () => {
     expect(t('Ласкаво просимо до міста', { enable: ['space.short-word'] })).toBe(
       'Ласкаво просимо до~міста',
     );
-    expect(t('Ласкаво просимо до міста')).toBe('Ласкаво просимо до міста');
+    expect(t('Ласкаво просимо до міста')).toBe('Ласкаво просимо до~міста');
   });
 });

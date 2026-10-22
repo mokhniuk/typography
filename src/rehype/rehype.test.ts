@@ -28,7 +28,7 @@ const fromMarkdown = (md: string, options?: RehypeOptions) =>
 
 describe('rehypeTypography', () => {
   test('typesets the text of a block', () => {
-    expect(fromHtml('<p>He said "hi" - and left.</p>')).toBe('<p>He said «hi»~— and left.</p>');
+    expect(fromHtml('<p>He said "hi" - and left.</p>')).toBe('<p>He said «hi»~— and~left.</p>');
   });
 
   test('a quotation pairs across inline elements', () => {
@@ -49,7 +49,7 @@ describe('rehypeTypography', () => {
 
   test('works on a Markdown pipeline, code kept', () => {
     expect(fromMarkdown('# "Title" - sub\n\nRun `a -> b` and "see [the docs](/x)".\n')).toBe(
-      '<h1>«Title»~— sub</h1>\n<p>Run <code>a -> b</code> and «see <a href="/x">the docs</a>».</p>',
+      '<h1>«Title»~— sub</h1>\n<p>Run <code>a -> b</code> and~«see <a href="/x">the~docs</a>».</p>',
     );
   });
 
