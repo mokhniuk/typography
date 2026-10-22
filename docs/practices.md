@@ -38,7 +38,7 @@ A no-break space keeps two words on one line. Bind a pair when a line that ends 
 
   ```text
   (en)  before  Call +380 44 123 45 67 or +1 (555) 123-4567
-        after   Call +380~44~123~45~67 or +1~(555)~123‑4567
+        after   Call +380~44~123~45~67~or +1~(555)~123‑4567
   ```
 
   Only an international number (`+` or `00`, seven to fifteen digits) is bound, and the digits are never reformatted; the hyphens become U+2011, which does not break. Dates, ranges, IBANs and `tel:` links are left alone ([phone.bind](../resources/sources.md#phonebind)).

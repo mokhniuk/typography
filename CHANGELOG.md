@@ -2,6 +2,12 @@
 
 Versions follow semver while the package is below 1.0.0: a **minor** release may change the output of the engine or the API (every entry says whether it can change output you already have), a **patch** release fixes a bug without changing output you rely on. If you depend on exact output, pin a tag and read this file before you move it.
 
+## Unreleased
+
+### Tooling and docs
+
+- The landing page, the articles and the hand-written docs say what the engine does today: only English has a literary register, twelve packs set a spaced en dash, closing marks hang too, `avoid` keeps one stretch (a quotation whole), a lone mark is read by position, git is the install that works until 1.0, and the counts of sources and cases are the current ones. The landing shows `space.section`, `space.operator`, money, `phone.bind` and `space.short-word`, and a test runs its code sample. `docs/languages/uk.md` prints its one-letter words instead of escaped code points. No output change.
+
 ## 0.11.0 (2026-10-22)
 
 ### Changes

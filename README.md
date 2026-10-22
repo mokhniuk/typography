@@ -22,6 +22,8 @@ The package is `@mokhniuk/typography`.
 + Outside it is −5 °C, ±2 °C at night. Add ½ cup of sugar. Read on → p. 12.
 ```
 
+The group separator in `125,000`, the dropped space before the comma, and the `°`, `±` and `½` come from opt-in rules: `enable: ['number.group', 'space.before-punctuation', 'symbol.degree', 'symbol.plusminus', 'symbol.fraction']`. Everything else above is the default.
+
 It also puts no-break spaces where a line should not break (after one-letter words, inside ranges, before units), nests quotations in the marks each language expects, and can hang opening punctuation in the margin. The `«…»` above is this project's default for English; `quoteStyle: 'us'` gives `“…”` in any language, and the `literary` register gives British `‘…’`.
 
 <!-- Image paths are repository-relative; swap for absolute URLs (the website, once it is hosted) when the package goes on a public registry. -->
@@ -31,7 +33,7 @@ It also puts no-break spaces where a line should not break (after one-letter wor
 
 Measured, not promised: every claim below comes from [a published benchmark](apps/bench/RESULTS.md) that runs this package and six others over the same style-neutral checks — every case, check and output is in the file, so any check can be contested. **Read it with care: the cases were written by this package's author.** They test what is right (a German quotation is „…“ or »…«; an ISO date is not a range), not one tool's house style — this package's own English `«…»` default is reported as a failure there too.
 
-Passed / scored; `–` means the tool has no such feature or language, and is not held against it. Each tool scores against its own denominator.
+Passed / scored; `–` means the tool has no such feature or language, and is not held against it. Each tool scores against its own denominator. The table shows eight of the groups; the total row counts all sixteen (every group but Registers).
 
 | | typography-engine | typography-engine literary | typograf | typopo | richtypo | tipograph | smartypants |
 |---|---|---|---|---|---|---|---|
@@ -43,7 +45,7 @@ Passed / scored; `–` means the tool has no such feature or language, and is no
 | Abbreviations | **5/5** | **5/5** | 0/5 | 2/3 | 0/1 | 0/4 | 0/1 |
 | Symbols | **17/17** | **17/17** | 10/17 | 7/16 | 5/16 | 12/17 | 5/15 |
 | Safety | **33/33** | **33/33** | 28/29 | 11/12 | 9/10 | 17/19 | 7/9 |
-| **All groups** | **242/250** | **250/250** | 131/226 | 85/111 | 68/102 | 126/162 | 53/89 |
+| **Total, all 16 groups** | **242/250** | **250/250** | 131/226 | 85/111 | 68/102 | 126/162 | 53/89 |
 
 Speed, English text in one piece, best of three (typograf is the closest tool in scope):
 
@@ -116,16 +118,16 @@ typesetMarkdown(md, { ...site, lang: 'de' });
 
 | Entry | Use it for | Exports |
 |---|---|---|
-| `@mokhniuk/typography` | The whole engine and the plain-text mode | everything in `src/core` (`typographic`, `explain`, `typesetBlock`, `defineConfig`, `RULES`, `RULE_IDS`, `LANGS`, `REGISTERS`, `NBSP`, `splitHangs`, `diff` and their types) plus `typesetText` |
+| `@mokhniuk/typography` | The whole engine and the plain-text mode | everything in `src/core` (`typographic`, `explain`, `typesetBlock`, `defineConfig`, `RULES`, `RULE_IDS`, `DEFAULT_RULES`, `LANGS`, `REGISTERS`, `NBSP`, `splitHangs`, `diff`, `ruleGlyphs`, `insertedCharacters`, `insertedGlyphs`, `keepAvoided`, `CURRENCY_CODES`, `CURRENCY_SIGNS`, `CURRENCY_WORDS` and their types) plus `typesetText` |
 | `@mokhniuk/typography/text` | Plain text a paragraph at a time | `typesetText` |
 | `@mokhniuk/typography/html` | An HTML string | `typesetHtml` |
 | `@mokhniuk/typography/markdown` | A Markdown document | `typesetMarkdown` |
 | `@mokhniuk/typography/rehype` | A unified/rehype pipeline, or any hast tree | default `rehypeTypography`, `typesetHast` |
-| `@mokhniuk/typography/dom` | Hanging punctuation in the browser, no framework | `hangPunctuation`, `hangScript`, `markHangs` |
-| `@mokhniuk/typography/react` | React pages | `Typeset`, `TypographyRoot`, `HangText`, `HangScript`, `useHangingPunctuation`, `TypographyContext` |
+| `@mokhniuk/typography/dom` | Hanging punctuation in the browser, no framework | `hangPunctuation`, `hangScript`, `markHangs`, `hangStyle`; glyph checks `supports`, `glyphStatus`, `missingGlyphs`, `missingIn`, `fontOf` |
+| `@mokhniuk/typography/react` | React pages | `Typeset`, `TypographyRoot`, `HangText`, `HangScript`, `useHangingPunctuation`, `useMissingGlyphs`, `TypographyContext` |
 | `typo` (bin) | The command line; needs Bun | see [docs/cli.md](docs/cli.md) |
 
-Every mode takes the same options (`lang`, `register`, `quoteStyle`, `disable`, `enable`, `rules`, `onChange`); signatures and the full option table are in [docs/api.md](docs/api.md).
+Every mode takes the same options (`lang`, `register`, `quoteStyle`, `disable`, `enable`, `rules`, `avoid`, `onChange`; `nbsp` for HTML output and `hangAmount` for hanging marks); signatures and the full option table are in [docs/api.md](docs/api.md).
 
 ### The modes in one glance
 
@@ -169,7 +171,7 @@ Paste text, HTML or Markdown; see the result, every change with the rule that ma
 
 ## Hanging punctuation without a jump on a prerendered page
 
-Hanging never measures where lines break: the space beside each mark carries the mark's width and goes away at a break, so marks hang wherever a line happens to start, at any width and in any alignment (left-to-right text). A mark's exact width is measured; before that the marks carry a rough width, and on a prerendered page the inline pass (`TypographyRoot`, or `<HangScript />` placed last inside the element that holds the text) runs as the page is parsed, so the marks do not shift when the bundle loads. The cost is about 1.5 kB of inline HTML; `early={false}` turns it off where a content security policy forbids inline scripts. How to check it on your own page, and what has not been measured: [docs/limits.md](docs/limits.md).
+Hanging never measures where lines break: the space beside each mark carries the mark's width and goes away at a break, so marks hang wherever a line happens to start, at any width and in any alignment (left-to-right text). A mark's exact width is measured; before that the marks carry a rough width, and on a prerendered page the inline pass (`TypographyRoot`, or `<HangScript />` placed last inside the element that holds the text) runs as the page is parsed, so the marks do not shift when the bundle loads. The cost is about 2.2 kB of inline HTML; `early={false}` turns it off where a content security policy forbids inline scripts. How to check it on your own page, and what has not been measured: [docs/limits.md](docs/limits.md).
 
 ## What is not finished
 

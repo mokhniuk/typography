@@ -17,13 +17,13 @@ It typesets text, HTML or Markdown with the same engine as the library functions
 | `--format` | `-f` | `text`, `html`, `markdown` (`md` is accepted) | by extension | How to read the input. |
 | `--quotes` | | `language`, `us` | `language` | `language`: the quote marks of the language. `us`: `“…”` and `‘…’` in any language and register. |
 | `--disable` | `-d` | rule ids or groups, comma separated | none | Switch rules off, for example `dash.range,space`. The flag may be given more than once. |
-| `--enable` | `-e` | rule ids or groups, comma separated | none | Switch on rules that are off by default (`--rules` marks them). A rule named in both `--enable` and `--disable` is a usage error. |
+| `--enable` | `-e` | rule ids or groups, comma separated | none | Switch on rules that are off by default (`--rules` marks them). The flag may be given more than once. A rule named in both `--enable` and `--disable` is a usage error. |
 | `--rules` | | | | List the rules (the config's `rules` when it has them), one per line: id, category (`tradition`, `symbols`, `math` or `data`, see [rules.md](rules.md#categories)) and description, and exit 0. A rule that is off by default is marked `(off by default; --enable <id>)`. |
 | `--explain` | | | | Print every change and the rule behind it, instead of the typeset text. |
 | `--json` | | | | JSON output for `--explain`. An error without `--explain`. |
 | `--write` | `-w` | | | Rewrite the files in place. |
 | `--check` | `-c` | | | Change nothing; exit 1 if any input would change. |
-| `--avoid` | | characters | none | Characters the font cannot draw (`--avoid "⇒½¼¾−"`): a rule that would insert one of them leaves the text as it was typed, for that one change. See [api.md](api.md#avoid). |
+| `--avoid` | | characters | none | Characters the font cannot draw (`--avoid "⇒½¼¾−"`): a rule that would insert one of them leaves the text as it was typed, for that one change; quotation marks are kept whole, so if one mark of a quotation is avoided, every quotation mark stays as typed. See [api.md](api.md#avoid). |
 | `--nbsp` | | `entity`, `char` | `entity` | HTML only: write a no-break space as `&nbsp;` or as the character. Checked for every format, used only for HTML. |
 | `--config` | | a file | `typography` in `./package.json` | Read the options from a config (see [Config](#config) below). |
 | `--help` | `-h` | | | Show the help and exit 0. |
@@ -55,7 +55,7 @@ When `-f` is not given:
 |---|---|
 | 0 | Success. With `--check`: nothing would change. |
 | 1 | `--check` only: at least one input would change. |
-| 2 | A usage error (unknown flag, language, register, format, rule or `--nbsp` value; a config that cannot be read or does not check; `--write` with `--check`; `--json` without `--explain`; `--explain` with `--write` or `--check`; `--write` without files; several files with no `--write`/`--check`/`--explain`) or a file that could not be read. |
+| 2 | A usage error (unknown flag, language, register, format, rule, `--quotes` or `--nbsp` value; a config that cannot be read or does not check; `--write` with `--check`; `--json` without `--explain`; `--explain` with `--write` or `--check`; `--write` without files; several files with no `--write`/`--check`/`--explain`) or a file that could not be read. |
 
 Messages go to standard error, prefixed `typo:`. With `--check`, each file that would change is named on standard error as `<file>: would change`. With `--write`, each file that was rewritten is named as `<file>: typeset`; a file that needs no change is not written. When a file cannot be read, the command reports it, goes on to the next file and exits 2 at the end (a later `would change` does not lower it to 1).
 
@@ -108,7 +108,7 @@ Exit 1 means "would change", exit 2 means the command was misused or a file is m
 
 The options can come from a config (`TypographyConfig`, see [api.md](api.md#config)), so a project writes them once:
 
-- `--config <file>`: a module (`.ts`, `.mts`, `.js`, `.mjs`, `.cjs`) whose default export is the config, usually written with `defineConfig`, or a `.json` file holding the config object. A path is relative to the current directory.
+- `--config <file>`: a module (`.ts`, `.mts`, `.cts`, `.js`, `.mjs`, `.cjs`) whose default export is the config, usually written with `defineConfig`, or a `.json` file holding the config object. A path is relative to the current directory.
 - Without `--config`: the `typography` key of `package.json` in the current directory, if the file and the key exist.
 
 ```json

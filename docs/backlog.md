@@ -1,6 +1,6 @@
 # Backlog
 
-What the package still lacks, after the 0.2.0 work that closed the gaps found by comparing it with typograf, typopo, richtypo, tipograph, smartypants and retext-smartypants (2026-10-20, versions in [../bench/RESULTS.md](../bench/RESULTS.md)). Our audience is the EU, Ukraine and the US; tools for a single other language (Russian, Chinese) are out of scope.
+What the package still lacks, after the 0.2.0 work that closed the gaps found by comparing it with typograf, typopo, richtypo, tipograph, smartypants and retext-smartypants (2026-10-20, versions in [../apps/bench/RESULTS.md](../apps/bench/RESULTS.md)). Our audience is the EU, Ukraine and the US; tools for a single other language (Russian, Chinese) are out of scope.
 
 Priorities: **P0** blocks the audience, **P1** closes a gap other tools do not have, **P2** is worth doing later. An item is done when its test exists and the docs say so; move it out of this file into [../CHANGELOG.md](../CHANGELOG.md).
 
@@ -10,9 +10,9 @@ Priorities: **P0** blocks the audience, **P1** closes a gap other tools do not h
 |---|---|---|---|
 | Benchmark checks passed (default / literary register) | 242 / 250, 250 / 250 | typograf 131 / 226 | `apps/bench/RESULTS.md` |
 | 1 MB of English, text mode | 63 ms | typograf 118 ms, tipograph 22 ms, smartypants 18 ms | `cd apps/bench && bun run bench` (one run; the ratios are what count) |
-| Target languages covered (26) | 26 | typograf 22, tipograph 12 | [languages/index.md](languages/index.md) |
+| Target languages covered (26) | 26 | typograf 21 of 26, tipograph 11 | [languages/index.md](languages/index.md) |
 
-The 26 target languages are the 24 official languages of the EU, Ukrainian and US English (the option `quoteStyle: 'us'`). This engine's 8 default-run misses are all the house `«…»` for English, which the checks count as a failure; the literary register passes every check. The cases were written by this package's author; read the caveats in [limits.md](limits.md). The cases for the twenty new languages come from the same style guides as the packs, so they are not an independent test.
+The 26 target languages are the 24 official languages of the EU, Ukrainian and Swiss German (`ch`); US English is not a pack but the option `quoteStyle: 'us'`. This engine's 8 default-run misses are all the house `«…»` for English, which the checks count as a failure; the literary register passes every check. The cases were written by this package's author; read the caveats in [limits.md](limits.md). The cases for the twenty new languages come from the same style guides as the packs, so they are not an independent test.
 
 ## P0
 
@@ -24,13 +24,13 @@ Every pack has `reviewed: false`: bg cs da el es et fi ga hr hu it lt lv mt nl p
 
 ### Finish the sources registry
 
-[sources.md](../resources/sources.md) has 15 of 31 decisions still `general-knowledge` (eight of them opt-in rules with no source read, seven default-on), one `disputed`, 15 `verified` for the cases and languages named in each entry (mostly English; `dash.dialogue` since 0.4.0 for 17 languages). Read the sources and upgrade them, and have a native speaker check each language. Found while building it (2026-10-20, CLDR 46):
+[sources.md](../resources/sources.md) has 17 of 33 decisions still `general-knowledge` (ten of them opt-in rules with no source read, seven default-on), one `disputed`, 15 `verified` for the cases and languages named in each entry (mostly English; `dash.dialogue` since 0.4.0 for 17 languages). Read the sources and upgrade them, and have a native speaker check each language. Found while building it (2026-10-20, CLDR 46):
 
-- `quote` is `disputed`: CLDR has English `“ ” ‘ ’` (see the American quotes item above), German `„ “ ‚ ‘` (the engine sets `» « › ‹`), French `« »` with `« »` inside (the engine uses `“ ”`), and de-CH `„ “ ‚ ‘` (the engine's `ch` profile is the fr-CH one: `« » ‹ ›`). Decide per language whether the engine or CLDR is right, citing a guide. The English default is settled with the named configs (built on `TypographyConfig`, which exists since the per-project config): the engine defaults to the language standard and ships `standard` and a house config (guillemets in English; perhaps named `display`, a name the register already uses) that restores the house style.
+- `quote` is `disputed`: CLDR has English `“ ” ‘ ’`, German `„ “ ‚ ‘` (the engine sets `» « › ‹`), French `« »` with `« »` inside (the engine uses `“ ”`), and de-CH `„ “ ‚ ‘` (the engine's `ch` profile is the fr-CH one: `« » ‹ ›`). Decide per language whether the engine or CLDR is right, citing a guide. The English default is settled with the named configs (built on `TypographyConfig`, which exists since the per-project config): the engine defaults to the language standard and ships `standard` and a house config (guillemets in English; perhaps named `display`, a name the register already uses) that restores the house style.
 - `space.percent` / currency: CLDR sets a no-break space before the currency sign in `uk`, `pl` and `fr-CH`; the engine leaves `49€` alone there.
 - Gaps found against Practical Typography and OQLF (2026-10-20, probed in the engine; both sources were read as fetch-tool summaries, check them first):
   - French `:` gets a no-break space before it, and `;` `!` `?` none or a fine space (OQLF). The engine sets none of these. A France or Swiss guide may differ, so read one before building it.
-  - `ellipsis` (P2): a no-break space on a side with no text (`... and so`); keep the last two words of a paragraph together (P2, or document `text-wrap: pretty`).
+  - `ellipsis` (P2): a no-break space on a side with no text (`... and so`).
   - Out of scope, by design: repeated `!!` or `?!` and one exclamation mark per three pages (a lint, not a substitution), superscript ordinals (Butterick says not to, and the engine already leaves `1st` alone).
 - Reading list, none read yet, each to be read before it is cited: Bringhurst, *The Elements of Typographic Style*, 4th ed. (Hartley & Marks, 2013), section 5.2.1; *The Chicago Manual of Style*, 18th ed. (University of Chicago Press, 2024); Butterick, *Typography for Lawyers*, 2nd ed. (O'Connors, 2015); ISO 80000-1 (the SI Brochure, 9th ed., was read in 0.8.0 and backs `symbol.degree`); Knuth and Plass, "Breaking Paragraphs into Lines", *Software: Practice and Experience* 11 (1981) 1119–1184; Dyson on on-screen line length and Beier, *Reading Letters* (BIS, 2012), as context only. No peer-reviewed study of punctuation, dash or no-break-space conventions was found; the empirical work found (Ho Sang and Petrarca, *Visible Language* 59(3), 2025, a review of 42 studies) is about typeface, size and line length, so no rule here should cite research.
 - Unread, to read next: Pravopys 2019 (§ 161 "Тире" for `dash.dialogue`, the quote section; mon.gov.ua refused the fetch), the Swiss Federal Chancellery Schreibweisungen § 2.1.1 (the PDF has no extractable text here; needs a PDF reader), Imprimerie nationale Lexique, Duden, Chicago, Bringhurst, and a guide that prefers `−` and `×` (`symbol.minus`, `symbol.multiply`).
@@ -113,7 +113,11 @@ Found in the review (2026-10-21), none changes output:
 - The anchor slug is written two ways (`slug()` and `rule.replaceAll('.', '-')`, and `replaceAll('.', '')` in `gen-rules-doc.ts`). One function, one anchor format, checked by a test that every `docs/rules.md` link lands on an anchor in `sources.md`.
 - `sources.html` prints an empty "Used by:" for a source no decision cites, `bibliography.html` says "unused". Say "unused" in both.
 - `render()` in `sources.ts` and `sources-html.ts` skip a rule with no decision, while `gen-rules-doc.ts` links it as `general-knowledge`. `resources/sources.test.ts` stops that from shipping today; make the generators fail loudly instead of skipping, so a run outside the test cannot write a page that disagrees with its counts.
-- Eight opt-in rules have `general-knowledge` entries with no source (`space.before-punctuation`, `space.after-comma`, `punctuation.double`, `symbol.implies`, `number.group`, `symbol.plusminus`, `symbol.fraction`, `space.trailing`; `symbol.degree` is `verified` since 0.8.0). Read a source for each and upgrade; a guide for the grouping separator of each language for `number.group` (the SI brochure is cited there already, but says nothing on `±`). Counted in "Finish the sources registry" above.
+- Ten opt-in rules have `general-knowledge` entries with no source (`space.before-punctuation`, `space.after-comma`, `punctuation.double`, `symbol.implies`, `phone.bind`, `number.group`, `symbol.plusminus`, `symbol.fraction`, `space.short-word`, `space.trailing`; `symbol.degree` is `verified` since 0.8.0). Read a source for each and upgrade; a guide for the grouping separator of each language for `number.group` (the SI brochure is cited there already, but says nothing on `±`). Counted in "Finish the sources registry" above.
+
+### Phone numbers: locale formats
+
+`phone.bind` (opt-in) only keeps an international number whole; it never reformats one and leaves local numbers alone (a limit, in [limits.md](limits.md#opt-in-rules)). Each language writes its numbers in its own groups (`+49 30 1234567`, `+33 1 23 45 67 89`, `+380 44 123 45 67`) and some bind a local number too. Read a national numbering plan or style guide per language before binding or grouping anything beyond what is typed.
 
 ### Publish to npm, with a licence and compiled output (1.0.0)
 

@@ -9,9 +9,9 @@ bun test src apps/playground apps/website resources      # every test; this is t
 bun run typecheck            # tsc -p tsconfig.json; tests are typechecked too
 ```
 
-`bun test` does not typecheck; `bun run typecheck` does, and covers `src` and `apps/playground` (and `scripts` through the test that imports the docs generator).
+`bun test` does not typecheck; `bun run typecheck` does, and covers `src`, `apps/playground`, `apps/website`, `scripts` and `resources` (the `include` of `tsconfig.json`).
 
-No lint configuration is included yet. The project used the Biome settings of the repository it was developed in; add a `biome.json` before relying on a formatter.
+Lint and format are Biome, configured in `biome.json`: `bunx biome ci .` checks, and CI (`.github/workflows/release.yml`) runs it before the tests; `bunx biome check --write .` fixes what it can.
 
 When you change a rule or its examples, regenerate the rules page and commit it with the change:
 
@@ -24,7 +24,7 @@ bun run docs:languages       # writes docs/languages/*.md from the packs
 
 | Path | What it holds |
 |---|---|
-| `src/core/` | The engine: `typography.ts` (`typographic`, `explain`), `rules.ts` (the `RULES` table), `quotes.ts`, `dashes.ts`, `spaces.ts`, `marks.ts`, `zones.ts` (text set aside), `lang/` (one pack per language, and the registry), `profiles.ts` (the tables derived from the packs), `hang.ts` (`splitHangs`), `diff.ts` |
+| `src/core/` | The engine: `typography.ts` (`typographic`, `explain`, `typesetBlock`, `keepAvoided`), `rules.ts` (the `RULES` table), `config.ts` (`TypographyConfig`, `defineConfig`, `checkConfig`), `quotes.ts`, `dashes.ts`, `spaces.ts`, `marks.ts`, `extra.ts` (the opt-in rules), `numbers.ts` (digit grouping, `number.group`), `phone.ts` (`phone.bind`), `currency.ts` (the currency codes and signs), `glyphs.ts` (what each rule can insert, read by `avoid`), `scan.ts` (helpers that read the character before a match instead of a lookbehind), `zones.ts` (text set aside), `lang/` (one pack per language, and the registry), `profiles.ts` (the tables derived from the packs), `hang.ts` (`splitHangs`), `diff.ts` |
 | `src/text`, `src/html`, `src/markdown`, `src/rehype` | The modes, each built on `typesetBlock` |
 | `src/dom`, `src/react` | Hanging punctuation, framework-free and React |
 | `src/cli` | The `typo` command; `run.ts` takes an `Io` object so it can be tested without a process |
@@ -34,7 +34,7 @@ bun run docs:languages       # writes docs/languages/*.md from the packs
 | `resources/` | The sources registry (below) and the pages generated from it; not part of the package |
 | `apps/bench/` | The benchmark: a separate project, not tracked except `RESULTS.md` (see below) |
 | `apps/playground/` | The web page (its own `package.json` for `dev`/`build`; uses the root's `vite`) |
-| `apps/website/` | The website: landing, docs (built from `docs/`), articles, playground; see [ui.md](ui.md#the-website) |
+| `apps/website/` | The website: landing, docs, articles, playground; see [ui.md](ui.md#the-website). The docs it publishes are the files listed in `DOC_FILES` in `apps/website/build/content.ts` (`apps/website/content/docs/getting-started.md`, `docs/api.md`, `cli.md`, `rules.md`, `languages.md`, `limits.md`, `practices.md`, `contributing.md` and `CHANGELOG.md`, in that order) plus the generated `docs/languages/*.md`; `README.md`, `ui.md`, `backlog.md` and `ideas.md` are not published |
 | `docs/` | These pages. `rules.md` and `languages/` are generated; the others are written by hand |
 
 ## Adding a rule
@@ -101,6 +101,7 @@ Abbreviation lists and the like come from a style guide, not from memory; say in
 A change that is meant to make the engine faster must change no output and no `explain`/`onChange` record. Two tools prove it, both fed by one seeded corpus (`scripts/corpus.ts`: a fuzz vocabulary of every mark the rules care about, fixed prose in every language, quote soups).
 
 ```sh
+git tag speed-baseline <ref>     # once, before the speed work: a plain tag on the engine as it was (not `git tag -a`)
 bun run compare                  # this checkout against the git ref `speed-baseline` (the frozen engine)
 bun run compare <ref> --n 20000  # against another ref; --slice N runs all N strings through every combination (slow)
 bun run snapshot                 # ONLY for an intentional output change or a new language: rewrites src/snapshot.digests.json
@@ -133,7 +134,7 @@ bun run playground           # vite dev server for apps/playground/
 bun run playground:build     # static site in apps/playground/dist
 ```
 
-A client-side page: paste text, HTML or Markdown, pick the language, register, quote style (`language` or `us`) and how a no-break space is written, and see the result, a word-level diff of what changed with what each rule did, a switch for each rule (every rule starts on, the opt-in ones too; "All rules on" goes back to that), and a preview with hanging punctuation at an amount set with a slider that stops at 0, 30%, 50% and 100% of the mark ( through `--hang-amount`); HTML is previewed in a sandboxed frame where no script runs, and the page marks and measures its opening punctuation from outside. "Short example" inserts the pack's `sample`; "Long example" inserts a longer text in the language, in the chosen format, from `apps/playground/examples.ts`. The "Config" panel shows the switches as a config (`TypographyConfig` JSON, for `package.json` or `typo --config`) and applies a pasted one, checked with `checkConfig` (`apps/playground/config-io.ts`). Nothing is sent anywhere. The page imports from `../../src` and is covered by the boundary test. Its markup and CSS follow [ui.md](ui.md).
+A client-side page: paste text, HTML or Markdown, pick the language, register, quote style (`language` or `us`), the characters to avoid (`avoid`; under each rule switch the characters it can insert are struck through while one of them is avoided) and how a no-break space is written, and see the result, a word-level diff of what changed with what each rule did, a switch for each rule (every rule starts on, the opt-in ones too; "All rules on" goes back to that), and a preview with hanging punctuation at an amount set with a slider that stops at 0, 30%, 50% and 100% of the mark ( through `--hang-amount`); HTML is previewed in a sandboxed frame where no script runs, and the page marks and measures its opening punctuation from outside. "Short example" inserts the pack's `sample`; "Long example" inserts a longer text in the language, in the chosen format, from `apps/playground/examples.ts`. The "Config" panel shows the switches as a config (`TypographyConfig` JSON, for `package.json` or `typo --config`) and applies a pasted one, checked with `checkConfig` (`apps/playground/config-io.ts`). Nothing is sent anywhere. The page imports from `../../src` and is covered by the boundary test. Its markup and CSS follow [ui.md](ui.md).
 
 ## Releasing
 

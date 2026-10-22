@@ -31,9 +31,8 @@ These are the options the functions below take. Which function takes which is in
 | `blockStart` | `boolean` | `true` | Whether the text opens its paragraph. Only then can its first dash be read as a dialogue dash (`dash.dialogue`), in the languages that write dialogue with one. Taken by `typographic` and `explain` only; the text, HTML, Markdown and rehype modes always treat each block as opening a paragraph. |
 | `avoid` | `string` | `''` | Characters the font cannot draw, as one string (`'⇒½¼¾−'`). See [`avoid`](#avoid) below. |
 | `nbsp` | `'entity' \| 'char'` | `'entity'` | HTML only (`--nbsp` on the command line). How a no-break space is written in a block that changed: as `&nbsp;`, or as the character U+00A0. Every mode accepts it, so a config spreads into any of them; only `typesetHtml` reads it. |
-| `hangAmount` | `number`, 0 to 1 | `1` | How far hanging punctuation hangs: `TypographyRoot` sets it as the CSS custom property `--hang-amount` on its `div` (see [`hangPunctuation`](#hangpunctuationel-htmlelement---void)). The string modes and the command line accept it and do nothing with it. |
+| `hangAmount` | `number`, 0 to 1 | none | How far hanging punctuation hangs: `TypographyRoot` sets it as the CSS custom property `--hang-amount` on its `div` (`style="--hang-amount:0.5"`; see [`hangPunctuation`](#hangpunctuationel-htmlelement---void)). Left out, the `div` has no style and the amount is inherited through CSS, where unset means `1`. The string modes and the command line accept it and do nothing with it. |
 | `config` | `TypographyConfig` | none | A prop of `TypographyRoot` and `Typeset`: every option above in one object. See [Config](#config). |
-| `hangAmount` | `number`, 0 to 1 | none: set as `--hang-amount` on the root's `div` (`style="--hang-amount:0.5"`); left out, the `div` has no style and the amount is inherited through CSS |
 | `early` | `boolean` | `true` | A prop of `TypographyRoot`, not an engine option. Whether the root sends the hanging pass inline (`HangScript`). Set `false` on a page whose content security policy forbids inline scripts. |
 
 ### `avoid`
@@ -45,12 +44,15 @@ out of the text:
 
 ```ts
 typographic('He said "wait..." - 1/2 of it', 'en', { avoid: '…½' });
-// He said «wait...»<nbsp>— 1/2 of it   (the quotes and the dash are set, the ellipsis is not)
+// He said «wait...»~— 1/2~of it   (~ is a no-break space; the quotes and the dash are set, the ellipsis and the fraction are not)
 ```
 
 - One change at a time. A rule that would bring in an avoided character leaves *that* stretch as it
   was and goes on with the rest, so `1/2` stays while `1/4` elsewhere in the same text can still
   become `¼` when only `½` is avoided.
+- Except quotation marks (`Rule.avoidWhole`, set by `quote`): an opening and a closing mark are two
+  changes, and a quotation with one mark converted is worse than none, so if one quotation mark is
+  avoided, all of them stay as typed in that text.
 - Nothing is reported for a change that was dropped: `explain` and `onChange` only ever see what
   reached the text.
 - What the rules can insert is `insertedCharacters(lang?)` (every character, the no-break space
@@ -62,7 +64,7 @@ typographic('He said "wait..." - 1/2 of it', 'en', { avoid: '…½' });
   it in (`avoidMissing`, on by default). The website's font checker page
   (`apps/website/font-checker/`) writes the list for a font file, and the playground has a field for it.
 
-`quoteStyle`, `enable`, `rules` and `avoid` go wherever `register` and `disable` go (every function and component in the table, including `TypographyRoot` and `Typeset`, and `--quotes` and `--enable` on the command line). `TypographyRoot` and `Typeset` also take `disable` and `onChange`.
+`quoteStyle`, `enable`, `rules` and `avoid` go wherever `register` and `disable` go (every function and component in the table, including `TypographyRoot` and `Typeset`, and `--quotes`, `--enable` and `--avoid` on the command line; `rules` reaches the command line only through `--config`). `TypographyRoot` and `Typeset` also take `disable` and `onChange`.
 
 | Function or component | `lang` | `register` | `disable` | `onChange` | `blockStart` | `nbsp` | `early` |
 |---|---|---|---|---|---|---|---|
@@ -113,7 +115,7 @@ typo --config typography.config.ts page.md   # or a "typography" key in package.
 ```
 
 - **Precedence**: an option given to a call replaces the config's value for that option. Lists are not merged: `{ ...site, disable: ['quote'] }` drops the config's `disable` and switches off `quote` only. On `TypographyRoot` and `Typeset` a prop beats `config`, which beats the outer root. On the command line a flag beats the config (see [cli.md](cli.md#config)).
-- `defineConfig(config): TypographyConfig` returns `config` unchanged after checking it, so a mistake throws where the config is written: an unknown key, a `lang`, `register`, `quoteStyle` or `nbsp` that is not one of its values, a `hangAmount` outside 0 to 1, or a name in `disable` or `enable` that matches no rule (checked against the config's `rules` when given, like `selectRules`). A plain object typed `TypographyConfig` works as well, unchecked.
+- `defineConfig(config): TypographyConfig` returns `config` unchanged after checking it, so a mistake throws where the config is written: an unknown key, a `lang`, `register`, `quoteStyle` or `nbsp` that is not one of its values, an `avoid` that is not a string, a `hangAmount` outside 0 to 1, or a name in `disable` or `enable` that matches no rule (checked against the config's `rules` when given, like `selectRules`). A plain object typed `TypographyConfig` works as well, unchecked.
 - `checkConfig(value: unknown): TypographyConfig` is the same check for a value read from JSON (a file, a `package.json` key, a pasted text); the command line and the playground use it.
 - The playground's "Config" panel shows its switches as a config, ready for `package.json` or a file, and applies one pasted back.
 - A new option goes into `TypographyConfig`; `ModeOptions` is derived from it, so it reaches every mode's type.
@@ -145,6 +147,7 @@ type TypographicOptions = {
   disable?: readonly string[];
   enable?: readonly string[];
   rules?: readonly Rule[];
+  avoid?: string;          // characters the font cannot draw, see `avoid`
   onChange?: (change: Change) => void;
 };
 ```
@@ -195,10 +198,11 @@ Every mode takes the whole config: `nbsp` is read by the HTML mode only, `hangAm
 | Export | What it is |
 |---|---|
 | `TypographyConfig`, `defineConfig`, `checkConfig` | See [Config](#config). |
-| `RULES: readonly Rule[]` | The rules in the order they run. `Rule` is `{ id: string; about: string; category?: RuleCategory; defaultOn?: boolean; when?(text, context): boolean; apply(text, context): string }`; `defaultOn: false` means the rule runs only when named in `enable`. `category` says what the rule is for (see `RULE_CATEGORIES`); every built-in rule has one, a custom rule may leave it out. `when` is an optional cheap test: when it returns false `apply` is skipped, so it must be false only if `apply` would return the text unchanged. A rule without `when` always runs. A custom rule made by spreading a built-in (`{ ...RULES[i], apply }`) copies its `when`: set `when: undefined`. |
+| `RULES: readonly Rule[]` | The rules in the order they run. `Rule` is `{ id: string; about: string; category?: RuleCategory; defaultOn?: boolean; avoidWhole?: boolean; when?(text, context): boolean; apply(text, context): string }`; `defaultOn: false` means the rule runs only when named in `enable`. `avoidWhole: true` makes [`avoid`](#avoid) all or nothing for the rule: if one of its changes would bring in an avoided character, every change it made to that text is dropped (`quote` sets it). `category` says what the rule is for (see `RULE_CATEGORIES`); every built-in rule has one, a custom rule may leave it out. `when` is an optional cheap test: when it returns false `apply` is skipped, so it must be false only if `apply` would return the text unchanged. A rule without `when` always runs. A custom rule made by spreading a built-in (`{ ...RULES[i], apply }`) copies its `when`: set `when: undefined`. |
 | `selectRules({ rules?, disable?, enable? })` | The rules that run, in order. Names are checked against `rules` (the built-in list unless given); an unknown name, or a rule named in both `disable` and `enable`, throws. `without(disable)` is `selectRules({ disable })`. |
 | `addRule(list, rule, position)` | A new list with `rule` at `{ before: id }`, `{ after: id }`, `{ first: true }` or `{ last: true }`. Does not change `list` or `RULES`; an unknown anchor or a duplicate id throws. |
 | `RULE_IDS: readonly string[]` | `RULES.map(r => r.id)`. |
+| `DEFAULT_RULES: readonly Rule[]` | The rules that run when nothing is switched on or off: every rule in `RULES` that is not `defaultOn: false`, in order. |
 | `RULE_CATEGORIES`, `RuleCategory` | `['tradition', 'symbols', 'math', 'data']` and its union type. `tradition`: quotes, the apostrophe, dashes, the ellipsis, punctuation and the spaces of prose; `symbols`: arrows, ©, ®, ™; `math`: minus, ×, ±, fractions, ⇒; `data`: digit groups, ranges, units, percentages and currencies, dates. A label for lists (`typo --rules`, [rules.md](rules.md), the playground): it does not change what a rule does, and `disable` and `enable` take ids and groups of ids, not categories. |
 | `LANGS: readonly Lang[]` | Every language that has a pack (26): the 24 EU languages, `uk` and `ch`. |
 | `PACKS`, `PACK`, `LangPack` | The language packs (`src/core/lang/`), as a list and by code, and their type. See [contributing.md](contributing.md#adding-a-language). |
@@ -375,6 +379,7 @@ Wraps a page so its text is typeset: it sets the language and register every `Ty
 | `rules` | `readonly Rule[]` | inherited; pass a constant |
 | `onChange` | `(change: Change) => void` | inherited; pass a stable function (`useCallback`). Called when a text is typeset, not on every render. |
 | `avoid` | `string` | inherited: characters the font cannot draw (see [`avoid`](#avoid)) |
+| `hangAmount` | `number`, 0 to 1 | none: set as `--hang-amount` on the root's `div` (`style="--hang-amount:0.5"`), then from `config`; left out, the `div` has no style and the amount is inherited through CSS (unset is `1`) |
 | `avoidMissing` | `boolean` | `true`: the root measures the font of its own `div` once the page's fonts have loaded (`document.fonts.ready`) and adds what that font cannot draw to `avoid`, over the marks of every language (a `Typeset` under it may set its own). A server-rendered page is typeset as usual first, and only a real gap in the font changes a text after that. Set it to `false` for a page that must render the same everywhere. |
 | `early` | `boolean` | `true` |
 

@@ -10,14 +10,14 @@ The engine has 26 language packs, `src/core/lang/<code>.ts`: the 24 official lan
 - Which decisions have a source read, and which are still general knowledge, is recorded per rule in [sources.md](../resources/sources.md). Quote marks are `disputed` there: CLDR 46 differs from the engine for English, German, French level two and de-CH.
 - The abbreviation lists are short on purpose: a list is only as long as its source. Add to a list only from a style guide.
 - The short-word lists (`shortWords`, for the opt-in rule `space.short-word`) are the exception, and they say so: five packs have one (`cs en pl sk uk`), the words are this package's own enumeration of two- and three-letter prepositions, conjunctions and the English article, and the rule is off by default. What the sources do back is where such binding belongs: Wolański (PWN) and the ÚJČ advice service both say a short word may stay at a line end in body text and must travel with what it belongs to in a title. Use the rule for titles and headings, and read [sources.md](../resources/sources.md#spaceshort-word) before trusting a list.
-- Dash profiles: German and literary British English use a spaced en dash for a break in the sentence; the packs written from the Interinstitutional Style Guide use the em dash where it says so. Croatian, Hungarian, Romanian, Slovak and Swedish use the spaced en dash their dialogue sources set before the words of the narrator. Dutch defaults to the spaced em dash, but usage there often prefers a spaced en dash; this was not verified.
+- Dash profiles: twelve packs use a spaced en dash for a break in the sentence (`cs de et fi hr hu lt lv ro sk sl sv`), as the Interinstitutional Style Guide and their national guides set it, and so does English in the literary register only; every other pack uses the spaced em dash. Dutch defaults to the spaced em dash, but usage there often prefers a spaced en dash; this was not verified.
 - The package's benchmark has a few cases per language and mostly tests English. They check that the output is a defensible style, not that a native reader approves it.
 
 ## Quote marks
 
 A quotation nested deeper than the levels a pack lists starts over from the first. Source marks may be curly, low, straight or guillemets; any mix is read, and the marks of the language and level are set. The `literary` register uses the pack's literary quotes where it has them (British English `‘…’` with `“…”` inside) and the display quotes otherwise.
 
-`quoteStyle: 'us'` sets `“…”` with `‘…’` inside for any language and takes precedence over both the language's marks and the `literary` register. The default, `'language'`, keeps each language's own marks. English's own default is `«…»`, which is this package's house style; the benchmark counts it as a failure against its own check (see `bench/RESULTS.md`).
+`quoteStyle: 'us'` sets `“…”` with `‘…’` inside for any language and takes precedence over both the language's marks and the `literary` register. The default, `'language'`, keeps each language's own marks. English's own default is `«…»`, which is this package's house style; the benchmark counts it as a failure against its own check (see [apps/bench/RESULTS.md](../apps/bench/RESULTS.md)).
 
 German nested quotes are `»outer ›inner‹ outer«`. The other common German style, `„outer ‚inner‘ outer“`, is not implemented.
 
@@ -40,9 +40,9 @@ Two things keep a short word off the end of a line, and only the first runs by d
 
 ## Not implemented
 
-- A literary profile for most languages beyond English and Ukrainian: they fall back to display. German books use `„…“` with `‚…‘` inside.
-- A quotation that continues across paragraphs (books reopen the quote at each paragraph start). Pairing is per string, so the lone opener is left as it is.
+- A literary profile for any language but English: every other pack (Ukrainian included) gives the same output in both registers. German books use `„…“` with `‚…‘` inside.
+- A quotation that continues across paragraphs (books reopen the quote at each paragraph start). Pairing is per paragraph: a lone straight opener is converted by where it stands, but the quotation is not followed into the next paragraph.
 - A lone curly quotation mark (`“`, `„`) with no partner is left as written when its side cannot be told from where it stands.
 - Per-level quote shapes that differ in kind (Latvian and Lithuanian single quotes), a third Swedish level, dotted time ranges (`9.00-18.30`), and abbreviations written without a full stop (Estonian `nr`, Finnish `klo`): listed in [backlog.md](backlog.md).
 - Italian and Maltese truncation apostrophes (`po'`, `va'`) inside straight single quotes can close the quotation early.
-- A `lang` outside `Lang` is a type error in TypeScript, throws at run time when text with quotes is typeset, and is refused by the command line.
+- A `lang` outside `Lang` is a type error in TypeScript, throws a `TypeError` at run time on any text, even an empty one, and is refused by the command line.
