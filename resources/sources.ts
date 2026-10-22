@@ -146,6 +146,48 @@ export const SOURCES: readonly Source[] = [
       'A number and a currency sign are separated by a space ("100 Kč"; without one the compound reads as an adjective), and a line may not break between the number and the sign of a unit or currency ("1 000 000 Kč, 250 €"), for which a fixed space is advised. A line also may not break after the non-syllabic prepositions "k, s, v, z" ("k mostu", "v Plzni") nor after the syllabic prepositions "o, u" and conjunctions "a, i" ("u babičky", "o páté"); one-character prepositions and conjunctions are not separated from the word that follows. The fetched summary does not mention two-letter prepositions.',
   },
   {
+    id: 'pwn-wolanski-sieroty',
+    kind: 'orthography',
+    author: 'Adam Wolański (PWN Poradnia językowa)',
+    title: 'Sieroty na końcu wiersza (PWN Poradnia, 8.06.2018)',
+    about:
+      'An answer of the PWN language advice service, by the author of the PWN book on text editing, on which one-letter words may not end a line. Read as a fetch-tool summary.',
+    cite: 'A. Wolański, "Sieroty na końcu wiersza", Poradnia językowa PWN, 8.06.2018.',
+    url: 'https://sjp.pwn.pl/poradnia/haslo/Sieroty-na-koncu-wiersza;18684.html',
+    accessed: '2026-10-22',
+    readVia: 'summary',
+    claim:
+      '"W wierszach tekstu, które liczą powyżej 40 znaków, nie należy zasadniczo pozostawiać na końcu wiersza jednoliterowych spójników i przyimków (a, i, o, u, w, z, A, I, O, U, W, Z)." and "Przyimki liczące dwa, trzy i więcej znaków mogą pozostawać na końcu wiersza w tekście zasadniczym." A recommendation for lines over 40 characters; in titles and subheads the words must travel with what they belong to.',
+  },
+  {
+    id: 'ujc-poradna-konec-radku',
+    kind: 'orthography',
+    author: 'Ústav pro jazyk český AV ČR',
+    title: 'Jazyková poradna: category "Výraz na konci řádku"',
+    about:
+      'Answers of the Czech Academy of Sciences language advice service on what may end a line; the answer #12952 gives the list and its limits, #10683 reports the ČSN norm.',
+    cite: 'Jazyková poradna ÚJČ AV ČR, answers #12952, #10683, #10881, #10896, #10907 (category "Výraz na konci řádku"); cites ČSN 01 6910 (Lozan, Pravdová, 2014, 12.6, p. 38) and Pravidla českého pravopisu 1994, §106.',
+    url: 'https://dotazy.ujc.cas.cz/odpovedi/?id_otazka=778&filter=1&id_kategorie_otazek=201&id_domena_kategorii_otazek=24&items=20&page=1',
+    accessed: '2026-10-22',
+    readVia: 'raw',
+    claim:
+      '#12952: "Na konci řádku by neměly stát jednopísmenné neslabičné předložky k, s, v, z. V hodnocení jednopísmenných slabičných předložek (o, u) a spojek (a, i) se příručky rozcházejí. … Doporučujeme, aby pokud to sazba textu umožňuje, ani tyto výrazy na koncích řádku nezůstávaly… Vícepísmenné výrazy na konci řádku zůstat mohou." #10683: "Norma ČSN 01 6910 uvádí, že by na konci řádku neměly stát jednopísmenné neslabičné předložky k, s, v, z a slabičné předložky o, u. Ostatní předložky na konci řádku stát mohou." (The norm lists k s v z o u, not a i.)',
+  },
+  {
+    id: 'zu-blyzniuk-technical-rules',
+    kind: 'research',
+    author: 'A. S. Blyzniuk (compiler), Zhytomyr Ivan Franko State University',
+    title: 'Основні технічні правила набору текстів',
+    about:
+      'A university handbook of technical typesetting rules (2012) that reproduces the Soviet-era rules for books and periodicals; not an orthography authority. The url is the PDF\'s landing page, which links to the PDF. The text layer was decoded by hand, so apostrophes and punctuation are missing in the quotes.',
+    cite: 'А. С. Близнюк (упоряд.), "Основні технічні правила набору текстів", Житомирський державний університет імені Івана Франка, 2012.',
+    url: 'https://eprints.zu.edu.ua/7122/',
+    accessed: '2026-10-22',
+    readVia: 'raw',
+    claim:
+      'Books: "У книжкових виданнях не слід залишати в кінці рядка прийменники та сполучники що починають речення а також однобуквені прийменники та сполучники в середині речень" (a recommendation, "не слід"). Periodicals are looser: one-letter ones inside a sentence are allowed at a line end. No letters are listed and two-letter words are not in the body-text rule.',
+  },
+  {
     id: 'bipm-si-brochure-9',
     kind: 'standard',
     author: 'Bureau International des Poids et Mesures (BIPM)',
@@ -728,12 +770,15 @@ export const RULE_SOURCES: Record<string, Decision> = {
       'No source found. Practical Typography "Nonbreaking spaces" was read (as a fetch-tool summary) and does not mention an ampersand or any operator; a web search for a guide on binding an ampersand between names found only general pages on no-break spaces and a LaTeX tie guide for forenames, none a style guide on this point, so none is cited. The rule is a judgement: a line ending on "&" or starting with it reads as a break in the pair. It binds both sides, so "Tom & Jerry" is one unbreakable unit, and a chain of operators binds end to end ("Tom & Jerry & Co" is five tokens in one unit; "one + two + three + four + five" is one run, and a pathological chain could bind a whole line); a guide may prefer a break before the operator instead. Two shapes stay unbound: an operator next to an inline tag in HTML or Markdown ("Tom &amp; <em>Jerry</em>": the tag placeholder is not a letter) and a word ending in a combining mark (decomposed "café & bar"). Numbers (2 + 2, x = 5) are left to the author; doubled operators (&&, ==, +=) and operators with no typed spaces (R&D, x+y) are untouched.',
   },
   'space.orphan': {
-    sources: ['ijp-penezni-castky'],
+    sources: ['ijp-penezni-castky', 'ujc-poradna-konec-radku', 'pwn-wolanski-sieroty', 'zu-blyzniuk-technical-rules'],
     why: 'A one-letter word does not end a line.',
     alternative:
-      'Czech is settled by the Internetová jazyková příručka (entry 880, read through a fetch summary): k, s, v, z, o, u, a, i stay with the next word, which is exactly the cs list; the fetched summary does not mention two-letter prepositions (do, na, ve, ...), so none is bound. Polish (a, i, o, u, w, z): only a Wikipedia article ("Sierotka (typografia)", which cites PWN and PN-P-55366:1983 without our having read either) states the six words, so the list is unchanged and not verified; the PWN Poradnia pages could not be fetched. Ukrainian: no readable source (the one found, a university layout handbook, returned 403 and a search snippet is not a read), so the list is unchanged and not verified. The English a/I rule has no source at all. Neither the Polish nor the Ukrainian two-letter prepositions are bound.',
+      'Czech: the Internetová jazyková příručka (entry 880, a fetch summary) names k, s, v, z, o, u, a, i; the Jazyková poradna (read raw) says k s v z should not end a line, that guides differ on o u and a i, and recommends binding them too where the typesetting allows; ČSN 01 6910 lists k s v z o u only. The engine binds all eight (the list is the příručka\'s). Longer words may stay. Polish (a, i, o, u, w, z): Wolański in the PWN Poradnia (a fetch summary) lists exactly these, capitals included, as a recommendation for lines over about 40 characters, which is why the pack binds them in body text; in titles and subheads they must travel with what they belong to. Two-letter prepositions may stay in body text there, so none is bound. Ukrainian: a Zhytomyr handbook of technical typesetting rules (read raw, Soviet-era rules) says "не слід" leave one-letter prepositions and conjunctions at a line end in books, without listing letters; the CLASS is source-backed and the letters (а в і ї й з у о) are the engine\'s own enumeration, so Ukrainian stays general-knowledge. Slovak (v, k, s, u, z, o, a, i): an editorial convention, not a read authority: tvorim.net (2008) and a Slovak wikibook name the words, a design studio page (grafeon.sk) states the class without letters, but the Slovak language-advice pages and the Pravidlá PDF could not be read; shipped on that footing, general-knowledge. Bulgarian has a class rule in one anonymous 2005 guide with no letters, so nothing is bound (parked for a native reviewer). Slovenian, Croatian, German, French, Spanish and Italian: nothing found. The English a/I rule has no source at all. Two-letter words are bound in no language.',
     confidence: 'verified',
-    langs: { cs: ['ijp-penezni-castky'] },
+    langs: {
+      cs: ['ijp-penezni-castky', 'ujc-poradna-konec-radku'],
+      pl: ['pwn-wolanski-sieroty'],
+    },
   },
   'space.arrow': general('An arrow stays on the line of the word it points from or to.'),
   'space.before-punctuation': {

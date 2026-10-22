@@ -47,7 +47,7 @@ tr:last-child td{border-bottom:0}
 <body>
 <main>
 <h1>Typography bibliography</h1>
-<p class="lead">Every source the rules rest on: 35 read so far. Each row says who wrote it, links to it, what it is, the one thing we rely on, and which rules and languages cite it. Generated from <code>resources/sources.ts</code> by <code>bun run docs:sources</code>; do not edit by hand. The decisions themselves, with their gaps, are on the <a href="sources.html">sources page</a>.</p>
+<p class="lead">Every source the rules rest on: 38 read so far. Each row says who wrote it, links to it, what it is, the one thing we rely on, and which rules and languages cite it. Generated from <code>resources/sources.ts</code> by <code>bun run docs:sources</code>; do not edit by hand. The decisions themselves, with their gaps, are on the <a href="sources.html">sources page</a>.</p>
 <div class="table">
 <table>
 <thead><tr><th>Source</th><th>Author</th><th>Kind</th><th>What it is</th><th>Relied on</th><th>Used in</th><th>Read</th></tr></thead>
@@ -142,6 +142,15 @@ tr:last-child td{border-bottom:0}
 <td><a class="chip" href="sources.html#rule-dash-dialogue">dash.dialogue</a> <span class="meta">pl</span></td>
 <td><span class="via summary">Summary only, check by hand</span><br><span class="meta">2026-10-21</span></td>
 </tr>
+<tr id="src-pwn-wolanski-sieroty">
+<td><b><a href="https://sjp.pwn.pl/poradnia/haslo/Sieroty-na-koncu-wiersza;18684.html" target="_blank" rel="noopener">Sieroty na końcu wiersza (PWN Poradnia, 8.06.2018) ↗</a></b><br><span class="meta">pwn-wolanski-sieroty</span></td>
+<td>Adam Wolański (PWN Poradnia językowa)</td>
+<td>Orthography</td>
+<td>An answer of the PWN language advice service, by the author of the PWN book on text editing, on which one-letter words may not end a line. Read as a fetch-tool summary.</td>
+<td>&quot;W wierszach tekstu, które liczą powyżej 40 znaków, nie należy zasadniczo pozostawiać na końcu wiersza jednoliterowych spójników i przyimków (a, i, o, u, w, z, A, I, O, U, W, Z).&quot; and &quot;Przyimki liczące dwa, trzy i więcej znaków mogą pozostawać na końcu wiersza w tekście zasadniczym.&quot; A recommendation for lines over 40 characters; in titles and subheads the words must travel with what they belong to.</td>
+<td><a class="chip" href="sources.html#rule-space-orphan">space.orphan</a> <span class="meta">pl</span></td>
+<td><span class="via summary">Summary only, check by hand</span><br><span class="meta">2026-10-22</span></td>
+</tr>
 <tr id="src-rae-raya-dialogos">
 <td><b><a href="https://www.rae.es/ortograf%C3%ADa/otros-usos-de-la-raya" target="_blank" rel="noopener">Ortografía de la lengua española, § 3.4.7.2.1 «En diálogos» ↗</a></b><br><span class="meta">rae-raya-dialogos</span></td>
 <td>Real Academia Española and ASALE</td>
@@ -159,6 +168,24 @@ tr:last-child td{border-bottom:0}
 <td>Direct speech is normally in double quotation marks; a dash may replace them only at the start of a paragraph with no lead-in clause, and the dash is spaced on both sides.</td>
 <td><a class="chip" href="sources.html#rule-dash-dialogue">dash.dialogue</a> <span class="meta">sl</span></td>
 <td><span class="via summary">Summary only, check by hand</span><br><span class="meta">2026-10-21</span></td>
+</tr>
+<tr id="src-ujc-poradna-konec-radku">
+<td><b><a href="https://dotazy.ujc.cas.cz/odpovedi/?id_otazka=778&amp;filter=1&amp;id_kategorie_otazek=201&amp;id_domena_kategorii_otazek=24&amp;items=20&amp;page=1" target="_blank" rel="noopener">Jazyková poradna: category &quot;Výraz na konci řádku&quot; ↗</a></b><br><span class="meta">ujc-poradna-konec-radku</span></td>
+<td>Ústav pro jazyk český AV ČR</td>
+<td>Orthography</td>
+<td>Answers of the Czech Academy of Sciences language advice service on what may end a line; the answer #12952 gives the list and its limits, #10683 reports the ČSN norm.</td>
+<td>#12952: &quot;Na konci řádku by neměly stát jednopísmenné neslabičné předložky k, s, v, z. V hodnocení jednopísmenných slabičných předložek (o, u) a spojek (a, i) se příručky rozcházejí. … Doporučujeme, aby pokud to sazba textu umožňuje, ani tyto výrazy na koncích řádku nezůstávaly… Vícepísmenné výrazy na konci řádku zůstat mohou.&quot; #10683: &quot;Norma ČSN 01 6910 uvádí, že by na konci řádku neměly stát jednopísmenné neslabičné předložky k, s, v, z a slabičné předložky o, u. Ostatní předložky na konci řádku stát mohou.&quot; (The norm lists k s v z o u, not a i.)</td>
+<td><a class="chip" href="sources.html#rule-space-orphan">space.orphan</a> <span class="meta">cs</span></td>
+<td><span class="via raw">Raw data</span><br><span class="meta">2026-10-22</span></td>
+</tr>
+<tr id="src-zu-blyzniuk-technical-rules">
+<td><b><a href="https://eprints.zu.edu.ua/7122/" target="_blank" rel="noopener">Основні технічні правила набору текстів ↗</a></b><br><span class="meta">zu-blyzniuk-technical-rules</span></td>
+<td>A. S. Blyzniuk (compiler), Zhytomyr Ivan Franko State University</td>
+<td>Research</td>
+<td>A university handbook of technical typesetting rules (2012) that reproduces the Soviet-era rules for books and periodicals; not an orthography authority. The url is the PDF's landing page, which links to the PDF. The text layer was decoded by hand, so apostrophes and punctuation are missing in the quotes.</td>
+<td>Books: &quot;У книжкових виданнях не слід залишати в кінці рядка прийменники та сполучники що починають речення а також однобуквені прийменники та сполучники в середині речень&quot; (a recommendation, &quot;не слід&quot;). Periodicals are looser: one-letter ones inside a sentence are allowed at a line end. No letters are listed and two-letter words are not in the body-text rule.</td>
+<td><a class="chip" href="sources.html#rule-space-orphan">space.orphan</a></td>
+<td><span class="via raw">Raw data</span><br><span class="meta">2026-10-22</span></td>
 </tr>
 <tr id="src-bipm-si-brochure-9">
 <td><b><a href="https://www.bipm.org/documents/20126/41483022/SI-Brochure-9-EN.pdf" target="_blank" rel="noopener">The International System of Units (SI), 9th edition (SI Brochure) ↗</a></b><br><span class="meta">bipm-si-brochure-9</span></td>

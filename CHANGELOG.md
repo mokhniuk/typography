@@ -2,6 +2,16 @@
 
 Versions follow semver while the package is below 1.0.0: a **minor** release may change the output of the engine or the API (every entry says whether it can change output you already have), a **patch** release fixes a bug without changing output you rely on. If you depend on exact output, pin a tag and read this file before you move it.
 
+## 0.9.0 (2026-10-22)
+
+### Changes
+
+- Slovak binds the one-letter words `v k s u z o a i` (both cases) to the next word, so a line does not end on them (`k~lesu`, `a~v~noci`); a word that merely ends in one of the letters (`Slovensko v Európe`) is untouched, and two-letter words are not bound. The list is an editorial convention from secondary sources (a typography article, a wikibook style guide, a design studio page), not a read authority, so the decision stays `general-knowledge` for sk. Can change existing output: yes, in sk.
+
+### Tooling and docs
+
+- The `space.orphan` decision record now cites more sources. Polish: Wolański in the PWN Poradnia lists `a i o u w z` (capitals too) as a recommendation for lines over about 40 characters; the list is unchanged, and the Polish list is now registry-verified from that entry. Czech: the ÚJČ Jazyková poradna (read raw) and the ČSN 01 6910 mention, with the nuance that the norm lists `k s v z o u` and the poradna recommends `a i` as well; the engine still binds all eight. Ukrainian: a Zhytomyr typesetting handbook backs the class (one-letter prepositions and conjunctions in books, "не слід"); the letter list is the engine's own, so Ukrainian stays `general-knowledge`. Two-letter words stay unbound everywhere (PWN and ÚJČ both let them stay in body text). No output change.
+
 ## 0.8.0 (2026-10-22)
 
 ### Fixes
