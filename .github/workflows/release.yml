@@ -30,13 +30,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.11
+      # The tag points at a commit on the `release` branch that holds only the packed package
+      # (scripts/release-commit.ts): Bun installs a git dependency as the whole tagged tree and
+      # ignores the `files` list, so tagging a commit of main would ship the whole repository.
       - name: Tag the version in package.json
         run: |
           version="v$(jq -r .version package.json)"
           if git ls-remote --exit-code --tags origin "refs/tags/$version" >/dev/null; then
             echo "$version already tagged"
-          else
-            # plain tag, not annotated: Bun 1.3 cannot resolve an annotated tag by name
-            git tag "$version"
-            git push origin "$version"
+            exit 0
           fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          parent=""
+          if git fetch --quiet origin release; then parent="$(git rev-parse FETCH_HEAD)"; fi
+          commit="$(bun scripts/release-commit.ts $parent)"
+          # plain tag, not annotated: Bun 1.3 cannot resolve an annotated tag by name
+          git tag "$version" "$commit"
+          git push origin "$commit:refs/heads/release" "refs/tags/$version"

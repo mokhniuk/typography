@@ -15,6 +15,14 @@
     "./dom": "./src/dom/index.ts",
     "./react": "./src/react/index.ts"
   },
+  "files": [
+    "src",
+    "!src/**/*.test.ts",
+    "!src/**/*.test.tsx",
+    "!src/**/*.fixture.json",
+    "!src/snapshot.digests.json",
+    "CHANGELOG.md"
+  ],
   "bin": {
     "typo": "./src/cli/main.ts"
   },

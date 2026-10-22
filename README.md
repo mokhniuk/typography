@@ -81,7 +81,7 @@ Not on a public registry yet (it will be, at 1.0). Until then, depend on a relea
 bun add git+ssh://git@github.com/mokhniuk/typography.git#vX.Y.Z
 ```
 
-Replace `vX.Y.Z` with a version from [CHANGELOG.md](CHANGELOG.md). It ships TypeScript sources with no build step, so it needs Bun or a TypeScript-aware bundler. Tag handling in Bun, local linking and bundler notes: [docs/contributing.md](docs/contributing.md#using-it-from-another-project).
+Replace `vX.Y.Z` with a version from [CHANGELOG.md](CHANGELOG.md). From 0.13.1 a tag holds the engine only (`src/` without tests, the readme, the changelog: about 70 files, 0.34 MB); earlier tags bring the whole repository. It ships TypeScript sources with no build step, so it needs Bun or a TypeScript-aware bundler. Tag handling in Bun, local linking and bundler notes: [docs/contributing.md](docs/contributing.md#using-it-from-another-project).
 
 ## Use
 

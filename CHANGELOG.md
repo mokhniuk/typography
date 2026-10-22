@@ -4,7 +4,13 @@ Versions follow semver while the package is below 1.0.0: a **minor** release may
 
 ## Unreleased
 
+### Changes
+
+- An install gets the engine only: `package.json` has a `files` list (the sources in `src/` without tests and fixtures, `README.md`, `CHANGELOG.md`), and a release tag now points at a commit on the `release` branch that holds only that, built by `scripts/release-commit.ts` from `bun pm pack`. Bun installs a git dependency as the whole tagged tree and ignores `files`, which is why the tag cannot sit on a commit of `main`. An install was 303 files, 3.9 MB (the website, playground, benchmark, docs, tests); it is 69 files, 0.34 MB. `src/package.test.ts` checks the pack: every source and entry point in, no test, nothing else. The dependency line stays the same (`…typography.git#vX.Y.Z`); tags up to `v0.13.0` stay where they are. No output change.
+
 ### Tooling and docs
+
+- The benchmark measures bundle size, dependencies, load time, speed and memory under Bun, Node and Deno, speed by language and as HTML, and hard inputs (`bun run size`, `deps`, `engines`, `probes`; all in `bun run bench`). The probes found two quadratic inputs in the text and HTML modes, now in the backlog. No output change.
 
 - The no-break-space and numbers articles and `practices.md` show `rock~’n’~roll` and `3~×~4`, the 0.13.0 outputs. No output change.
 

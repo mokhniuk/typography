@@ -43,7 +43,7 @@ If the changes since the last tag touch `src/` (anything that ships), check that
 3. Move the new `CHANGELOG.md` entries under `## X.Y.Z (date)`, set `version` in `package.json`.
 4. Run `bun test src apps/playground apps/website resources`, `bun run typecheck`, `bun run docs:rules`, and `bun run gen:script` if `src/dom/hang.ts` changed.
 5. Commit as `release: X.Y.Z`.
-6. Push `main`. Do NOT tag by hand: `.github/workflows/release.yml` creates the plain tag `vX.Y.Z` from `package.json` after the push. If a tag is ever needed manually, use a plain `git tag vX.Y.Z`, never `git tag -a` (Bun 1.3 cannot resolve annotated tags).
+6. Push `main`. Do NOT tag by hand: `.github/workflows/release.yml` builds a commit on the `release` branch that holds only the packed package (`scripts/release-commit.ts`, the `files` list in `package.json`) and puts the plain tag `vX.Y.Z` on it. If a tag is ever needed manually, follow "Releasing" in `docs/contributing.md`, and use a plain `git tag`, never `git tag -a` (Bun 1.3 cannot resolve annotated tags).
 
 Skip the release steps for changes that touch only docs, tests, playground or CI.
 

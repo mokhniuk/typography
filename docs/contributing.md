@@ -154,7 +154,9 @@ To release:
 1. Move the new entries of `CHANGELOG.md` under a heading `## X.Y.Z (date)`.
 2. Set `version` in `package.json` (`typo --version` reads it).
 3. Run `bun test src apps/playground apps/website resources`, `bun run typecheck`, `bun run docs:rules`, `bun run docs:languages` and, if `src/dom/hang.ts` changed, `bun run gen:script`, and commit with the message `release: X.Y.Z`.
-4. Push or merge to `main`. `.github/workflows/release.yml` runs the tests and creates the plain tag `vX.Y.Z` from `version` in `package.json` if it does not exist yet. Do not tag by hand; if you must, use a plain `git tag vX.Y.Z` (not `-a`, see below) and `git push origin vX.Y.Z`.
+4. Push or merge to `main`. `.github/workflows/release.yml` runs the tests and, if the tag `vX.Y.Z` (from `version` in `package.json`) does not exist yet, builds the release commit and tags it. The release commit holds only what `bun pm pack` packs (the `files` list in `package.json`: `src/` without tests and fixtures, `README.md`, `CHANGELOG.md`, `package.json`); it sits on the `release` branch, each one the child of the previous release, and is built by `scripts/release-commit.ts` without touching the working tree. The tag goes on that commit, not on `main`, because Bun installs a git dependency as the whole tagged tree and ignores `files`. Do not tag by hand; if you must, run `bun scripts/release-commit.ts <previous release commit>`, tag the commit it prints with a plain `git tag vX.Y.Z <commit>` (not `-a`, see below) and push both: `git push origin <commit>:refs/heads/release refs/tags/vX.Y.Z`.
+
+What ships is checked by `src/package.test.ts`: every source that is not a test, every entry point and the command line are in the pack, and nothing else is. A new file in `src/` that tests alone use must match the exclusions in `files` (`*.test.ts`, `*.test.tsx`, `*.fixture.json`, `snapshot.digests.json`), or add one there and in the test.
 
 ## Using it from another project
 

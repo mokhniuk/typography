@@ -151,11 +151,11 @@ This package's entry points one by one (`react` is a peer dependency, left out o
 
 ## Dependencies
 
-What `npm install` (or a git dependency) puts on disk for one tool: its package and everything it depends on, counted once each, read from `apps/bench/node_modules`. The licence, types and format are those of the tool's own package; the date is when the installed version was published to npm.
+What `npm install` (or a git dependency) puts on disk for one tool: its package and everything it depends on, counted once each, read from `apps/bench/node_modules` (for this package, what `bun pm pack` packs, which is what a release tag holds). This is the developer's disk and install time; what reaches a reader of a page is in [Bundle size](#bundle-size). The licence, types and format are those of the tool's own package; the date is when the installed version was published to npm.
 
-| Tool | Packages installed | On disk | Licence | Types | Format | Version published |
+| Tool | Packages installed | Install footprint | Licence | Types | Format | Version published |
 |---|---|---|---|---|---|---|
-| typography-engine | 1 (react is an optional peer) | 3.6 MB (297 files; the shipped sources are 272 KB) | none | TypeScript sources | ESM, TypeScript (needs Bun or a bundler) | git tag only |
+| typography-engine | 1 (react is an optional peer) | 337 KB (69 files) | none | TypeScript sources | ESM, TypeScript (needs Bun or a bundler) | git tag only |
 | typograf | 1 | 604 KB | MIT | yes | ESM and CommonJS | 2026-08-14 (7.8.0) |
 | typopo | 1 | 105 KB | MIT | yes | ESM and CommonJS | 2026-05-25 (3.1.0) |
 | richtypo | 1 | 22 KB | MIT | yes | ESM | 2026-04-27 (8.0.0) |

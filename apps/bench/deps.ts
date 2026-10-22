@@ -93,31 +93,24 @@ const TOOLS: [string, string[]][] = [
   ['retext-smartypants', ['retext-smartypants', 'unified', 'retext-english', 'retext-stringify']],
 ];
 
-/** This package installs from a git tag, with no `files` list: the user gets every tracked file. */
-function enginePackage(): { files: number; all: number; shipped: number } {
-  const listed = Bun.spawnSync({ cmd: ['git', 'ls-files', '-z'], cwd: REPO, stdout: 'pipe' })
+/** This package installs from a git tag whose commit holds what `bun pm pack` packs (scripts/release-commit.ts). */
+function enginePackage(): { files: number; bytes: number } {
+  const listed = Bun.spawnSync({ cmd: ['bun', 'pm', 'pack', '--dry-run'], cwd: REPO, stdout: 'pipe' })
     .stdout.toString()
-    .split('\0')
-    .filter(Boolean);
-  let all = 0;
-  let shipped = 0;
-  for (const file of listed) {
-    const path = join(REPO, file);
-    if (!existsSync(path)) continue;
-    const size = statSync(path).size;
-    all += size;
-    if (file.startsWith('src/') && !/\.test\.tsx?$|\.json$/.test(file)) shipped += size;
-  }
-  return { files: listed.length, all, shipped };
+    .split('\n')
+    .map((line) => /^packed \S+ (.+)$/.exec(line.trim())?.[1])
+    .filter((file): file is string => !!file);
+  const bytes = listed.reduce((sum, file) => sum + statSync(join(REPO, file)).size, 0);
+  return { files: listed.length, bytes };
 }
 
 export async function depsSection(): Promise<string[]> {
   const own = readPkg(REPO);
   const e = enginePackage();
   const rows = [
-    '| Tool | Packages installed | On disk | Licence | Types | Format | Version published |',
+    '| Tool | Packages installed | Install footprint | Licence | Types | Format | Version published |',
     '|---|---|---|---|---|---|---|',
-    `| typography-engine | 1 (react is an optional peer) | ${kb(e.all)} (${e.files} files; the shipped sources are ${kb(e.shipped)}) | ${own.license ?? 'none'} | TypeScript sources | ESM, TypeScript (needs Bun or a bundler) | git tag only |`,
+    `| typography-engine | 1 (react is an optional peer) | ${kb(e.bytes)} (${e.files} files) | ${own.license ?? 'none'} | TypeScript sources | ESM, TypeScript (needs Bun or a bundler) | git tag only |`,
   ];
   for (const [tool, roots] of TOOLS) {
     const dirs = closure(roots);
@@ -131,7 +124,7 @@ export async function depsSection(): Promise<string[]> {
   return [
     '## Dependencies',
     '',
-    "What `npm install` (or a git dependency) puts on disk for one tool: its package and everything it depends on, counted once each, read from `apps/bench/node_modules`. The licence, types and format are those of the tool's own package; the date is when the installed version was published to npm.",
+    "What `npm install` (or a git dependency) puts on disk for one tool: its package and everything it depends on, counted once each, read from `apps/bench/node_modules` (for this package, what `bun pm pack` packs, which is what a release tag holds). This is the developer's disk and install time; what reaches a reader of a page is in [Bundle size](#bundle-size). The licence, types and format are those of the tool's own package; the date is when the installed version was published to npm.",
     '',
     ...rows,
     '',
