@@ -9,7 +9,7 @@ Priorities: **P0** blocks the audience, **P1** closes a gap other tools do not h
 | | podiia | best other | Source |
 |---|---|---|---|
 | Benchmark checks passed (default / literary register) | 242 / 250, 250 / 250 | typograf 131 / 226 | `apps/bench/RESULTS.md` |
-| 1 MB of English, text mode | 33 ms | typograf 59 ms, tipograph 12 ms, smartypants 10 ms | `cd apps/bench && bun run bench` |
+| 1 MB of English, text mode | 63 ms | typograf 118 ms, tipograph 22 ms, smartypants 18 ms | `cd apps/bench && bun run bench` (one run; the ratios are what count) |
 | Target languages covered (26) | 26 | typograf 22, tipograph 12 | [languages/index.md](languages/index.md) |
 
 The 26 target languages are the 24 official languages of the EU, Ukrainian and US English (the option `quoteStyle: 'us'`). Podiia's 8 default-run misses are all the house `«…»` for English, which the checks count as a failure; the literary register passes every check. The cases were written by this package's author; read the caveats in [limits.md](limits.md). The cases for the twenty new languages come from the same style guides as the packs, so they are not an independent test.
@@ -40,6 +40,7 @@ Every pack has `reviewed: false`: bg cs da el es et fi ga hr hu it lt lv mt nl p
 Found in the review of the inch-mark fix (2026-10-21). It is a limit, listed in [limits.md](limits.md):
 
 - **An inch mark inside a quotation** (`He said "a 5" hole" ok`) closes the quotation at the inch mark, leaving the real closer lone (`«a 5» hole»`). Same on main. A closer after a digit followed by a letter or space and another `"` later is the ambiguous case; research what other tools do before choosing.
+
 ### Language gaps found while writing the packs
 
 Each is a limit of the pack format or an unverified choice, not a crash:
@@ -57,47 +58,26 @@ Each is a limit of the pack format or an unverified choice, not a crash:
 - **`rock 'n' roll`** is handled only in the packs that list the elision `n`.
 - **`number.group`** treats `ch` as no-break-space grouped (Swiss Federal Chancellery); five-digit amounts after a capital word are skipped; the ZIP-code guard is English, German, Italian and French in shape.
 - **`symbol.degree`** knows an English label list only (`Type C`, `Vitamin C`).
+- **`space.short-word`** lists are editorial in all five packs, and twenty-one languages have none (see the item below).
 - The opt-in rules' own limits are in [limits.md](limits.md#opt-in-rules).
 
-### Keep the original when the font lacks the glyph
+### Font checker: what is left
 
-A rule that inserts a character the font does not have shows a box or a mismatched fallback glyph; the text as typed is better. The engine is string to string and cannot see the font, so the plan is an option that names the characters to avoid:
+Shipped in 0.10.0 on the website (`/font-checker/`): a font file or an installed name, the languages, the coverage of every character the rules insert and of the letters fonts often lack (own, borrowed, none), the `avoid` config it writes, the examples set in the font at two measures, and a preset measured from the font. Still open:
 
-- A rule whose output would contain an avoided character is skipped for that match, and the original stays (the change is not recorded by `explain`). Default on, with a documented default set of characters the engine expects every font to have; the user lists what their font lacks (for example `⇒`, `½ ¼ ¾`, `−`, `→`). The candidates at risk are the symbols the rules insert: `⇒ ½ ¼ ¾ ± − × → ← ™ ® ° …` and the quote marks of unusual fonts.
-- An `avoid` field of `TypographyConfig` (so it reaches every mode's type and the config check), threaded like `enable` was: `typographic`, React, CLI, playground (and its config export), `scripts/gen-rules-doc.ts`.
-- Docs: explained next to the other options, and every opt-in rule and flag gets a before/after preview in the docs and the playground (a "preview" for each feature flag), so a reader sees what a flag changes and which characters it needs.
-- Later, a browser add-on: `supports(char)` in the React/DOM layer (`document.fonts.check` or a canvas measure), used when given; server rendering uses the option.
-- Done when: a golden test per rule shows the original text kept when its character is avoided, idempotence holds, and `explain` records nothing for the skipped match.
+- **The detection is a width comparison** (`src/dom/glyphs.ts`): a glyph exactly as wide as the fallback's in both probes is reported as missing, and a font that draws a wrong glyph of its own as present. If that proves too unreliable in practice, read the `cmap` table instead (a small table reader, written here, no dependency).
+- **The letters each language's readers actually miss** (`apps/website/font-checker/letters.ts`) are this package's own list; a native reader should check them, with the pack review (the P0 item above).
+- **The preset rests on no read source.** The size, line height, measure and hang amount are measured from the font with editorial rules of thumb; the reading list in the sources item (Dyson, Beier) is unread, so the page says the numbers are a starting point. Read it, or drop the preset.
+- **The playground has no font field**: it shows which characters each rule inserts and takes an `avoid` list, but it cannot load a font. Sharing the checker's measuring with the playground would let a reader see the real font there too.
 
-### Font checker: is this font ready for this language and these rules
+### Currencies: what is left
 
-A tool on the website (and in the playground): upload a font file, or name an installed one, pick languages, and get a verdict.
+Done in 0.10.0: a sign or code before the amount is bound, the groups of a hand-grouped amount are bound (so `space.number` and `number.group` agree), and the signs and codes are one table (`src/core/currency.ts`). Still open:
 
-- **Glyph coverage**: the characters every rule can insert (`« » „ “ ‚ ‘ ‹ › “ ” ’ … – — − × ± ½ ¼ ¾ ° § ¶ © ® ™ → ← ⇒`, the no-break and thin spaces) and the letters of each selected language that fonts most often lack (Ukrainian `ґ є і ї`, Polish `ł ą ę ś ź ż`, Maltese `ħ ġ ċ ż`, Irish fada vowels, Romanian `ș ț` with comma below, Latvian and Lithuanian macrons and ogoneks), each as present, missing, or present as a fallback glyph (the browser substitutes silently; `document.fonts.check` and a canvas width comparison against the fallback font tell them apart). The missing ones become the `avoid` list of the item above, copied into a config.
-- **Rendered examples**: the long example of each selected language, typeset by the engine with the current switches, set in the font at two widths, with hanging punctuation on, so the reader sees the quotes, dashes and marks the font actually draws.
-- **Rating and recommendation**: a score per language from the coverage, and a suggested text preset: size, line height for a vertical rhythm, measure (45 to 90 characters), `--hang-amount` for the font's quote marks (a wide guillemet hangs less than a thin `‘`). The rhythm and measure advice rests on the reading list in the sources item (Dyson, Beier), cited as context, not as rules.
-- Runs in the browser with no dependencies, per `docs/ui.md`: the font is loaded with `FontFace`, never uploaded anywhere; the glyph table is read with the browser's own measuring, not an OpenType parser, unless the fallback detection proves too unreliable (then a small table reader for `cmap`, written here).
-- Done when a font with a known gap (a system font without `ґ`, a display font without `»`) is reported with the exact characters, the `avoid` config it writes makes the engine keep the original text for them, and the examples page renders every selected language.
-
-### Phone numbers
-
-Today the engine only protects them: a hyphenated phone number is not read as a range (`555-1234`, `044-123-45-67`, `+49 30 123456-0` keep their hyphens), and nothing else is done. Checked on 0.2.1:
-
-- `+380 44 123 45 67`, `+44 20 7946 0958` and `+1 (555) 123-4567` keep plain spaces inside, so a number can wrap in the middle. Only the space before a following word is bound (`123 45 67~now`).
-- Plan: an opt-in rule `phone.bind` (off by default, named in the changelog) that joins the groups of an international number (`+` or `00`, then digits, spaces, hyphens and parentheses, at least seven digits) with no-break spaces and non-breaking hyphens (U+2011) so it never wraps, without reformatting the digits. Locale formats (`+380 44 123 45 67`, `(555) 123-4567`) are a pack field for later; start with "do not break", not "reformat".
-- Guards: dates (`2026-10-20`), ranges (`100-1200`), ISO numbers, IBANs, and anything in a link or `tel:` href are left alone; `number.group` must not group a phone number.
-- Done when: golden tests per shape above, no change to dates, ranges and identifiers, idempotence, and the letters-and-digits property holds (U+2011 replaces `-`, so the property needs a hyphen-aware check).
-
-### Currencies
-
-Partly there: `space.number` binds a number to the symbol or code after it (`49~€`, `100~USD`, `5~$`, `20~zł`, `100~грн`), and `space.percent` adds a no-break space before `%` in the 17 packs with `percentSpace` and before `€` in the 11 with `currencySpace` (`$ £ ₴ zł` are never spaced by it). Gaps found on 0.2.1:
-
-- **Code or symbol before the amount** is not bound: `USD 5 000` and `€ 49.99` can wrap between the code and the number.
-- **Grouped amounts** keep plain spaces between the groups unless `number.group` (opt-in) is on: `1 000 грн` becomes `1 000~грн`, so the number can still break in the middle.
-- **Placement and spacing per locale** (`€49.99` in en, `49,99 €` in de, fr and uk, `49,99 zł` in pl) is not applied: the engine never moves a symbol, which is right, but only `€` has a pack field (`currencySpace`) that says whether a space belongs between amount and symbol.
+- **Placement and spacing per locale** (`€49.99` in en, `49,99 €` in de, fr and uk, `49,99 zł` in pl) is not applied: the engine never moves a symbol, which is right, but only `€` has a pack field (`currencySpace`) that says whether a space belongs between amount and symbol. A field per sign, or a general one, needs a source per language.
 - **Swiss apostrophe grouping** (`CHF 1'000`) is not read as a number group, and the apostrophe is not a quote.
-- **Symbols and codes** are an inline list; a code list (ISO 4217) and the symbols of the audience's currencies (`€ $ £ ₴ zł Kč Ft lei лв kr`) should be one table in `src/core`, not in two rules.
-- Done when: golden tests per locale for the amount, the symbol and the code before and after; `space.number` and `number.group` agree on grouped amounts; no rule moves or adds a currency symbol.
+- **CLDR sets a no-break space before the currency sign in `uk`, `pl` and `fr-CH`**; the engine leaves `49€` alone there (see the sources item above).
+- **A three-letter code that is not money** (`PIN 1234`) is bound as if it were: the rule reads the shape, not the meaning (a limit, in [limits.md](limits.md)).
 
 ### Irish (`ga`): make the pack real
 
@@ -109,19 +89,19 @@ The pack exists but is thin, because the Irish edition of the Interinstitutional
 - **Initial mutations:** the hyphen and apostrophe forms (`an t-athair`, `na h-oibrithe`, `d'fhág`, `b'fhéidir`) pass through unchanged today and a test pins `d'`, `b'`, `m'`; add goldens for `t-`, `n-` and `h-` prefixes (`an t-uisce`, `i n-Éirinn`, `go h-álainn`) inside and outside quotes, since a hyphen after a single letter must never read as a range or a dash.
 - **Review:** `reviewed: false`; get an Irish reader to check the page.
 
-### Short words, conjunctions and the end of the line
+### Short words, conjunctions and the end of the line: what is left
 
-Today `space.orphan` binds a one-letter word in a language's list to the next word (`a~long`, `в~місті`), `space.number` binds a number to a short word, and `space.title`, `space.initial` and `space.abbreviation` bind their cases. Not covered, checked on 0.2.1:
+Shipped in 0.10.0: the opt-in rule `space.short-word` and the pack field `shortWords`, with editorial lists for cs, en, pl, sk and uk, for titles and headings — the read sources (PWN Poradnia, ÚJČ) say such a word may stay at a line end in body text and must travel with what it belongs to in a title. `space.orphan` (one-letter words), `space.number`, `space.title`, `space.initial` and `space.abbreviation` were there already. Still open:
 
-- Short words of two or three letters (`to`, `of`, `the`; `на`, `до`; `der`, `die`) are not bound by any pack.
+- **The word lists are editorial.** No style guide read gives a list of two- and three-letter words for any language. Find one per language, or have a native reader settle each list; five packs have one, the other twenty-one have none.
+- **The rule does not know a title from body text.** It is switched on where titles are set. A rule that binds in a heading only would need the markup, so it belongs in the HTML, Markdown and rehype modes, not in the string engine.
 - **The last words of a paragraph (widows and runts)** are decided: not a string rule, CSS `text-wrap: pretty` on the page (written down in [limits.md](limits.md)).
 - **How to bind, not only what:** a no-break space is a character and travels with the text (copy, search, screen readers read it as a space), a `<span style="white-space: nowrap">` is markup and stays on the page. The HTML, rehype and React modes could offer `bind: 'nbsp' | 'nowrap'` (the text mode and the CLI on plain text have only the character). Research what the two do to search, copy, hyphenation and `text-wrap: pretty` before choosing a default; the string engine keeps the no-break space.
-- **Short words in other languages:** cs, en, pl, sk and uk have an `orphans` list. cs and pl are backed by a read source (ÚJČ, PWN Poradnia); sk is an editorial convention from secondary sources (no Slovak authority could be read: jazykovaporadna.sme.sk and the Pravidlá PDF returned nothing); uk's class rule is backed by a Zhytomyr handbook but its letters are ours. Open: a Slovak authority for sk; a native reviewer for Bulgarian (a class rule in one anonymous 2005 guide, no letters, nothing bound). Searched and found nothing: sl, hr, de, fr, es, it. Two-letter words are bound nowhere (PWN and ÚJČ let them stay in body text); binding them in titles only would need a new rule. Known limit: the orphan lookbehind does not see combining marks, so NFD text can mis-bind a word-final list letter (see limits.md).
-- Done when each rule has golden tests per language that has the pattern, no rule can bind a whole line (`space.operator` chains are the known, disclosed exception, see limits.md), and the `bind: nowrap` question is answered.
+- **One-letter words in other languages:** cs and pl are backed by a read source (ÚJČ, PWN Poradnia); sk is an editorial convention from secondary sources (no Slovak authority could be read: jazykovaporadna.sme.sk and the Pravidlá PDF returned nothing); uk's class rule is backed by a Zhytomyr handbook but its letters are ours. Open: a Slovak authority for sk; a native reviewer for Bulgarian (a class rule in one anonymous 2005 guide, no letters, nothing bound). Searched and found nothing: sl, hr, de, fr, es, it. Known limit: the orphan lookbehind does not see combining marks, so NFD text can mis-bind a word-final list letter (see limits.md).
 
 ### Speed: what is left
 
-Nothing superlinear is known (0.2.1). Typical text costs 30 to 60 ms per MB; the biggest rules are `quote`, `space.abbreviation` and `space.title` at 5 to 10 ms each. Further gains would be constant-factor work on those; tipograph and smartypants (10 to 20 ms) do much less. React already memoises per component (`useMemo` in `Typeset`), so no paragraph cache is needed.
+Nothing superlinear is known (0.2.1). Typical text costs 60 ms per MB on the machine of the run above (30 on a quieter one); with every rule on, the biggest are `space.short-word` (16%, opt-in), `quote`, `space.number` and `space.abbreviation` at about 10 ms per MB each, then `space.title` at 6. `space.number` doubled in 0.10.0 when money and hand-grouped numbers were added to it; it is three linear passes and could be one. Further gains would be constant-factor work on those; tipograph and smartypants (10 to 20 ms) do much less. React already memoises per component (`useMemo` in `Typeset`), so no paragraph cache is needed.
 
 ## P2 (deferred by choice)
 

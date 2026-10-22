@@ -11,10 +11,20 @@ describe('docs/rules.md', () => {
   });
 
   for (const id of RULE_IDS) {
-    test(`${id} has examples, and each one changes its text`, () => {
+    test(`${id} has examples, and each one shows what it says`, () => {
       const examples = EXAMPLES[id] ?? [];
       expect(examples.length).toBeGreaterThan(0);
-      for (const example of examples) expect(runOnly(id, example)).not.toBe(example.input);
+      // An example changes its text, unless it is marked as one that shows text the rule leaves
+      // alone (a guard, or a character in `avoid`), and then it must change nothing.
+      for (const example of examples) {
+        const out = runOnly(id, example);
+        if (example.keeps) expect(out).toBe(example.input);
+        else expect(out).not.toBe(example.input);
+      }
+    });
+    test(`${id}: at least one example changes its text`, () => {
+      const examples = EXAMPLES[id] ?? [];
+      expect(examples.some((example) => runOnly(id, example) !== example.input)).toBe(true);
     });
   }
 

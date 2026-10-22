@@ -26,6 +26,7 @@ An apostrophe before a dropped-letter word is not a quotation mark: `'s`, `'m`, 
 ## Spaces
 
 - One-letter words kept with the next word: none.
+- Short words kept with the next word, in a title (the opt-in rule `space.short-word`): none.
 - A no-break space between a number and %: no.
 - A no-break space between a number and € after it: no.
 - Abbreviations: no list.

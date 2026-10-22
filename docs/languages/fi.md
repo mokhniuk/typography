@@ -26,6 +26,7 @@ The language opens and closes a quotation with the same mark.
 ## Spaces
 
 - One-letter words kept with the next word: none.
+- Short words kept with the next word, in a title (the opt-in rule `space.short-word`): none.
 - A no-break space between a number and %: yes.
 - A no-break space between a number and € after it: yes.
 

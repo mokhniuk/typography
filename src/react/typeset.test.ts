@@ -50,6 +50,11 @@ describe('typesetFor passes the remaining options on', () => {
     expect(typesetFor('"x" 1-2', { ...root, disable: ['dash.range'] }, true)).toBe('«x» 1-2');
   });
 
+  test('avoid keeps the text as typed where a rule would insert a character the font lacks', () => {
+    expect(typesetFor('"x"... ok', { ...root, avoid: '«»' }, true)).toBe('"x"… ok');
+    expect(typesetFor('"x"... ok', { ...root, avoid: '…' }, true)).toBe('«x»... ok');
+  });
+
   test('onChange sees every change', () => {
     const seen: string[] = [];
     typesetFor('"x"... ok', { ...root, onChange: (c) => seen.push(c.rule) }, true);

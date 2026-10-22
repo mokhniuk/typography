@@ -11,6 +11,7 @@ import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { RULE_SOURCES } from '../resources/sources';
 import {
+  ruleGlyphs,
   type Lang,
   NBSP,
   type Register,
@@ -26,6 +27,13 @@ export type Example = {
   lang?: Lang;
   register?: Register;
   blockStart?: boolean;
+  /** Characters the font cannot draw (the `avoid` option), for an example that shows what it keeps. */
+  avoid?: string;
+  /**
+   * The example shows text the rule leaves alone (a guard, or a character in `avoid`), so its two
+   * lines are the same. Every other example must change its text (`src/docs.test.ts`).
+   */
+  keeps?: true;
   /** One line about what the example shows. */
   note?: string;
 };
@@ -65,7 +73,15 @@ export const EXAMPLES: Record<string, readonly Example[]> = {
     { input: `It's Maria's turn, don't wait.`, note: 'Inside a word.' },
     { input: `The '90s were loud.`, note: 'Before a year.' },
   ],
-  ellipsis: [{ input: 'Wait... what?' }],
+  ellipsis: [
+    { input: 'Wait... what?' },
+    {
+      input: 'Wait... what?',
+      avoid: '…',
+      keeps: true,
+      note: 'With the ellipsis in `avoid` (a font that cannot draw it), the text stays as typed.',
+    },
+  ],
   'space.before-punctuation': [
     { input: 'Hello , world . Is it ready ? (yes )', note: 'Off by default.' },
     {
@@ -104,6 +120,17 @@ export const EXAMPLES: Record<string, readonly Example[]> = {
       input: '- Odotetaanko? kysyi hän.',
       lang: 'fi',
       note: 'An en dash where the language uses one. A paragraph whose later line also opens with a dash is a list and is left alone.',
+    },
+  ],
+  'phone.bind': [
+    {
+      input: 'Call +380 44 123 45 67 or +1 (555) 123-4567',
+      note: 'Off by default. The digits are not reformatted; the hyphen becomes U+2011, which does not break.',
+    },
+    {
+      input: 'Not 555-1234, not 2026-10-20, not DE89 3704 0044 0532 0130 00',
+      keeps: true,
+      note: 'A local number, a date and an IBAN are left alone: the number must open with + or 00 and hold seven to fifteen digits.',
     },
   ],
   'dash.range': [
@@ -163,6 +190,14 @@ export const EXAMPLES: Record<string, readonly Example[]> = {
   'space.copyright': [{ input: '© 2026 Studio' }],
   'space.section': [{ input: 'See § 5 and ¶¶ 3, 4' }],
   'space.operator': [{ input: 'Tom & Jerry, rock + roll' }],
+  'space.short-word': [
+    {
+      input: 'Welcome to the city of light',
+      note: 'For titles and headings; off by default. Never more than two words in a row, so a chain cannot grow into a line.',
+    },
+    { input: 'Zapraszamy do Gdańska', lang: 'pl' },
+    { input: 'Ласкаво просимо до міста', lang: 'uk' },
+  ],
   'space.orphan': [
     { input: 'A cat and I', lang: 'en' },
     { input: 'Він і я в домі', lang: 'uk' },
@@ -194,6 +229,7 @@ export function runOnly(id: string, example: Example, rules: readonly Rule[] = R
   return typographic(example.input, example.lang ?? 'en', {
     register: example.register ?? 'display',
     blockStart: example.blockStart ?? true,
+    avoid: example.avoid,
     rules,
     disable: rules.map((rule) => rule.id).filter((other) => other !== id),
     enable: rules.find((rule) => rule.id === id)?.defaultOn === false ? [id] : [],
@@ -204,6 +240,7 @@ function setting(example: Example): string {
   const parts: string[] = [example.lang ?? 'en'];
   if (example.register) parts.push(example.register);
   if (example.blockStart === false) parts.push('not at block start');
+  if (example.avoid) parts.push(`avoid ${show(example.avoid)}`);
   return parts.join(', ');
 }
 
@@ -247,6 +284,13 @@ export function render(rules: readonly Rule[] = RULES): string {
     );
     if (rule.defaultOn === false) {
       out.push('Off by default: switch it on with `enable` (`--enable` on the command line).', '');
+    }
+    const glyphs = ruleGlyphs()[rule.id];
+    if (glyphs) {
+      out.push(
+        `Characters it can insert, in any language: ${[...glyphs].map((ch) => `\`${ch === NBSP ? '~' : ch}\``).join(' ')}. A font that lacks one of them is handled by \`avoid\` (see [api.md](api.md#avoid)).`,
+        '',
+      );
     }
     for (const example of EXAMPLES[rule.id] ?? []) {
       out.push(

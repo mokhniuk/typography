@@ -3,11 +3,11 @@
 **Real quotation marks, dashes and spaces, in 26 languages.** A typography engine for running text: plain strings in, typeset strings out, nothing marked up in the source. Tags, links and code are left alone.
 
 [![CI](https://github.com/mokhniuk/typography/actions/workflows/release.yml/badge.svg)](https://github.com/mokhniuk/typography/actions/workflows/release.yml)
-![31 rules](https://img.shields.io/badge/rules-31-4c72b0)
+![33 rules](https://img.shields.io/badge/rules-33-4c72b0)
 ![26 languages](https://img.shields.io/badge/languages-26-4c72b0)
 ![Zero dependencies](https://img.shields.io/badge/dependencies-0-2ca02c)
 ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6)
-![1 MB in 56 ms](https://img.shields.io/badge/1%20MB%20of%20text-56%20ms-2ca02c)
+![1 MB in 63 ms](https://img.shields.io/badge/1%20MB%20of%20text-63%20ms-2ca02c)
 
 ```diff
 - Ada said: "The sign read 'Closed' again" - and laughed... We're used to it by now.
@@ -47,24 +47,25 @@ Speed, English text in one piece, best of three (typograf is the closest tool in
 
 | Tool | 10 KB | 100 KB | 1 MB |
 |---|---|---|---|
-| **podiia** | **1 ms** | **6 ms** | **56 ms** |
-| typograf | 1 ms | 11 ms | 117 ms |
-| tipograph | 0 ms | 2 ms | 24 ms |
+| **podiia** | **1 ms** | **6 ms** | **63 ms** |
+| typograf | 1 ms | 12 ms | 118 ms |
+| tipograph | 0 ms | 2 ms | 22 ms |
 | smartypants | 0 ms | 2 ms | 18 ms |
-| retext-smartypants | 5 ms | 51 ms | 1059 ms |
-| typopo | 41 ms | 2101 ms | not run (~210 s) |
-| richtypo | 5026 ms | not run (~500 s) | not run (~14 h) |
+| retext-smartypants | 5 ms | 52 ms | 2075 ms |
+| typopo | 39 ms | 2104 ms | not run (~210 s) |
+| richtypo | 4876 ms | not run (~485 s) | not run (~13 h) |
 
 The tools that beat it on speed (tipograph, smartypants) score far below it on the checks; typograf, the closest in scope, is about 2× slower on large text, and typopo and richtypo slow down quadratically.
 
 ## What is in the box
 
-- **31 rules** — quotes, apostrophes, dashes, ranges, no-break spaces, symbols, numbers; 22 on by default, 9 opt-in ([docs/rules.md](docs/rules.md)).
+- **33 rules** — quotes, apostrophes, dashes, ranges, no-break spaces, symbols, numbers, money, phone numbers; 22 on by default, 11 opt-in ([docs/rules.md](docs/rules.md)).
 - **26 languages** — the 24 official EU languages, `uk` and `ch`, each one pack with its quote marks, dash habits, elisions and abbreviations ([docs/languages.md](docs/languages.md)).
 - **Two registers** — `display` for interface and marketing text, `literary` for book-like text.
 - **Every format** — plain text, HTML, Markdown, hast trees (rehype plugin), React components, the DOM, a CLI.
 - **`explain`** — every change comes with the rule that made it and the before/after, so nothing is a mystery.
 - **Hanging punctuation** — opening marks hang in the margin at any width, no line-break measuring, with an inline script so prerendered pages do not jump ([more below](#hanging-punctuation-without-a-jump-on-a-prerendered-page)).
+- **A font without the glyph** — `avoid` names the characters a font cannot draw and the rules keep the text as it was typed instead of inserting them; in a browser `TypographyRoot` measures the page's own font and fills that list in, and the website's font checker writes it for a font file ([docs/api.md](docs/api.md#avoid)).
 - **Zero dependencies** — nothing in the package imports anything outside it; `react` is an optional peer for the `./react` entry only.
 - **Safe by construction** — code, tags, URLs and protected spans are never touched; an unknown rule name throws instead of silently passing.
 

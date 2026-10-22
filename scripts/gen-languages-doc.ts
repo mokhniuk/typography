@@ -107,6 +107,9 @@ export function renderPack(pack: LangPack): string {
   out.push('', '## Spaces', '');
   out.push(
     `- One-letter words kept with the next word: ${pack.orphans ? orphanLetters(pack.orphans) : 'none'}.`,
+    `- Short words kept with the next word, in a title (the opt-in rule \`space.short-word\`): ${
+      pack.shortWords?.length ? pack.shortWords.map(code).join(' ') : 'none'
+    }.`,
     `- A no-break space between a number and %: ${pack.percentSpace ? 'yes' : 'no'}.`,
     `- A no-break space between a number and € after it: ${pack.currencySpace ? 'yes' : 'no'}.`,
   );

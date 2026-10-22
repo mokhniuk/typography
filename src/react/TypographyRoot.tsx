@@ -3,13 +3,16 @@ import {
   type ReactNode,
   type RefObject,
   useContext,
+  useEffect,
   useLayoutEffect,
   useMemo,
   useRef,
+  useState,
   useSyncExternalStore,
 } from 'react';
 import type { Change, Lang, QuoteStyle, Register, Rule, TypographyConfig } from '../core';
-import { hangPunctuation, hangScript } from '../dom';
+import { insertedGlyphs } from '../core';
+import { hangPunctuation, hangScript, missingIn } from '../dom';
 import { TypographyContext } from './context';
 
 /**
@@ -36,6 +39,37 @@ export function useHangingPunctuation(root: RefObject<HTMLElement | null>) {
 }
 
 const subscribe = () => () => {};
+
+/**
+ * The characters the font of `root` cannot draw, measured once the fonts of the page have loaded
+ * (see `missingGlyphs` in ../dom). Empty on the server and until the measure is made, so the first
+ * paint is the ordinary typeset text and only a real gap in the font changes it.
+ */
+export function useMissingGlyphs(
+  root: RefObject<HTMLElement | null>,
+  lang: Lang,
+  on: boolean,
+): string {
+  const [missing, setMissing] = useState('');
+  useEffect(() => {
+    const el = root.current;
+    if (!on || !el) {
+      setMissing('');
+      return;
+    }
+    let live = true;
+    const measure = () => {
+      if (live) setMissing(missingIn(insertedGlyphs(lang), el));
+    };
+    const fonts = typeof document === 'undefined' ? undefined : document.fonts;
+    if (fonts) fonts.ready.then(measure, measure);
+    else measure();
+    return () => {
+      live = false;
+    };
+  }, [root, lang, on]);
+  return missing;
+}
 
 /** True on the server and while the page hydrates; false on any client render after that. */
 const useServerRender = () =>
@@ -66,6 +100,8 @@ export function TypographyRoot({
   enable,
   rules,
   onChange,
+  avoid,
+  avoidMissing = true,
   hangAmount,
   early = true,
 }: {
@@ -84,6 +120,15 @@ export function TypographyRoot({
   rules?: readonly Rule[] | undefined;
   /** Called with each change made to a text under this root; pass a stable function (`useCallback`). */
   onChange?: ((change: Change) => void) | undefined;
+  /** Characters the font cannot draw: a rule that would insert one leaves the text as typed. */
+  avoid?: string | undefined;
+  /**
+   * Whether to add the characters the page's own font cannot draw to `avoid`, measured in the
+   * browser (`true` by default). They are measured once the fonts have loaded, so a server-rendered
+   * page is typeset as usual first and only a real gap in the font changes a text. Set it to `false`
+   * for a page that must render the same everywhere, or to name the characters yourself with `avoid`.
+   */
+  avoidMissing?: boolean | undefined;
   /** How far marks hang, 0 to 1: set as `--hang-amount` on the root's div. Left out, it is inherited through CSS. */
   hangAmount?: number | undefined;
   early?: boolean;
@@ -98,6 +143,9 @@ export function TypographyRoot({
   const list = rules ?? config?.rules ?? inherited.rules;
   const listener = onChange ?? inherited.onChange;
   const amount = hangAmount ?? config?.hangAmount;
+  const given = avoid ?? config?.avoid ?? inherited.avoid ?? '';
+  const missing = useMissingGlyphs(root, language, avoidMissing);
+  const without = missing ? given + missing : given;
   const value = useMemo(
     () => ({
       lang: language,
@@ -107,8 +155,9 @@ export function TypographyRoot({
       enable: switchedOn,
       rules: list,
       onChange: listener,
+      avoid: without,
     }),
-    [language, setting, style, switchedOff, switchedOn, list, listener],
+    [language, setting, style, switchedOff, switchedOn, list, listener, without],
   );
   useHangingPunctuation(root);
   return (

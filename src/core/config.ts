@@ -23,6 +23,12 @@ export type TypographyConfig = {
   enable?: readonly string[] | undefined;
   /** The list of rules to run instead of the built-in `RULES` (see `addRule`). Only from a module, not JSON. */
   rules?: readonly Rule[] | undefined;
+  /**
+   * Characters the font cannot draw, as one string (`'⇒½¼¾−'`): a rule that would insert one of them
+   * leaves the text as it was typed, for that one change. Empty unless given; the font checker on the
+   * website writes the list for a font.
+   */
+  avoid?: string | undefined;
   /** HTML only: a no-break space as `&nbsp;` (the default) or the character. Ignored by the other modes. */
   nbsp?: 'entity' | 'char' | undefined;
   /** How far hanging punctuation hangs, 0 to 1 (`--hang-amount`); set by `TypographyRoot`. Ignored by the string modes. */
@@ -36,6 +42,7 @@ const KEYS: readonly (keyof TypographyConfig)[] = [
   'disable',
   'enable',
   'rules',
+  'avoid',
   'nbsp',
   'hangAmount',
 ];
@@ -69,11 +76,16 @@ export function checkConfig(value: unknown): TypographyConfig {
       throw new Error(`config: unknown key "${key}" (${KEYS.join(', ')})`);
     }
   }
-  const { lang, register, quoteStyle, disable, enable, rules, nbsp, hangAmount } = config;
+  const { lang, register, quoteStyle, disable, enable, rules, avoid, nbsp, hangAmount } = config;
   if (lang !== undefined) oneOf('lang', lang, LANGS);
   if (register !== undefined) oneOf('register', register, ['display', 'literary']);
   if (quoteStyle !== undefined) oneOf('quoteStyle', quoteStyle, ['language', 'us']);
   if (nbsp !== undefined) oneOf('nbsp', nbsp, ['entity', 'char']);
+  if (avoid !== undefined && typeof avoid !== 'string') {
+    throw new Error(
+      `config: avoid is a string of the characters the font cannot draw, not ${JSON.stringify(avoid)}`,
+    );
+  }
   if (
     hangAmount !== undefined &&
     (typeof hangAmount !== 'number' || !(hangAmount >= 0 && hangAmount <= 1))

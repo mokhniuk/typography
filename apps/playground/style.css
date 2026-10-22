@@ -115,17 +115,25 @@ fieldset {
 }
 select,
 button,
-textarea {
+textarea,
+input[type="text"] {
   font: inherit;
   color: inherit;
 }
 select,
-button {
+button,
+input[type="text"] {
   min-height: var(--control-height);
   background: var(--color-surface);
   border: 1px solid var(--color-line);
   border-radius: var(--radius-md);
   padding: var(--space-2) var(--space-4);
+}
+/* The characters to avoid: a short field, set in the mono font so a mark is easy to tell apart. */
+input[type="text"] {
+  font-family: var(--font-mono);
+  font-size: var(--size-sm);
+  width: 9rem;
 }
 /* The native arrow sits at the browser's own inset; this one is drawn, so it has room and follows the theme. */
 select {
@@ -300,6 +308,12 @@ details p {
   margin: var(--space-3) 0 0;
   font-size: var(--size-xs);
 }
+/* The line under the avoid field that says what it is for */
+form > small[data-hint] {
+  flex-basis: 100%;
+  margin: calc(-1 * var(--space-3)) 0 0;
+  font-size: var(--size-xs);
+}
 /* The rule list: one fieldset per category, its rules in a grid */
 details fieldset {
   display: grid;
@@ -319,8 +333,19 @@ details fieldset fieldset legend {
 }
 details label {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--space-3);
   align-items: baseline;
+}
+/* The characters a rule can insert, on a line of its own under it; struck through while avoided. */
+details label > small[data-glyphs-for] {
+  flex-basis: 100%;
+  margin-inline-start: var(--space-5);
+  font-family: var(--font-mono);
+}
+details label > small[data-avoided] {
+  color: var(--color-del-text);
+  text-decoration: line-through;
 }
 details > button {
   background: transparent;

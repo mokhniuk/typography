@@ -78,7 +78,40 @@ export type TypographicOptions = {
   rules?: readonly Rule[] | undefined;
   /** Called with each change a rule makes, in the order the rules ran. Costs a diff per rule that changed anything. */
   onChange?: ((change: Change) => void) | undefined;
+  /**
+   * Characters the font cannot draw, as one string (`'⇒½¼¾−'`). Wherever a rule would insert one of
+   * them, that one change is dropped and the text stays as it was typed, which reads better than a
+   * box or another font's glyph; nothing is reported for it. Costs a diff per rule that changed
+   * anything, so it is only paid when it is set. See `insertedCharacters` in glyphs.ts for what the
+   * rules can insert, and the font checker for finding the characters a font lacks.
+   */
+  avoid?: string | undefined;
 };
+
+/**
+ * `after`, with every change that brought in an avoided character undone. The text is compared with
+ * the same word-level diff `explain` uses, so a "change" here is one stretch a rule rewrote: the
+ * stretch is kept as it was typed if what arrived holds a character of `avoided`.
+ */
+export function keepAvoided(before: string, after: string, avoided: ReadonlySet<string>): string {
+  let out = '';
+  let from = '';
+  let to = '';
+  const settle = () => {
+    out += [...to].some((ch) => avoided.has(ch)) ? from : to;
+    from = '';
+    to = '';
+  };
+  for (const run of diff(before, after)) {
+    if (run.kind === 'same') {
+      settle();
+      out += run.text;
+    } else if (run.kind === 'del') from += run.text;
+    else to += run.text;
+  }
+  settle();
+  return out;
+}
 
 /** Pairs each stretch that left with the stretch that arrived in its place. */
 function changesOf(rule: string, runs: readonly DiffRun[]): Change[] {
@@ -115,6 +148,7 @@ export function typographic(
     enable,
     rules: custom,
     onChange,
+    avoid,
   }: TypographicOptions = {},
 ): string {
   const rules =
@@ -122,11 +156,13 @@ export function typographic(
       ? selectRules({ rules: custom, disable, enable })
       : DEFAULT_RULES;
   const context: Context = { lang, register, quoteStyle, blockStart };
+  const avoided = avoid ? new Set([...avoid]) : null;
   const [shielded, restore] = shield(text);
   let out = shielded;
   for (const rule of rules) {
     if (rule.when && !rule.when(out, context)) continue;
-    const next = rule.apply(out, context);
+    const applied = rule.apply(out, context);
+    const next = avoided && applied !== out ? keepAvoided(out, applied, avoided) : applied;
     if (onChange && next !== out) {
       for (const change of changesOf(rule.id, diff(out, next))) onChange(change);
     }

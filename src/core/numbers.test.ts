@@ -36,16 +36,12 @@ describe('number.group', () => {
   });
 
   test('leaves a number already grouped, in any language', () => {
-    for (const s of [
-      '1,000,000',
-      '1 000 000',
-      `1${N}000${N}000`,
-      '1.000.000',
-      '1’000’000',
-      "1'000'000",
-    ]) {
+    for (const s of ['1,000,000', `1${N}000${N}000`, '1.000.000', '1’000’000', "1'000'000"]) {
       for (const lang of LANGS) expect(on(s, lang)).toBe(s);
     }
+    // Grouped by hand with plain spaces: this rule leaves the digits alone, and space.number binds
+    // the group spaces, so the number cannot break inside itself (the two rules agree).
+    for (const lang of LANGS) expect(on('1 000 000', lang)).toBe(`1${N}000${N}000`);
     expect(on('1234,000')).toBe('1234,000');
     expect(on('12345,000')).toBe('12345,000');
   });

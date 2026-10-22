@@ -18,6 +18,7 @@ const ORDER = [
   'symbol.implies',
   'symbol.legal',
   'dash.dialogue',
+  'phone.bind',
   'number.group',
   'dash.range',
   'dash.sentence',
@@ -36,6 +37,7 @@ const ORDER = [
   'space.association',
   'space.copyright',
   'space.operator',
+  'space.short-word',
   'space.orphan',
   'space.arrow',
   'space.trailing',
@@ -51,6 +53,9 @@ describe('the built-in order', () => {
 
 /** A planned rule: where it must stand when it exists, as [rule, relation, anchor]. */
 const SLOTS: readonly (readonly [string, 'before' | 'after', string])[] = [
+  ['phone.bind', 'before', 'number.group'],
+  ['phone.bind', 'before', 'dash.range'],
+  ['phone.bind', 'before', 'symbol.minus'],
   ['number.group', 'before', 'dash.range'],
   ['number.group', 'before', 'space.number'],
   ['symbol.fraction', 'before', 'space.number'],
@@ -63,6 +68,7 @@ const SLOTS: readonly (readonly [string, 'before' | 'after', string])[] = [
   ['symbol.plusminus', 'before', 'symbol.minus'],
   ['symbol.implies', 'after', 'arrow'],
   ['space.trailing', 'after', 'space.arrow'],
+  ['space.short-word', 'before', 'space.orphan'],
 ];
 
 describe('the reserved slots', () => {

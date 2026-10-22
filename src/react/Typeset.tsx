@@ -21,6 +21,7 @@ export function typesetFor(text: string, setting: TypographySetting, atStart: bo
     enable: setting.enable,
     rules: setting.rules,
     onChange: setting.onChange,
+    avoid: setting.avoid,
   });
 }
 
@@ -39,6 +40,7 @@ export function Typeset({
   enable,
   rules,
   onChange,
+  avoid,
 }: {
   text: string;
   /** Whether `text` opens its paragraph; false for a string that continues one after an element. */
@@ -59,6 +61,8 @@ export function Typeset({
   rules?: readonly Rule[] | undefined;
   /** Overrides the change listener of the surrounding `TypographyRoot`. Pass a stable function (`useCallback`). */
   onChange?: ((change: Change) => void) | undefined;
+  /** Characters the font cannot draw; overrides the root's list (its own and the measured ones). */
+  avoid?: string | undefined;
 }) {
   const inherited = useContext(TypographyContext);
   const language = lang ?? config?.lang ?? inherited.lang;
@@ -68,6 +72,7 @@ export function Typeset({
   const switchedOn = enable ?? config?.enable ?? inherited.enable;
   const list = rules ?? config?.rules ?? inherited.rules;
   const listener = onChange ?? inherited.onChange;
+  const without = avoid ?? config?.avoid ?? inherited.avoid;
   // The rules are a dozen regex passes; hover state in a parent re-renders this often.
   const formatted = useMemo(
     () =>
@@ -81,10 +86,11 @@ export function Typeset({
           enable: switchedOn,
           rules: list,
           onChange: listener,
+          avoid: without,
         },
         atStart,
       ),
-    [text, language, setting, style, switchedOff, switchedOn, list, listener, atStart],
+    [text, language, setting, style, switchedOff, switchedOn, list, listener, without, atStart],
   );
   return <HangText text={formatted} atStart={atStart} />;
 }

@@ -8,6 +8,7 @@ const switches: Switches = {
   register: 'literary',
   quoteStyle: 'us',
   nbsp: 'char',
+  avoid: '⇒½',
   hang: 0.3,
   // Click order, not run order.
   disable: ['dash.range', 'quote'],
@@ -18,6 +19,7 @@ const defaults: Switches = {
   register: 'display',
   quoteStyle: 'language',
   nbsp: 'entity',
+  avoid: '',
   hang: 1,
   disable: [],
   enable: [],
@@ -32,6 +34,7 @@ describe('playground config: export, and import back', () => {
       quoteStyle: 'us',
       nbsp: 'char',
       hangAmount: 0.3,
+      avoid: '⇒½',
       disable: runOrder(['dash.range', 'quote']),
       enable: ['symbol.plusminus'],
     });
@@ -46,10 +49,10 @@ describe('playground config: export, and import back', () => {
 
   test('what it exports is a valid config that sets the text as the page does', () => {
     const config = checkConfig(JSON.parse(configText(switches)));
-    const { lang, register, quoteStyle, disable, enable } = switches;
+    const { lang, register, quoteStyle, disable, enable, avoid } = switches;
     const text = '"x" - 1-2 +-3';
     expect(typesetText(text, config)).toBe(
-      typesetText(text, { lang, register, quoteStyle, disable, enable }),
+      typesetText(text, { lang, register, quoteStyle, disable, enable, avoid }),
     );
   });
 

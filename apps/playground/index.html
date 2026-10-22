@@ -37,6 +37,11 @@
             <option value="us">US: “…” and ‘…’</option>
           </select>
         </label>
+        <label id="avoidField">Avoid characters
+          <input id="avoid" type="text" size="12" spellcheck="false"
+            placeholder="⇒½¼¾−" aria-describedby="avoidAbout" />
+        </label>
+        <small id="avoidAbout" data-hint>Characters the font cannot draw: a rule that would insert one of them leaves the text as typed.</small>
         <label id="nbspField" hidden>No-break space as
           <select id="nbsp">
             <option value="entity">&amp;nbsp;</option>

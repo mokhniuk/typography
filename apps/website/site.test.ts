@@ -24,7 +24,11 @@ describe('website pages', () => {
         if (!href || /^([a-z]+:|#)/i.test(href)) continue;
         const target = posix.normalize(posix.join(path, href.split('#')[0] ?? ''));
         const page = target.endsWith('/') ? target : `${target}/`;
-        if (page !== './' && !pages.has(page) && !['playground/', ''].includes(page))
+        if (
+          page !== './' &&
+          !pages.has(page) &&
+          !['playground/', 'font-checker/', ''].includes(page)
+        )
           missing.push(`${path} -> ${href}`);
       }
     }

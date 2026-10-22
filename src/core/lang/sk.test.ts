@@ -67,4 +67,9 @@ describe('Slovak', () => {
     expect(t('- Počkáme? - spýtal sa.')).toBe('–~Počkáme?~– spýtal sa.');
     expect(t('- Počkáme? - spýtal sa.', { register: 'literary' })).toBe('–~Počkáme?~– spýtal sa.');
   });
+
+  test('short words stay with the next word when space.short-word is on', () => {
+    expect(t('Vitajte na námestí', { enable: ['space.short-word'] })).toBe('Vitajte na~námestí');
+    expect(t('Vitajte na námestí')).toBe('Vitajte na námestí');
+  });
 });

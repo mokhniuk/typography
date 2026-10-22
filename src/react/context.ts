@@ -17,6 +17,11 @@ export type TypographySetting = {
   enable?: readonly string[] | undefined;
   /** The list of rules to run instead of the built-in one. */
   rules?: readonly Rule[] | undefined;
+  /**
+   * Characters the font cannot draw: a rule that would insert one of them leaves the text as it was
+   * typed. `TypographyRoot` measures the font of the page and fills this in; see `avoidMissing`.
+   */
+  avoid?: string | undefined;
   /** Called with each change made to a text, when it is typeset (not on every render). */
   onChange?: ((change: Change) => void) | undefined;
 };

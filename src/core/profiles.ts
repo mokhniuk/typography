@@ -29,6 +29,11 @@ export const LITERARY: Partial<Record<Lang, readonly Level[]>> = table((p) => p.
 /** One-letter words a language must not strand at the end of a line. */
 export const ORPHANS: Partial<Record<Lang, RegExp>> = table((p) => p.orphans);
 
+/** Short words (two or three letters) that travel with the next word in a title (`space.short-word`). */
+export const SHORT_WORDS: Partial<Record<Lang, readonly string[]>> = table((p) =>
+  p.shortWords?.length ? p.shortWords : undefined,
+);
+
 /**
  * The dash that sets off a break in the sentence, spaced. An em dash unless a language
  * says otherwise: German sets a spaced en dash, and so does British English in the

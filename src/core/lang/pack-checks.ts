@@ -42,5 +42,14 @@ export function wellFormed(pack: LangPack, file: string) {
     for (const [open, close] of pack.turnedPairs ?? []) {
       expect(open).not.toBe(close);
     }
+    // Short words: two or three letters, lower case, no duplicates (the rule adds the capital form).
+    const short = pack.shortWords ?? [];
+    expect(new Set(short).size).toBe(short.length);
+    for (const word of short) {
+      expect(word).toBe(word.toLocaleLowerCase());
+      expect([...word].length).toBeGreaterThan(1);
+      expect([...word].length).toBeLessThan(4);
+      expect(/^[\p{L}]+$/u.test(word)).toBe(true);
+    }
   });
 }

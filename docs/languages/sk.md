@@ -24,6 +24,7 @@ A quotation nested deeper than the levels listed starts over from the first.
 ## Spaces
 
 - One-letter words kept with the next word: k K s S v V z Z o O u U a A i I.
+- Short words kept with the next word, in a title (the opt-in rule `space.short-word`): `do` `od` `vo` `na` `so` `za` `po` `pre` `pri` `nad` `pod` `bez`.
 - A no-break space between a number and %: no.
 - A no-break space between a number and € after it: no.
 - Abbreviations: no list.

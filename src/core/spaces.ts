@@ -1,6 +1,13 @@
+import {
+  CURRENCY_CODES,
+  CURRENCY_SIGNS,
+  CURRENCY_WORDS,
+  EURO,
+  PERCENT,
+} from './currency';
 import { PACK } from './lang';
-import { ABBREVIATIONS, type Abbreviations, ORPHANS } from './profiles';
-import { before, isLetterOrNumber, replaceBehind } from './scan';
+import { ABBREVIATIONS, type Abbreviations, ORPHANS, SHORT_WORDS } from './profiles';
+import { before, isLetter, isLetterOrNumber, replaceBehind } from './scan';
 import { type Lang, NBSP } from './types';
 
 /** `(?<![\p{L}\p{N}])` before `index`: no letter or number stands directly before it. */
@@ -36,12 +43,93 @@ export const initials = (text: string): string =>
     () => `.${NBSP}`,
   );
 
+/** A number and a short word, a percent sign, a degree sign or a currency sign after it. */
+const NUMBER_UNIT = new RegExp(
+  `(\\d)[ ]+(?=[\\p{L}]{1,9}(?![\\p{L}])|[${PERCENT}°${CURRENCY_SIGNS}])`,
+  'gu',
+);
+
+/** The longest currency name read back from before an amount (`lei`, `USD`, `zł`). */
+const SIGN_LETTERS = 3;
+const CURRENCY_NAMES: ReadonlySet<string> = new Set<string>([
+  ...CURRENCY_CODES,
+  ...CURRENCY_WORDS,
+]);
+
+/**
+ * Whether a currency sign, code or letter name ends at `end`: `€`, `USD`, `zł`. A name of letters
+ * must stand free (no letter or digit before it), and is read back by at most `SIGN_LETTERS`
+ * characters, so a long word before an amount costs a fixed number of steps, not its length.
+ */
+function currencyEndsAt(text: string, end: number): boolean {
+  if (CURRENCY_SIGNS.includes(text.charAt(end - 1))) return true;
+  let start = end;
+  while (start > 0 && end - start < SIGN_LETTERS && isLetter(text.charAt(start - 1))) start--;
+  for (let from = start; from < end; from++) {
+    if (CURRENCY_NAMES.has(text.slice(from, end))) return !isLetterOrNumber(before(text, from));
+  }
+  return false;
+}
+
+const DIGIT = /\d/g;
+
+/**
+ * A currency sign or code before the amount stays with it: `USD 5`, `€ 49.99`. The digit is found
+ * first and the typed spaces and the sign before it are read back by hand (a forward `[ ]+` would be
+ * tried from every space of a run and scan to its end each time, see `association`).
+ */
+function currencyBefore(text: string): string {
+  let out = '';
+  let from = 0;
+  DIGIT.lastIndex = 0;
+  for (let m = DIGIT.exec(text); m; m = DIGIT.exec(text)) {
+    const at = m.index;
+    let start = at;
+    while (start > from && text.charCodeAt(start - 1) === 0x20) start--;
+    if (start === at || !currencyEndsAt(text, start)) continue;
+    out += text.slice(from, start) + NBSP;
+    from = at;
+  }
+  DIGIT.lastIndex = 0;
+  return from === 0 ? text : out + text.slice(from);
+}
+
+/**
+ * The digit groups of a number written in threes (1 000 000), with nothing that would make the run
+ * something else: no leading zero (a phone number or a code: 09 123 456), no digit, letter, sign or
+ * separator directly before it, no digit group before it (+380 44 123 45 67), and no further digits
+ * after it (555 123 4567).
+ */
+const GROUP_RUN = /[1-9]\d{0,2}(?:[ ]\d{3})+(?![\d\p{L}])(?![  ]\d)/gu;
+const NOT_BEFORE_GROUPS = /[\d\p{L}+,.:/'’‑-]/u;
+const isSpace = (code: number): boolean => code === 0x20 || code === 0xa0;
+
+function groupsStandFree(text: string, at: number): boolean {
+  const prev = before(text, at);
+  if (prev === '') return true;
+  if (NOT_BEFORE_GROUPS.test(prev)) return false;
+  if (!isSpace(text.charCodeAt(at - 1))) return true;
+  let start = at;
+  while (start > 0 && isSpace(text.charCodeAt(start - 1))) start--;
+  return !/[\d)]/.test(before(text, start));
+}
+
+/**
+ * A number the writer grouped by hand keeps its groups on one line: `1 000 000`, `5 000 zł`. This is
+ * what the opt-in `number.group` does to a number of its own, so the two agree on an amount that is
+ * already grouped.
+ */
+const bindGroups = (text: string): string =>
+  replaceBehind(text, GROUP_RUN, groupsStandFree, (m) => m[0].replaceAll(' ', NBSP));
+
 /**
  * A number stays with a short word after it (a unit, a month): 21 September, 15 people, 5 %.
- * A longer word is left free, so a chain of bound words never outgrows a narrow column.
+ * A longer word is left free, so a chain of bound words never outgrows a narrow column. Money is
+ * kept whole as well: the sign or code before the amount (`USD 5 000`, `€ 49.99`) and the digit
+ * groups of an amount written in threes (`1 000 грн`). The engine never moves or adds a sign.
  */
 export const numberUnit = (text: string): string =>
-  text.replace(/(\d)[ ]+(?=[\p{L}]{1,9}(?![\p{L}])|[%°€$£])/gu, `$1${NBSP}`);
+  bindGroups(currencyBefore(text.replace(NUMBER_UNIT, `$1${NBSP}`)));
 
 const ASSOCIATION = /e\.V\./g;
 
@@ -120,6 +208,57 @@ export const orphans = (text: string, lang: Lang): string => {
 
 const escapeRegex = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
+const capitalised = (word: string) => word.charAt(0).toUpperCase() + word.slice(1);
+
+/** The pattern of a language's short words, built once: the word in either case, its spaces, and a word after it. */
+const shortWordPatterns = new Map<Lang, RegExp | null>();
+
+function shortWordPattern(lang: Lang): RegExp | null {
+  const cached = shortWordPatterns.get(lang);
+  if (cached !== undefined) return cached;
+  const list = SHORT_WORDS[lang];
+  const made = list?.length
+    ? new RegExp(
+        `(?:${list
+          .flatMap((word) => [word, capitalised(word)])
+          .map(escapeRegex)
+          .join('|')})(?![\\p{L}\\p{N}])[ ]+(?=[\\p{L}\\p{N}])`,
+        'gu',
+      )
+    : null;
+  shortWordPatterns.set(lang, made);
+  return made;
+}
+
+/**
+ * A short word (two or three letters) travels with the word after it: `to~the shop`. For titles and
+ * headings, which is why the rule is off by default — the sources read say such a word may stay at a
+ * line end in body text. Never more than two words in a row: a short word that follows one this rule
+ * has just bound stays free, so a chain cannot grow into a whole line.
+ */
+export function shortWords(text: string, lang: Lang): string {
+  const pattern = shortWordPattern(lang);
+  if (!pattern) return text;
+  pattern.lastIndex = 0;
+  let out = '';
+  let from = 0;
+  let lastEnd = -1;
+  for (let m = pattern.exec(text); m; m = pattern.exec(text)) {
+    const at = m.index;
+    // A word that already follows a no-break space stays free: that is how the chain is kept to two
+    // words whether the space was bound on this pass (`lastEnd`) or on an earlier one (the character).
+    if (!freeBefore(text, at) || at === lastEnd || before(text, at) === NBSP) {
+      pattern.lastIndex = at + 1;
+      continue;
+    }
+    out += text.slice(from, at) + m[0].replace(/[ ]+$/, NBSP);
+    from = at + m[0].length;
+    lastEnd = from;
+  }
+  pattern.lastIndex = 0;
+  return from === 0 ? text : out + text.slice(from);
+}
+
 /**
  * The three abbreviation patterns of a language, each as the forward regex that stays once the
  * leading `(?<![\p{L}\p{N}])` is taken off (it is checked by hand, see scan.ts).
@@ -176,11 +315,18 @@ export const abbreviations = (text: string, lang: Lang): string => {
   return out;
 };
 
-/** The marks `unitSymbol` spaces in a language: `%` with `percentSpace`, `€` with `currencySpace`. */
+/**
+ * The marks `unitSymbol` spaces in a language: `%` with `percentSpace`, `€` with `currencySpace`.
+ * The euro sign comes from the currency table (currency.ts), the one place a sign is named.
+ */
+const BOTH_MARKS = new RegExp(`[${PERCENT}${EURO}]`, 'g');
+const PERCENT_ONLY = new RegExp(PERCENT, 'g');
+const EURO_ONLY = new RegExp(EURO, 'g');
+
 const unitMarks = (lang: Lang): RegExp | undefined => {
   const { percentSpace, currencySpace } = PACK[lang];
-  if (percentSpace) return currencySpace ? /[%€]/g : /%/g;
-  return currencySpace ? /€/g : undefined;
+  if (percentSpace) return currencySpace ? BOTH_MARKS : PERCENT_ONLY;
+  return currencySpace ? EURO_ONLY : undefined;
 };
 
 /**

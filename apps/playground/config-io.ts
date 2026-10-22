@@ -15,6 +15,8 @@ export type Switches = RuleState & {
   register: Register;
   quoteStyle: QuoteStyle;
   nbsp: 'entity' | 'char';
+  /** Characters the font cannot draw (`avoid`), as one string; empty when there are none. */
+  avoid: string;
   /** How far marks hang, 0 to 1 (`hangAmount`). */
   hang: number;
 };
@@ -36,6 +38,7 @@ export function toConfig(switches: Switches): TypographyConfig {
     quoteStyle: switches.quoteStyle,
     nbsp: switches.nbsp,
     hangAmount: switches.hang,
+    ...(switches.avoid ? { avoid: switches.avoid } : {}),
     ...(disable.length ? { disable } : {}),
     ...(enable.length ? { enable } : {}),
   };
@@ -72,6 +75,7 @@ export function fromConfig(text: string): Switches {
     register: config.register ?? 'display',
     quoteStyle: config.quoteStyle ?? 'language',
     nbsp: config.nbsp ?? 'entity',
+    avoid: config.avoid ?? '',
     hang: config.hangAmount ?? 1,
     disable: RULES.filter((rule) => rule.defaultOn !== false && !on.has(rule)).map((r) => r.id),
     enable: RULES.filter((rule) => rule.defaultOn === false && on.has(rule)).map((r) => r.id),

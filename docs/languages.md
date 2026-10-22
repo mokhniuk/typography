@@ -1,6 +1,6 @@
 # Languages
 
-One generated page per language, read from its pack: [languages/index.md](languages/index.md). Each page lists the quote marks and nesting, the sentence dash, orphan letters, abbreviations, `%` and currency spacing, number format, and the sources the pack was written from.
+One generated page per language, read from its pack: [languages/index.md](languages/index.md). Each page lists the quote marks and nesting, the sentence dash, orphan letters, short words, abbreviations, `%` and currency spacing, number format, and the sources the pack was written from.
 
 The engine has 26 language packs, `src/core/lang/<code>.ts`: the 24 official languages of the EU (`bg cs da de el en es et fi fr ga hr hu it lt lv mt nl pl pt ro sk sl sv`), Ukrainian (`uk`) and Swiss usage (`ch`). `Lang` is derived from the packs, and `en` is the default when none is given. American English is not a pack: it is the option `quoteStyle: 'us'` (`“…”` with `‘…’` inside) on any language.
 
@@ -9,6 +9,7 @@ The engine has 26 language packs, `src/core/lang/<code>.ts`: the 24 official lan
 - **No pack has been read by a native speaker.** Every pack has `reviewed: false`. The five oldest (`en uk de pl fr`) and `ch` came from general knowledge; the other twenty were written from published style guides (the EU Interinstitutional Style Guide first, then the national guide), and each page names its sources. Some of those sources could only be read in part, so a pack is a defensible style, not a certified one. Have a native reader check a language before you rely on it, then set `reviewed: true`.
 - Which decisions have a source read, and which are still general knowledge, is recorded per rule in [sources.md](../resources/sources.md). Quote marks are `disputed` there: CLDR 46 differs from the engine for English, German, French level two and de-CH.
 - The abbreviation lists are short on purpose: a list is only as long as its source. Add to a list only from a style guide.
+- The short-word lists (`shortWords`, for the opt-in rule `space.short-word`) are the exception, and they say so: five packs have one (`cs en pl sk uk`), the words are this package's own enumeration of two- and three-letter prepositions, conjunctions and the English article, and the rule is off by default. What the sources do back is where such binding belongs: Wolański (PWN) and the ÚJČ advice service both say a short word may stay at a line end in body text and must travel with what it belongs to in a title. Use the rule for titles and headings, and read [sources.md](../resources/sources.md#spaceshort-word) before trusting a list.
 - Dash profiles: German and literary British English use a spaced en dash for a break in the sentence; the packs written from the Interinstitutional Style Guide use the em dash where it says so. Croatian, Hungarian, Romanian, Slovak and Swedish use the spaced en dash their dialogue sources set before the words of the narrator. Dutch defaults to the spaced em dash, but usage there often prefers a spaced en dash; this was not verified.
 - The package's benchmark has a few cases per language and mostly tests English. They check that the output is a defensible style, not that a native reader approves it.
 
@@ -29,6 +30,13 @@ Where a language writes a line of dialogue with a dash instead of quotation mark
 - Not set: `et` (dialogue is quoted), `el` and `lv` (not confirmed by a source read), and `en de ch nl mt ga`.
 
 Only the start of the text (`blockStart`), and not when a later line of the same paragraph also opens with a dash: a dash after a line break is as likely a list marker, and a paragraph of such lines is a list. A single line that opens with `- ` in one of these languages is read as dialogue, so a one-item list written that way gets the dash too. Sources per language are in [sources.md](../resources/sources.md#dashdialogue).
+
+## Short words and one-letter words
+
+Two things keep a short word off the end of a line, and only the first runs by default:
+
+- `space.orphan` binds the one-letter words a pack lists (`cs en pl sk uk`), in any text. The letters are in each language page.
+- `space.short-word` binds the two- and three-letter words a pack lists, and is off until named in `enable`. It never binds more than two words in a row.
 
 ## Not implemented
 

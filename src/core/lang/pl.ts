@@ -11,6 +11,10 @@ export const pl = {
     ['«', '»'],
   ],
   orphans: /(?<![\p{L}\p{N}])([aAiIoOuUwWzZ])[ ]+(?=\S)/gu,
+  // Two- and three-letter prepositions and conjunctions, for the opt-in rule space.short-word:
+  // Wolański (PWN) says they may stay at a line end in body text but must travel with what they
+  // belong to in a title, which is what the rule is for. The entries are editorial.
+  shortWords: ['do', 'od', 'we', 'na', 'po', 'za', 'ze', 'dla', 'bez', 'pod', 'nad', 'lub', 'czy'],
   abbreviations: {
     bind: [
       'ul',

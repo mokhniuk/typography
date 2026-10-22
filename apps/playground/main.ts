@@ -1,6 +1,7 @@
 import {
   type Change,
   diff,
+  NBSP,
   LANGS,
   type Lang,
   PACKS,
@@ -9,6 +10,7 @@ import {
   type Register,
   RULES,
   type Rule,
+  ruleGlyphs,
 } from '../../src/core';
 import { hangPunctuation, markHangs } from '../../src/dom';
 import { typesetHtml } from '../../src/html';
@@ -44,6 +46,8 @@ type State = {
   register: Register;
   quoteStyle: QuoteStyle;
   nbsp: 'entity' | 'char';
+  /** Characters the font cannot draw (`avoid`): a rule that would insert one leaves the text as typed. */
+  avoid: string;
   view: View;
   mark: boolean;
   /** How far an opening mark hangs in the preview, from 0 to 1, as `--hang-amount`. */
@@ -79,6 +83,7 @@ function load(): State {
     register: 'display',
     quoteStyle: 'language',
     nbsp: 'entity',
+    avoid: '',
     view: 'result',
     mark: false,
     hang: 1,
@@ -107,6 +112,7 @@ function load(): State {
       register: saved.register === 'literary' ? 'literary' : 'display',
       quoteStyle: saved.quoteStyle === 'us' ? 'us' : 'language',
       nbsp: saved.nbsp === 'char' ? 'char' : 'entity',
+      avoid: typeof saved.avoid === 'string' ? saved.avoid : '',
       view: saved.view === 'changes' || saved.view === 'preview' ? saved.view : 'result',
       mark: saved.mark === true,
       hang: readHang(saved.hang),
@@ -145,6 +151,7 @@ const registerSelect = el<HTMLSelectElement>('register');
 const quoteStyleSelect = el<HTMLSelectElement>('quoteStyle');
 const nbspSelect = el<HTMLSelectElement>('nbsp');
 const nbspField = el<HTMLLabelElement>('nbspField');
+const avoidInput = el<HTMLInputElement>('avoid');
 const mark = el<HTMLInputElement>('mark');
 const hangInput = el<HTMLInputElement>('hang');
 const hangValue = el<HTMLOutputElement>('hangValue');
@@ -199,6 +206,11 @@ function addRuleBox(set: HTMLFieldSetElement, rule: Rule) {
   const about = document.createElement('small');
   about.textContent = rule.defaultOn === false ? `${rule.about} (off by default)` : rule.about;
   label.append(box, name, about);
+  // What the rule can put into the text, filled in by render() for the language in use: a reader
+  // sees which characters a flag needs, and whether `avoid` is keeping them out.
+  const glyphs = document.createElement('small');
+  glyphs.dataset.glyphsFor = rule.id;
+  label.append(glyphs);
   set.append(label);
   box.addEventListener('change', () => {
     Object.assign(state, setRule(state, rule, box.checked));
@@ -215,7 +227,7 @@ const escapeHtml = (text: string) =>
 const visible = (text: string) => text.replaceAll(' ', '⍽');
 
 function convert(): { output: string; changes: Change[] } {
-  const { lang, register, quoteStyle, disable, enable } = state;
+  const { lang, register, quoteStyle, disable, enable, avoid } = state;
   const changes: Change[] = [];
   const options = {
     lang,
@@ -223,6 +235,7 @@ function convert(): { output: string; changes: Change[] } {
     quoteStyle,
     disable,
     enable,
+    avoid,
     onChange: (change: Change) => changes.push(change),
   };
   const output =
@@ -343,6 +356,7 @@ function render() {
   registerSelect.value = state.register;
   quoteStyleSelect.value = state.quoteStyle;
   nbspSelect.value = state.nbsp;
+  if (avoidInput.value !== state.avoid) avoidInput.value = state.avoid;
   mark.checked = state.mark;
   hangInput.value = String(stopOf(state.hang));
   showHang();
@@ -350,6 +364,19 @@ function render() {
   for (const box of ruleList.querySelectorAll<HTMLInputElement>('input')) {
     const rule = RULES.find((r) => r.id === box.dataset.id);
     if (rule) box.checked = isOn(state, rule);
+  }
+  // The characters each rule can insert, in the language in use; a rule whose characters the font
+  // cannot draw is marked, because its changes are kept out of the text.
+  const glyphsOf = ruleGlyphs(state.lang);
+  for (const small of ruleList.querySelectorAll<HTMLElement>('[data-glyphs-for]')) {
+    const inserts = glyphsOf[small.dataset.glyphsFor ?? ''] ?? '';
+    small.textContent = inserts
+      ? `Inserts ${[...inserts].map((ch) => (ch === NBSP ? '~' : ch)).join(' ')}`
+      : '';
+    small.hidden = !inserts;
+    const avoided = [...state.avoid].some((ch) => inserts.includes(ch));
+    if (avoided) small.setAttribute('data-avoided', '');
+    else small.removeAttribute('data-avoided');
   }
   ruleCount.textContent = ruleBadge(state);
   ruleCount.hidden = !ruleCount.textContent;
@@ -445,6 +472,10 @@ quoteStyleSelect.addEventListener('change', () => {
 });
 nbspSelect.addEventListener('change', () => {
   state.nbsp = nbspSelect.value === 'char' ? 'char' : 'entity';
+  schedule();
+});
+avoidInput.addEventListener('input', () => {
+  state.avoid = avoidInput.value;
   schedule();
 });
 // Live while dragging: only the hanging pass runs again, the preview is not rebuilt.

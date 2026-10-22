@@ -30,9 +30,22 @@ What the engine deliberately leaves alone, what it knowingly does not do, and wh
 - **The literary register has been tested but not looked at on a real page.** It has unit tests and a rendered check of the British quotes and the hanging marks, not of a Ukrainian dialogue page.
 - **`space.operator` binds chains end to end.** A lone `&`, `+` or `=` between two letter words is bound on both sides, so a chain (`Tom & Jerry & Co`, `one + two + three + four + five`) binds end to end into one unbreakable unit; a pathological chain could bind a whole line. It does not bind an operator next to an inline tag in HTML or Markdown (`Tom &amp; <em>Jerry</em>`: the tag placeholder is not a letter), after a word ending in a combining mark (decomposed `café & bar`), or where either side of it is not a letter (a digit, a bracket, a full stop, the start or end of the text, as in `2 + 2` and `x = 5`).
 
+## Money and grouped numbers
+
+- **A number the writer grouped by hand is bound as one number** by `space.number` (`1 000 000` keeps its groups together), and a phone number written in groups of three looks exactly like one. The guards are the shape: a leading zero (`09 123 456`), a group run that follows another digit group (`+380 44 123 45 67`), and four digits at the end (`555 123 4567`) are left alone. What is left is a number of 1–3 digits followed by groups of exactly three with nothing else around it, which in prose is an amount; `number.group` reads the same shape as one number. A seven-digit number written `555 123 456`, with no country code, is bound as an amount.
+- **A currency sign or code binds to the amount after it** (`USD 5 000`, `€ 49.99`). The codes are ISO 4217 and the signs are the ones of the audience's currencies (`src/core/currency.ts`); a code of three capitals that is not currency (`ISO 9001` has no space-then-digit shape, but `PIN 1234` does) binds too where it stands before a number. The engine never moves, adds or removes a sign: placement per language (`€49.99` in English, `49,99 €` in German) is the writer's.
+
+## Fonts and `avoid`
+
+- **The engine cannot see a font.** `avoid` is a list you give it (see [api.md](api.md#avoid)); the measuring in `./dom` writes that list in a browser, and `TypographyRoot` uses it by default (`avoidMissing`).
+- **The measuring compares advance widths**, so a font whose glyph is exactly as wide as the fallback's in both probes is reported as missing, and a font that draws a wrong glyph of its own is reported as present. A no-break space cannot be measured at all and is never reported.
+- **`avoid` drops a whole change, not a character.** A rule that rewrites a stretch (a quotation, a spaced dash) leaves that whole stretch as it was typed if any character it would insert is avoided.
+- **In React the text can change after the fonts load.** The first paint is the ordinary typeset text; once `document.fonts.ready` resolves and a gap is found, the texts under the root are set again. Set `avoidMissing={false}` for a page that must not do that.
+- **The font checker's verdict and preset are a starting point**, not research: the score is the share of characters the font draws itself, and the size, line height, measure and hang amount are measured from the font with editorial rules of thumb.
+
 ## Opt-in rules
 
-Nine rules are off until named in `enable` (`number.group` is described in the rules page) ([rules.md](rules.md)). Their known limits:
+Eleven rules are off until named in `enable` (`number.group` is described in the rules page) ([rules.md](rules.md)). Their known limits:
 
 - **`space.before-punctuation`** removes a space before `, . ; : ! ? )` only when the mark is not followed by a letter or digit, so a decimal (` .5`), a file extension (` .gitignore`), `!=` and `??` stay. A colon between digits (`10 : 30`) and an emoticon (` :)`, ` ;-)`) are left. A dot is not pulled against another dot, so `. . .` never becomes `...`. French keeps its space before `: ; ! ?` (it needs one) but loses it before `, . )`. It is not aware of prose that is really code: `a ?. b` outside a code span is left only because of its guards.
 - **`space.after-comma`** adds a space only when a letter follows the comma. `1,5`, `1,000` and `3,14` are untouched, and so is `a,b` inside a web address, email or code span. It cannot tell `a,b` in a CSV or a list of variables from a missed space, so use it on prose.
@@ -41,6 +54,8 @@ Nine rules are off until named in `enable` (`number.group` is described in the r
 - **`symbol.plusminus`** turns `+-` into `±` only before a digit and not after a letter, digit or `+`. A range written right after it (`+-0.2-5`) is read as a range only on a second run, because `dash.range` runs before the sign exists.
 - **`symbol.fraction`** knows `1/2`, `1/4` and `3/4` only, as whole numbers: not `11/2`, `1/20`, `a1/2`, `1/2/2026`, `5/1/2`, `0.1/2` or `1/2a`. `2 1/2` becomes `2 ½` (a mixed number keeps its integer; some fonts show `2½` closer). Other fractions (`2/3`, `1/3`) are left. The rule binds a short word after the fraction (`½ cup`) with a no-break space itself, because `space.number` only looks for a digit before the space.
 - **`symbol.degree`** reads `20°C`, `20 °C`, `20° C` and `20 C` (also `F`) and writes number, no-break space, `°C`. The degree sign is the signal: a bare `20 C` is read as a temperature unless the word before the number is a single letter or a label such as Type, Class, Section, Plan, Grade, Level, Vitamin (an English list; `Vitamin C 5 C` is left). `20C` with no space, `20 Cat`, `20 F1` and `5 C.E.` are left. Kelvin and `ºC` (a masculine ordinal) are not handled.
+- **`phone.bind`** only keeps a number whole; it never reformats one. It reads a number that opens with `+` or `00` followed directly by a digit and holds seven to fifteen digits (ITU-T E.164), with digits, spaces, hyphens and brackets inside. So a local number (`555-1234`, `044-123-45-67`), a number written `+ 49 30 …` with a space after the sign, and a number of more than fifteen digits are left as typed — the last on purpose, because a phone number standing directly against a date or another figure would otherwise swallow it (`+49 30 1234567 2026-10-20` is nineteen digits and is left alone). A date, a range, an IBAN group and a `tel:` link are left alone. Locale formats per language are not applied (in the backlog). The hyphens become U+2011, so a text search for the typed hyphen no longer finds them.
+- **`space.short-word`** binds the words of a list in the pack (cs, en, pl, sk, uk have one; every other language has none and the rule does nothing). The lists are editorial, not read from a style guide, and they are for titles and headings: the sources read say such a word may stay at a line end in body text. It never binds more than two words in a row, and a word that already follows a no-break space is left free, so the first of two short words wins (`in the house` becomes `in~the house`). It does not know a title from body text: switch it on where you set titles.
 - **`symbol.implies`** turns `=>` into `⇒`. Not `=>>`, `==>`, `=>=` or `<=>`. Outside a code span it cannot tell an arrow function in prose from an implication.
 
 ## HTML mode
@@ -76,15 +91,15 @@ Since 0.2.0 the package is faster than typograf on English text in one piece, an
 
 | Tool | 10 KB | 100 KB | 1000 KB |
 |---|---|---|---|
-| this package | 0 ms | 3 ms | 33 ms |
-| typograf | 1 ms | 6 ms | 59 ms |
-| typopo | 21 ms | 1086 ms | 100010 ms |
-| richtypo | 2502 ms | not run (the file estimates about 249 s, extrapolating a quadratic) | not run |
-| tipograph | 0 ms | 1 ms | 12 ms |
-| smartypants | 0 ms | 1 ms | 10 ms |
-| retext-smartypants | 3 ms | 32 ms | 543 ms |
+| this package | 1 ms | 6 ms | 63 ms |
+| typograf | 1 ms | 12 ms | 118 ms |
+| typopo | 39 ms | 2104 ms | not run (the file estimates about 210 s) |
+| richtypo | 4876 ms | not run (the file estimates about 485 s, extrapolating a quadratic) | not run |
+| tipograph | 0 ms | 2 ms | 22 ms |
+| smartypants | 0 ms | 2 ms | 18 ms |
+| retext-smartypants | 5 ms | 52 ms | 2075 ms |
 
-That is 0.03 s against 0.06 s for typograf at 1 MB; 0.2.0 took it from 0.32 s (the output is identical: a differential run against the engine as it was before the speed work, over 2.5 million combinations, finds no difference). The cost is linear in the text. What made the old engine slow was a regular expression that opens with a lookbehind, which the engine tries at every position; the rules now find a literal first and read the character before it (`src/core/scan.ts`), and a rule is skipped when a cheap test (`Rule.when`) shows its trigger is absent. The quote rule is 5 ms per MB of ordinary prose, 60 to 100 ms on text full of unpaired marks.
+Every figure here is from one run of the benchmark, so only the ratios between the tools mean anything: an earlier run on the same machine put this package at 33 ms and typograf at 59 at 1 MB, with every other tool about half of what it shows above. That is 0.06 s against 0.12 s for typograf at 1 MB; 0.2.0 took it from 0.32 s (the output is identical: a differential run against the engine as it was before the speed work, over 2.5 million combinations, finds no difference). The cost is linear in the text. What made the old engine slow was a regular expression that opens with a lookbehind, which the engine tries at every position; the rules now find a literal first and read the character before it (`src/core/scan.ts`), and a rule is skipped when a cheap test (`Rule.when`) shows its trigger is absent. The quote rule is 5 ms per MB of ordinary prose, 60 to 100 ms on text full of unpaired marks.
 
 Since 0.2.1 no known input makes a rule superlinear: a run of one opening mark (`“` repeated 40,000 times) took a minute and now takes about 7 ms, and text full of dialogue or unpaired marks costs about 45 to 70 ms per MB (it was 180 to 200). Every rule is linear on a long run of one character (spaces, digits, `x`, `-`, `--`, `.`, `+-`, `1x`, `!`, `)`), and the opt-in `space.before-punctuation`, `punctuation.double` and `symbol.degree` no longer open with a lookbehind (about 1, 2 and 5 ms per MB when switched on, from 40, 40 and 200). `bun scripts/stress.ts` times each rule at 20,000, 40,000 and 80,000 characters of each such run and flags a doubling that costs more than 2.5 times; `src/core/linear.test.ts` holds the loose version of that as a test.
 

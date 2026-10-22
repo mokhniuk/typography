@@ -62,7 +62,12 @@ export function website(): Plugin {
   return {
     name: 'typography-website',
     config(config) {
-      const hand = ['index.html', 'playground/index.html', '404.html'].map((name) =>
+      const hand = [
+        'index.html',
+        'playground/index.html',
+        'font-checker/index.html',
+        '404.html',
+      ].map((name) =>
         join(SITE_ROOT, name),
       );
       return {

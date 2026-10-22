@@ -148,7 +148,7 @@ tr:last-child td{border-bottom:0}
 <td>Orthography</td>
 <td>An answer of the PWN language advice service, by the author of the PWN book on text editing, on which one-letter words may not end a line. Read as a fetch-tool summary.</td>
 <td>&quot;W wierszach tekstu, które liczą powyżej 40 znaków, nie należy zasadniczo pozostawiać na końcu wiersza jednoliterowych spójników i przyimków (a, i, o, u, w, z, A, I, O, U, W, Z).&quot; and &quot;Przyimki liczące dwa, trzy i więcej znaków mogą pozostawać na końcu wiersza w tekście zasadniczym.&quot; A recommendation for lines over 40 characters; in titles and subheads the words must travel with what they belong to.</td>
-<td><a class="chip" href="sources.html#rule-space-orphan">space.orphan</a> <span class="meta">pl</span></td>
+<td><a class="chip" href="sources.html#rule-space-short-word">space.short-word</a><br><a class="chip" href="sources.html#rule-space-orphan">space.orphan</a> <span class="meta">pl</span></td>
 <td><span class="via summary">Summary only, check by hand</span><br><span class="meta">2026-10-22</span></td>
 </tr>
 <tr id="src-rae-raya-dialogos">
@@ -175,7 +175,7 @@ tr:last-child td{border-bottom:0}
 <td>Orthography</td>
 <td>Answers of the Czech Academy of Sciences language advice service on what may end a line; the answer #12952 gives the list and its limits, #10683 reports the ČSN norm.</td>
 <td>#12952: &quot;Na konci řádku by neměly stát jednopísmenné neslabičné předložky k, s, v, z. V hodnocení jednopísmenných slabičných předložek (o, u) a spojek (a, i) se příručky rozcházejí. … Doporučujeme, aby pokud to sazba textu umožňuje, ani tyto výrazy na koncích řádku nezůstávaly… Vícepísmenné výrazy na konci řádku zůstat mohou.&quot; #10683: &quot;Norma ČSN 01 6910 uvádí, že by na konci řádku neměly stát jednopísmenné neslabičné předložky k, s, v, z a slabičné předložky o, u. Ostatní předložky na konci řádku stát mohou.&quot; (The norm lists k s v z o u, not a i.)</td>
-<td><a class="chip" href="sources.html#rule-space-orphan">space.orphan</a> <span class="meta">cs</span></td>
+<td><a class="chip" href="sources.html#rule-space-short-word">space.short-word</a><br><a class="chip" href="sources.html#rule-space-orphan">space.orphan</a> <span class="meta">cs</span></td>
 <td><span class="via raw">Raw data</span><br><span class="meta">2026-10-22</span></td>
 </tr>
 <tr id="src-zu-blyzniuk-technical-rules">
@@ -193,7 +193,7 @@ tr:last-child td{border-bottom:0}
 <td>Standard</td>
 <td>The definitive international reference on the SI, in force since 2019. Section 5.4 sets how the value of a quantity and a number are written. It is a metrology standard: it covers unit symbols and digit grouping, not general prose typography, and it does not say whether a space is nonbreaking.</td>
 <td>A space always separates a number from its unit symbol, so &quot;30.2 °C&quot; and not &quot;30.2°C&quot;; the only exception is the plane-angle symbols for degree, minute and second, which take no space. Digits may be grouped in threes by a space, never by commas or dots, and a four-digit number is not split.</td>
-<td><a class="chip" href="sources.html#rule-number-group">number.group</a><br><a class="chip" href="sources.html#rule-symbol-degree">symbol.degree</a> <span class="meta">en</span></td>
+<td><a class="chip" href="sources.html#rule-number-group">number.group</a><br><a class="chip" href="sources.html#rule-space-number">space.number</a><br><a class="chip" href="sources.html#rule-symbol-degree">symbol.degree</a> <span class="meta">en</span></td>
 <td><span class="via raw">Raw data</span><br><span class="meta">2026-10-22</span></td>
 </tr>
 <tr id="src-cldr-delimiters">
@@ -229,7 +229,7 @@ tr:last-child td{border-bottom:0}
 <td>Standard</td>
 <td>The standard that decides where a line may break. It is the mechanism behind every no-break rule here: it says what a no-break space does, not which words to bind.</td>
 <td>U+00A0 NO-BREAK SPACE is class GL and prohibits a break on either side, and is the preferred way to keep two words on a line (a title and a name); U+202F is the same but narrow; the horizontal ellipsis is class IN, so breaks between consecutive ellipses are never allowed.</td>
-<td><a class="chip" href="sources.html#rule-ellipsis">ellipsis</a><br><a class="chip" href="sources.html#rule-dash-sentence">dash.sentence</a><br><a class="chip" href="sources.html#rule-space-title">space.title</a><br><a class="chip" href="sources.html#rule-space-abbreviation">space.abbreviation</a><br><a class="chip" href="sources.html#rule-space-number">space.number</a><br><a class="chip" href="sources.html#rule-space-percent">space.percent</a><br><a class="chip" href="sources.html#rule-space-copyright">space.copyright</a></td>
+<td><a class="chip" href="sources.html#rule-ellipsis">ellipsis</a><br><a class="chip" href="sources.html#rule-phone-bind">phone.bind</a><br><a class="chip" href="sources.html#rule-dash-sentence">dash.sentence</a><br><a class="chip" href="sources.html#rule-space-title">space.title</a><br><a class="chip" href="sources.html#rule-space-abbreviation">space.abbreviation</a><br><a class="chip" href="sources.html#rule-space-number">space.number</a><br><a class="chip" href="sources.html#rule-space-percent">space.percent</a><br><a class="chip" href="sources.html#rule-space-copyright">space.copyright</a></td>
 <td><span class="via summary">Summary only, check by hand</span><br><span class="meta">2026-10-20</span></td>
 </tr>
 <tr id="src-unicode-names">

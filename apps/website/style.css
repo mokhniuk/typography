@@ -1685,6 +1685,22 @@ table[data-samples] small {
   width: 100%;
   min-width: 0;
 }
+/* The characters to avoid: a field in the mono font, and the line that explains it. */
+[data-page="playground"] form input[type="text"] {
+  width: 100%;
+  min-height: var(--control-height);
+  padding: var(--space-2) var(--space-3);
+  font: var(--size-sm) var(--font-mono);
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+}
+[data-page="playground"] form small[data-hint] {
+  margin: 0;
+  font-size: var(--size-xs);
+  color: var(--color-muted);
+}
 
 /* A segmented control: the input format, and the view of the result. */
 [data-page="playground"] #mode,
@@ -1781,6 +1797,14 @@ table[data-samples] small {
 [data-page="playground"] details > button {
   width: 100%;
   background: transparent;
+}
+/* The characters a rule can insert, under its description; struck through while one is avoided. */
+[data-page="playground"] details label small[data-glyphs-for] {
+  font-family: var(--font-mono);
+}
+[data-page="playground"] details label small[data-avoided] {
+  color: var(--color-del-text);
+  text-decoration: line-through;
 }
 /* The config box: JSON, shorter than the text panes, its buttons on one row. */
 [data-page="playground"] #configPanel textarea {
@@ -2005,6 +2029,193 @@ table[data-samples] small {
   border: 0;
   background: var(--color-frame);
   border-radius: var(--radius-sm);
+}
+
+/* The font checker: a form of its own, a table per language, the examples set in the font. */
+
+[data-page="font-checker"] [data-wide] {
+  width: min(100% - 2 * var(--space-5), var(--container));
+  margin: 0 auto;
+  padding: var(--space-7) 0 var(--space-8);
+  display: grid;
+  gap: var(--space-6);
+}
+[data-page="font-checker"] [data-wide] > header h1 {
+  font-size: var(--size-2xl);
+}
+[data-page="font-checker"] [data-wide] > header p {
+  margin: var(--space-3) 0 0;
+  max-width: var(--measure);
+  color: var(--color-muted);
+}
+[data-page="font-checker"] h2 {
+  font-size: var(--size-lg);
+  margin: 0 0 var(--space-3);
+}
+[data-page="font-checker"] section > p {
+  margin: 0 0 var(--space-4);
+  max-width: var(--measure);
+  color: var(--color-muted);
+}
+/* The form: the three groups side by side, each a column of labelled controls. */
+[data-page="font-checker"] form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-5);
+  margin: 0;
+  padding: var(--space-5);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+[data-page="font-checker"] form fieldset {
+  display: grid;
+  gap: var(--space-3);
+  align-content: start;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+[data-page="font-checker"] form legend {
+  padding: 0;
+  font: 600 var(--size-xs) var(--font-ui);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+[data-page="font-checker"] form label {
+  display: grid;
+  gap: var(--space-2);
+  font: 500 var(--size-xs) var(--font-ui);
+  color: var(--color-muted);
+}
+[data-page="font-checker"] form label:has(input[type="checkbox"]) {
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: baseline;
+  gap: var(--space-3);
+}
+[data-page="font-checker"] :is(select, input[type="text"], input[type="file"]) {
+  width: 100%;
+  min-height: var(--control-height);
+  padding: var(--space-2) var(--space-3);
+  font: var(--size-sm) var(--font-ui);
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+}
+[data-page="font-checker"] input[type="text"] {
+  font-family: var(--font-mono);
+}
+[data-page="font-checker"] [role="status"] {
+  margin: 0;
+  font-size: var(--size-xs);
+}
+/* The languages: a scrolling list of checkboxes, so 26 of them do not push the page down. */
+[data-page="font-checker"] #languages {
+  display: grid;
+  gap: var(--space-2);
+  max-height: calc(var(--baseline) * 28);
+  overflow-y: auto;
+  padding-inline-end: var(--space-3);
+}
+[data-page="font-checker"] [data-languages] button {
+  width: auto;
+  min-height: 32px;
+  padding: 0 var(--space-3);
+  background: transparent;
+}
+/* The verdict and the preset: name and value, the score coloured by how far the font gets. */
+[data-page="font-checker"] dl {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-2) var(--space-5);
+  margin: 0;
+}
+[data-page="font-checker"] dt {
+  font-weight: 600;
+}
+[data-page="font-checker"] dd {
+  margin: 0;
+  color: var(--color-muted);
+}
+[data-page="font-checker"] dd[data-score="ready"] {
+  color: var(--color-text);
+}
+[data-page="font-checker"] dd[data-score="short"] {
+  color: var(--color-del-text);
+}
+/* The coverage tables: the character itself set large, in the font being checked. */
+[data-page="font-checker"] table {
+  margin: 0 0 var(--space-5);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+[data-page="font-checker"] caption {
+  text-align: start;
+  padding: var(--space-3) var(--space-5);
+  font: 600 var(--size-sm) var(--font-ui);
+}
+[data-page="font-checker"] th[data-specimen] {
+  font-size: var(--size-xl);
+  font-weight: 400;
+  line-height: calc(var(--baseline) * 4);
+  width: calc(var(--baseline) * 10);
+}
+[data-page="font-checker"] tr[data-status="fallback"] td:nth-child(3) {
+  color: var(--color-del-text);
+}
+[data-page="font-checker"] tr[data-status="none"] td:nth-child(3) {
+  color: var(--color-del-text);
+  font-weight: 600;
+}
+/* The examples: the same text at two measures, hanging punctuation on. */
+[data-page="font-checker"] figure {
+  margin: 0 0 var(--space-6);
+}
+[data-page="font-checker"] figcaption {
+  margin-bottom: var(--space-3);
+  font-size: var(--size-xs);
+  color: var(--color-muted);
+}
+[data-page="font-checker"] [data-measure] {
+  padding: var(--space-5) var(--space-5) var(--space-5) var(--space-6);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  background: var(--color-paper);
+  margin-bottom: var(--space-3);
+  line-height: calc(var(--baseline) * 4);
+}
+[data-page="font-checker"] [data-measure="narrow"] p {
+  max-width: 24em;
+}
+[data-page="font-checker"] [data-measure="wide"] p {
+  max-width: 48em;
+}
+[data-page="font-checker"] [data-measure] p {
+  margin: 0 0 var(--space-5);
+}
+[data-page="font-checker"] [data-measure] p:last-child {
+  margin-bottom: 0;
+}
+[data-page="font-checker"] textarea {
+  display: block;
+  width: 100%;
+  min-height: calc(var(--baseline) * 18);
+  padding: var(--space-4);
+  font: var(--size-sm) / calc(var(--baseline) * 3) var(--font-mono);
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  resize: vertical;
+}
+[data-page="font-checker"] section button {
+  width: auto;
+  min-height: var(--control-height);
+  margin-top: var(--space-3);
+  padding: 0 var(--space-5);
 }
 
 /*

@@ -9,8 +9,8 @@ Every entry point in `package.json` `exports`, plus the `typo` command (see [cli
 | `./html` | `src/html/index.ts` | `typesetHtml`, `HtmlOptions` |
 | `./markdown` | `src/markdown/index.ts` | `typesetMarkdown`, `MarkdownOptions` |
 | `./rehype` | `src/rehype/index.ts` | default `rehypeTypography`, `typesetHast`, `RehypeOptions` |
-| `./dom` | `src/dom/index.ts` | `hangPunctuation`, `hangScript`, `markHangs`, `hangStyle` |
-| `./react` | `src/react/index.ts` | `Typeset`, `TypographyRoot`, `HangText`, `HangScript`, `useHangingPunctuation`, `TypographyContext`, `TypographySetting` |
+| `./dom` | `src/dom/index.ts` | `hangPunctuation`, `hangScript`, `markHangs`, `hangStyle`, and the glyph measuring: `supports`, `glyphStatus`, `missingGlyphs`, `missingIn`, `fontOf` |
+| `./react` | `src/react/index.ts` | `Typeset`, `TypographyRoot`, `HangText`, `HangScript`, `useHangingPunctuation`, `useMissingGlyphs`, `TypographyContext`, `TypographySetting` |
 | bin `typo` | `src/cli/main.ts` | the command line; needs Bun |
 
 The main entry is not only plain text: it carries the whole engine (`typographic`, `explain`, `RULES`, `splitHangs`, ...) and the plain-text mode. It does not export the HTML, Markdown, rehype, DOM or React modules; import those from their own entry.
@@ -24,18 +24,45 @@ These are the options the functions below take. Which function takes which is in
 | `lang` | `Lang` | `'en'` | Language of the text. `Lang` is the union of the 26 pack codes (the 24 EU languages, `uk`, and `ch` for Swiss usage), derived from the packs in `src/core/lang/`; `LANGS` lists them. See [languages.md](languages.md). |
 | `register` | `Register` | `'display'` | `'display'` (marketing and interface text) or `'literary'` (book-like text). `literary` has its own rules for English (British quotes, spaced en dash); every other language keeps its display rules. The dialogue dash is the same in both registers. |
 | `quoteStyle` | `QuoteStyle` | `'language'` | `'language'` is the language's own quote marks (its literary ones in the literary register). `'us'` is `“…”` with `‘…’` inside for any language, and takes precedence over both the language table and the literary register. The rehype plugin does not read `lang="en-US"` as US quotes: a page's `<html lang="en-US">` must not change its output, so set the option. |
-| `enable` | `readonly string[]` | none | Rules to switch on that are off by default (`Rule.defaultOn: false`): ids or groups, checked like `disable`. Enabling a rule that is already on does nothing; a rule named in both `enable` and `disable` throws. Nine built-in rules are off by default (`space.before-punctuation`, `space.after-comma`, `punctuation.double`, `space.trailing`, `symbol.plusminus`, `symbol.fraction`, `symbol.degree`, `symbol.implies`, `number.group`); see [rules.md](rules.md) and [limits.md](limits.md#opt-in-rules). |
+| `enable` | `readonly string[]` | none | Rules to switch on that are off by default (`Rule.defaultOn: false`): ids or groups, checked like `disable`. Enabling a rule that is already on does nothing; a rule named in both `enable` and `disable` throws. Eleven built-in rules are off by default (`space.before-punctuation`, `space.after-comma`, `punctuation.double`, `space.trailing`, `space.short-word`, `symbol.plusminus`, `symbol.fraction`, `symbol.degree`, `symbol.implies`, `number.group`, `phone.bind`); see [rules.md](rules.md) and [limits.md](limits.md#opt-in-rules). |
 | `rules` | `readonly Rule[]` | `RULES` | The list of rules to run, in order, instead of the built-in one; build it with `addRule`. `disable` and `enable` are checked against this list, not the built-in one. A rule with `defaultOn: false` in it runs only when named in `enable`. |
 | `disable` | `readonly string[]` | none | Rules to switch off: ids (`'dash.range'`) or groups (`'space'`, or `'space.*'`). A name that matches no rule throws an `Error` that lists the rule ids, so a typo cannot pass for "everything stays on". See [rules.md](rules.md). |
 | `onChange` | `(change: Change) => void` | none | Called with each change a rule makes, in the order the rules ran (not in text order). Costs one word-level diff per rule that changed anything. |
 | `blockStart` | `boolean` | `true` | Whether the text opens its paragraph. Only then can its first dash be read as a dialogue dash (`dash.dialogue`), in the languages that write dialogue with one. Taken by `typographic` and `explain` only; the text, HTML, Markdown and rehype modes always treat each block as opening a paragraph. |
+| `avoid` | `string` | `''` | Characters the font cannot draw, as one string (`'⇒½¼¾−'`). See [`avoid`](#avoid) below. |
 | `nbsp` | `'entity' \| 'char'` | `'entity'` | HTML only (`--nbsp` on the command line). How a no-break space is written in a block that changed: as `&nbsp;`, or as the character U+00A0. Every mode accepts it, so a config spreads into any of them; only `typesetHtml` reads it. |
 | `hangAmount` | `number`, 0 to 1 | `1` | How far hanging punctuation hangs: `TypographyRoot` sets it as the CSS custom property `--hang-amount` on its `div` (see [`hangPunctuation`](#hangpunctuationel-htmlelement---void)). The string modes and the command line accept it and do nothing with it. |
 | `config` | `TypographyConfig` | none | A prop of `TypographyRoot` and `Typeset`: every option above in one object. See [Config](#config). |
 | `hangAmount` | `number`, 0 to 1 | none: set as `--hang-amount` on the root's `div` (`style="--hang-amount:0.5"`); left out, the `div` has no style and the amount is inherited through CSS |
 | `early` | `boolean` | `true` | A prop of `TypographyRoot`, not an engine option. Whether the root sends the hanging pass inline (`HangScript`). Set `false` on a page whose content security policy forbids inline scripts. |
 
-`quoteStyle`, `enable` and `rules` go wherever `register` and `disable` go (every function and component in the table, including `TypographyRoot` and `Typeset`, and `--quotes` and `--enable` on the command line). `TypographyRoot` and `Typeset` also take `disable` and `onChange`.
+### `avoid`
+
+A rule that inserts a character the font does not have gains nothing: the reader sees a box, or the
+mark drawn by whatever other font the browser reaches for. The text as it was typed is better. The
+engine is a string-to-string function and cannot see a font, so `avoid` names the characters to keep
+out of the text:
+
+```ts
+typographic('He said "wait..." - 1/2 of it', 'en', { avoid: '…½' });
+// He said «wait...»<nbsp>— 1/2 of it   (the quotes and the dash are set, the ellipsis is not)
+```
+
+- One change at a time. A rule that would bring in an avoided character leaves *that* stretch as it
+  was and goes on with the rest, so `1/2` stays while `1/4` elsewhere in the same text can still
+  become `¼` when only `½` is avoided.
+- Nothing is reported for a change that was dropped: `explain` and `onChange` only ever see what
+  reached the text.
+- What the rules can insert is `insertedCharacters(lang?)` (every character, the no-break space
+  included) and `insertedGlyphs(lang?)` (the marks a font draws); per rule it is `ruleGlyphs(lang?)`,
+  which [rules.md](rules.md) prints under each rule.
+- It costs one word-level diff per rule that changed anything, the same cost as `onChange`, and only
+  while it is set.
+- In a browser you need not write the list: `TypographyRoot` measures the page's own font and fills
+  it in (`avoidMissing`, on by default). The website's font checker page
+  (`apps/website/font-checker/`) writes the list for a font file, and the playground has a field for it.
+
+`quoteStyle`, `enable`, `rules` and `avoid` go wherever `register` and `disable` go (every function and component in the table, including `TypographyRoot` and `Typeset`, and `--quotes` and `--enable` on the command line). `TypographyRoot` and `Typeset` also take `disable` and `onChange`.
 
 | Function or component | `lang` | `register` | `disable` | `onChange` | `blockStart` | `nbsp` | `early` |
 |---|---|---|---|---|---|---|---|
@@ -58,6 +85,7 @@ type TypographyConfig = {
   disable?: readonly string[];
   enable?: readonly string[];
   rules?: readonly Rule[];   // only from a module, not JSON
+  avoid?: string;            // characters the font cannot draw
   nbsp?: 'entity' | 'char';  // read by the HTML mode only
   hangAmount?: number;       // 0 to 1, read by TypographyRoot only
 };
@@ -176,6 +204,10 @@ Every mode takes the whole config: `nbsp` is read by the HTML mode only, `hangAm
 | `PACKS`, `PACK`, `LangPack` | The language packs (`src/core/lang/`), as a list and by code, and their type. See [contributing.md](contributing.md#adding-a-language). |
 | `REGISTERS: readonly Register[]` | `display`, `literary`. |
 | `NBSP` | The no-break space character, U+00A0. |
+| `ruleGlyphs(lang?)` | What each rule can insert, by rule id: `{ quote: '«»„“‚‘’”‹›', ellipsis: '…', … }`. With a language it is that language's marks (its quote levels, its dash, its digit separator), without one it is every language's at once. Read by [`avoid`](#avoid), by the rules page and by the font checker; `src/core/glyphs.test.ts` fails if a rule has no entry, and proves that a rule given its own characters to avoid changes nothing. |
+| `insertedCharacters(lang?)`, `insertedGlyphs(lang?)` | The same as one string: every character any rule can insert, and the same without the no-break space (the marks a font draws, which is what can be measured). |
+| `CURRENCY_CODES`, `CURRENCY_SIGNS`, `CURRENCY_WORDS` | The money the engine knows, in one table (`src/core/currency.ts`): ISO 4217 codes (`EUR`, `USD`, `UAH`, …), the signs that are not letters (`€$£₴¥₺`) and the ones written with letters after the amount (`zł`, `Kč`, `Ft`, `lei`, `лв`, `kr`, `грн`). `space.number` and `space.percent` read it, so a sign is named in one place. The engine never moves, adds or removes a currency sign. |
+| `keepAvoided(before, after, avoided)` | What [`avoid`](#avoid) does to one rule's output: `after`, with every change that brought in a character of the `avoided` set undone. Exported for a custom pipeline; `typographic` calls it itself. |
 | `Context` | `{ lang, register, quoteStyle, blockStart }`, what a rule is given besides the text. |
 | `Lang`, `Register`, `QuoteStyle` | The unions above; `Lang` is derived from the packs. |
 | `splitHangs`, `TextPart`, `hangPieces`, `HangPiece` | See [Hanging punctuation](#hanging-punctuation). |
@@ -248,6 +280,26 @@ How far marks hang is the CSS custom property `--hang-amount` on the mark or any
 
 It runs once now, again when web fonts are ready (every mark is re-measured), when `el` or a `<dialog>` inside it is resized, and when text or elements under `el` change (new marks are measured). It returns a function that stops all of that. It marks the spans it has measured with `data-measured`. A mark with no width (a closed dialog) is left until it has one.
 
+### `supports(char, family): boolean`, `glyphStatus(char, family)`, `missingGlyphs(chars, family)`, `missingIn(chars, el)`, `fontOf(el)`
+
+Which characters a font on the page can actually draw, for the [`avoid`](#avoid) option.
+
+For each character the width the family list draws it at is compared with the width the fallback
+alone draws it at, twice (against `monospace` and against `serif`). A font with no glyph for a
+character lets the next font in the list draw it, and then the two widths are the same.
+
+- `supports(char, family)`: whether the font draws it itself. `true` where there is nothing to
+  measure with (on the server, or without a canvas), so a page without a browser is typeset as usual.
+- `glyphStatus(char, family)`: `'own'` (the font draws it), `'fallback'` (another font draws it, so
+  the mark is there in the wrong face) or `'none'` (nothing on the machine draws it).
+- `missingGlyphs(chars, family)`: the characters of `chars` the font cannot draw, as one string —
+  ready to pass as `avoid`. `missingIn(chars, el)` is the same for the font of an element, and
+  `fontOf(el)` is that element's family list.
+
+What it cannot see: a font whose glyph happens to have the same advance width as the fallback's in
+both probes is reported as missing, and a font that draws a wrong glyph of its own is reported as
+present. The measure is one canvas and two probes per character.
+
 ### `markHangs(el: HTMLElement): void`
 
 Wraps the punctuation under `el` that should hang in the spans `hangPunctuation` reads, for markup that did not come from `HangText`: the output of the HTML, Markdown or rehype modes, or any page. A text node opens a word where it begins its block or follows text that ended in a space, and a mark at its end is read against the next text in the block, so `<ins>“</ins>Curiouser` hangs. Text in `pre`, `code`, `kbd`, `samp`, `script`, `style` and `textarea`, and text already wrapped, is left alone. Every span gets a rough width (0.4em per mark) so the text hangs at once; call `hangPunctuation(el)` after it for the exact widths.
@@ -308,7 +360,7 @@ hangPieces('Grass (Camden House, 2027). He');
 
 `react` (18 or later) is an optional peer dependency; only this entry needs it.
 
-### `<TypographyRoot config? lang? register? quoteStyle? disable? enable? rules? onChange? hangAmount? early?>`
+### `<TypographyRoot config? lang? register? quoteStyle? disable? enable? rules? onChange? avoid? avoidMissing? hangAmount? early?>`
 
 Wraps a page so its text is typeset: it sets the language and register every `Typeset` under it falls back to (a value is taken from the root's own prop, then from `config`, then from an outer root, then `en` and `display`), and hangs opening punctuation wherever a line starts with it. It renders one `<div>` around its children. On a prerendered page it also sends the hanging pass inline with `<HangScript />` as the last child of that div; `early={false}` turns that off.
 
@@ -322,9 +374,11 @@ Wraps a page so its text is typeset: it sets the language and register every `Ty
 | `disable`, `enable` | `readonly string[]` | inherited; pass a constant, not an inline array |
 | `rules` | `readonly Rule[]` | inherited; pass a constant |
 | `onChange` | `(change: Change) => void` | inherited; pass a stable function (`useCallback`). Called when a text is typeset, not on every render. |
+| `avoid` | `string` | inherited: characters the font cannot draw (see [`avoid`](#avoid)) |
+| `avoidMissing` | `boolean` | `true`: the root measures the font of its own `div` once the page's fonts have loaded (`document.fonts.ready`) and adds what that font cannot draw to `avoid`. A server-rendered page is typeset as usual first, and only a real gap in the font changes a text after that. Set it to `false` for a page that must render the same everywhere. |
 | `early` | `boolean` | `true` |
 
-### `<Typeset text atStart? config? lang? register? quoteStyle? disable? enable? rules? onChange?>`
+### `<Typeset text atStart? config? lang? register? quoteStyle? disable? enable? rules? onChange? avoid?>`
 
 A plain string, typeset in the language and register of the surrounding root (or those given as props, then in `config`), with its hanging marks wrapped in `data-hang` spans. Memoised on its arguments.
 
@@ -334,7 +388,7 @@ A plain string, typeset in the language and register of the surrounding root (or
 | `atStart` | `boolean` | `true`; set `false` for a string that continues a paragraph after an element. Also passed as `blockStart`. |
 | `config` | `TypographyConfig` | none; its values beat the root's, its own props beat it. Pass a constant. |
 | `lang`, `register`, `quoteStyle` | `Lang`, `Register`, `QuoteStyle` | from `TypographyRoot` |
-| `disable`, `enable`, `rules`, `onChange` | as on `TypographyRoot` | from `TypographyRoot`; pass constants |
+| `disable`, `enable`, `rules`, `onChange`, `avoid` | as on `TypographyRoot` | from `TypographyRoot`; pass constants |
 
 ```tsx
 import { Typeset, TypographyRoot } from '@podiia/typography/react';
@@ -356,6 +410,13 @@ Renders `hangScript()` as an inline `<script>`. Put it last inside the element t
 
 Runs `hangPunctuation` over everything under `root.current` for as long as the component is mounted (in a layout effect). For a page that wires the hook itself instead of using `TypographyRoot`.
 
+### `useMissingGlyphs(root, lang, on): string`
+
+The characters the font of `root.current` cannot draw, measured once the page's fonts have loaded
+and returned as a string to pass as `avoid`. Empty on the server, while `on` is false, and until the
+measure is made. `TypographyRoot` uses it for `avoidMissing`; use it directly in a page that wires
+the context itself.
+
 ### `TypographyContext` and `TypographySetting`
 
 ```ts
@@ -363,8 +424,11 @@ type TypographySetting = {
   lang: Lang;
   register: Register;
   quoteStyle?: QuoteStyle;
+  disable?: readonly string[];
   enable?: readonly string[];
   rules?: readonly Rule[];
+  onChange?: (change: Change) => void;
+  avoid?: string;
 };
 const TypographyContext: React.Context<TypographySetting>; // default { lang: 'en', register: 'display' }
 ```

@@ -13,7 +13,35 @@ A no-break space keeps two words on one line. Bind a pair when a line that ends 
   (uk)  before  Він і я в домі   after  Він і~я в~домі
   ```
 
-  Each pack carries its own list: English `a` and `I`, Czech `k s v z o u a i`, Polish `a i o u w z`, Slovak `v k s u z o a i`, Ukrainian `а в і ї й з у о`. What backs each ([space.orphan](../resources/sources.md#spaceorphan)): Czech and Polish are source-backed (the Czech Language Institute's handbook and language advice, ČSN 01 6910 as the poradna reports it; Wolański in the PWN Poradnia, who gives the Polish list as a recommendation for lines over about 40 characters). Ukrainian has a source for the class only (a Zhytomyr typesetting handbook says one-letter prepositions and conjunctions should not end a line in books), the letters are ours. Slovak is an editorial convention from secondary sources, and English `a` and `I` have no source. A language with no list binds nothing; see [languages.md](languages.md). No pack binds two-letter words (`to`, `of`, `na`, `do`): the Czech and Polish sources let them stay in body text.
+  Each pack carries its own list: English `a` and `I`, Czech `k s v z o u a i`, Polish `a i o u w z`, Slovak `v k s u z o a i`, Ukrainian `а в і ї й з у о`. What backs each ([space.orphan](../resources/sources.md#spaceorphan)): Czech and Polish are source-backed (the Czech Language Institute's handbook and language advice, ČSN 01 6910 as the poradna reports it; Wolański in the PWN Poradnia, who gives the Polish list as a recommendation for lines over about 40 characters). Ukrainian has a source for the class only (a Zhytomyr typesetting handbook says one-letter prepositions and conjunctions should not end a line in books), the letters are ours. Slovak is an editorial convention from secondary sources, and English `a` and `I` have no source. A language with no list binds nothing; see [languages.md](languages.md). No pack binds two-letter words by default (`to`, `of`, `na`, `do`): the Czech and Polish sources let them stay in body text. For titles there is the opt-in rule below.
+
+- **A short word and the word after it, in a title** (`space.short-word`, off by default). In a heading a line should not end on `to` or `do`; in body text it may.
+
+  ```text
+  (en)  before  Welcome to the city of light
+        after   Welcome to~the city of~light
+  (pl)  before  Zapraszamy do Gdańska       after  Zapraszamy do~Gdańska
+  ```
+
+  Switch it on where you set titles and headings (`enable: ['space.short-word']`), not for body text — that is what the sources say: Wolański (PWN) writes that two- and three-letter prepositions may stay at a line end in body text and must travel with what they belong to in a title, and the ÚJČ advice service says the same for Czech ([space.short-word](../resources/sources.md#spaceshort-word)). The word lists themselves are ours, in five packs (`cs en pl sk uk`). The rule never binds more than two words in a row.
+
+- **An amount of money and its sign or code** (`space.number`). A figure must not be parted from the money it counts, on either side, and a number written in groups must not break inside itself.
+
+  ```text
+  (en)  before  USD 5 000, € 49.99, 100 USD   after  USD~5~000, €~49.99, 100~USD
+  (uk)  before  1 000 грн                     after  1~000~грн
+  ```
+
+  The signs and codes are one table (`src/core/currency.ts`): ISO 4217 codes and the signs of the audience's currencies. The engine never moves, adds or removes a sign — where it stands is yours to write. The group spaces of a number grouped by hand are bound whatever follows, which is what the opt-in `number.group` does to a bare number, so the two agree; the guards that keep a phone number out of it are in [limits.md](limits.md).
+
+- **A phone number, whole** (`phone.bind`, off by default). A number that wraps in the middle cannot be read out or dialled.
+
+  ```text
+  (en)  before  Call +380 44 123 45 67 or +1 (555) 123-4567
+        after   Call +380~44~123~45~67 or +1~(555)~123‑4567
+  ```
+
+  Only an international number (`+` or `00`, seven to fifteen digits) is bound, and the digits are never reformatted; the hyphens become U+2011, which does not break. Dates, ranges, IBANs and `tel:` links are left alone ([phone.bind](../resources/sources.md#phonebind)).
 
 - **A number and its unit or month** (`space.number`, `space.percent`). A figure should not be left alone at the end of a line.
 

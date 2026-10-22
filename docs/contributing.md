@@ -43,9 +43,10 @@ bun run docs:languages       # writes docs/languages/*.md from the packs
 2. Add one entry to `RULES` in `src/core/rules.ts`, in the place in the order where it should run: `{ id, category, about, apply }`, and `defaultOn: false` if the rule must run only when asked for (`enable`, `--enable`, a checkbox in the playground). Several places are reserved for planned rules (the comment block above `RULES`; `src/core/rules-order.test.ts` pins the order and checks a planned rule against its place). The id is `group.name`, or one word for a rule that stands alone. `about` is the one-line description that `typo --rules` prints and `docs/rules.md` shows. `category` is one of `RULE_CATEGORIES` (`tradition`, `symbols`, `math`, `data`; see [rules.md](rules.md#categories)): what the rule is for, shown as a column by `typo --rules` and `docs/rules.md` and as a group in the playground. `tsc` and `src/core/rules.category.test.ts` fail on a built-in rule without one.
 3. Do not add a step inside `typographic()`. It only loops over `RULES`, which is what makes a rule switchable (`disable`) and reportable (`explain`, `onChange`).
 4. Add examples to `EXAMPLES` in `scripts/gen-rules-doc.ts` (at least one, each of which must change its text when only that rule runs), then `bun run docs:rules`. For a `defaultOn: false` rule the example is run with the rule enabled. `src/docs.test.ts` fails if a rule has no examples, if an example changes nothing, or if `docs/rules.md` is out of date.
-5. Add an entry for the rule to `RULE_SOURCES` in `resources/sources.ts` (sources read, why, what others do instead, confidence), then `bun run docs:sources`. Read every source before you enter it; a rule with no source read is `general-knowledge`. `resources/sources.test.ts` fails if the entry is missing or the page is stale.
-6. Add tests in `src/core/typography.test.ts`. Run the property tests (below): a new rule must not lose or add a letter or digit, and must be stable on its own output.
-7. Update [limits.md](limits.md) if the rule has a known limit, and add an entry to [../CHANGELOG.md](../CHANGELOG.md) saying whether it can change existing output (a new rule almost always can).
+5. Add the characters the rule can insert to the table in `src/core/glyphs.ts` (`FIXED`, which `ruleGlyphs` reads) (an empty string for a rule that only removes text). `src/core/glyphs.test.ts` fails if a rule has no entry, and it proves on your examples that the rule changes nothing when its own characters are in `avoid`. A character that comes from a language pack (a quote mark, a digit separator, a dash) is read from the pack there, not listed by hand.
+6. Add an entry for the rule to `RULE_SOURCES` in `resources/sources.ts` (sources read, why, what others do instead, confidence), then `bun run docs:sources`. Read every source before you enter it; a rule with no source read is `general-knowledge`. `resources/sources.test.ts` fails if the entry is missing or the page is stale.
+7. Add tests in `src/core/typography.test.ts`. Run the property tests (below): a new rule must not lose or add a letter or digit, and must be stable on its own output. An opt-in rule also gets a vocabulary of its own in `src/properties.optin.test.ts`.
+8. Update [limits.md](limits.md) if the rule has a known limit, and add an entry to [../CHANGELOG.md](../CHANGELOG.md) saying whether it can change existing output (a new rule almost always can).
 
 A custom list (`rules` option) is built with `addRule(RULES, rule, { before: 'space.number' })`; it never changes `RULES`, and `disable`/`enable` are checked against the list in use.
 
@@ -61,7 +62,8 @@ A language is one object, a pack, and no code names a language: rules read the p
 4. Run `bun run docs:languages` and commit `docs/languages/<code>.md` and `index.md`; `src/lang-docs.test.ts` fails if a page differs from its pack. Never edit them by hand.
 5. If a rule acts on the new language, add an examples row to `scripts/gen-rules-doc.ts` and run `bun run docs:rules`.
 6. Add a long example in the language to `LONG` in `apps/playground/examples.ts` (the playground's "Long example"; `tsc` fails while it is missing, and `apps/playground/examples.test.ts` checks that it gives the rules something to do).
-7. Update the hand-written overview [languages.md](languages.md).
+7. Add a line for the language to `RISKY_LETTERS` in `apps/website/font-checker/letters.ts`: the letters of the language that fonts most often lack, or an empty string. `apps/website/font-checker/letters.test.ts` fails while it is missing.
+8. Update the hand-written overview [languages.md](languages.md).
 
 The pack:
 
@@ -71,6 +73,7 @@ The pack:
 | `quotes` | Quote marks per nesting level, `[open, close][]`; deeper nesting starts over. |
 | `literary` | The same for the literary register, if it differs. |
 | `orphans` | A global regex with one capture group: one-letter words kept with the next word. |
+| `shortWords` | Two- and three-letter words kept with the next word in a title, for the opt-in rule `space.short-word`. Lower case, each once; the rule matches the capitalised form too. Editorial by nature (no guide read lists them), so say so in `notes`. |
 | `abbreviations` | `{ together, bind, page }`, short lists, only from a style guide. |
 | `sentenceDash`, `sentenceDashLiterary` | The spaced dash of a break in the sentence, when it is not an em dash. |
 | `percentSpace` | A no-break space between a number and a `%` typed against it (`5%` becomes `5~%`). |

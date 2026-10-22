@@ -23,6 +23,7 @@ It typesets text, HTML or Markdown with the same engine as the library functions
 | `--json` | | | | JSON output for `--explain`. An error without `--explain`. |
 | `--write` | `-w` | | | Rewrite the files in place. |
 | `--check` | `-c` | | | Change nothing; exit 1 if any input would change. |
+| `--avoid` | | characters | none | Characters the font cannot draw (`--avoid "⇒½¼¾−"`): a rule that would insert one of them leaves the text as it was typed, for that one change. See [api.md](api.md#avoid). |
 | `--nbsp` | | `entity`, `char` | `entity` | HTML only: write a no-break space as `&nbsp;` or as the character. Checked for every format, used only for HTML. |
 | `--config` | | a file | `typography` in `./package.json` | Read the options from a config (see [Config](#config) below). |
 | `--help` | `-h` | | | Show the help and exit 0. |

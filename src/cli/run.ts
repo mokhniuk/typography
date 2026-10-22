@@ -53,6 +53,8 @@ Options
       --json                      JSON output for --explain
   -w, --write                     rewrite the files in place
   -c, --check                     change nothing; exit 1 if any file would change
+      --avoid <characters>        characters the font cannot draw ("⇒½¼¾−"): a rule that would
+                                  insert one of them leaves the text as it was typed
       --nbsp <entity|char>        HTML only: write a no-break space as &nbsp; (default) or the character
       --config <file>             read the options from a config: a .ts/.js/.mjs module with a
                                   default export, or a .json file. Without it, the "typography"
@@ -146,6 +148,7 @@ export async function run(argv: string[], io: Io): Promise<number> {
     return usage(io, error instanceof Error ? error.message : String(error));
   }
   const nbsp = (values.nbsp ?? config.nbsp) === 'char' ? 'char' : 'entity';
+  const avoid = values.avoid ?? config.avoid;
   const found: (Change & { file: string | null })[] = [];
   const typeset = (text: string, format: Format, file: string | null) => {
     const options = {
@@ -155,6 +158,7 @@ export async function run(argv: string[], io: Io): Promise<number> {
       disable,
       enable,
       rules,
+      avoid,
       onChange: values.explain ? (change: Change) => found.push({ file, ...change }) : undefined,
     };
     return format === 'html'
@@ -313,6 +317,7 @@ function parse(argv: string[]) {
       quotes: { type: 'string' },
       format: { type: 'string', short: 'f' },
       nbsp: { type: 'string' },
+      avoid: { type: 'string' },
       config: { type: 'string' },
       disable: { type: 'string', short: 'd', multiple: true },
       enable: { type: 'string', short: 'e', multiple: true },

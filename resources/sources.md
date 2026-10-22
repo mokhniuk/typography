@@ -131,6 +131,16 @@ Sources: [pravopys-125](#src-pravopys-125), [pwn-pauza-dialogowa](#src-pwn-pauza
 - `da`: [dsn-59](#src-dsn-59)
 - `lt`: [drukteinis-skyryba](#src-drukteinis-skyryba)
 
+### `phone.bind`
+
+Confidence: `general-knowledge`.
+
+Why: An international phone number is kept whole: no-break spaces between its groups and U+2011 for its hyphens, so a line never ends in the middle of a number.
+
+Alternative: Opt-in rule (off unless named in `enable`). UAX #14 is the source for the characters used: the no-break space and the non-breaking hyphen (U+2011) are the characters that forbid a break, which is the whole mechanism here. No style guide was read for phone numbers, so the shape the rule accepts is the engine's own: + or 00 followed directly by a digit, seven to fifteen digits (ITU-T E.164 allows fifteen, which is also what keeps a number from swallowing the figure after it), digits, spaces, hyphens and brackets inside. A local number (555-1234, 044-123-45-67) is left as typed, and so is a date, a range, an IBAN and a tel: link. The digits are never reformatted: a locale format per language would need a pack field (in the backlog). typograf has a rule for Russian phone numbers; no tool in the comparison binds an international one.
+
+Sources: [uax14](#src-uax14)
+
 ### `number.group`
 
 Confidence: `general-knowledge`.
@@ -250,11 +260,11 @@ Sources: [butterick-nbsp](#src-butterick-nbsp), [uax14](#src-uax14)
 
 Confidence: `verified`.
 
-Why: A number stays on the line of its unit or month. The source backs a space between a value and a unit, percent included.
+Why: A number stays on the line of its unit or month, and an amount of money stays whole: the sign or code before it (USD 5 000, € 49.99) and the digit groups of a number written in threes (1 000 грн).
 
-Alternative: The source does not say the space is nonbreaking, and says nothing about dates ("21 September"); both are our choice. It spaces % in English, while CLDR sets no space there (see space.percent) and the engine follows CLDR.
+Alternative: The source does not say the space is nonbreaking, and says nothing about dates ("21 September"); both are our choice. It spaces % in English, while CLDR sets no space there (see space.percent) and the engine follows CLDR. Money: the SI brochure (5.4.4) says a group separated by a space must not be split, which is why the group spaces of an amount the writer grouped by hand become no-break spaces — the same thing the opt-in number.group does to a bare number, so the two agree. No source was read for binding the sign or code to the amount, or for the list of signs and codes (ISO 4217 codes and the signs of the audience's currencies, in src/core/currency.ts): that list and the guards (a leading zero, a group run after another group, four digits at the end, all of which say "phone number", not "amount") are the engine's own. The engine never moves, adds or removes a currency sign: where it stands is the writer's choice, and placement per language (€49.99 in English, 49,99 € in German) is not applied.
 
-Sources: [nist-si-checklist](#src-nist-si-checklist), [uax14](#src-uax14)
+Sources: [nist-si-checklist](#src-nist-si-checklist), [uax14](#src-uax14), [bipm-si-brochure-9](#src-bipm-si-brochure-9)
 
 ### `space.percent`
 
@@ -323,6 +333,16 @@ Confidence: `general-knowledge`.
 Why: A lone &, + or = between two words stays on the line of the word before it and of the word after it, so a line neither ends on the operator nor starts with it (Tom & Jerry, rock + roll).
 
 Alternative: No source found. Practical Typography "Nonbreaking spaces" was read (as a fetch-tool summary) and does not mention an ampersand or any operator; a web search for a guide on binding an ampersand between names found only general pages on no-break spaces and a LaTeX tie guide for forenames, none a style guide on this point, so none is cited. The rule is a judgement: a line ending on "&" or starting with it reads as a break in the pair. It binds both sides, so "Tom & Jerry" is one unbreakable unit, and a chain of operators binds end to end ("Tom & Jerry & Co" is five tokens in one unit; "one + two + three + four + five" is one run, and a pathological chain could bind a whole line); a guide may prefer a break before the operator instead. Two shapes stay unbound: an operator next to an inline tag in HTML or Markdown ("Tom &amp; <em>Jerry</em>": the tag placeholder is not a letter) and a word ending in a combining mark (decomposed "café & bar"). Numbers (2 + 2, x = 5) are left to the author; doubled operators (&&, ==, +=) and operators with no typed spaces (R&D, x+y) are untouched.
+
+### `space.short-word`
+
+Confidence: `general-knowledge`.
+
+Why: In a title or a heading a short word (two or three letters) travels with the word after it, so a heading does not end a line on "to" or "do".
+
+Alternative: Opt-in rule (off unless named in `enable`), and off for exactly the reason the sources give: Wolański (PWN Poradnia) writes that prepositions of two, three or more characters MAY stay at the end of a line in body text ("Przyimki liczące dwa, trzy i więcej znaków mogą pozostawać na końcu wiersza w tekście zasadniczym"), and adds that in titles and subheads such a word must travel with what it belongs to; the ÚJČ advice service says the same for Czech ("Vícepísmenné výrazy na konci řádku zůstat mohou"). So the class is source-backed and the register is too, but the word lists themselves are editorial: no style guide read gives a list of two- and three-letter words for any language, and the five packs that have one (cs, en, pl, sk, uk) hold the engine's own enumeration of prepositions, conjunctions and the English article. That is why the decision stays general-knowledge. The rule never binds more than two words in a row, so a chain cannot grow into a whole line; a word that already follows a no-break space is left free. Other languages have no list, and the rule does nothing there.
+
+Sources: [pwn-wolanski-sieroty](#src-pwn-wolanski-sieroty), [ujc-poradna-konec-radku](#src-ujc-poradna-konec-radku)
 
 ### `space.orphan`
 

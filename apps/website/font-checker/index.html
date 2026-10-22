@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Font checker · Podiia Typography</title>
+<meta name="description" content="Check whether a font is ready for your languages and for the engine's rules: which marks it draws, which it borrows from another font, and what to do about the rest. Runs in your browser; the font is never uploaded." />
+<link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="../style.css" />
+<script>try{const t=localStorage.getItem('typography-theme');if(t)document.documentElement.dataset.theme=t}catch{}</script>
+</head>
+<body>
+<a href="#content" class="sr-only">Skip to the text</a>
+<!--header-->
+<main id="content" data-page="font-checker">
+<div data-wide>
+  <header>
+    <h1>Font checker</h1>
+    <p>Is this font ready for these languages and these rules? Load a font file or name one installed on this machine, pick the languages, and see which marks the font draws itself, which it quietly borrows from another font, and which it does not have at all. The font is read in your browser with <code>FontFace</code> and is never uploaded anywhere.</p>
+  </header>
+
+  <form data-font>
+    <fieldset>
+      <legend>The font</legend>
+      <label for="file">A font file (<code>.woff2</code>, <code>.woff</code>, <code>.ttf</code>, <code>.otf</code>)
+        <input id="file" type="file" accept=".woff2,.woff,.ttf,.otf,font/woff2,font/woff,font/ttf,font/otf" />
+      </label>
+      <label for="installed">or the name of an installed font
+        <input id="installed" type="text" spellcheck="false" placeholder="Georgia" />
+      </label>
+      <p id="fontState" role="status"></p>
+    </fieldset>
+
+    <fieldset data-languages>
+      <legend>Languages</legend>
+      <div id="languages"></div>
+      <button type="button" id="langsNone">None</button>
+      <button type="button" id="langsAll">All</button>
+    </fieldset>
+
+    <fieldset data-switches>
+      <legend>Rules</legend>
+      <label for="register">Register
+        <select id="register">
+          <option value="display">display</option>
+          <option value="literary">literary</option>
+        </select>
+      </label>
+      <label for="quoteStyle">Quotes
+        <select id="quoteStyle">
+          <option value="language">Of the language</option>
+          <option value="us">US: &#x201c;&#x2026;&#x201d; and &#x2018;&#x2026;&#x2019;</option>
+        </select>
+      </label>
+      <label for="optIn">
+        <input id="optIn" type="checkbox" />
+        Count the opt-in rules too
+      </label>
+    </fieldset>
+  </form>
+
+  <section aria-labelledby="verdict-title" data-verdict>
+    <h2 id="verdict-title">Verdict</h2>
+    <div id="verdict">
+      <p>Load a font to see how it stands.</p>
+    </div>
+  </section>
+
+  <section aria-labelledby="coverage-title">
+    <h2 id="coverage-title">Glyph coverage</h2>
+    <p>Every character a rule can insert, and the letters of each language that fonts most often lack. <b>Own</b> means the font draws it; <b>borrowed</b> means another font draws it and the reader sees a mark in the wrong face; <b>none</b> means no font here draws it at all. A borrowed or missing mark belongs in <code>avoid</code>.</p>
+    <div id="coverage"></div>
+  </section>
+
+  <section aria-labelledby="config-title">
+    <h2 id="config-title">The config for this font</h2>
+    <p>Paste this into the <code>typography</code> key of your <code>package.json</code>, or into a <code>typo --config</code> file. Every rule that would insert one of these characters leaves the text as it was typed.</p>
+    <textarea id="configText" rows="6" spellcheck="false" readonly></textarea>
+    <button type="button" id="configCopy">Copy</button>
+    <p><small>In a browser you can leave <code>avoid</code> out: <code>TypographyRoot</code> measures the page's own font and fills it in (<code>avoidMissing</code>).</small></p>
+  </section>
+
+  <section aria-labelledby="examples-title">
+    <h2 id="examples-title">Set in this font</h2>
+    <p>The example of each language you picked, typeset by the engine and set in the font at two measures, with hanging punctuation on. This is where a borrowed mark shows itself.</p>
+    <div id="examples"></div>
+  </section>
+
+  <section aria-labelledby="preset-title">
+    <h2 id="preset-title">A text preset</h2>
+    <p>A starting point for body text in this font, measured from the font itself: the size, a line height on the 8px grid, a measure of 45 to 90 characters, and how far its quote marks should hang. The advice on measure and line height is editorial, not research.</p>
+    <div id="preset"></div>
+  </section>
+
+  <p data-report>Something wrong or unclear here? <a id="report" href="https://github.com/mokhniuk/typography/issues/new" rel="noopener">Report an issue</a>.</p>
+</div>
+</main>
+<!--footer-->
+<script type="module" src="../main.ts"></script>
+<script type="module" src="./main.ts"></script>
+</body>
+</html>

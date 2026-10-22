@@ -36,6 +36,9 @@ export const en = {
     ['“', '”'],
   ],
   orphans: /(?<![\p{L}\p{N}])([aAI])[ ]+(?=\S)/gu,
+  // Short prepositions, conjunctions and the article, for the opt-in rule space.short-word
+  // (titles and headings). Editorial: no style guide read gives a list for English.
+  shortWords: ['to', 'of', 'in', 'on', 'at', 'by', 'as', 'or', 'if', 'an', 'the', 'and', 'for'],
   abbreviations: { page: ['No', 'Nos', 'Fig', 'Figs', 'Vol', 'Ch', 'Sec', 'Art', 'p', 'pp'] },
   sentenceDashLiterary: '–',
   elisions: ELISIONS_EN,

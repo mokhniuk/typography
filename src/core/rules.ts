@@ -12,7 +12,8 @@ import {
 import { PACK, PACKS } from './lang';
 import { apostrophe, arrows, ellipsis, legal, minus, multiply } from './marks';
 import { groupNumbers } from './numbers';
-import { ORPHANS, SENTENCE_DASH, SENTENCE_DASH_LITERARY } from './profiles';
+import { bindPhones } from './phone';
+import { ORPHANS, SENTENCE_DASH, SENTENCE_DASH_LITERARY, SHORT_WORDS } from './profiles';
 import { quotes } from './quotes';
 import {
   abbreviations,
@@ -26,6 +27,7 @@ import {
   operator,
   orphans,
   section,
+  shortWords,
   titles,
   unitSymbol,
 } from './spaces';
@@ -88,6 +90,9 @@ function names(packs: readonly { name: string }[]): string {
  *  - `number.group` goes after `dash.dialogue` and before `dash.range`, hence before
  *    `space.number`: it works on a bare number, and a spaced thousands group (1 000) must be
  *    one number by the time the number rules look at it.
+ *  - `phone.bind` goes before `number.group`, hence before `dash.range` and `symbol.minus`: a phone
+ *    number's groups must not be grouped as digits, and its hyphens are U+2011 before any rule can
+ *    read them as a range or a minus sign.
  *  - `symbol.fraction` goes before `space.number`, after `symbol.multiply`, so 1/2 is ½ before a
  *    unit is bound to it.
  *  - `symbol.plusminus` goes immediately before `symbol.minus`: +- becomes ± before a hyphen
@@ -168,6 +173,15 @@ export const RULES: readonly Rule[] = [
       const style = PACK[lang].dialogueDash;
       return style && blockStart ? dialogue(text, style) : text;
     },
+  },
+  {
+    id: 'phone.bind',
+    category: 'data',
+    about:
+      'An international phone number (+ or 00, at least seven digits) is kept whole: no-break spaces between its groups and non-breaking hyphens inside it, with the digits as typed',
+    defaultOn: false,
+    when: hasAny('+', '00'),
+    apply: bindPhones,
   },
   {
     id: 'number.group',
@@ -261,7 +275,7 @@ export const RULES: readonly Rule[] = [
     id: 'space.number',
     category: 'data',
     about:
-      'No-break space between a number and a short word or unit after it, up to nine letters (21 September, 5 %)',
+      'No-break space between a number and a short word or unit after it, up to nine letters (21 September, 5 %); money stays whole: the sign or code before the amount (USD 5 000, € 49.99) and the digit groups of an amount written in threes (1 000 грн)',
     apply: numberUnit,
   },
   {
@@ -308,6 +322,14 @@ export const RULES: readonly Rule[] = [
     about: 'No-break spaces around & + = standing alone between two words',
     when: hasAny('&', '+', '='),
     apply: operator,
+  },
+  {
+    id: 'space.short-word',
+    category: 'tradition',
+    about: `${names(PACKS.filter((pack) => 'shortWords' in pack && pack.shortWords?.length))}: a short word of two or three letters stays with the word after it (to~the shop), for titles and headings; never more than two words in a row`,
+    defaultOn: false,
+    when: (_text, { lang }) => SHORT_WORDS[lang] !== undefined,
+    apply: (text, { lang }) => shortWords(text, lang),
   },
   {
     id: 'space.orphan',

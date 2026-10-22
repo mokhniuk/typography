@@ -86,4 +86,9 @@ describe('Czech', () => {
     expect(t('- Počkáme? - zeptal se.')).toBe('–~Počkáme?~– zeptal se.');
     expect(t('- Počkáme? - zeptal se.', { register: 'literary' })).toBe('–~Počkáme?~– zeptal se.');
   });
+
+  test('short words stay with the next word when space.short-word is on', () => {
+    expect(t('Vítejte na náměstí', { enable: ['space.short-word'] })).toBe('Vítejte na~náměstí');
+    expect(t('Vítejte na náměstí')).toBe('Vítejte na náměstí');
+  });
 });

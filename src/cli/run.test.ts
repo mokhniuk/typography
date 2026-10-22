@@ -43,6 +43,15 @@ describe('typo', () => {
     expect(u.out()).toBe('‘x’\n');
   });
 
+  test('--avoid keeps the text as typed where a rule would insert a character the font lacks', async () => {
+    const t = fake({}, 'He said "hi"... ok\n');
+    expect(await run(['--avoid', '«»'], t.io)).toBe(0);
+    expect(nb(t.out())).toBe('He said "hi"… ok\n');
+    const u = fake({ 'package.json': JSON.stringify({ typography: { avoid: '…' } }) }, '"x"... ok\n');
+    await run([], u.io);
+    expect(nb(u.out())).toBe('«x»... ok\n');
+  });
+
   test('a Ukrainian dialogue dash is read at the start of every paragraph', async () => {
     const t = fake({}, '- Один\n\n- Два\n');
     await run(['-l', 'uk', '-r', 'literary'], t.io);

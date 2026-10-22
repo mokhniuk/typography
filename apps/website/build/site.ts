@@ -35,6 +35,7 @@ export const NAV = [
   // Docs opens on Getting started and stays current on every page under docs/.
   { href: 'docs/getting-started/', label: 'Docs', match: 'docs/' },
   { href: 'playground/', label: 'Playground' },
+  { href: 'font-checker/', label: 'Fonts' },
   { href: 'articles/', label: 'Articles' },
   { href: 'docs/changelog/', label: 'Changelog' },
 ] as const;

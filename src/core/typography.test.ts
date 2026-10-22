@@ -170,6 +170,45 @@ describe('spaces', () => {
     expect(t('Vitsche e.V.')).toBe('Vitsche~e.V.');
   });
 
+  test('a currency sign or code before the amount stays with it', () => {
+    expect(t('USD 5000')).toBe('USD~5000');
+    expect(t('€ 49.99')).toBe('€~49.99');
+    expect(t('$ 5')).toBe('$~5');
+    expect(t('Ціна: 1000 грн', 'uk')).toBe('Ціна: 1000~грн');
+    expect(t('zł 50', 'pl')).toBe('zł~50');
+  });
+
+  test('a currency sign or code after the amount stays with it', () => {
+    expect(t('49 €')).toBe('49~€');
+    expect(t('100 USD')).toBe('100~USD');
+    expect(t('100 ₴', 'uk')).toBe('100~₴');
+    expect(t('20 zł', 'pl')).toBe('20~zł');
+  });
+
+  test('the groups of a number written in threes stay together', () => {
+    expect(t('USD 5 000')).toBe('USD~5~000');
+    expect(t('1 000 грн', 'uk')).toBe('1~000~грн');
+    expect(t('€ 1 000 000')).toBe('€~1~000~000');
+    expect(t('1 000,50', 'de')).toBe('1~000,50');
+    expect(t('21 000 seats')).toBe('21~000~seats');
+  });
+
+  test('a phone number, an identifier and a year keep their spaces', () => {
+    expect(t('+380 44 123 45 67')).toBe('+380 44 123 45 67');
+    expect(t('+1 555 123 4567')).toBe('+1 555 123 4567');
+    expect(t('555 123 4567')).toBe('555 123 4567');
+    expect(t('2026 2027')).toBe('2026 2027');
+  });
+
+  test('money binding is stable and recorded by explain', () => {
+    const once = typographic('USD 5 000 and € 49.99');
+    expect(typographic(once)).toBe(once);
+    expect(explain('USD 5 000').changes).toEqual([
+      { rule: 'space.number', from: ' ', to: NBSP },
+      { rule: 'space.number', from: ' ', to: NBSP },
+    ]);
+  });
+
   test('§ and ¶ stay with the number after them', () => {
     expect(t('see § 5')).toBe('see §~5');
     expect(t('§§ 5–7')).toBe('§§~5–7');

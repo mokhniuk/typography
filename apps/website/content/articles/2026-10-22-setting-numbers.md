@@ -21,6 +21,12 @@ English groups thousands with a comma, German and Ukrainian with a (no-break) sp
 
 A line must not break between `15` and `people`, `21` and `September`, `5` and `%`. The `space.number` rule sets a no-break space between a number and the short word after it. On top of that, `space.percent` knows the languages whose guides space the percent sign — German, French, Czech and fourteen others set `5 %`, while English keeps `5%` — and several of them also set `49 €`.
 
+## Money stays whole
+
+An amount and the money it counts belong together, on either side of the figure: `100 USD` and `49 €` after it, `USD 5 000` and `€ 49.99` before it. The same rule also binds the group spaces of a number the writer grouped by hand, so `1 000 грн` can no longer break inside the number — which is what `number.group` does to a bare number, so the two agree. The signs and codes come from one table (ISO 4217 codes and the signs of our audience's currencies), and the engine never moves, adds or removes a sign: where it stands is the writer's choice, and it differs by language (`€49.99` in English, `49,99 €` in German).
+
+A phone number has the same problem and its own rule, `phone.bind` (off by default): an international number keeps its groups on one line, with no-break spaces and a non-breaking hyphen, and its digits exactly as typed — `+380 44 123 45 67`, `+1 (555) 123-4567`. A local number, a date and an IBAN are left alone, because a number that does not say what it is should not be guessed at.
+
 Temperatures get their own rule, `symbol.degree` (off by default): `20 C`, `20°C` and `20 °C` all become `20 °C` — number, no-break space, degree sign, unit — while `Vitamin C` stays a vitamin.
 
 ## True signs
