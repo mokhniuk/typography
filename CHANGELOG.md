@@ -2,7 +2,7 @@
 
 Versions follow semver while the package is below 1.0.0: a **minor** release may change the output of the engine or the API (every entry says whether it can change output you already have), a **patch** release fixes a bug without changing output you rely on. If you depend on exact output, pin a tag and read this file before you move it.
 
-## Unreleased
+## 0.11.0 (2026-10-22)
 
 ### Changes
 
