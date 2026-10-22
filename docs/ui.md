@@ -63,7 +63,28 @@ The comparison page is published as an Artifact, so it is one self-contained fil
 
 ### Deployment
 
-`.github/workflows/pages.yml` builds the site on every push to `main` that touches it and publishes it to GitHub Pages as the repository's project page, `https://mokhniuk.github.io/typography/`, with `SITE_BASE=/typography/` for the 404 page. It needs one setting that cannot be made from a file: **Settings → Pages → Build and deployment → Source: GitHub Actions**. A private repository needs a paid plan for Pages; on the free plan that source is not offered, and the site would have to come from a public repository instead. To deploy somewhere else, change `SITE_BASE` (a domain root needs none) and the path in the workflow.
-- Vertical rhythm: `--baseline` (8px) is the vertical module, the design grid's second axis. Line heights are its multiples — 24px for UI text, code and tables, 32px for reading text (articles, ledes, the specimen), and headings round up with `round(up, 1.05em, 8px)` over a unitless fallback — and the vertical margins, paddings and gaps between blocks use the spacing tokens that are its multiples (`--space-3` and up; `--space-4`, 12px, stays horizontal). `--header-height` (56px), `--control-height` (40px), `--pane-height` (416px) and the article covers (176px) sit on it too. The overlay shows both axes: G toggles the pink columns and the blue rows — a faint line every 8px, a stronger one every 32px — together (`?grid` turns it on anywhere; main.ts).
+The site ships as a container: `Dockerfile` at the repository root builds it with Bun and serves it
+with nginx (`apps/website/nginx.conf`). The build context is the root, because the site imports the
+engine from `src/`, its long examples from `apps/playground/` and its docs pages from `docs/`.
+
+```sh
+docker build -t podiia-typography-website .
+docker run --rm -p 8080:80 podiia-typography-website
+```
+
+On a Docker host (this project deploys to Coolify) the settings are: build pack **Dockerfile**, base
+directory `/`, Dockerfile `/Dockerfile`, exposed port **80**, then the domain. Nothing else is
+needed: the image holds a finished static site, so there is no runtime configuration, no environment
+variable and no volume. For a site served under a path rather than at the root of a host, pass the
+build argument `SITE_BASE=/path/` (it reaches `BASE` above; only the 404 page reads it).
+
+What nginx does, and why: a page per directory is found by `try_files $uri $uri/`, so `/docs/api`
+redirects to `/docs/api/` and the page's relative links resolve from there; `absolute_redirect off`
+keeps that redirect on the host it was asked for rather than the container's own name; `error_page
+404 /404.html` serves the 404 page for an address that is not there; asset names carry a hash of
+their contents and are cached for a year, while a page is `no-cache` because a deployment rewrites
+it in place. Checked on the built image: every page 200, `/docs/api` 301 to the slash, a deep
+missing path serving the styled 404 page, `font/woff2` for the fonts and gzip on the stylesheet.
+
 - Fonts: KyivType Sans (Regular, Medium, Bold; Latin and Cyrillic) is self-hosted in `apps/website/fonts/KyivType/`, with Poppins (Latin and Latin Extended, SIL OFL) as the fallback; see `fonts/README.md`.
 - Landing copy is a draft for the author to review; `data-raw` marks text that must show exactly as written, so the build's own typesetting skips it.

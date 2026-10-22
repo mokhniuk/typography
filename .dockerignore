@@ -1,0 +1,10 @@
+# What the website's image does not need (see the Dockerfile). Keeping the context small also keeps
+# a deployment from copying the benchmark's installed packages, which are the size of the repository.
+node_modules
+**/node_modules
+**/dist
+.git
+.github
+apps/bench
+docs/media
+*.log
