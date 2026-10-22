@@ -2,7 +2,7 @@
 
 Versions follow semver while the package is below 1.0.0: a **minor** release may change the output of the engine or the API (every entry says whether it can change output you already have), a **patch** release fixes a bug without changing output you rely on. If you depend on exact output, pin a tag and read this file before you move it.
 
-## Unreleased
+## 0.13.0 (2026-10-22)
 
 ### Changes
 
@@ -14,7 +14,7 @@ Versions follow semver while the package is below 1.0.0: a **minor** release may
 
 - The sources scripts share one `esc`, one `usedBy` (rules citing a source, with their languages) and one anchor function per page (`htmlAnchor`, `mdAnchor` in `resources/sources.ts`), so `sources.html`, `bibliography.html` and the links from `docs/rules.md` cannot disagree; a test checks that every rule link in `docs/rules.md` lands on a heading in `sources.md`. `sources.html` says "unused" for a source no decision cites, as `bibliography.html` did. The generators throw on a rule with no decision instead of skipping it. No output change.
 - The benchmark's sources, cases and configuration (`apps/bench/*.ts`, `cases/`, `package.json`, `tsconfig.json`) are tracked; `node_modules` and the lockfile stay out. Until now only `RESULTS.md` was, so the scripts lived on one machine. No output change.
-- The tags `v0.10.0` and `v0.11.0`, which the release workflow had failed to make, were created by hand on their release commits and pushed; `v0.12.0` was made by the workflow.
+- The benchmark outputs were re-run (`apps/bench/RESULTS.md`): every score is unchanged, the `rock ’n’ roll` and `3 x 4` outputs show the new no-break spaces, and the comparison page says so. The tags `v0.10.0` and `v0.11.0`, which the release workflow had failed to make, were created by hand on their release commits and pushed; `v0.12.0` was made by the workflow.
 
 ## 0.12.0 (2026-10-22)
 
