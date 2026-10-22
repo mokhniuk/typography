@@ -24,7 +24,9 @@ let shared: CanvasRenderingContext2D | null | undefined;
 function context(): CanvasRenderingContext2D | null {
   if (shared !== undefined) return shared;
   shared =
-    typeof document === 'undefined' ? null : (document.createElement('canvas').getContext('2d') ?? null);
+    typeof document === 'undefined'
+      ? null
+      : (document.createElement('canvas').getContext('2d') ?? null);
   return shared;
 }
 
@@ -81,5 +83,4 @@ export function missingGlyphs(chars: string, family: string): string {
 }
 
 /** The characters of `chars` the font of `el` cannot draw. */
-export const missingIn = (chars: string, el: Element): string =>
-  missingGlyphs(chars, fontOf(el));
+export const missingIn = (chars: string, el: Element): string => missingGlyphs(chars, fontOf(el));

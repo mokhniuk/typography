@@ -47,7 +47,10 @@ describe('typo', () => {
     const t = fake({}, 'He said "hi"... ok\n');
     expect(await run(['--avoid', '«»'], t.io)).toBe(0);
     expect(nb(t.out())).toBe('He said "hi"… ok\n');
-    const u = fake({ 'package.json': JSON.stringify({ typography: { avoid: '…' } }) }, '"x"... ok\n');
+    const u = fake(
+      { 'package.json': JSON.stringify({ typography: { avoid: '…' } }) },
+      '"x"... ok\n',
+    );
     await run([], u.io);
     expect(nb(u.out())).toBe('«x»... ok\n');
   });

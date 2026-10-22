@@ -39,7 +39,9 @@ describe('Slovak', () => {
 
   test('v, k, s, u, z, o, a, i bind to the next word (convention from secondary sources)', () => {
     expect(t('Idem k lesu a v noci')).toBe('Idem k~lesu a~v~noci');
-    expect(t('o dome u cesty s priateľom z mesta i ona')).toBe('o~dome u~cesty s~priateľom z~mesta i~ona');
+    expect(t('o dome u cesty s priateľom z mesta i ona')).toBe(
+      'o~dome u~cesty s~priateľom z~mesta i~ona',
+    );
   });
 
   test('capital forms are bound too', () => {
@@ -57,7 +59,12 @@ describe('Slovak', () => {
   });
 
   test('the goldens are idempotent', () => {
-    for (const text of ['“x ‘y’ z”', 'Povedal: "idem domov."', 'O\'Brien povedal "áno"', 'Idem k lesu a v noci']) {
+    for (const text of [
+      '“x ‘y’ z”',
+      'Povedal: "idem domov."',
+      'O\'Brien povedal "áno"',
+      'Idem k lesu a v noci',
+    ]) {
       const once = typographic(text, 'sk');
       expect(typographic(once, 'sk')).toBe(once);
     }

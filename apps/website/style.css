@@ -260,6 +260,7 @@ h4 {
   font-weight: 600;
   /* On the grid: up to the next 8px (the plain number is the fallback). */
   line-height: 1.15;
+  /* biome-ignore lint/suspicious/noDuplicateProperties: the plain number above is the fallback for a browser without round() */
   line-height: round(up, 1.05em, var(--baseline));
   letter-spacing: -0.02em;
   text-wrap: balance;
@@ -654,7 +655,11 @@ html[data-grid] body::before {
       var(--baseline-line) 0 1px,
       transparent 1px calc(var(--baseline) * 4)
     ),
-    repeating-linear-gradient(to bottom, var(--baseline-half) 0 1px, transparent 1px var(--baseline));
+    repeating-linear-gradient(
+      to bottom,
+      var(--baseline-half) 0 1px,
+      transparent 1px var(--baseline)
+    );
 }
 
 /* Code and tables, anywhere */
@@ -1036,6 +1041,7 @@ main[data-layout="article"] > article > header {
 main[data-layout="article"] > article > header h1 {
   font-size: var(--size-3xl);
   line-height: 1.05;
+  /* biome-ignore lint/suspicious/noDuplicateProperties: the plain number above is the fallback for a browser without round() */
   line-height: round(up, 1.05em, var(--baseline));
   margin-bottom: var(--space-5);
 }
@@ -1062,6 +1068,7 @@ main[data-layout="index"] > .container > header {
 main[data-layout="index"] > .container > header h1 {
   font-size: var(--size-3xl);
   line-height: 1.05;
+  /* biome-ignore lint/suspicious/noDuplicateProperties: the plain number above is the fallback for a browser without round() */
   line-height: round(up, 1.05em, var(--baseline));
 }
 main[data-layout="index"] > .container > header p {
@@ -1172,6 +1179,7 @@ ol[data-articles] p {
 [data-hero] h1 {
   font-size: var(--size-display);
   line-height: 1.06;
+  /* biome-ignore lint/suspicious/noDuplicateProperties: the plain number above is the fallback for a browser without round() */
   line-height: round(up, 1.05em, var(--baseline));
   letter-spacing: -0.035em;
   font-weight: 600;

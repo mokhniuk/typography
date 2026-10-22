@@ -1,9 +1,9 @@
 import {
   type Change,
   diff,
-  NBSP,
   LANGS,
   type Lang,
+  NBSP,
   PACKS,
   type QuoteStyle,
   REGISTERS,

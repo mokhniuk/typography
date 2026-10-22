@@ -51,11 +51,11 @@ export const EURO = '€';
 /** The percent sign, which `space.number` and `space.percent` both read. */
 export const PERCENT = '%';
 
-const escape = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const escapeRegex = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 /** `€`, `$`, `USD`, `zł`: every way of naming money, as one alternation for a regex. */
 export const CURRENCY_ALTERNATION = [
   `[${CURRENCY_SIGNS}]`,
-  ...CURRENCY_CODES.map(escape),
-  ...CURRENCY_WORDS.map(escape),
+  ...CURRENCY_CODES.map(escapeRegex),
+  ...CURRENCY_WORDS.map(escapeRegex),
 ].join('|');

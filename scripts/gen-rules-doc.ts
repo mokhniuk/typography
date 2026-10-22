@@ -11,7 +11,6 @@ import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { RULE_SOURCES } from '../resources/sources';
 import {
-  ruleGlyphs,
   type Lang,
   NBSP,
   type Register,
@@ -19,6 +18,7 @@ import {
   RULES,
   type Rule,
   type RuleCategory,
+  ruleGlyphs,
   typographic,
 } from '../src';
 

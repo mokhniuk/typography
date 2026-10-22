@@ -1,10 +1,4 @@
-import {
-  CURRENCY_CODES,
-  CURRENCY_SIGNS,
-  CURRENCY_WORDS,
-  EURO,
-  PERCENT,
-} from './currency';
+import { CURRENCY_CODES, CURRENCY_SIGNS, CURRENCY_WORDS, EURO, PERCENT } from './currency';
 import { PACK } from './lang';
 import { ABBREVIATIONS, type Abbreviations, ORPHANS, SHORT_WORDS } from './profiles';
 import { before, isLetter, isLetterOrNumber, replaceBehind } from './scan';
@@ -51,10 +45,7 @@ const NUMBER_UNIT = new RegExp(
 
 /** The longest currency name read back from before an amount (`lei`, `USD`, `zł`). */
 const SIGN_LETTERS = 3;
-const CURRENCY_NAMES: ReadonlySet<string> = new Set<string>([
-  ...CURRENCY_CODES,
-  ...CURRENCY_WORDS,
-]);
+const CURRENCY_NAMES: ReadonlySet<string> = new Set<string>([...CURRENCY_CODES, ...CURRENCY_WORDS]);
 
 /**
  * Whether a currency sign, code or letter name ends at `end`: `€`, `USD`, `zł`. A name of letters

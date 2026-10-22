@@ -67,9 +67,7 @@ export function website(): Plugin {
         'playground/index.html',
         'font-checker/index.html',
         '404.html',
-      ].map((name) =>
-        join(SITE_ROOT, name),
-      );
+      ].map((name) => join(SITE_ROOT, name));
       return {
         build: {
           rollupOptions: {

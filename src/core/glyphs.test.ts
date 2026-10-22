@@ -37,9 +37,9 @@ describe('avoid', () => {
   });
 
   test('the other changes of the same rule still happen', () => {
-    expect(typographic('A 1/2 cup and 1/4', 'en', { avoid: '¼', enable: ['symbol.fraction'] })).toBe(
-      `A${NBSP}½${NBSP}cup and 1/4`,
-    );
+    expect(
+      typographic('A 1/2 cup and 1/4', 'en', { avoid: '¼', enable: ['symbol.fraction'] }),
+    ).toBe(`A${NBSP}½${NBSP}cup and 1/4`);
   });
 
   test('the quotation rule keeps every mark as typed when one of them is avoided', () => {
@@ -57,9 +57,9 @@ describe('avoid', () => {
       typographic(`He said "we said 'no' twice"`, 'en', { disable: ['quote'] }),
     );
     // A rule whose changes stand on their own still drops one change at a time.
-    expect(typographic('A 1/2 cup and 1/4', 'en', { avoid: '¼', enable: ['symbol.fraction'] })).toBe(
-      `A${NBSP}½${NBSP}cup and 1/4`,
-    );
+    expect(
+      typographic('A 1/2 cup and 1/4', 'en', { avoid: '¼', enable: ['symbol.fraction'] }),
+    ).toBe(`A${NBSP}½${NBSP}cup and 1/4`);
   });
 
   test('nothing is reported for a change that was dropped', () => {

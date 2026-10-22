@@ -30,7 +30,9 @@ describe('Ukrainian', () => {
   });
 
   test('short words stay with the next word when space.short-word is on', () => {
-    expect(t('Ласкаво просимо до міста', { enable: ['space.short-word'] })).toBe('Ласкаво просимо до~міста');
+    expect(t('Ласкаво просимо до міста', { enable: ['space.short-word'] })).toBe(
+      'Ласкаво просимо до~міста',
+    );
     expect(t('Ласкаво просимо до міста')).toBe('Ласкаво просимо до міста');
   });
 });

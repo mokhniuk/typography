@@ -36,7 +36,9 @@ class El {
     this.children = [...nodes];
   }
   addEventListener(name: string, fn: Listener) {
-    (this.listeners[name] ??= []).push(fn);
+    const list = this.listeners[name] ?? [];
+    list.push(fn);
+    this.listeners[name] = list;
   }
   setAttribute(name: string, value: string) {
     this.attributes[name] = value;
@@ -62,7 +64,8 @@ class El {
   }
 }
 
-const camel = (name: string) => name.replace(/^data-/, '').replace(/-(.)/g, (_, c) => c.toUpperCase());
+const camel = (name: string) =>
+  name.replace(/^data-/, '').replace(/-(.)/g, (_, c) => c.toUpperCase());
 
 const ids = [
   'file',
@@ -91,8 +94,7 @@ beforeAll(() => {
   for (const id of ids) made.set(id, new El('div'));
   (globalThis as { document?: unknown }).document = {
     getElementById: (id: string) => made.get(id) ?? null,
-    createElement: (tag: string) =>
-      tag === 'canvas' ? { getContext: () => null } : new El(tag),
+    createElement: (tag: string) => (tag === 'canvas' ? { getContext: () => null } : new El(tag)),
   };
   (globalThis as { localStorage?: unknown }).localStorage = {
     getItem: () => null,

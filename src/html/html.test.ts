@@ -13,7 +13,9 @@ describe('typesetHtml', () => {
   test('an operator between two words is bound, written as &amp; or as a raw &', () => {
     expect(h('<p>Tom &amp; Jerry</p>')).toBe('<p>Tom~&amp;~Jerry</p>');
     expect(h('<p>Tom & Jerry</p>')).toBe('<p>Tom~&amp;~Jerry</p>');
-    expect(typesetHtml('<p>Tom &amp; Jerry</p>', { nbsp: 'char' })).toBe('<p>Tom\u00a0&amp;\u00a0Jerry</p>');
+    expect(typesetHtml('<p>Tom &amp; Jerry</p>', { nbsp: 'char' })).toBe(
+      '<p>Tom\u00a0&amp;\u00a0Jerry</p>',
+    );
     expect(h('<p>rock + roll</p>')).toBe('<p>rock~+~roll</p>');
   });
 

@@ -9,10 +9,9 @@
  * keep the text as it was typed wherever a rule would insert one of those characters.
  */
 
-import { example } from '../../playground/examples';
 import {
-  type Lang,
   LANGS,
+  type Lang,
   NBSP,
   PACK,
   type QuoteStyle,
@@ -22,8 +21,8 @@ import {
   typographic,
 } from '../../../src/core';
 import { glyphStatus, hangPunctuation, markHangs } from '../../../src/dom';
+import { example } from '../../playground/examples';
 import { RISKY_LETTERS } from './letters';
-
 
 type Status = 'own' | 'fallback' | 'none';
 
@@ -273,7 +272,9 @@ function missingFor(): { avoid: string; perLang: Map<Lang, Row[]>; letters: Map<
 
 /** The share of characters the font draws itself, as a percentage. */
 const share = (rows: Row[]): number =>
-  rows.length ? Math.round((rows.filter((row) => row.status === 'own').length / rows.length) * 100) : 100;
+  rows.length
+    ? Math.round((rows.filter((row) => row.status === 'own').length / rows.length) * 100)
+    : 100;
 
 function renderVerdict(perLang: Map<Lang, Row[]>, letters: Map<Lang, Row[]>) {
   verdict.replaceChildren();

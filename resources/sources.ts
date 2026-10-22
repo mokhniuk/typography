@@ -179,7 +179,7 @@ export const SOURCES: readonly Source[] = [
     author: 'A. S. Blyzniuk (compiler), Zhytomyr Ivan Franko State University',
     title: 'Основні технічні правила набору текстів',
     about:
-      'A university handbook of technical typesetting rules (2012) that reproduces the Soviet-era rules for books and periodicals; not an orthography authority. The url is the PDF\'s landing page, which links to the PDF. The text layer was decoded by hand, so apostrophes and punctuation are missing in the quotes.',
+      "A university handbook of technical typesetting rules (2012) that reproduces the Soviet-era rules for books and periodicals; not an orthography authority. The url is the PDF's landing page, which links to the PDF. The text layer was decoded by hand, so apostrophes and punctuation are missing in the quotes.",
     cite: 'А. С. Близнюк (упоряд.), "Основні технічні правила набору текстів", Житомирський державний університет імені Івана Франка, 2012.',
     url: 'https://eprints.zu.edu.ua/7122/',
     accessed: '2026-10-22',
@@ -777,7 +777,12 @@ export const RULE_SOURCES: Record<string, Decision> = {
     confidence: 'general-knowledge',
   },
   'space.orphan': {
-    sources: ['ijp-penezni-castky', 'ujc-poradna-konec-radku', 'pwn-wolanski-sieroty', 'zu-blyzniuk-technical-rules'],
+    sources: [
+      'ijp-penezni-castky',
+      'ujc-poradna-konec-radku',
+      'pwn-wolanski-sieroty',
+      'zu-blyzniuk-technical-rules',
+    ],
     why: 'A one-letter word does not end a line.',
     alternative:
       'Czech: the Internetová jazyková příručka (entry 880, a fetch summary) names k, s, v, z, o, u, a, i; the Jazyková poradna (read raw) says k s v z should not end a line, that guides differ on o u and a i, and recommends binding them too where the typesetting allows; ČSN 01 6910 lists k s v z o u only. The engine binds all eight (the list is the příručka\'s). Longer words may stay. Polish (a, i, o, u, w, z): Wolański in the PWN Poradnia (a fetch summary) lists exactly these, capitals included, as a recommendation for lines over about 40 characters, which is why the pack binds them in body text; in titles and subheads they must travel with what they belong to. Two-letter prepositions may stay in body text there, so none is bound. Ukrainian: a Zhytomyr handbook of technical typesetting rules (read raw, Soviet-era rules) says "не слід" leave one-letter prepositions and conjunctions at a line end in books, without listing letters; the CLASS is source-backed and the letters (а в і ї й з у о) are the engine\'s own enumeration, so Ukrainian stays general-knowledge. Slovak (v, k, s, u, z, o, a, i): an editorial convention, not a read authority: tvorim.net (2008) and a Slovak wikibook name the words, a design studio page (grafeon.sk) states the class without letters, but the Slovak language-advice pages and the Pravidlá PDF could not be read; shipped on that footing, general-knowledge. Bulgarian has a class rule in one anonymous 2005 guide with no letters, so nothing is bound (parked for a native reviewer). Slovenian, Croatian, German, French, Spanish and Italian: nothing found. The English a/I rule has no source at all. Two-letter words are bound in no language.',
@@ -827,7 +832,7 @@ export const RULE_SOURCES: Record<string, Decision> = {
     sources: ['uax14'],
     why: 'An international phone number is kept whole: no-break spaces between its groups and U+2011 for its hyphens, so a line never ends in the middle of a number.',
     alternative:
-      'Opt-in rule (off unless named in `enable`). UAX #14 is the source for the characters used: the no-break space and the non-breaking hyphen (U+2011) are the characters that forbid a break, which is the whole mechanism here. No style guide was read for phone numbers, so the shape the rule accepts is the engine\'s own: + or 00 followed directly by a digit, seven to fifteen digits (ITU-T E.164 allows fifteen, which is also what keeps a number from swallowing the figure after it), digits, spaces, hyphens and brackets inside. A local number (555-1234, 044-123-45-67) is left as typed, and so is a date, a range, an IBAN and a tel: link. The digits are never reformatted: a locale format per language would need a pack field (in the backlog). typograf has a rule for Russian phone numbers; no tool in the comparison binds an international one.',
+      "Opt-in rule (off unless named in `enable`). UAX #14 is the source for the characters used: the no-break space and the non-breaking hyphen (U+2011) are the characters that forbid a break, which is the whole mechanism here. No style guide was read for phone numbers, so the shape the rule accepts is the engine's own: + or 00 followed directly by a digit, seven to fifteen digits (ITU-T E.164 allows fifteen, which is also what keeps a number from swallowing the figure after it), digits, spaces, hyphens and brackets inside. A local number (555-1234, 044-123-45-67) is left as typed, and so is a date, a range, an IBAN and a tel: link. The digits are never reformatted: a locale format per language would need a pack field (in the backlog). typograf has a rule for Russian phone numbers; no tool in the comparison binds an international one.",
     confidence: 'general-knowledge',
   },
   'symbol.plusminus': {
