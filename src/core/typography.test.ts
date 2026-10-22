@@ -178,6 +178,12 @@ describe('spaces', () => {
     expect(t('zł 50', 'pl')).toBe('zł~50');
   });
 
+  test('a space that opens the text is not read as the space after a currency sign', () => {
+    expect(t(' 5 apples')).toBe(' 5~apples');
+    expect(t('  5')).toBe(' 5');
+    expect(t('\n 5 apples')).toBe('\n 5~apples');
+  });
+
   test('a currency sign or code after the amount stays with it', () => {
     expect(t('49 €')).toBe('49~€');
     expect(t('100 USD')).toBe('100~USD');

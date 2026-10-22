@@ -44,11 +44,15 @@ const subscribe = () => () => {};
  * The characters the font of `root` cannot draw, measured once the fonts of the page have loaded
  * (see `missingGlyphs` in ../dom). Empty on the server and until the measure is made, so the first
  * paint is the ordinary typeset text and only a real gap in the font changes it.
+ *
+ * Every language's marks are measured, not only the root's: a `Typeset` under this root may set a
+ * language of its own, and a mark no rule inserts in the language in use costs nothing to avoid.
+ * Pass `lang` to measure one language's marks only.
  */
 export function useMissingGlyphs(
   root: RefObject<HTMLElement | null>,
-  lang: Lang,
   on: boolean,
+  lang?: Lang,
 ): string {
   const [missing, setMissing] = useState('');
   useEffect(() => {
@@ -144,7 +148,7 @@ export function TypographyRoot({
   const listener = onChange ?? inherited.onChange;
   const amount = hangAmount ?? config?.hangAmount;
   const given = avoid ?? config?.avoid ?? inherited.avoid ?? '';
-  const missing = useMissingGlyphs(root, language, avoidMissing);
+  const missing = useMissingGlyphs(root, avoidMissing);
   const without = missing ? given + missing : given;
   const value = useMemo(
     () => ({

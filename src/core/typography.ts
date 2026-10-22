@@ -92,6 +92,10 @@ export type TypographicOptions = {
  * `after`, with every change that brought in an avoided character undone. The text is compared with
  * the same word-level diff `explain` uses, so a "change" here is one stretch a rule rewrote: the
  * stretch is kept as it was typed if what arrived holds a character of `avoided`.
+ *
+ * A rule whose changes belong together (`Rule.avoidWhole`, the quotation rule: its opening and
+ * closing mark are two changes and half a converted quotation is worse than none) is handled by
+ * `typographic`, which drops all of them together.
  */
 export function keepAvoided(before: string, after: string, avoided: ReadonlySet<string>): string {
   let out = '';
@@ -162,7 +166,13 @@ export function typographic(
   for (const rule of rules) {
     if (rule.when && !rule.when(out, context)) continue;
     const applied = rule.apply(out, context);
-    const next = avoided && applied !== out ? keepAvoided(out, applied, avoided) : applied;
+    let next = applied;
+    if (avoided && applied !== out) {
+      next = keepAvoided(out, applied, avoided);
+      // A rule whose changes belong together is all or nothing: if one had to be dropped, the text
+      // keeps every one of them as it was typed (a quotation with one mark converted is worse).
+      if (rule.avoidWhole && next !== applied) next = out;
+    }
     if (onChange && next !== out) {
       for (const change of changesOf(rule.id, diff(out, next))) onChange(change);
     }

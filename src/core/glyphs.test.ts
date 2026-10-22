@@ -42,6 +42,26 @@ describe('avoid', () => {
     );
   });
 
+  test('the quotation rule keeps every mark as typed when one of them is avoided', () => {
+    // Its marks come in pairs: half a converted quotation is worse than one left alone.
+    expect(typographic('Řekl "dům" a odešel', 'cs', { avoid: '„' })).toBe(
+      `Řekl "dům" a${NBSP}odešel`,
+    );
+    expect(typographic('He said "x" and "y"...', 'en', { avoid: '«' })).toBe(
+      'He said "x" and "y"…',
+    );
+    // Avoiding the inner level keeps the outer pair too: they are one rule's work. The straight
+    // marks then stay as typed, and the apostrophe rule claims the single one, as it does whenever
+    // the quotation rule leaves it (the same output as `disable: ['quote']`).
+    expect(typographic(`He said "we said 'no' twice"`, 'en', { avoid: '„“' })).toBe(
+      typographic(`He said "we said 'no' twice"`, 'en', { disable: ['quote'] }),
+    );
+    // A rule whose changes stand on their own still drops one change at a time.
+    expect(typographic('A 1/2 cup and 1/4', 'en', { avoid: '¼', enable: ['symbol.fraction'] })).toBe(
+      `A${NBSP}½${NBSP}cup and 1/4`,
+    );
+  });
+
   test('nothing is reported for a change that was dropped', () => {
     expect(explain('Wait... what?', 'en', { avoid: '…' }).changes).toEqual([]);
     const { changes } = explain('Wait... what? Read more ->', 'en', { avoid: '…' });

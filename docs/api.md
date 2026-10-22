@@ -375,7 +375,7 @@ Wraps a page so its text is typeset: it sets the language and register every `Ty
 | `rules` | `readonly Rule[]` | inherited; pass a constant |
 | `onChange` | `(change: Change) => void` | inherited; pass a stable function (`useCallback`). Called when a text is typeset, not on every render. |
 | `avoid` | `string` | inherited: characters the font cannot draw (see [`avoid`](#avoid)) |
-| `avoidMissing` | `boolean` | `true`: the root measures the font of its own `div` once the page's fonts have loaded (`document.fonts.ready`) and adds what that font cannot draw to `avoid`. A server-rendered page is typeset as usual first, and only a real gap in the font changes a text after that. Set it to `false` for a page that must render the same everywhere. |
+| `avoidMissing` | `boolean` | `true`: the root measures the font of its own `div` once the page's fonts have loaded (`document.fonts.ready`) and adds what that font cannot draw to `avoid`, over the marks of every language (a `Typeset` under it may set its own). A server-rendered page is typeset as usual first, and only a real gap in the font changes a text after that. Set it to `false` for a page that must render the same everywhere. |
 | `early` | `boolean` | `true` |
 
 ### `<Typeset text atStart? config? lang? register? quoteStyle? disable? enable? rules? onChange? avoid?>`
@@ -410,12 +410,14 @@ Renders `hangScript()` as an inline `<script>`. Put it last inside the element t
 
 Runs `hangPunctuation` over everything under `root.current` for as long as the component is mounted (in a layout effect). For a page that wires the hook itself instead of using `TypographyRoot`.
 
-### `useMissingGlyphs(root, lang, on): string`
+### `useMissingGlyphs(root, on, lang?): string`
 
 The characters the font of `root.current` cannot draw, measured once the page's fonts have loaded
 and returned as a string to pass as `avoid`. Empty on the server, while `on` is false, and until the
-measure is made. `TypographyRoot` uses it for `avoidMissing`; use it directly in a page that wires
-the context itself.
+measure is made. Without `lang` it measures the marks of every language, because a `Typeset` under
+the root may set a language of its own and a mark no rule inserts costs nothing to avoid; pass a
+language to measure only its marks. `TypographyRoot` uses it for `avoidMissing`; use it directly in
+a page that wires the context itself.
 
 ### `TypographyContext` and `TypographySetting`
 

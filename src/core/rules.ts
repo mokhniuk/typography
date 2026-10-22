@@ -58,6 +58,13 @@ export type Rule = {
   /** Whether the rule runs unless it is switched off. `false`: it runs only when named in `enable`. Default `true`. */
   defaultOn?: boolean;
   /**
+   * Whether the rule's changes belong together where `avoid` is set: if one of them would bring in a
+   * character the font cannot draw, every change of this rule is dropped for that text, not only
+   * that one. The quotation rule sets it, because an opening and a closing mark are two changes and
+   * a quotation with one mark converted and one as typed is worse than one left alone.
+   */
+  avoidWhole?: boolean;
+  /**
    * An optional cheap test of the text. If it returns `false`, `apply` MUST return the text unchanged,
    * so the rule is skipped, and no change is recorded (`onChange` and `explain` only see rules that
    * changed something). A rule without `when` always runs, as every custom rule does.
@@ -109,6 +116,8 @@ export const RULES: readonly Rule[] = [
     id: 'quote',
     category: 'tradition',
     about: 'Quotation marks by language, register and nesting level, from any source style',
+    // Its marks come in pairs, so `avoid` keeps or drops them together (see `avoidWhole`).
+    avoidWhole: true,
     apply: (text, { lang, register, quoteStyle }) => quotes(text, lang, register, quoteStyle),
   },
   {

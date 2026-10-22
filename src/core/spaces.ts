@@ -62,6 +62,8 @@ const CURRENCY_NAMES: ReadonlySet<string> = new Set<string>([
  * characters, so a long word before an amount costs a fixed number of steps, not its length.
  */
 function currencyEndsAt(text: string, end: number): boolean {
+  // Nothing stands before the start of the text; `includes('')` is true, so this must be asked first.
+  if (end <= 0) return false;
   if (CURRENCY_SIGNS.includes(text.charAt(end - 1))) return true;
   let start = end;
   while (start > 0 && end - start < SIGN_LETTERS && isLetter(text.charAt(start - 1))) start--;

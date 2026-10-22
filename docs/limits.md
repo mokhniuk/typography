@@ -39,7 +39,8 @@ What the engine deliberately leaves alone, what it knowingly does not do, and wh
 
 - **The engine cannot see a font.** `avoid` is a list you give it (see [api.md](api.md#avoid)); the measuring in `./dom` writes that list in a browser, and `TypographyRoot` uses it by default (`avoidMissing`).
 - **The measuring compares advance widths**, so a font whose glyph is exactly as wide as the fallback's in both probes is reported as missing, and a font that draws a wrong glyph of its own is reported as present. A no-break space cannot be measured at all and is never reported.
-- **`avoid` drops a whole change, not a character.** A rule that rewrites a stretch (a quotation, a spaced dash) leaves that whole stretch as it was typed if any character it would insert is avoided.
+- **`avoid` drops a whole change, not a character.** A rule that rewrites a stretch (a spaced dash) leaves that whole stretch as it was typed if any character it would insert is avoided. The quotation rule goes further (`avoidWhole`): one mark it cannot set means the text keeps every quotation mark as typed, since its marks come in pairs.
+- **In React the measured list covers every language**, not only the root's, because a `Typeset` under it may set its own; a mark no rule inserts in the language in use costs nothing to avoid.
 - **In React the text can change after the fonts load.** The first paint is the ordinary typeset text; once `document.fonts.ready` resolves and a gap is found, the texts under the root are set again. Set `avoidMissing={false}` for a page that must not do that.
 - **The font checker's verdict and preset are a starting point**, not research: the score is the share of characters the font draws itself, and the size, line height, measure and hang amount are measured from the font with editorial rules of thumb.
 
