@@ -520,10 +520,6 @@ body > header button:hover {
     scrollbar-width: none;
     white-space: nowrap;
   }
-  /* GitHub is in the footer too; without it the four pages fit a phone's width. */
-  body > header li[data-github] {
-    display: none;
-  }
 }
 
 /* The landing ends on the inverted support band: there the footer sits flush against it. */

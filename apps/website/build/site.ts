@@ -45,7 +45,6 @@ export const NAV = [
   { href: 'playground/', label: 'Playground' },
   { href: 'font-checker/', label: 'Fonts' },
   { href: 'articles/', label: 'Articles' },
-  { href: 'docs/changelog/', label: 'Changelog' },
 ] as const;
 
 /** `{{name}}` placeholders in a page become the value in `FACTS`. */
