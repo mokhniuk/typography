@@ -6,7 +6,7 @@ import { footer, header, rootOf } from './chrome';
 import { examplesFigure, samplesTable, specimenFigure } from './examples';
 import { markHangsInPage } from './hang';
 import { highlightHtml } from './highlight';
-import { generatedPages } from './pages';
+import { generatedPages, notesRow } from './pages';
 import { BASE, fill, SITE_ROOT, TYPESET } from './site';
 
 /** The path of a page on the site: "docs/api/", "" for the landing page. */
@@ -50,6 +50,7 @@ function finish(html: string, path: string): string {
     .replace('<!--examples-->', () => examplesFigure())
     .replace('<!--specimen-->', () => specimenFigure())
     .replace('<!--samples-->', () => samplesTable())
+    .replace('<!--notes-->', () => notesRow())
     .replace('</head>', () => `${preload(path)}\n</head>`);
   return markHangsInPage(typesetHtml(externalLinks(highlightHtml(filled)), TYPESET));
 }

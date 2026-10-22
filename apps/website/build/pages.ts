@@ -161,6 +161,27 @@ ${items}
   });
 }
 
+/**
+ * The newest notes on the landing page (`<!--notes-->`): three articles, each with its date, how
+ * long it takes to read, and what it is about. Built from the same `articles()` the index uses, so
+ * a new file in `content/articles/` appears here by itself.
+ */
+export function notesRow(count = 3): string {
+  const items = articles()
+    .slice(0, count)
+    .map(
+      (article) => `<li>
+  <article>
+    <p data-meta><time datetime="${article.date}">${when(article.date)}</time> · ${article.minutes} min read</p>
+    <h3><a href="./${article.path}">${esc(article.title)}</a></h3>
+    <p>${esc(article.summary)}</p>
+  </article>
+</li>`,
+    )
+    .join('\n');
+  return `<ol data-notes>\n${items}\n</ol>`;
+}
+
 /** Every page the site builds from content, keyed by its path ("docs/api/"). */
 export function generatedPages(): Map<string, string> {
   const all = docs();

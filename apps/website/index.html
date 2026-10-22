@@ -49,6 +49,84 @@
     </div>
   </section>
 
+  <section aria-labelledby="figures" data-figures>
+    <div class="container">
+      <h2 id="figures" class="sr-only">In numbers</h2>
+      <dl>
+        <div>
+          <dt>Languages</dt>
+          <dd>{{langs}}</dd>
+          <dd>The 24 official languages of the EU, Ukrainian, and Swiss usage. Each one a pack, not a translation of English.</dd>
+        </div>
+        <div>
+          <dt>Rules</dt>
+          <dd>{{rules}}</dd>
+          <dd>{{rulesOn}} run by default; {{rulesOff}} wait until you ask for them. Each one switchable by name.</dd>
+        </div>
+        <div>
+          <dt>Benchmark checks passed</dt>
+          <dd>{{checks}}</dd>
+          <dd>Against {{tools}} other tools on the same cases, {{checksLiterary}} in the literary register. The cases were written by this project, which is the first thing to <a href="./docs/limits/">read about them</a>.</dd>
+        </div>
+        <div>
+          <dt>A megabyte of English</dt>
+          <dd>{{speed}}</dd>
+          <dd>Linear in the length of the text. The closest tool in scope took {{speedOther}} in the same run.</dd>
+        </div>
+        <div>
+          <dt>Runtime dependencies</dt>
+          <dd>0</dd>
+          <dd>Nothing in the package imports anything outside it. React is an optional peer, for one entry point.</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <section aria-labelledby="does" data-section>
+    <div class="container">
+      <header>
+        <h2 id="does">What it does</h2>
+      </header>
+      <div>
+        <p data-lede>The engine is one function over a string. Everything else is a way of getting your text into it, or a way of seeing what it did.</p>
+        <dl data-features>
+          <div>
+            <dt>Every format your text lives in</dt>
+            <dd>Plain text, an HTML string, a Markdown document, a rehype or hast tree, React components, the DOM, and a command line for files and CI. One engine under all of them. <a href="./docs/api/">The API</a></dd>
+          </div>
+          <div>
+            <dt>A pack per language, and no rule that names one</dt>
+            <dd>Quotation marks and how they nest, the dash, the spacing habits, the one-letter words that may not end a line: each is data in a language pack, which is why adding a language is writing one file. <a href="./docs/languages/">The languages</a></dd>
+          </div>
+          <div>
+            <dt>Two registers</dt>
+            <dd>Display text is the default: interfaces, marketing, event pages. The literary register sets book-like text — British quotes in English, a dash for a line of dialogue where the language writes dialogue that way.</dd>
+          </div>
+          <div>
+            <dt>It tells you what it changed</dt>
+            <dd><code>explain</code> returns every change with the rule that made it and the text before and after, so a surprise is a question with an answer, not a mystery. <a href="./docs/rules/">The rules</a></dd>
+          </div>
+          <div>
+            <dt>Hanging punctuation, measured</dt>
+            <dd>An opening mark hangs in the margin so the first letter lines up with the lines under it. Each mark's width is measured in the browser once; nothing re-measures when lines move. <a href="./articles/hanging-punctuation/">How it works</a></dd>
+          </div>
+          <div>
+            <dt>It knows what your font cannot draw</dt>
+            <dd>A rule that would insert a character the font has no glyph for leaves the text as you typed it — better a straight quote than a box. In a browser the list writes itself from the page's own font. <a href="./font-checker/">The font checker</a></dd>
+          </div>
+          <div>
+            <dt>Safe on what is not prose</dt>
+            <dd>Web addresses, emails and code spans come back byte for byte; tags, attributes and the contents of <code>pre</code> and <code>code</code> are never touched. An unknown rule name throws instead of passing quietly.</dd>
+          </div>
+          <div>
+            <dt>Proved, not promised</dt>
+            <dd>Property tests on seeded random text in every language: no letter or digit is lost or added, and a second pass changes nothing. A differential harness proves a speed change rewrote no output. <a href="./docs/limits/">Known limits</a></dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
   <section aria-labelledby="languages" data-section>
     <div class="container">
       <header>
@@ -58,6 +136,18 @@
         <p data-lede>Each language has its own pack: its quotation marks and how they nest, its dash, its habits with spaces. These four are not translations of one sentence; each is written the way that language is.</p>
         <!--examples-->
       </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="why" data-quote>
+    <div class="container">
+      <h2 id="why" class="sr-only">Why it matters</h2>
+      <figure>
+        <blockquote data-hanging>
+          <p>"Typography is what language looks like. A straight quote, a hyphen standing in for a dash, a number torn from the word it counts: each is a small lie about the text, and a reader feels all of them at once without being able to name one."</p>
+        </blockquote>
+        <figcaption>The opening mark of that quotation hangs in the margin, where the engine put it. Turn it off in <a href="./playground/">the playground</a> and watch the first line step inward. <a href="./articles/why-typography-is-hard-to-automate/">Why this is hard to automate</a></figcaption>
+      </figure>
     </div>
   </section>
 
@@ -121,6 +211,19 @@ explain('He said "hi"... 21-26', 'en', { quoteStyle: 'us' }).changes;
           <li><strong>Some input can't be read with certainty.</strong> An inch mark inside a quotation (<code>a 5" hole</code>) is one. Such cases are listed as limits, not guessed at.</li>
         </ul>
         <p><a href="./docs/limits/">Known limits</a> · <a href="./docs/languages/">Languages and their review status</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="notes" data-section>
+    <div class="container">
+      <header>
+        <h2 id="notes">Notes</h2>
+      </header>
+      <div>
+        <p data-lede>Where each decision came from, and what a reader should know about the marks themselves. Written while building the engine.</p>
+        <!--notes-->
+        <p><a href="./articles/">All the notes</a></p>
       </div>
     </div>
   </section>

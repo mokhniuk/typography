@@ -1,9 +1,9 @@
 import { describe, expect, test } from 'bun:test';
 import { posix } from 'node:path';
-import { latestDateOnly } from './build/content';
+import { articles, latestDateOnly } from './build/content';
 import { EXAMPLES, exampleResult } from './build/examples';
-import { generatedPages } from './build/pages';
-import { externalLinks, rootLinks } from './build/plugin';
+import { generatedPages, notesRow } from './build/pages';
+import { externalLinks, rootLinks, source } from './build/plugin';
 import { FACTS, fill } from './build/site';
 
 const pages = generatedPages();
@@ -37,6 +37,31 @@ describe('website pages', () => {
 
   test('no placeholder is left unfilled', () => {
     for (const html of pages.values()) expect(fill(html)).not.toMatch(/\{\{\w+\}\}/);
+  });
+
+  test('the hand-written pages name only facts that exist', () => {
+    // A page quoting `{{checks}}` with no such fact would ship the braces as text.
+    for (const name of [
+      'index.html',
+      'playground/index.html',
+      'font-checker/index.html',
+      '404.html',
+    ]) {
+      expect(fill(source(name)), name).not.toMatch(/\{\{\w+\}\}/);
+    }
+  });
+
+  test('the landing page builds its figures and its notes from the engine and the articles', () => {
+    const landing = fill(source('index.html'));
+    for (const fact of ['langs', 'rules', 'rulesOn', 'rulesOff', 'checks', 'speed', 'tools'])
+      expect(landing, fact).toContain(FACTS[fact] as string);
+    const notes = notesRow();
+    expect([...notes.matchAll(/<li>/g)]).toHaveLength(3);
+    expect(notes).toContain('min read');
+    // The newest article first, and a link that lands on a page of the site.
+    const first = articles()[0];
+    expect(notes).toContain(`./${first?.path}`);
+    expect(pages.has(first?.path ?? '')).toBe(true);
   });
 
   test('the numbers come from the engine', () => {
