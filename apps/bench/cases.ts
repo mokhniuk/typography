@@ -401,7 +401,7 @@ add({
   format: 'html',
   input: '<p>See <a href="/x">"the docs"</a> now</p>',
   expect: 'a quotation written inside a link stays inside it',
-  pass: matches(/<a href="\/x">[“‘«][^<]*the docs[^<]*[”’»]<\/a>/u),
+  pass: matches(/<a href="\/x">[“‘«][^<]*the[ \u00a0]docs[^<]*[”’»]<\/a>/u),
 });
 add({
   id: 'html-quote-across-link',
@@ -410,7 +410,7 @@ add({
   format: 'html',
   input: '<p>"See <a href="/x">the docs</a> now"</p>',
   expect: 'a quotation pairs across a link, markup unchanged',
-  pass: matches(/[“‘]See <a href="\/x">the docs<\/a> now[”’]/u),
+  pass: matches(/[“‘]See <a href="\/x">the[ \u00a0]docs<\/a> now[”’]/u),
 });
 
 // Stability and safety

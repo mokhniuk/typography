@@ -32,13 +32,13 @@ Passed / scored. "–" means the tool has no such feature or language (not score
 | Abbreviations | 5/5 | 5/5 | 0/5 | 0/5 | 2/3 | 0/1 | 0/4 | 0/1 | 0/1 |
 | Symbols | 17/17 | 17/17 | 10/17 | 10/17 | 7/16 | 5/16 | 12/17 | 5/15 | 5/15 |
 | Protected text | 3/3 | 3/3 | 2/3 | 2/3 | 2/3 | 2/3 | 1/3 | 1/3 | 1/3 |
-| HTML | 4/6 | 6/6 | 4/6 | 4/6 | – | 4/6 | 6/6 | – | – |
+| HTML | 4/6 | 6/6 | 5/6 | 5/6 | – | 5/6 | 6/6 | – | – |
 | Safety | 33/33 | 33/33 | 28/29 | 28/29 | 11/12 | 9/10 | 17/19 | 7/9 | 7/9 |
 | Registers | – | 2/2 | – | – | – | – | – | – | – |
 | Ellipsis | 5/5 | 5/5 | 5/5 | 5/5 | 5/5 | 3/5 | 3/5 | 4/5 | 4/5 |
 | Spacing | 13/13 | 13/13 | 9/13 | 11/13 | 9/13 | 12/13 | 8/13 | 7/13 | 7/13 |
 | Stability | 25/25 | 25/25 | 21/21 | 21/21 | 4/4 | 1/2 | 11/11 | 1/1 | 1/1 |
-| **All (without Registers)** | **242/250** | **250/250** | **131/226** | **137/226** | **85/111** | **68/102** | **126/162** | **53/89** | **52/89** |
+| **All (without Registers)** | **242/250** | **250/250** | **132/226** | **138/226** | **85/111** | **69/102** | **126/162** | **53/89** | **52/89** |
 
 A language a tool does not support is not scored, so the totals compare different numbers of cases: read each tool's row against its own denominator.
 
@@ -50,15 +50,15 @@ English text in one piece, text mode: the median of seven runs (three at 1 MB), 
 
 | Tool | 10 KB | 100 KB | 1000 KB |
 |---|---|---|---|
-| typography-engine | 1 ms (3) | 6 ms (9) | 56 ms (57) |
-| typography-engine literary | 1 ms (1) | 6 ms (6) | 56 ms (58) |
-| typograf | 1 ms (2) | 11 ms (14) | 112 ms (112) |
-| typograf +nbsp | 1 ms (1) | 11 ms (13) | 112 ms (115) |
-| typopo | 40 ms (400) | 2122 ms (2706) | not run (~212 s) |
-| richtypo | 4992 ms (5121) | not run (~497 s) | not run (~49607 s) |
-| tipograph | 0 ms (1) | 2 ms (2) | 23 ms (27) |
-| smartypants | 0 ms (3) | 2 ms (2) | 18 ms (18) |
-| retext-smartypants | 5 ms (10) | 51 ms (57) | 2074 ms (2082) |
+| typography-engine | 1 ms (1) | 8 ms (11) | 74 ms (75) |
+| typography-engine literary | 1 ms (1) | 7 ms (8) | 72 ms (76) |
+| typograf | 1 ms (2) | 11 ms (12) | 115 ms (116) |
+| typograf +nbsp | 1 ms (1) | 11 ms (12) | 111 ms (129) |
+| typopo | 38 ms (371) | 2084 ms (2318) | not run (~208 s) |
+| richtypo | 4866 ms (4898) | not run (~484 s) | not run (~48351 s) |
+| tipograph | 0 ms (1) | 2 ms (2) | 23 ms (25) |
+| smartypants | 0 ms (1) | 2 ms (2) | 19 ms (19) |
+| retext-smartypants | 6 ms (10) | 49 ms (56) | 2062 ms (2118) |
 
 ### Speed by input
 
@@ -66,15 +66,15 @@ About 100 KB of each language's prose from `scripts/corpus.ts` (paragraphs, with
 
 | Tool | en text | de text | fr text | uk text | en HTML |
 |---|---|---|---|---|---|
-| typography-engine | 7 ms (8) | 19 ms (21) | 6 ms (17) | 8 ms (8) | 7 ms (7) |
-| typography-engine literary | 7 ms (8) | 18 ms (19) | 6 ms (6) | 8 ms (8) | 7 ms (7) |
-| typograf | 13 ms (15) | 13 ms (15) | 10 ms (10) | 13 ms (18) | 13 ms (22) |
-| typograf +nbsp | 12 ms (13) | 13 ms (13) | 11 ms (14) | 12 ms (13) | 13 ms (13) |
-| typopo | 854 ms | 682 ms | – | – | – |
+| typography-engine | 8 ms (11) | 19 ms (19) | 6 ms (6) | 9 ms (9) | 9 ms (9) |
+| typography-engine literary | 8 ms (8) | 18 ms (19) | 7 ms (8) | 9 ms (11) | 8 ms (8) |
+| typograf | 13 ms (14) | 13 ms (14) | 10 ms (12) | 11 ms (13) | 13 ms (14) |
+| typograf +nbsp | 12 ms (13) | 12 ms (15) | 10 ms (11) | 12 ms (13) | 13 ms (13) |
+| typopo | 856 ms | 417 ms | – | – | – |
 | richtypo | not run | not run | not run | not run | not run |
-| tipograph | 3 ms (3) | 3 ms (3) | 3 ms (3) | – | 3 ms (4) |
-| smartypants | 2 ms (3) | – | – | – | – |
-| retext-smartypants | 50 ms (65) | – | – | – | – |
+| tipograph | 3 ms (5) | 3 ms (4) | 3 ms (3) | – | 3 ms (4) |
+| smartypants | 2 ms (2) | – | – | – | – |
+| retext-smartypants | 53 ms (64) | – | – | – | – |
 
 ## Engines
 
@@ -86,13 +86,13 @@ Time to import the bundle, and the first call on 1 KB of English (it includes th
 
 | Tool | Bun import | Bun first call | Node import | Node first call | Deno import | Deno first call |
 |---|---|---|---|---|---|---|
-| typography-engine | 6.0 ms | 4.5 ms | 6.5 ms | 6.2 ms | 3.9 ms | 6.0 ms |
-| typograf | 7.3 ms | 2.2 ms | 4.3 ms | 4.0 ms | 3.6 ms | 4.4 ms |
-| typopo | 3.2 ms | 342 ms | 1.0 ms | 258 ms | 0.8 ms | 571 ms |
-| richtypo | 1.5 ms | 52 ms | 0.6 ms | 3.3 ms | 0.7 ms | 4.2 ms |
-| tipograph | 8.0 ms | 0.4 ms | 11 ms | 0.8 ms | 8.0 ms | 1.2 ms |
-| smartypants | 1.1 ms | 0.7 ms | 0.5 ms | 0.6 ms | 0.5 ms | 0.7 ms |
-| retext-smartypants | 3.0 ms | 5.7 ms | 2.0 ms | 5.9 ms | 1.3 ms | 5.2 ms |
+| typography-engine | 6.9 ms | 5.8 ms | 6.7 ms | 8.0 ms | 4.0 ms | 7.8 ms |
+| typograf | 7.3 ms | 2.2 ms | 4.3 ms | 4.1 ms | 3.5 ms | 4.4 ms |
+| typopo | 3.1 ms | 357 ms | 1.0 ms | 262 ms | 0.9 ms | 572 ms |
+| richtypo | 1.4 ms | 52 ms | 0.6 ms | 3.8 ms | 0.7 ms | 4.1 ms |
+| tipograph | 7.8 ms | 0.4 ms | 11 ms | 0.8 ms | 8.2 ms | 1.2 ms |
+| smartypants | 1.1 ms | 0.7 ms | 0.5 ms | 0.6 ms | 0.6 ms | 0.7 ms |
+| retext-smartypants | 2.9 ms | 5.7 ms | 2.0 ms | 5.9 ms | 1.4 ms | 5.2 ms |
 
 ### Speed
 
@@ -100,13 +100,13 @@ A warm call on 1 KB of English (median of 300, p95 in brackets): what a page pay
 
 | Tool | Bun 1 KB | Node 1 KB | Deno 1 KB | Bun 100 KB | Node 100 KB | Deno 100 KB |
 |---|---|---|---|---|---|---|
-| typography-engine | 73 µs (94 µs) | 55 µs (81 µs) | 50 µs (86 µs) | 5.9 ms (6.7 ms) | 5.0 ms (5.5 ms) | 5.5 ms (7.7 ms) |
-| typograf | 136 µs (162 µs) | 115 µs (174 µs) | 91 µs (132 µs) | 11 ms (13 ms) | 10 ms (13 ms) | 8.3 ms (9.2 ms) |
-| typopo | 2.4 ms (3.0 ms) | 2.3 ms (2.9 ms) | 1.6 ms (1.7 ms) | 2090 ms | 2706 ms | 2890 ms |
-| richtypo | 50 ms (54 ms) | 2.1 ms (2.4 ms) | 1.3 ms (1.7 ms) | not run | 8826 ms | 8909 ms |
-| tipograph | 26 µs (30 µs) | 20 µs (24 µs) | 20 µs (24 µs) | 2.2 ms (2.2 ms) | 1.5 ms (1.7 ms) | 1.4 ms (1.6 ms) |
-| smartypants | 23 µs (31 µs) | 21 µs (27 µs) | 20 µs (29 µs) | 1.9 ms (1.9 ms) | 1.8 ms (1.9 ms) | 1.6 ms (1.8 ms) |
-| retext-smartypants | 339 µs (517 µs) | 521 µs (714 µs) | 586 µs (748 µs) | 47 ms (64 ms) | 70 ms (81 ms) | 80 ms (186 ms) |
+| typography-engine | 89 µs (112 µs) | 63 µs (98 µs) | 56 µs (92 µs) | 7.6 ms (8.6 ms) | 6.5 ms (8.7 ms) | 5.1 ms (5.5 ms) |
+| typograf | 133 µs (158 µs) | 112 µs (157 µs) | 90 µs (129 µs) | 12 ms (13 ms) | 11 ms (11 ms) | 7.6 ms (8.5 ms) |
+| typopo | 2.4 ms (3.1 ms) | 2.3 ms (2.6 ms) | 1.6 ms (1.8 ms) | 2048 ms | 2676 ms | 2936 ms |
+| richtypo | 49 ms (52 ms) | 2.3 ms (2.5 ms) | 1.4 ms (2.3 ms) | not run | 8883 ms | 8855 ms |
+| tipograph | 25 µs (30 µs) | 20 µs (25 µs) | 20 µs (30 µs) | 2.1 ms (2.2 ms) | 1.6 ms (1.7 ms) | 1.4 ms (1.6 ms) |
+| smartypants | 22 µs (31 µs) | 21 µs (27 µs) | 20 µs (28 µs) | 1.8 ms (1.9 ms) | 1.8 ms (1.9 ms) | 1.7 ms (1.8 ms) |
+| retext-smartypants | 313 µs (419 µs) | 511 µs (669 µs) | 592 µs (742 µs) | 48 ms (68 ms) | 72 ms (95 ms) | 78 ms (91 ms) |
 
 ### Memory
 
@@ -114,13 +114,13 @@ Peak resident memory of the process that typesets 1 MB of English in one call, a
 
 | Tool | Bun | Node | Deno |
 |---|---|---|---|
-| typography-engine | 80 MB (+49) | 87 MB (+40) | 88 MB (+40) |
+| typography-engine | 85 MB (+54) | 89 MB (+41) | 90 MB (+42) |
 | typograf | 103 MB (+66) | 134 MB (+85) | 133 MB (+83) |
-| typopo | 50 MB (+19) at 100 KB | 64 MB (+18) at 100 KB | 92 MB (+45) at 100 KB |
-| richtypo | > 20 s | 48 MB (+2) at 100 KB | 48 MB (+1) at 100 KB |
+| typopo | 59 MB (+27) at 100 KB | 55 MB (+9) at 100 KB | 95 MB (+48) at 100 KB |
+| richtypo | > 20 s | 48 MB (+2) at 100 KB | 47 MB (+0) at 100 KB |
 | tipograph | 47 MB (+14) | 68 MB (+18) | 64 MB (+15) |
 | smartypants | 44 MB (+14) | 62 MB (+16) | 62 MB (+15) |
-| retext-smartypants | 366 MB (+337) | 379 MB (+333) | 294 MB (+247) |
+| retext-smartypants | 376 MB (+347) | 381 MB (+335) | 301 MB (+254) |
 
 ## Bundle size
 
@@ -128,7 +128,7 @@ One call that typesets English text, bundled for the browser with `Bun.build` (E
 
 | Bundle | Minified | gzip | brotli |
 |---|---|---|---|
-| typography-engine | 86.9 KB | 30.4 KB | 25.9 KB |
+| typography-engine | 86.8 KB | 30.4 KB | 26.0 KB |
 | typograf | 49.3 KB | 17.2 KB | 14.7 KB |
 | typopo | 29.3 KB | 7.4 KB | 6.5 KB |
 | richtypo | 3.2 KB | 1.4 KB | 1.2 KB |
@@ -142,10 +142,10 @@ This package's entry points one by one (`react` is a peer dependency, left out o
 |---|---|---|---|
 | typography-engine (everything, `.`) | 91.4 KB | 32.1 KB | 27.4 KB |
 | typography-engine/text | 86.8 KB | 30.4 KB | 25.9 KB |
-| typography-engine/html | 89.0 KB | 31.5 KB | 26.9 KB |
+| typography-engine/html | 88.9 KB | 31.5 KB | 26.8 KB |
 | typography-engine/markdown | 88.6 KB | 31.3 KB | 26.8 KB |
-| typography-engine/rehype | 87.8 KB | 30.9 KB | 26.3 KB |
-| typography-engine/dom | 89.3 KB | 31.1 KB | 26.4 KB |
+| typography-engine/rehype | 87.7 KB | 30.9 KB | 26.3 KB |
+| typography-engine/dom | 89.3 KB | 31.0 KB | 26.3 KB |
 | typography-engine/react | 95.9 KB | 33.5 KB | 28.6 KB |
 | typography-engine: the language packs alone | 57.4 KB | 19.1 KB | 15.9 KB |
 
@@ -155,7 +155,7 @@ What `npm install` (or a git dependency) puts on disk for one tool: its package 
 
 | Tool | Packages installed | Install footprint | Licence | Types | Format | Version published |
 |---|---|---|---|---|---|---|
-| typography-engine | 1 (react is an optional peer) | 337 KB (69 files) | none | TypeScript sources | ESM, TypeScript (needs Bun or a bundler) | git tag only |
+| typography-engine | 1 (react is an optional peer) | 338 KB (69 files) | none | TypeScript sources | ESM, TypeScript (needs Bun or a bundler) | git tag only |
 | typograf | 1 | 604 KB | MIT | yes | ESM and CommonJS | 2026-08-14 (7.8.0) |
 | typopo | 1 | 105 KB | MIT | yes | ESM and CommonJS | 2026-05-25 (3.1.0) |
 | richtypo | 1 | 22 KB | MIT | yes | ESM | 2026-04-27 (8.0.0) |
@@ -169,18 +169,18 @@ About 10 KB built to find a slow path (a regex that backtracks, a loop that resc
 
 | Probe | typography-engine | typograf | typopo | richtypo | tipograph | smartypants | retext-smartypants |
 |---|---|---|---|---|---|---|---|
-| double quotes: `"` repeated | 5.1 ms | 6.3 ms | 604 ms | **6.2 s** | 0.8 ms | 1.6 ms | 2.7 ms |
-| single quotes: `'` repeated | 5.6 ms | 2.4 ms | > 10 s | **6.2 s** | 0.8 ms | 1.8 ms | 2.8 ms |
-| quoted words: `"a ` repeated | 6.6 ms | 5.2 ms | > 10 s | **5.1 s** | 0.8 ms | 1.1 ms | 23 ms |
-| hyphens: `-` repeated | 2.9 ms | 2.4 ms | 174 ms | **1.8 s** | 0.8 ms | 0.9 ms | 2.7 ms |
-| spaced hyphens: `a - ` repeated | 2.8 ms | 3.1 ms | 354 ms | **5.0 s** | 0.9 ms | 0.8 ms | 23 ms |
-| digit ranges: `1-2-` repeated | 3.8 ms | 2.5 ms | 457 ms | **6.0 s** | 1.3 ms | 0.6 ms | 21 ms |
-| dots: `.` repeated | 2.3 ms | 2.4 ms | 341 ms | **3.7 s** | 0.7 ms | 0.8 ms | 2.8 ms |
-| spaces: spaces between two words | 78 ms | 78 ms | 164 ms | 0.7 ms | 209 ms | 0.7 ms | 2.7 ms |
-| one word: one word of 10 000 letters | 1.8 ms | 2.4 ms | 680 ms | **6.2 s** | 0.7 ms | 0.5 ms | 2.9 ms |
-| initials: `A. ` repeated | 3.0 ms | 2.7 ms | 172 ms | **4.0 s** | 0.8 ms | 0.6 ms | 23 ms |
-| nested HTML: 1 000 nested `<b>` | 6.5 ms | 8.7 ms | – | 443 ms | 3.2 ms | – | – |
-| open tags: `<a` repeated, never closed | 106 ms | 33 ms | – | **1.4 s** | 1.4 ms | – | – |
+| double quotes: `"` repeated | 6.2 ms | 6.2 ms | 575 ms | **6.3 s** | 0.8 ms | 1.6 ms | 3.4 ms |
+| single quotes: `'` repeated | 6.5 ms | 2.5 ms | > 10 s | **6.0 s** | 0.8 ms | 1.7 ms | 2.8 ms |
+| quoted words: `"a ` repeated | 7.8 ms | 5.1 ms | **9.9 s** | **5.0 s** | 0.8 ms | 1.1 ms | 23 ms |
+| hyphens: `-` repeated | 3.8 ms | 2.4 ms | 211 ms | **1.8 s** | 0.8 ms | 0.9 ms | 2.7 ms |
+| spaced hyphens: `a - ` repeated | 4.1 ms | 4.4 ms | 360 ms | **4.7 s** | 0.9 ms | 0.8 ms | 23 ms |
+| digit ranges: `1-2-` repeated | 4.6 ms | 2.5 ms | 492 ms | **6.1 s** | 1.3 ms | 0.6 ms | 21 ms |
+| dots: `.` repeated | 3.4 ms | 2.4 ms | 371 ms | **3.8 s** | 0.8 ms | 0.8 ms | 2.8 ms |
+| spaces: spaces between two words | 81 ms | 78 ms | 201 ms | 0.8 ms | 208 ms | 0.7 ms | 2.7 ms |
+| one word: one word of 10 000 letters | 2.8 ms | 2.4 ms | 650 ms | **6.2 s** | 0.7 ms | 0.5 ms | 2.9 ms |
+| initials: `A. ` repeated | 4.0 ms | 2.7 ms | 173 ms | **4.1 s** | 0.7 ms | 0.6 ms | 23 ms |
+| nested HTML: 1 000 nested `<b>` | 12 ms | 8.6 ms | – | 417 ms | 3.3 ms | – | – |
+| open tags: `<a` repeated, never closed | 107 ms | 33 ms | – | **1.4 s** | 1.2 ms | – | – |
 
 ## Every case
 
@@ -192,8 +192,8 @@ About 10 KB built to find a slow path (a regex that backtracks, a loop that resc
 
 Input: `He said "stone" and left`
 
-- ✗ typography-engine: `He said «stone» and left`
-- ✓ typography-engine literary: `He said ‘stone’ and left`
+- ✗ typography-engine: `He said «stone» and~left`
+- ✓ typography-engine literary: `He said ‘stone’ and~left`
 - ✓ typograf: `He~said “stone” and~left`
 - ✓ typograf +nbsp: `He~said “stone” and~left`
 - ✓ typopo: `He said “stone” and left`
@@ -598,8 +598,8 @@ Input: `He left "stone".`
 
 Input: `"a" and "b"`
 
-- ✓ typography-engine: `«a» and «b»`
-- ✓ typography-engine literary: `‘a’ and ‘b’`
+- ✓ typography-engine: `«a» and~«b»`
+- ✓ typography-engine literary: `‘a’ and~‘b’`
 - ✓ typograf: `“a” and~“b”`
 - ✓ typograf +nbsp: `“a” and~“b”`
 - ✓ typopo: `“a” and “b”`
@@ -612,8 +612,8 @@ Input: `"a" and "b"`
 
 Input: `He said "stone by stone" twice`
 
-- ✓ typography-engine: `He said «stone by stone» twice`
-- ✓ typography-engine literary: `He said ‘stone by stone’ twice`
+- ✓ typography-engine: `He said «stone by~stone» twice`
+- ✓ typography-engine literary: `He said ‘stone by~stone’ twice`
 - ✓ typograf: `He~said “stone by~stone” twice`
 - ✓ typograf +nbsp: `He~said “stone by~stone” twice`
 - ✓ typopo: `He said “stone by stone” twice`
@@ -640,8 +640,8 @@ Input: `It's don't can't`
 
 Input: `the dogs' bowls and Tom's`
 
-- ✓ typography-engine: `the dogs’ bowls and Tom’s`
-- ✓ typography-engine literary: `the dogs’ bowls and Tom’s`
+- ✓ typography-engine: `the~dogs’ bowls and~Tom’s`
+- ✓ typography-engine literary: `the~dogs’ bowls and~Tom’s`
 - ✓ typograf: `the~dogs' bowls and~Tom’s`
 - ✓ typograf +nbsp: `the~dogs' bowls and~Tom’s`
 - ✓ typopo: `the dogs’ bowls and Tom’s`
@@ -654,8 +654,8 @@ Input: `the dogs' bowls and Tom's`
 
 Input: `the '90s`
 
-- ✓ typography-engine: `the ’90s`
-- ✓ typography-engine literary: `the ’90s`
+- ✓ typography-engine: `the~’90s`
+- ✓ typography-engine literary: `the~’90s`
 - ✗ typograf: `the~'90s`
 - ✗ typograf +nbsp: `the~'90s`
 - ✓ typopo: `the ’90s`
@@ -710,8 +710,8 @@ Input: `He said "stone`
 
 Input: `An empty "" pair`
 
-- ✓ typography-engine: `An empty «» pair`
-- ✓ typography-engine literary: `An empty ‘’ pair`
+- ✓ typography-engine: `An~empty «» pair`
+- ✓ typography-engine literary: `An~empty ‘’ pair`
 - ✓ typograf: `An~empty “” pair`
 - ✓ typograf +nbsp: `An~empty “” pair`
 - ✓ typopo: `An empty “” pair`
@@ -754,8 +754,8 @@ Input: `"one"⏎"two"`
 
 Input: `He said "outer 'inner' outer" and left`
 
-- ✗ typography-engine: `He said «outer „inner“ outer» and left`
-- ✓ typography-engine literary: `He said ‘outer “inner” outer’ and left`
+- ✗ typography-engine: `He said «outer „inner“ outer» and~left`
+- ✓ typography-engine literary: `He said ‘outer “inner” outer’ and~left`
 - ✗ typograf: `He~said “outer 'inner' outer” and~left`
 - ✗ typograf +nbsp: `He~said “outer 'inner' outer” and~left`
 - ✓ typopo: `He said “outer ‘inner’ outer” and left`
@@ -1134,8 +1134,8 @@ Input: `пам'ять і м'яч`
 
 Input: `Wait... and then`
 
-- ✓ typography-engine: `Wait… and then`
-- ✓ typography-engine literary: `Wait… and then`
+- ✓ typography-engine: `Wait… and~then`
+- ✓ typography-engine literary: `Wait… and~then`
 - ✓ typograf: `Wait… and~then`
 - ✓ typograf +nbsp: `Wait… and~then`
 - ✓ typopo: `Wait… and then`
@@ -1150,8 +1150,8 @@ Input: `Wait... and then`
 
 Input: `Stone - memory - and time`
 
-- ✓ typography-engine: `Stone~— memory~— and time`
-- ✓ typography-engine literary: `Stone~– memory~– and time`
+- ✓ typography-engine: `Stone~— memory~— and~time`
+- ✓ typography-engine literary: `Stone~– memory~– and~time`
 - ✓ typograf: `Stone~— memory~— and~time`
 - ✓ typograf +nbsp: `Stone~— memory~— and~time`
 - ✗ typopo: `Stone—memory—and time`
@@ -2008,8 +2008,8 @@ Input: `σελίδες 21-26 και 10:00-12:00`
 
 Input: `on 2026-10-19 we met`
 
-- ✓ typography-engine: `on 2026-10-19~we met`
-- ✓ typography-engine literary: `on 2026-10-19~we met`
+- ✓ typography-engine: `on~2026-10-19~we met`
+- ✓ typography-engine literary: `on~2026-10-19~we met`
 - ✓ typograf: `on~2026-10-19 we~met`
 - ✓ typograf +nbsp: `on~2026-10-19 we~met`
 - ✗ typopo: `on 2026–10–19~we met`
@@ -2050,8 +2050,8 @@ Input: `see ISO 9001-2 here`
 
 Input: `the score was 3-1 today`
 
-- ✓ typography-engine: `the score was 3-1~today`
-- ✓ typography-engine literary: `the score was 3-1~today`
+- ✓ typography-engine: `the~score was 3-1~today`
+- ✓ typography-engine literary: `the~score was 3-1~today`
 - ✓ typograf: `the~score was 3-1 today`
 - ✓ typograf +nbsp: `the~score was 3-1 today`
 - ✗ typopo: `the score was 3–1~today`
@@ -2080,8 +2080,8 @@ Input: `a one-week, value-based lab`
 
 Input: `It is 5 km to the lab`
 
-- ✓ typography-engine: `It is 5~km to the lab`
-- ✓ typography-engine literary: `It is 5~km to the lab`
+- ✓ typography-engine: `It is 5~km to~the lab`
+- ✓ typography-engine literary: `It is 5~km to~the lab`
 - ✗ typograf: `It~is~5 km~to~the~lab`
 - ✓ typograf +nbsp: `It~is~5~km~to~the~lab`
 - ✓ typopo: `It is 5~km to the lab`
@@ -2108,8 +2108,8 @@ Input: `Es sind 5 km bis zum Labor`
 
 Input: `До лабораторії 5 км`
 
-- ✓ typography-engine: `До лабораторії 5~км`
-- ✓ typography-engine literary: `До лабораторії 5~км`
+- ✓ typography-engine: `До~лабораторії 5~км`
+- ✓ typography-engine literary: `До~лабораторії 5~км`
 - ✗ typograf: `До~лабораторії 5 км`
 - ✓ typograf +nbsp: `До~лабораторії 5~км`
 - – typopo: 
@@ -2122,8 +2122,8 @@ Input: `До лабораторії 5 км`
 
 Input: `The lab opens on 21 September`
 
-- ✓ typography-engine: `The lab opens on 21~September`
-- ✓ typography-engine literary: `The lab opens on 21~September`
+- ✓ typography-engine: `The~lab opens on~21~September`
+- ✓ typography-engine literary: `The~lab opens on~21~September`
 - ✗ typograf: `The~lab opens on~21 September`
 - ✓ typograf +nbsp: `The~lab opens on~21~September`
 - ✓ typopo: `The lab opens on 21~September`
@@ -2136,8 +2136,8 @@ Input: `The lab opens on 21 September`
 
 Input: `We found a stone in the lake`
 
-- ✓ typography-engine: `We found a~stone in the lake`
-- ✓ typography-engine literary: `We found a~stone in the lake`
+- ✓ typography-engine: `We found a~stone in~the lake`
+- ✓ typography-engine literary: `We found a~stone in~the lake`
 - ✓ typograf: `We~found a~stone in~the~lake`
 - ✓ typograf +nbsp: `We~found a~stone in~the~lake`
 - ✓ typopo: `We found a~stone in the lake`
@@ -2350,8 +2350,8 @@ Input: `It was -5 degrees`
 
 Input: `The value is 0x1F here`
 
-- ✓ typography-engine: `The value is 0x1F here`
-- ✓ typography-engine literary: `The value is 0x1F here`
+- ✓ typography-engine: `The~value is 0x1F here`
+- ✓ typography-engine literary: `The~value is 0x1F here`
 - ✗ typograf: `The~value is~0×1F here`
 - ✗ typograf +nbsp: `The~value is~0×1F here`
 - ✗ typopo: `The value is 0~×~1F here`
@@ -2476,8 +2476,8 @@ Input: `3 x 4`
 
 Input: `a box and an ox`
 
-- ✓ typography-engine: `a~box and an ox`
-- ✓ typography-engine literary: `a~box and an ox`
+- ✓ typography-engine: `a~box and~an ox`
+- ✓ typography-engine literary: `a~box and~an ox`
 - ✓ typograf: `a~box and~an~ox`
 - ✓ typograf +nbsp: `a~box and~an~ox`
 - ✓ typopo: `a~box and an ox`
@@ -2606,8 +2606,8 @@ Input: `<p>a - b <a href="https://a.b/1-2" title="a - b">link</a></p>`
 
 Input: `<p>He said "stone" and left</p>`
 
-- ✗ typography-engine: `<p>He said «stone» and left</p>`
-- ✓ typography-engine literary: `<p>He said ‘stone’ and left</p>`
+- ✗ typography-engine: `<p>He said «stone» and~left</p>`
+- ✓ typography-engine literary: `<p>He said ‘stone’ and~left</p>`
 - ✓ typograf: `<p>He~said “stone” and~left</p>`
 - ✓ typograf +nbsp: `<p>He~said “stone” and~left</p>`
 - – typopo: 
@@ -2620,12 +2620,12 @@ Input: `<p>He said "stone" and left</p>`
 
 Input: `<p>See <a href="/x">"the docs"</a> now</p>`
 
-- ✓ typography-engine: `<p>See <a href="/x">«the docs»</a> now</p>`
-- ✓ typography-engine literary: `<p>See <a href="/x">‘the docs’</a> now</p>`
+- ✓ typography-engine: `<p>See <a href="/x">«the~docs»</a> now</p>`
+- ✓ typography-engine literary: `<p>See <a href="/x">‘the~docs’</a> now</p>`
 - ✗ typograf: `<p>See “<a href="/x">the~docs</a>” now</p>`
 - ✗ typograf +nbsp: `<p>See “<a href="/x">the~docs</a>” now</p>`
 - – typopo: 
-- ✗ richtypo: `<p>See <a href="/x">“the~docs”</a>~now</p>`
+- ✓ richtypo: `<p>See <a href="/x">“the~docs”</a>~now</p>`
 - ✓ tipograph: `<p>See <a href="/x">“the docs”</a> now</p>`
 - – smartypants: 
 - – retext-smartypants: 
@@ -2634,10 +2634,10 @@ Input: `<p>See <a href="/x">"the docs"</a> now</p>`
 
 Input: `<p>"See <a href="/x">the docs</a> now"</p>`
 
-- ✗ typography-engine: `<p>«See <a href="/x">the docs</a> now»</p>`
-- ✓ typography-engine literary: `<p>‘See <a href="/x">the docs</a> now’</p>`
-- ✗ typograf: `<p>“See <a href="/x">the~docs</a> now”</p>`
-- ✗ typograf +nbsp: `<p>“See <a href="/x">the~docs</a> now”</p>`
+- ✗ typography-engine: `<p>«See <a href="/x">the~docs</a> now»</p>`
+- ✓ typography-engine literary: `<p>‘See <a href="/x">the~docs</a> now’</p>`
+- ✓ typograf: `<p>“See <a href="/x">the~docs</a> now”</p>`
+- ✓ typograf +nbsp: `<p>“See <a href="/x">the~docs</a> now”</p>`
 - – typopo: 
 - ✗ richtypo: `<p>“See <a href="/x">the~docs</a>~now”</p>`
 - ✓ tipograph: `<p>“See <a href="/x">the docs</a> now”</p>`
@@ -2650,8 +2650,8 @@ Input: `<p>"See <a href="/x">the docs</a> now"</p>`
 
 Input: `He said "we're here" - and left... It runs 21-26 September, 10:00-12:00 (c) 2026. Read more ->`
 
-- ✓ typography-engine: `He said «we’re here»~— and left… It runs 21–26~September, 10:00–12:00 ©~2026. Read more~→`
-- ✓ typography-engine literary: `He said ‘we’re here’~– and left… It runs 21–26~September, 10:00–12:00 ©~2026. Read more~→`
+- ✓ typography-engine: `He said «we’re here»~— and~left… It runs 21–26~September, 10:00–12:00 ©~2026. Read more~→`
+- ✓ typography-engine literary: `He said ‘we’re here’~– and~left… It runs 21–26~September, 10:00–12:00 ©~2026. Read more~→`
 - ✓ typograf: `He~said “we’re here”~— and~left… It~runs 21-26 September, 10:00-12:00 © 2026. Read more →`
 - ✓ typograf +nbsp: `He~said “we’re here”~— and~left… It~runs 21-26 September, 10:00-12:00 © 2026. Read more →`
 - ✓ typopo: `He said “we’re here” and left… It runs 21–26~September, 10:00–12:00 ©~2026. Read more ->`
@@ -3129,7 +3129,7 @@ Input: `- Привіт, - сказав він.⏎⏎- Як справи?`
 Input: `She said "stone" and left`
 
 - – typography-engine: 
-- ✓ typography-engine literary: `She said ‘stone’ and left`
+- ✓ typography-engine literary: `She said ‘stone’ and~left`
 - – typograf: 
 - – typograf +nbsp: 
 - – typopo: 
@@ -3314,8 +3314,8 @@ Input: `  indented`
 
 Input: `I saw a cat in the yard`
 
-- ✓ typography-engine: `I~saw a~cat in the yard`
-- ✓ typography-engine literary: `I~saw a~cat in the yard`
+- ✓ typography-engine: `I~saw a~cat in~the yard`
+- ✓ typography-engine literary: `I~saw a~cat in~the yard`
 - ✓ typograf: `I~saw a~cat in~the~yard`
 - ✓ typograf +nbsp: `I~saw a~cat in~the~yard`
 - ✓ typopo: `I~saw a~cat in the yard`
@@ -3342,8 +3342,8 @@ Input: `Mr. Smith left`
 
 Input: `on 21 September`
 
-- ✓ typography-engine: `on 21~September`
-- ✓ typography-engine literary: `on 21~September`
+- ✓ typography-engine: `on~21~September`
+- ✓ typography-engine literary: `on~21~September`
 - ✗ typograf: `on~21 September`
 - ✓ typograf +nbsp: `on~21~September`
 - ✓ typopo: `on 21~September`
@@ -3400,8 +3400,8 @@ Input: `e.g. this`
 
 Input: `He said "we're here" - and left... It runs 21-26 September, 10:00-12:00 (c) 2026. Read more ->`
 
-- ✓ typography-engine: `He said «we’re here»~— and left… It runs 21–26~September, 10:00–12:00 ©~2026. Read more~→`
-- ✓ typography-engine literary: `He said ‘we’re here’~– and left… It runs 21–26~September, 10:00–12:00 ©~2026. Read more~→`
+- ✓ typography-engine: `He said «we’re here»~— and~left… It runs 21–26~September, 10:00–12:00 ©~2026. Read more~→`
+- ✓ typography-engine literary: `He said ‘we’re here’~– and~left… It runs 21–26~September, 10:00–12:00 ©~2026. Read more~→`
 - ✓ typograf: `He~said “we’re here”~— and~left… It~runs 21-26 September, 10:00-12:00 © 2026. Read more →`
 - ✓ typograf +nbsp: `He~said “we’re here”~— and~left… It~runs 21-26 September, 10:00-12:00 © 2026. Read more →`
 - ✓ typopo: `He said “we’re here” and left… It runs 21–26~September, 10:00–12:00 ©~2026. Read more ->`
