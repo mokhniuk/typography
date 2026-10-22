@@ -11,8 +11,8 @@ const save = (key: string, value: string) => {
   } catch {}
 };
 
-// The design grid: pink columns over the page. G toggles it (remembered); until then it is on in
-// development (localhost) and off on the site, or on anywhere with ?grid.
+// The design grid: pink columns and blue baseline rows over the page. G toggles it (remembered);
+// until then it is on in development (localhost) and off on the site, or on anywhere with ?grid.
 const GRID = 'typography-grid';
 const showGrid = (on: boolean) => {
   if (on) document.documentElement.dataset.grid = '';

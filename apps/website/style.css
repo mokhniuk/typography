@@ -134,6 +134,14 @@
   --space-7: 48px;
   --space-8: 96px;
 
+  /*
+   * Vertical rhythm: an 8px grid. Line heights are its multiples (24px for UI text and code,
+   * 32px for reading text, headings round up to it), and the vertical margins, paddings and
+   * gaps between blocks are its multiples too (--space-3 and up; --space-4 is horizontal).
+   * G draws the grid: the columns and these rows together.
+   */
+  --baseline: 8px;
+
   --size-xs: 12px;
   --size-sm: 14px;
   --size-md: 16px;
@@ -149,10 +157,10 @@
   --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 
   --measure: 32em;
-  --control-height: 38px;
+  --control-height: 40px;
   --container: 1200px;
-  --header-height: 60px;
-  --pane-height: 420px;
+  --header-height: 56px;
+  --pane-height: 416px;
 
   color-scheme: light;
 }
@@ -219,7 +227,7 @@ body {
   margin: 0;
   background: var(--color-bg);
   color: var(--color-text);
-  font: var(--size-md) / 1.65 var(--font-ui);
+  font: var(--size-md) / calc(var(--baseline) * 3) var(--font-ui);
   font-kerning: normal;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -250,7 +258,9 @@ h3,
 h4 {
   font-family: var(--font-text);
   font-weight: 600;
+  /* On the grid: up to the next 8px (the plain number is the fallback). */
   line-height: 1.15;
+  line-height: round(up, 1.05em, var(--baseline));
   letter-spacing: -0.02em;
   text-wrap: balance;
   margin: 0;
@@ -343,7 +353,7 @@ textarea {
   border: 1px solid var(--color-line);
   border-radius: var(--radius-lg);
   padding: var(--space-5);
-  font: var(--size-sm) / 1.7 var(--font-mono);
+  font: var(--size-sm) / calc(var(--baseline) * 3) var(--font-mono);
   resize: vertical;
 }
 output {
@@ -519,7 +529,7 @@ body > footer {
   margin-top: var(--space-8);
   padding: var(--space-7) 0;
   border-top: 1px solid var(--color-line);
-  font-size: var(--size-sm);
+  font: var(--size-sm) / calc(var(--baseline) * 3) var(--font-ui);
   color: var(--color-muted);
 }
 /* The footer on the design grid: the description, then two groups of links, each on whole columns. */
@@ -551,7 +561,7 @@ body > footer nav {
   }
 }
 body > footer h2 {
-  margin: 0 0 var(--space-4);
+  margin: 0 0 var(--space-5);
   padding: 0;
   border: 0;
   font: 500 var(--size-xs) var(--font-ui);
@@ -561,7 +571,7 @@ body > footer p {
   margin: 0;
 }
 body > footer [data-credit] {
-  margin-top: var(--space-4);
+  margin-top: var(--space-5);
 }
 body > footer strong {
   color: var(--color-text);
@@ -621,6 +631,32 @@ html[data-grid] body::after {
     inset -1px 0 var(--grid-edge);
 }
 
+/*
+ * The same overlay's rows: a faint blue line every 8px and a stronger one every 32px, one line
+ * of reading text, drawn with the columns, so G shows the whole design grid.
+ */
+:root {
+  --baseline-line: rgb(0 145 255 / 0.3);
+  --baseline-half: rgb(0 145 255 / 0.12);
+}
+html[data-grid] body {
+  position: relative;
+}
+html[data-grid] body::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1000;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      var(--baseline-line) 0 1px,
+      transparent 1px calc(var(--baseline) * 4)
+    ),
+    repeating-linear-gradient(to bottom, var(--baseline-half) 0 1px, transparent 1px var(--baseline));
+}
+
 /* Code and tables, anywhere */
 
 pre {
@@ -631,7 +667,7 @@ pre {
   background: var(--color-code-bg);
   color: var(--color-code-text);
   border-radius: var(--radius-lg);
-  font: var(--size-sm) / 1.7 var(--font-mono);
+  font: var(--size-sm) / calc(var(--baseline) * 3) var(--font-mono);
   tab-size: 2;
 }
 pre code {
@@ -660,14 +696,14 @@ pre code {
 /* A rules example: what you type, and what the rule gives, the changes marked. */
 figure[data-rule-example] {
   margin: var(--space-5) 0;
-  padding: var(--space-4) var(--space-5) var(--space-5);
+  padding: var(--space-5);
   border: 1px solid var(--color-line);
   background: var(--color-surface);
   max-width: var(--measure);
 }
 figure[data-rule-example] figcaption {
   margin-bottom: var(--space-3);
-  font: 500 var(--size-xs) var(--font-mono);
+  font: 500 var(--size-xs) / calc(var(--baseline) * 2) var(--font-mono);
   color: var(--color-muted);
 }
 figure[data-rule-example] dl {
@@ -680,8 +716,8 @@ figure[data-rule-example] dl > div {
   display: contents;
 }
 figure[data-rule-example] dt {
-  padding-top: 0.35em;
-  font: 500 var(--size-xs) var(--font-ui);
+  padding-top: var(--space-3);
+  font: 500 var(--size-xs) / calc(var(--baseline) * 2) var(--font-ui);
   color: var(--color-muted);
 }
 figure[data-rule-example] dd {
@@ -691,14 +727,14 @@ figure[data-rule-example] dd {
   hyphens: none;
 }
 figure[data-rule-example] kbd {
-  font: var(--size-sm) / 1.8 var(--font-mono);
+  font: var(--size-sm) / calc(var(--baseline) * 3) var(--font-mono);
   color: var(--color-muted);
   background: none;
   border: 0;
   padding: 0;
 }
 figure[data-rule-example] samp {
-  font: var(--size-lg) / 1.5 var(--font-text);
+  font: var(--size-lg) / calc(var(--baseline) * 4) var(--font-text);
   color: var(--color-text);
 }
 figure[data-rule-example] :is(ins, del) {
@@ -746,13 +782,13 @@ pre > button:hover {
 table {
   width: 100%;
   border-collapse: collapse;
-  font-size: var(--size-sm);
+  font: var(--size-sm) / calc(var(--baseline) * 3) var(--font-ui);
 }
 th,
 td {
   text-align: start;
   vertical-align: top;
-  padding: var(--space-4) var(--space-5);
+  padding: var(--space-3) var(--space-5);
   border-bottom: 1px solid var(--color-line);
 }
 thead th {
@@ -783,7 +819,7 @@ article > :is(p, ul, ol, blockquote, dl, h2, h3, h4) {
 article {
   font-family: var(--font-text);
   font-size: var(--size-lg);
-  line-height: 1.6;
+  line-height: calc(var(--baseline) * 4);
   min-width: 0;
   /* A bare web address is one long word: on a phone it breaks rather than widen the page. */
   overflow-wrap: break-word;
@@ -803,7 +839,7 @@ article h1 {
   margin-bottom: var(--space-5);
 }
 article h2 {
-  margin: var(--space-7) 0 var(--space-4);
+  margin: var(--space-7) 0 var(--space-5);
   padding-top: var(--space-5);
   border-top: 1px solid var(--color-line);
   font-size: var(--size-xl);
@@ -856,27 +892,27 @@ article > header p {
 }
 article > header > p:not([data-crumbs]):first-of-type {
   font-size: var(--size-lg);
-  line-height: 1.5;
+  line-height: calc(var(--baseline) * 4);
 }
 /* The line that opens a GitHub issue about the page (or the playground's result). */
 [data-report] {
   margin: var(--space-6) 0 0;
-  font: var(--size-sm) / 1.5 var(--font-ui);
+  font: var(--size-sm) / calc(var(--baseline) * 3) var(--font-ui);
   color: var(--color-muted);
 }
 [data-report] a {
   color: var(--color-text);
 }
 [data-crumbs] {
-  margin: 0 0 var(--space-4);
-  font: var(--size-sm) var(--font-ui);
+  margin: 0 0 var(--space-5);
+  font: var(--size-sm) / calc(var(--baseline) * 3) var(--font-ui);
   color: var(--color-muted);
 }
 [data-crumbs] a {
   color: inherit;
 }
 time {
-  font: var(--size-sm) var(--font-ui);
+  font: var(--size-sm) / calc(var(--baseline) * 3) var(--font-ui);
   color: var(--color-muted);
 }
 
@@ -890,11 +926,11 @@ time {
 }
 [data-pager] a {
   display: grid;
-  gap: var(--space-1);
+  gap: 0;
   max-width: 48%;
   text-decoration: none;
   color: var(--color-text);
-  font: 600 var(--size-md) / 1.3 var(--font-text);
+  font: 600 var(--size-md) / calc(var(--baseline) * 3) var(--font-text);
 }
 [data-pager] a:last-child:not(:only-child),
 [data-pager] a[rel="next"] {
@@ -921,7 +957,7 @@ main[data-layout="docs"] > :is(nav, aside) {
   top: calc(var(--header-height) + var(--space-6));
   max-height: calc(100vh - var(--header-height) - var(--space-7));
   overflow-y: auto;
-  font-size: var(--size-sm);
+  font: var(--size-sm) / calc(var(--baseline) * 3) var(--font-ui);
 }
 main[data-layout="docs"] :is(nav, aside) :is(ul) {
   list-style: none;
@@ -1000,6 +1036,7 @@ main[data-layout="article"] > article > header {
 main[data-layout="article"] > article > header h1 {
   font-size: var(--size-3xl);
   line-height: 1.05;
+  line-height: round(up, 1.05em, var(--baseline));
   margin-bottom: var(--space-5);
 }
 main[data-layout="article"] > article > :is(p, ul, ol, blockquote, dl, h2, h3, h4) {
@@ -1025,10 +1062,11 @@ main[data-layout="index"] > .container > header {
 main[data-layout="index"] > .container > header h1 {
   font-size: var(--size-3xl);
   line-height: 1.05;
+  line-height: round(up, 1.05em, var(--baseline));
 }
 main[data-layout="index"] > .container > header p {
   margin: var(--space-5) 0 0;
-  font: var(--size-lg) / 1.5 var(--font-text);
+  font: var(--size-lg) / calc(var(--baseline) * 4) var(--font-text);
   color: var(--color-muted);
 }
 /* Articles: a card each, its cover a mark hanging past the text edge (the site's own motif). */
@@ -1054,7 +1092,7 @@ ol[data-articles] article:hover {
 }
 ol[data-articles] [data-cover] {
   position: relative;
-  height: 11rem;
+  height: calc(var(--baseline) * 22);
   overflow: hidden;
   border-bottom: 1px solid var(--color-line);
   background: var(--color-paper);
@@ -1093,7 +1131,7 @@ ol[data-articles] h2 {
   padding: 0;
   border: 0;
   font-size: var(--size-xl);
-  line-height: 1.25;
+  line-height: calc(var(--baseline) * 4);
 }
 ol[data-articles] h2 a {
   color: var(--color-text);
@@ -1134,6 +1172,7 @@ ol[data-articles] p {
 [data-hero] h1 {
   font-size: var(--size-display);
   line-height: 1.06;
+  line-height: round(up, 1.05em, var(--baseline));
   letter-spacing: -0.035em;
   font-weight: 600;
   max-width: 14em;
@@ -1142,7 +1181,7 @@ ol[data-articles] p {
   max-width: 34em;
   margin: var(--space-6) 0 var(--space-7);
   font-size: var(--size-lg);
-  line-height: 1.6;
+  line-height: calc(var(--baseline) * 4);
   color: var(--color-muted);
 }
 [data-hero] [data-lede] {
@@ -1228,9 +1267,9 @@ input[type="radio"]:focus-visible + span {
   border-color: var(--color-code-muted);
 }
 [data-status] {
-  margin: var(--space-4) 0 0;
+  margin: var(--space-5) 0 0;
   max-width: 34em;
-  font-size: var(--size-sm);
+  font: var(--size-sm) / calc(var(--baseline) * 3) var(--font-ui);
   color: var(--color-muted);
 }
 [data-actions] {
@@ -1244,7 +1283,7 @@ input[type="radio"]:focus-visible + span {
   font-weight: 500;
 }
 [data-actions] a.primary {
-  min-height: 44px;
+  min-height: calc(var(--baseline) * 6);
   padding: 0 var(--space-6);
   text-decoration: none;
   border-radius: var(--radius-md);
@@ -1293,7 +1332,7 @@ input[type="radio"]:focus-visible + span {
   border: 0;
   border-radius: 0;
   background: transparent;
-  font: var(--size-sm) / 1.7 var(--font-mono);
+  font: var(--size-sm) / calc(var(--baseline) * 3) var(--font-mono);
   color: var(--color-text);
   overflow: hidden;
   resize: none;
@@ -1307,13 +1346,13 @@ input[type="radio"]:focus-visible + span {
 /* The result: the text face, with room on the left for the opening marks to hang into. */
 [data-specimen] [data-after] {
   padding: var(--space-5) var(--space-5) var(--space-5) var(--space-6);
-  font: var(--size-lg) / 1.6 var(--font-text);
+  font: var(--size-lg) / calc(var(--baseline) * 4) var(--font-text);
   color: var(--color-text);
   hyphens: none;
   overflow-wrap: break-word;
 }
 [data-specimen] [data-after] p {
-  margin: 0 0 0.8em;
+  margin: 0 0 var(--space-5);
   text-wrap: pretty;
 }
 [data-specimen] [data-after] p:last-child {
@@ -1538,14 +1577,14 @@ table[data-samples] small {
   margin: 0;
   max-width: 30em;
   font-size: var(--size-xl);
-  line-height: 1.5;
+  line-height: calc(var(--baseline) * 4);
 }
 /* Before: the text as typed, in mono so straight quotes and hyphens read; what changes is marked, not struck. */
 [data-examples] dl > div:first-child dd {
   color: var(--color-muted);
 }
 [data-examples] dl > div:first-child code[data-raw] {
-  font: 0.8em / 1.9 var(--font-mono);
+  font: 0.8em / calc(var(--baseline) * 4) var(--font-mono);
   hyphens: none;
 }
 /* The engine's output, shown in the text face (samp keeps the page's typesetting off it). */
@@ -1706,7 +1745,7 @@ table[data-samples] small {
 [data-page="playground"] details {
   padding-top: var(--space-4);
   border-top: 1px solid var(--color-line);
-  font-size: var(--size-sm);
+  font: var(--size-sm) / calc(var(--baseline) * 3) var(--font-ui);
 }
 [data-page="playground"] summary {
   cursor: pointer;
@@ -1931,7 +1970,7 @@ table[data-samples] small {
 }
 [data-panel="changes"] > p {
   margin: 0;
-  font: var(--size-sm) / 1.7 var(--font-mono);
+  font: var(--size-sm) / calc(var(--baseline) * 3) var(--font-mono);
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
@@ -1948,10 +1987,10 @@ table[data-samples] small {
   margin: 0;
 }
 [data-panel="preview"] {
-  font: var(--size-lg) / 1.55 var(--font-text);
+  font: var(--size-lg) / calc(var(--baseline) * 4) var(--font-text);
 }
 [data-panel="preview"] p {
-  margin: 0 0 1em;
+  margin: 0 0 var(--space-5);
   max-width: var(--measure);
   color: var(--color-text);
 }
