@@ -4,18 +4,18 @@ Install the package, typeset a string, then pick the mode that matches where you
 
 ## Install
 
-The package is `@podiia/typography`. It reaches npm with 1.0; until then it is a git dependency on a release tag. The repository is private, so the machine needs SSH access to it.
+The package is `@mokhniuk/typography`. It reaches npm with 1.0; until then it is a git dependency on a release tag. The repository is private, so the machine needs SSH access to it.
 
 ```sh
 bun add git+ssh://git@github.com/mokhniuk/typography.git#v{{version}}
 ```
 
-After 1.0 this becomes `npm install @podiia/typography` (or `pnpm add`, `bun add`, `yarn add`). The package ships TypeScript sources and has no build step, so it needs Bun or a TypeScript-aware bundler. The core has no dependencies; `react` 18 or later is an optional peer, needed only by the React entry.
+After 1.0 this becomes `npm install @mokhniuk/typography` (or `pnpm add`, `bun add`, `yarn add`). The package ships TypeScript sources and has no build step, so it needs Bun or a TypeScript-aware bundler. The core has no dependencies; `react` 18 or later is an optional peer, needed only by the React entry.
 
 ## Typeset a string
 
 ```ts
-import { typographic } from '@podiia/typography';
+import { typographic } from '@mokhniuk/typography';
 
 typographic('He said "we\'re here" - and left.', 'en', { quoteStyle: 'us' });
 // He said “we’re here” — and left.
@@ -28,7 +28,7 @@ English defaults to the package's house guillemets `«…»`. Pass `quoteStyle: 
 ## See what it changed
 
 ```ts
-import { explain } from '@podiia/typography';
+import { explain } from '@mokhniuk/typography';
 
 explain('He said "hi"... 21-26', 'en', { quoteStyle: 'us' });
 // { output: 'He said “hi”… 21–26', changes: [{ rule: 'quote', from: '"', to: '“' }, …] }
@@ -44,19 +44,19 @@ typographic('Call 1000000 , now', 'en', { enable: ['number.group', 'space.before
 ## HTML, Markdown and pipelines
 
 ```ts
-import { typesetHtml } from '@podiia/typography/html';
-import { typesetMarkdown } from '@podiia/typography/markdown';
+import { typesetHtml } from '@mokhniuk/typography/html';
+import { typesetMarkdown } from '@mokhniuk/typography/markdown';
 
 typesetHtml('<p>She said "go" - <a href="/x">Read more -></a></p>', { lang: 'en' });
 typesetMarkdown('# "Title" - subtitle\n\n`a -> b` stays.', { lang: 'en' });
 ```
 
-Tags, attributes, comments and the content of `pre`, `code`, `script` and `style` are left as they were. In a unified pipeline, use `@podiia/typography/rehype` as a plugin. This website is built that way: every page you read went through `typesetHtml`.
+Tags, attributes, comments and the content of `pre`, `code`, `script` and `style` are left as they were. In a unified pipeline, use `@mokhniuk/typography/rehype` as a plugin. This website is built that way: every page you read went through `typesetHtml`.
 
 ## React
 
 ```tsx
-import { Typeset, TypographyRoot } from '@podiia/typography/react';
+import { Typeset, TypographyRoot } from '@mokhniuk/typography/react';
 
 <TypographyRoot lang="uk">
   <p><Typeset text={'Він сказав "камінь" - і пішов'} /></p>

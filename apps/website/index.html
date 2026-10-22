@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Podiia Typography: proper typography for running text</title>
+<title>Typography Engine: proper typography for running text</title>
 <meta name="description" content="A typography engine for running text: quotation marks by language, dashes and ranges, no-break spaces and hanging punctuation. Plain strings in, typeset strings out." />
 <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
 <link rel="stylesheet" href="./style.css" />
@@ -26,15 +26,15 @@
           <form>
             <fieldset>
               <legend class="sr-only">Package manager</legend>
-              <label><input type="radio" name="pm" value="npm install @podiia/typography" checked /><span>npm</span></label>
-              <label><input type="radio" name="pm" value="pnpm add @podiia/typography" /><span>pnpm</span></label>
-              <label><input type="radio" name="pm" value="bun add @podiia/typography" /><span>bun</span></label>
-              <label><input type="radio" name="pm" value="yarn add @podiia/typography" /><span>yarn</span></label>
+              <label><input type="radio" name="pm" value="npm install @mokhniuk/typography" checked /><span>npm</span></label>
+              <label><input type="radio" name="pm" value="pnpm add @mokhniuk/typography" /><span>pnpm</span></label>
+              <label><input type="radio" name="pm" value="bun add @mokhniuk/typography" /><span>bun</span></label>
+              <label><input type="radio" name="pm" value="yarn add @mokhniuk/typography" /><span>yarn</span></label>
               <label><input type="radio" name="pm" value="bun add {{git}}" /><span>git <small>today</small></span></label>
             </fieldset>
           </form>
           <div data-command>
-            <pre><code>npm install @podiia/typography</code></pre>
+            <pre><code>npm install @mokhniuk/typography</code></pre>
             <button type="button" data-copy aria-label="Copy the install command">Copy</button>
           </div>
           <p data-status>Version {{version}}, a pre-release. Not on npm yet; it will be there at 1.0. Until then, pick <em>git</em> and install a release tag. The repository is private, so the machine needs SSH access.</p>
@@ -81,7 +81,7 @@
       </header>
       <div>
         <p data-lede>One function takes a string and a language. The other entry points do the same for HTML, Markdown, rehype trees, React and the DOM.</p>
-<pre><code class="language-ts">import { typographic, explain } from '@podiia/typography';
+<pre><code class="language-ts">import { typographic, explain } from '@mokhniuk/typography';
 
 typographic('He said "we\'re here" - and left.', 'en', { quoteStyle: 'us' });
 // He said “we’re here” — and left.
@@ -92,7 +92,7 @@ explain('He said "hi"... 21-26', 'en', { quoteStyle: 'us' }).changes;
         <table>
           <thead><tr><th scope="col">Import</th><th scope="col">For</th></tr></thead>
           <tbody>
-            <tr><th scope="row"><code>@podiia/typography</code></th><td>A string. <code>explain</code> lists each change and the rule behind it.</td></tr>
+            <tr><th scope="row"><code>@mokhniuk/typography</code></th><td>A string. <code>explain</code> lists each change and the rule behind it.</td></tr>
             <tr><th scope="row"><code>…/html</code></th><td>An HTML string. Tags and code are untouched.</td></tr>
             <tr><th scope="row"><code>…/markdown</code></th><td>A Markdown document.</td></tr>
             <tr><th scope="row"><code>…/rehype</code></th><td>A unified or rehype pipeline, or any hast tree.</td></tr>
@@ -131,7 +131,7 @@ explain('He said "hi"... 21-26', 'en', { quoteStyle: 'us' }).changes;
         <h2 id="support">Support it</h2>
       </header>
       <div>
-        <p data-lede>Podiia Typography is a solo project by Oleg Mokhniuk: the rules, the language packs, the docs and this site are one person's work.</p>
+        <p data-lede>Typography Engine is a solo project by Oleg Mokhniuk: the rules, the language packs, the docs and this site are one person's work.</p>
         <p>If it is useful and you want to give something back, skip the coffee. The best way to support this project is a donation to Come Back Alive, the Ukrainian foundation that equips the people defending Ukraine.</p>
         <p data-actions><a href="https://savelife.in.ua/en/donate-en/" class="primary"><svg viewBox="0 0 36 36" width="20" height="20" fill="none" aria-hidden="true"><path d="M15.3988 5.95477C16.045 4.58084 16.9218 3.31428 17.6973 2H18.093C18.2321 2.27439 18.3335 2.5786 18.5185 2.81919C20.0872 4.84727 21.0098 7.12191 20.9363 9.70076C20.8627 12.2935 20.6062 14.8823 20.5167 17.4751C20.4451 19.5708 20.5028 21.6704 20.5028 23.8298H25.2986C25.1217 22.0144 24.901 20.2667 24.7896 18.511C24.6166 15.8188 24.6107 13.1286 25.6307 10.5657C26.4021 8.62508 27.6468 7.10004 29.6391 6.12974V28.8224C26.8933 28.8224 24.2369 28.8324 21.5785 28.8145C20.9541 28.8105 20.6599 28.9795 20.3696 29.6356C19.7015 31.1428 18.8127 32.5525 18.0134 34C17.8941 33.992 17.7728 33.9821 17.6535 33.9722C16.9079 32.6499 16.0688 31.3714 15.4465 29.9935C15.0528 29.1227 14.6293 28.7767 13.6491 28.8065C11.1 28.8841 8.54505 28.8324 6 28.8324V6.15559C7.66422 6.77594 8.6385 8.01665 9.41991 9.3707C11.1776 12.4128 11.0921 15.7731 10.8535 19.1254C10.7421 20.6783 10.5294 22.2232 10.3485 23.9113C11.8457 23.9113 13.1858 23.8814 14.5239 23.9252C15.1741 23.9471 15.4167 23.7303 15.3769 23.0821C15.2914 21.6704 15.2497 20.2567 15.1761 18.845C15.0528 16.4829 14.9097 14.1208 14.7963 11.7567C14.7029 9.79222 14.5339 7.788 15.3988 5.95477Z" stroke="currentColor" stroke-width="2.5"/></svg>Donate to Come Back Alive</a></p>
         <p>Or support the author directly: <a href="https://paypal.me/mokhniuk">paypal.me/mokhniuk</a>.</p>

@@ -153,7 +153,7 @@ To release:
 
 ## Using it from another project
 
-- Depend on a release tag over SSH: `"@podiia/typography": "git+ssh://git@github.com/<owner>/typography.git#vX.Y.Z"` (it needs SSH access to the repository). The consumer takes a new version only when it changes the tag.
+- Depend on a release tag over SSH: `"@mokhniuk/typography": "git+ssh://git@github.com/<owner>/typography.git#vX.Y.Z"` (it needs SSH access to the repository). The consumer takes a new version only when it changes the tag.
 - Tag releases with a plain `git tag vX.Y.Z`, not `git tag -a`: Bun 1.3 cannot resolve an annotated tag by name, and it cannot resolve a version range (`#semver:`) either.
 - Bun keeps its own copy of a git repository and does not see tags pushed after it made that copy. If the consumer's install says "no commit matching", run `bun pm cache rm` once and retry. A consumer that already installed a tag keeps working: `bun.lock` holds the commit.
 - The package ships `.ts` sources with no build step. A consumer needs Bun or a TypeScript-aware bundler. If the consumer's dev server shows an old copy after an update, clear its bundler cache (for Vite, `node_modules/.vite`).

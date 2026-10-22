@@ -18,7 +18,7 @@ const pkg = JSON.parse(readFileSync(join(REPO_ROOT, 'package.json'), 'utf8')) as
 export const BASE = (process.env.SITE_BASE ?? '/').replace(/\/*$/, '/');
 
 export const GITHUB = 'https://github.com/mokhniuk/typography';
-export const NAME = 'Podiia Typography';
+export const NAME = 'Typography Engine';
 /** Where a reader reports a problem: a new GitHub issue. */
 export const ISSUES = `${GITHUB}/issues/new`;
 /** A new issue with its title and body filled in. */

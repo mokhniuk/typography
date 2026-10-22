@@ -6,13 +6,13 @@ Priorities: **P0** blocks the audience, **P1** closes a gap other tools do not h
 
 ## Where we stand
 
-| | podiia | best other | Source |
+| | typography-engine | best other | Source |
 |---|---|---|---|
 | Benchmark checks passed (default / literary register) | 242 / 250, 250 / 250 | typograf 131 / 226 | `apps/bench/RESULTS.md` |
 | 1 MB of English, text mode | 63 ms | typograf 118 ms, tipograph 22 ms, smartypants 18 ms | `cd apps/bench && bun run bench` (one run; the ratios are what count) |
 | Target languages covered (26) | 26 | typograf 22, tipograph 12 | [languages/index.md](languages/index.md) |
 
-The 26 target languages are the 24 official languages of the EU, Ukrainian and US English (the option `quoteStyle: 'us'`). Podiia's 8 default-run misses are all the house `«…»` for English, which the checks count as a failure; the literary register passes every check. The cases were written by this package's author; read the caveats in [limits.md](limits.md). The cases for the twenty new languages come from the same style guides as the packs, so they are not an independent test.
+The 26 target languages are the 24 official languages of the EU, Ukrainian and US English (the option `quoteStyle: 'us'`). This engine's 8 default-run misses are all the house `«…»` for English, which the checks count as a failure; the literary register passes every check. The cases were written by this package's author; read the caveats in [limits.md](limits.md). The cases for the twenty new languages come from the same style guides as the packs, so they are not an independent test.
 
 ## P0
 

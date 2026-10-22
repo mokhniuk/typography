@@ -1,6 +1,6 @@
 # Typography
 
-Package `@podiia/typography`, consumed from other projects as a git dependency on a tag. Full release rules are in `docs/contributing.md`.
+Package `@mokhniuk/typography`, consumed from other projects as a git dependency on a tag. Full release rules are in `docs/contributing.md`.
 
 Bun project, TypeScript sources shipped as they are (no build step). Details: `README.md` (entry points), `docs/contributing.md` (layout, adding a rule or language, tests), `docs/api.md`.
 

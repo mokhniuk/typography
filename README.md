@@ -1,4 +1,6 @@
-# @podiia/typography
+# Typography Engine
+
+The package is `@mokhniuk/typography`.
 
 **Real quotation marks, dashes and spaces, in 26 languages.** A typography engine for running text: plain strings in, typeset strings out, nothing marked up in the source. Tags, links and code are left alone.
 
@@ -31,7 +33,7 @@ Measured, not promised: every claim below comes from [a published benchmark](app
 
 Passed / scored; `–` means the tool has no such feature or language, and is not held against it. Each tool scores against its own denominator.
 
-| | podiia | podiia literary | typograf | typopo | richtypo | tipograph | smartypants |
+| | typography-engine | typography-engine literary | typograf | typopo | richtypo | tipograph | smartypants |
 |---|---|---|---|---|---|---|---|
 | Quotes | 35/40 | **40/40** | 33/36 | 19/19 | 14/17 | 24/26 | 14/16 |
 | Nested quotes | 24/25 | **25/25** | 0/21 | 4/4 | 0/2 | 10/11 | 1/1 |
@@ -47,7 +49,7 @@ Speed, English text in one piece, best of three (typograf is the closest tool in
 
 | Tool | 10 KB | 100 KB | 1 MB |
 |---|---|---|---|
-| **podiia** | **1 ms** | **6 ms** | **63 ms** |
+| **typography-engine** | **1 ms** | **6 ms** | **63 ms** |
 | typograf | 1 ms | 12 ms | 118 ms |
 | tipograph | 0 ms | 2 ms | 22 ms |
 | smartypants | 0 ms | 2 ms | 18 ms |
@@ -82,7 +84,7 @@ Replace `vX.Y.Z` with a version from [CHANGELOG.md](CHANGELOG.md). It ships Type
 ## Use
 
 ```ts
-import { explain, typographic } from '@podiia/typography';
+import { explain, typographic } from '@mokhniuk/typography';
 
 typographic('He said "we\'re here" - and left.', 'en');
 // He said «we’re here»~— and left.     (~ is a no-break space)
@@ -100,7 +102,7 @@ explain('He said "hi"... 21-26');
 A project writes its options once and spreads them into every call; an option given to a call replaces the config's:
 
 ```ts
-import { defineConfig } from '@podiia/typography';
+import { defineConfig } from '@mokhniuk/typography';
 
 export const site = defineConfig({ lang: 'uk', quoteStyle: 'us', hangAmount: 0.5 }); // checked here
 typesetHtml(html, site);
@@ -114,13 +116,13 @@ typesetMarkdown(md, { ...site, lang: 'de' });
 
 | Entry | Use it for | Exports |
 |---|---|---|
-| `@podiia/typography` | The whole engine and the plain-text mode | everything in `src/core` (`typographic`, `explain`, `typesetBlock`, `defineConfig`, `RULES`, `RULE_IDS`, `LANGS`, `REGISTERS`, `NBSP`, `splitHangs`, `diff` and their types) plus `typesetText` |
-| `@podiia/typography/text` | Plain text a paragraph at a time | `typesetText` |
-| `@podiia/typography/html` | An HTML string | `typesetHtml` |
-| `@podiia/typography/markdown` | A Markdown document | `typesetMarkdown` |
-| `@podiia/typography/rehype` | A unified/rehype pipeline, or any hast tree | default `rehypeTypography`, `typesetHast` |
-| `@podiia/typography/dom` | Hanging punctuation in the browser, no framework | `hangPunctuation`, `hangScript`, `markHangs` |
-| `@podiia/typography/react` | React pages | `Typeset`, `TypographyRoot`, `HangText`, `HangScript`, `useHangingPunctuation`, `TypographyContext` |
+| `@mokhniuk/typography` | The whole engine and the plain-text mode | everything in `src/core` (`typographic`, `explain`, `typesetBlock`, `defineConfig`, `RULES`, `RULE_IDS`, `LANGS`, `REGISTERS`, `NBSP`, `splitHangs`, `diff` and their types) plus `typesetText` |
+| `@mokhniuk/typography/text` | Plain text a paragraph at a time | `typesetText` |
+| `@mokhniuk/typography/html` | An HTML string | `typesetHtml` |
+| `@mokhniuk/typography/markdown` | A Markdown document | `typesetMarkdown` |
+| `@mokhniuk/typography/rehype` | A unified/rehype pipeline, or any hast tree | default `rehypeTypography`, `typesetHast` |
+| `@mokhniuk/typography/dom` | Hanging punctuation in the browser, no framework | `hangPunctuation`, `hangScript`, `markHangs` |
+| `@mokhniuk/typography/react` | React pages | `Typeset`, `TypographyRoot`, `HangText`, `HangScript`, `useHangingPunctuation`, `TypographyContext` |
 | `typo` (bin) | The command line; needs Bun | see [docs/cli.md](docs/cli.md) |
 
 Every mode takes the same options (`lang`, `register`, `quoteStyle`, `disable`, `enable`, `rules`, `onChange`); signatures and the full option table are in [docs/api.md](docs/api.md).
@@ -128,24 +130,24 @@ Every mode takes the same options (`lang`, `register`, `quoteStyle`, `disable`, 
 ### The modes in one glance
 
 ```ts
-import { typesetText } from '@podiia/typography/text';
+import { typesetText } from '@mokhniuk/typography/text';
 typesetText('First "paragraph" - here.\n\nSecond...', { lang: 'en' });
 // keeps line breaks and indentation; an unchanged paragraph comes back byte for byte
 
-import { typesetHtml } from '@podiia/typography/html';
+import { typesetHtml } from '@mokhniuk/typography/html';
 typesetHtml('<p>She said "go" - <a href="/x">Read more -></a></p>', { lang: 'en' });
 // tags, attributes, comments, <pre>, <code>, <script>, <style> untouched
 
-import { typesetMarkdown } from '@podiia/typography/markdown';
+import { typesetMarkdown } from '@mokhniuk/typography/markdown';
 typesetMarkdown('# "Title" - subtitle\n\n`a -> b` stays.', { lang: 'en' });
 
-import rehypeTypography from '@podiia/typography/rehype';
+import rehypeTypography from '@mokhniuk/typography/rehype';
 unified().use(remarkParse).use(remarkRehype).use(rehypeTypography, { lang: 'uk' }).use(rehypeStringify);
 // reads each element's lang attribute; skips data-typography="off" and code
 ```
 
 ```tsx
-import { Typeset, TypographyRoot } from '@podiia/typography/react';
+import { Typeset, TypographyRoot } from '@mokhniuk/typography/react';
 
 <TypographyRoot lang="uk">
   <p><Typeset text={'Він сказав "камінь" - і пішов'} /></p>

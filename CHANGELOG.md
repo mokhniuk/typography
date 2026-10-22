@@ -2,6 +2,20 @@
 
 Versions follow semver while the package is below 1.0.0: a **minor** release may change the output of the engine or the API (every entry says whether it can change output you already have), a **patch** release fixes a bug without changing output you rely on. If you depend on exact output, pin a tag and read this file before you move it.
 
+## Unreleased
+
+### Changes
+
+- The package is renamed from `@podiia/typography` to `@mokhniuk/typography`. Every import changes
+  with it (`@mokhniuk/typography/html`, `/markdown`, `/rehype`, `/dom`, `/react`), and so does the
+  dependency entry; the git address of the repository is the same, so moving a consumer is a change
+  of the key in `package.json` and of the import specifiers. Nothing in the engine's behaviour is
+  touched. Can change existing output: no.
+- The website and the tool are called **Typography Engine**, not Podiia Typography: the page titles,
+  the header, the footer and the docs. The benchmark and the comparison page name this package
+  `typography-engine` in their tables, where it used to be `podiia`. The old name is left in the
+  entries below, which are the history of the package under it.
+
 ## 0.10.0 (2026-10-22)
 
 ### New: an option

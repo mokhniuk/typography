@@ -19,7 +19,7 @@ export function header(path: string): string {
   ).join('');
   return `<header>
   <nav aria-label="Main">
-    <a href="${root}" data-brand><b>Podiia</b> Typography</a>
+    <a href="${root}" data-brand><b>Typography</b> Engine</a>
     <ul>${links}<li data-github><a href="${GITHUB}" rel="noopener">GitHub</a></li></ul>
     <button type="button" data-theme-toggle aria-label="Switch between light and dark">
       <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor"/></svg>

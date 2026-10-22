@@ -68,8 +68,8 @@ with nginx (`apps/website/nginx.conf`). The build context is the root, because t
 engine from `src/`, its long examples from `apps/playground/` and its docs pages from `docs/`.
 
 ```sh
-docker build -t podiia-typography-website .
-docker run --rm -p 8080:80 podiia-typography-website
+docker build -t typography-website .
+docker run --rm -p 8080:80 typography-website
 ```
 
 On a Docker host (this project deploys to Coolify) the settings are: build pack **Dockerfile**, base

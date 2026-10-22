@@ -1,6 +1,6 @@
 # API reference
 
-Every entry point in `package.json` `exports`, plus the `typo` command (see [cli.md](cli.md)). All of them ship as TypeScript sources: there is no build step and no `.d.ts` files; a TypeScript-aware bundler or Bun reads the `.ts` directly. The package is private and not published to a registry; it is installed from a git tag (see [contributing.md](contributing.md#using-it-from-another-project)), and the import names below are its package name `@podiia/typography`.
+Every entry point in `package.json` `exports`, plus the `typo` command (see [cli.md](cli.md)). All of them ship as TypeScript sources: there is no build step and no `.d.ts` files; a TypeScript-aware bundler or Bun reads the `.ts` directly. The package is private and not published to a registry; it is installed from a git tag (see [contributing.md](contributing.md#using-it-from-another-project)), and the import names below are its package name `@mokhniuk/typography`.
 
 | Entry | Source | What it exports |
 |---|---|---|
@@ -93,7 +93,7 @@ type TypographyConfig = {
 
 ```ts
 // typography.config.ts
-import { defineConfig } from '@podiia/typography';
+import { defineConfig } from '@mokhniuk/typography';
 
 export default defineConfig({ lang: 'uk', quoteStyle: 'us', enable: ['symbol.plusminus'], hangAmount: 0.5 });
 ```
@@ -152,7 +152,7 @@ type TypographicOptions = {
 Applies the [rules](rules.md) to one plain string. Web addresses, emails and `` `code spans` `` are set aside while the rules run and come back exactly as written. A second run on the output changes nothing, in every language. German reads its own `»…«` and `›…‹` by where each mark stands, so two quotations in a row (`»a« und »b«`) are not taken for one.
 
 ```ts
-import { typographic } from '@podiia/typography';
+import { typographic } from '@mokhniuk/typography';
 
 typographic('He said "we\'re here" - and left.', 'en');
 // He said «we’re here»~— and left.   (~ is a no-break space)
@@ -229,7 +229,7 @@ Typesets the text of an HTML string. Tags, attributes, comments and the content 
 Entities: `&quot; &apos; &amp; &lt; &gt; &nbsp;`, the typographic names (`&mdash; &laquo; &hellip;` and so on), the printable signs the rules act on (`&euro; &copy; &reg; &trade; &deg; &times; &minus; &plusmn; &sect; &para; &frac12; &frac14; &frac34;`) and numeric references are read as the characters they stand for, so `5 &euro;` binds like `5 €`. In a block that changes, text is written back as Unicode characters, with `& < >` escaped and, by default, a no-break space as `&nbsp;`; the output needs UTF-8. Any other named entity (`&alpha;`, `&shy;`) is kept as it was.
 
 ```ts
-import { typesetHtml } from '@podiia/typography/html';
+import { typesetHtml } from '@mokhniuk/typography/html';
 
 typesetHtml('<p>She said "go" - <a href="/x">Read more -></a></p>', { lang: 'en' });
 ```
@@ -243,7 +243,7 @@ It does not read the `lang` attribute (pass `lang`), and it uses a tokenizer, no
 `MarkdownOptions` is `ModeOptions`. Typesets the prose of a Markdown document. Left alone: fenced and indented code, inline code, front matter, raw HTML, link and image targets, reference definitions, footnote markers, backslash escapes, entities, thematic breaks and table separator rows. The marker at the start of a line (`#`, `>`, `-`, `1.`) is kept and the text after it is typeset. A paragraph is typeset as a whole, line breaks included; a paragraph that needs no change comes back byte for byte, and so does the whitespace of every line.
 
 ```ts
-import { typesetMarkdown } from '@podiia/typography/markdown';
+import { typesetMarkdown } from '@mokhniuk/typography/markdown';
 
 typesetMarkdown('# "Title" - subtitle\n\n`a -> b` stays.', { lang: 'en' });
 ```
@@ -255,7 +255,7 @@ typesetMarkdown('# "Title" - subtitle\n\n`a -> b` stays.', { lang: 'en' });
 A unified plugin: `.use(rehypeTypography, { lang: 'uk' })`. It has no dependency: a hast node is read as plain data. `RehypeOptions` is `ModeOptions`.
 
 ```ts
-import rehypeTypography from '@podiia/typography/rehype';
+import rehypeTypography from '@mokhniuk/typography/rehype';
 
 unified().use(remarkParse).use(remarkRehype).use(rehypeTypography, { lang: 'uk' }).use(rehypeStringify);
 ```
@@ -391,7 +391,7 @@ A plain string, typeset in the language and register of the surrounding root (or
 | `disable`, `enable`, `rules`, `onChange`, `avoid` | as on `TypographyRoot` | from `TypographyRoot`; pass constants |
 
 ```tsx
-import { Typeset, TypographyRoot } from '@podiia/typography/react';
+import { Typeset, TypographyRoot } from '@mokhniuk/typography/react';
 
 <TypographyRoot lang="uk">
   <p><Typeset text={'Він сказав "камінь" - і пішов'} /></p>

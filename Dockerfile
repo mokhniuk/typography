@@ -4,8 +4,8 @@
 # context must be the root, because the site imports the engine from `src/` and its long examples
 # from `apps/playground/`, and the docs pages are the repository's own Markdown.
 #
-#   docker build -t podiia-typography-website .
-#   docker run --rm -p 8080:80 podiia-typography-website
+#   docker build -t typography-website .
+#   docker run --rm -p 8080:80 typography-website
 #
 # On a Docker host (Coolify and the like) nothing has to be configured but the domain: the container
 # listens on port 80 and serves a finished static site. Set SITE_BASE as a build argument only if the
