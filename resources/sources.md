@@ -330,11 +330,12 @@ Confidence: `verified`.
 
 Why: A one-letter word does not end a line.
 
-Alternative: Czech is settled by the Internetová jazyková příručka (entry 880, read through a fetch summary): k, s, v, z, o, u, a, i stay with the next word, which is exactly the cs list; the fetched summary does not mention two-letter prepositions (do, na, ve, ...), so none is bound. Polish (a, i, o, u, w, z): only a Wikipedia article ("Sierotka (typografia)", which cites PWN and PN-P-55366:1983 without our having read either) states the six words, so the list is unchanged and not verified; the PWN Poradnia pages could not be fetched. Ukrainian: no readable source (the one found, a university layout handbook, returned 403 and a search snippet is not a read), so the list is unchanged and not verified. The English a/I rule has no source at all. Neither the Polish nor the Ukrainian two-letter prepositions are bound.
+Alternative: Czech: the Internetová jazyková příručka (entry 880, a fetch summary) names k, s, v, z, o, u, a, i; the Jazyková poradna (read raw) says k s v z should not end a line, that guides differ on o u and a i, and recommends binding them too where the typesetting allows; ČSN 01 6910 lists k s v z o u only. The engine binds all eight (the list is the příručka's). Longer words may stay. Polish (a, i, o, u, w, z): Wolański in the PWN Poradnia (a fetch summary) lists exactly these, capitals included, as a recommendation for lines over about 40 characters, which is why the pack binds them in body text; in titles and subheads the PWN asks for it without exception. Two-letter prepositions may stay in body text there, so none is bound. Ukrainian: a Zhytomyr handbook of technical typesetting rules (read raw, Soviet-era rules) says "не слід" leave one-letter prepositions and conjunctions at a line end in books, without listing letters; the CLASS is source-backed and the letters (а в і ї й з у о) are the engine's own enumeration, so Ukrainian stays general-knowledge. Slovak (v, k, s, u, z, o, a, i): an editorial convention, not a read authority: a typography article (tvorim.net, 2008), a wikibook style guide and a design studio page name the words, but the Slovak language-advice pages and the Pravidlá PDF could not be read; shipped on that footing, general-knowledge. Bulgarian has a class rule in one anonymous 2005 guide with no letters, so nothing is bound (parked for a native reviewer). Slovenian, Croatian, German, French, Spanish and Italian: nothing found. The English a/I rule has no source at all. Two-letter words are bound in no language.
 
-Sources: [ijp-penezni-castky](#src-ijp-penezni-castky)
+Sources: [ijp-penezni-castky](#src-ijp-penezni-castky), [ujc-poradna-konec-radku](#src-ujc-poradna-konec-radku), [pwn-wolanski-sieroty](#src-pwn-wolanski-sieroty), [zu-blyzniuk-technical-rules](#src-zu-blyzniuk-technical-rules)
 
-- `cs`: [ijp-penezni-castky](#src-ijp-penezni-castky)
+- `cs`: [ijp-penezni-castky](#src-ijp-penezni-castky), [ujc-poradna-konec-radku](#src-ujc-poradna-konec-radku)
+- `pl`: [pwn-wolanski-sieroty](#src-pwn-wolanski-sieroty)
 
 ### `space.arrow`
 
@@ -528,6 +529,20 @@ Relied on: Direct speech shown as dialogue is set off with dashes (brūkšniai),
 
 Relied on: A number and a currency sign are separated by a space ("100 Kč"; without one the compound reads as an adjective), and a line may not break between the number and the sign of a unit or currency ("1 000 000 Kč, 250 €"), for which a fixed space is advised. A line also may not break after the non-syllabic prepositions "k, s, v, z" ("k mostu", "v Plzni") nor after the syllabic prepositions "o, u" and conjunctions "a, i" ("u babičky", "o páté"); one-character prepositions and conjunctions are not separated from the word that follows. The fetched summary does not mention two-letter prepositions.
 
+<a id="src-pwn-wolanski-sieroty"></a>
+**pwn-wolanski-sieroty**. A. Wolański, "Sieroty na końcu wiersza", Poradnia językowa PWN, 8.06.2018.
+
+<https://sjp.pwn.pl/poradnia/haslo/Sieroty-na-koncu-wiersza;18684.html>, read as a summary by a fetch tool, check it by hand on 2026-10-22.
+
+Relied on: "W wierszach tekstu, które liczą powyżej 40 znaków, nie należy zasadniczo pozostawiać na końcu wiersza jednoliterowych spójników i przyimków (a, i, o, u, w, z, A, I, O, U, W, Z)." and "Przyimki liczące dwa, trzy i więcej znaków mogą pozostawać na końcu wiersza w tekście zasadniczym." A recommendation for lines over 40 characters; in titles and subheads the words must travel with what they belong to.
+
+<a id="src-ujc-poradna-konec-radku"></a>
+**ujc-poradna-konec-radku**. Jazyková poradna ÚJČ AV ČR, answers #12952, #10683, #10881, #10896, #10907 (category "Výraz na konci řádku"); cites ČSN 01 6910 (Lozan, Pravdová, 2014, 12.6, p. 38) and Pravidla českého pravopisu 1994, §106.
+
+<https://dotazy.ujc.cas.cz/odpovedi/?id_otazka=778&filter=1&id_kategorie_otazek=201&id_domena_kategorii_otazek=24&items=20&page=1>, read as raw data on 2026-10-22.
+
+Relied on: #12952: "Na konci řádku by neměly stát jednopísmenné neslabičné předložky k, s, v, z. V hodnocení jednopísmenných slabičných předložek (o, u) a spojek (a, i) se příručky rozcházejí. … Doporučujeme, aby pokud to sazba textu umožňuje, ani tyto výrazy na koncích řádku nezůstávaly… Vícepísmenné výrazy na konci řádku zůstat mohou." #10683: "Norma ČSN 01 6910 uvádí, že by na konci řádku neměly stát jednopísmenné neslabičné předložky k, s, v, z a slabičné předložky o, u. Ostatní předložky na konci řádku stát mohou." (The norm lists k s v z o u, not a i.)
+
 <a id="src-pravopys-125"></a>
 **pravopys-125**. Український правопис (1993 rules, labelled the 2015 edition on pravopys.net), § 125, points 1 and 3б.
 
@@ -604,3 +619,12 @@ Relied on: Dashes are the newer alternative to quotation marks at the start and 
 <https://ro.dsn.dk/?paragraf=59&type=rulesearch>, read as a summary by a fetch tool, check it by hand on 2026-10-21.
 
 Relied on: Dialogue may be given with a replikstreg, quotation marks or no marks; the replikstreg has the same form as the tankestreg and is set especially where a turn starts a new line.
+
+### Research
+
+<a id="src-zu-blyzniuk-technical-rules"></a>
+**zu-blyzniuk-technical-rules**. А. С. Близнюк (упоряд.), "Основні технічні правила набору текстів", Житомирський державний університет імені Івана Франка, 2012.
+
+<https://eprints.zu.edu.ua/7122/>, read as raw data on 2026-10-22.
+
+Relied on: Books: "У книжкових виданнях не слід залишати в кінці рядка прийменники та сполучники що починають речення а також однобуквені прийменники та сполучники в середині речень" (a recommendation, "не слід"). Periodicals are looser: one-letter ones inside a sentence are allowed at a line end. No letters are listed and two-letter words are not in the body-text rule.
