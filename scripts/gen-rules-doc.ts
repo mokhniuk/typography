@@ -9,7 +9,7 @@
  */
 import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { RULE_SOURCES } from '../resources/sources';
+import { mdAnchor, RULE_SOURCES } from '../resources/sources';
 import {
   type Lang,
   NBSP,
@@ -189,7 +189,13 @@ export const EXAMPLES: Record<string, readonly Example[]> = {
   'space.association': [{ input: 'Kulturverein e.V.', lang: 'de' }],
   'space.copyright': [{ input: '© 2026 Studio' }],
   'space.section': [{ input: 'See § 5 and ¶¶ 3, 4' }],
-  'space.operator': [{ input: 'Tom & Jerry, rock + roll' }],
+  'space.operator': [
+    { input: 'Tom & Jerry, rock + roll' },
+    {
+      input: 'rock ’n’ roll',
+      note: 'The `’n’` of rock ’n’ roll is an "and" with its letters dropped, so it is bound like one; `quote` sets the two marks curly before this rule runs.',
+    },
+  ],
   'space.short-word': [
     {
       input: 'Welcome to the city of light',
@@ -279,7 +285,7 @@ export function render(rules: readonly Rule[] = RULES): string {
     out.push('', `## \`${rule.id}\``, '', rule.about, '');
     if (rule.category) out.push(`Category: \`${rule.category}\`.`, '');
     out.push(
-      `Why: [sources.md](../resources/sources.md#${rule.id.replaceAll('.', '')}), \`${confidence}\`.`,
+      `Why: [sources.md](../resources/sources.md#${mdAnchor(rule.id)}), \`${confidence}\`.`,
       '',
     );
     if (rule.defaultOn === false) {

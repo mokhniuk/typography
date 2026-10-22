@@ -4,14 +4,7 @@
  * `bun run docs:sources`; `resources/sources.test.ts` fails when it is out of date.
  */
 import { RULES } from '../src';
-import { RULE_SOURCES, SOURCES } from './sources';
-
-const esc = (text: string): string =>
-  text
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;');
+import { decisionOf, esc, htmlAnchor, SOURCES, usedBy } from './sources';
 
 const LABEL = {
   verified: 'Verified',
@@ -23,20 +16,7 @@ const VIA = {
   summary: 'Read as a summary by a fetch tool. Check it by hand.',
 } as const;
 
-const slug = (id: string): string => id.replaceAll('.', '-');
 const chip = (id: string): string => `<a class="chip" href="#src-${esc(id)}">${esc(id)}</a>`;
-
-export const usedBy = (sourceId: string): string[] =>
-  RULES.filter((rule) => {
-    const decision = RULE_SOURCES[rule.id];
-    if (!decision) return false;
-    return (
-      decision.sources.includes(sourceId) ||
-      Object.values(decision.langs ?? {})
-        .flat()
-        .includes(sourceId)
-    );
-  }).map((rule) => rule.id);
 
 /** The stylesheet shared by every generated page. */
 export const CSS = `:root{color-scheme:light dark;--bg:#f7f6f3;--fg:#1d2327;--muted:#5d666b;--line:#dcdad3;--card:#fff;--accent:#1f5f8b;--ok:#1c6b3f;--okbg:#e1f1e7;--bad:#8a2f1b;--badbg:#f8e3dd;--gk:#6b5b14;--gkbg:#f3ecc9}
@@ -74,21 +54,17 @@ p{margin:6px 0}
 
 export function renderHtml(): string {
   const counts = { verified: 0, disputed: 0, 'general-knowledge': 0 };
-  for (const rule of RULES) {
-    const decision = RULE_SOURCES[rule.id];
-    if (decision) counts[decision.confidence]++;
-  }
+  for (const rule of RULES) counts[decisionOf(rule.id).confidence]++;
 
   const rules = RULES.map((rule) => {
-    const decision = RULE_SOURCES[rule.id];
-    if (!decision) return '';
+    const decision = decisionOf(rule.id);
     const sources = decision.sources.map(chip).join(' ') || '<span class="none">none read</span>';
     const langs = Object.entries(decision.langs ?? {})
       .map(
         ([lang, ids]) => `<span class="lang"><b>${esc(lang)}</b> ${ids.map(chip).join(' ')}</span>`,
       )
       .join(' ');
-    return `<article class="rule" id="rule-${slug(rule.id)}" data-c="${decision.confidence}">
+    return `<article class="rule" id="${htmlAnchor(rule.id)}" data-c="${decision.confidence}">
 <div class="head"><h3>${esc(rule.id)}</h3><span class="pill ${decision.confidence}">${LABEL[decision.confidence]}</span></div>
 <p class="about">${esc(rule.about)}</p>
 <p><b>Why:</b> ${esc(decision.why)}</p>
@@ -98,9 +74,10 @@ export function renderHtml(): string {
   }).join('\n');
 
   const sources = SOURCES.map((source) => {
-    const used = usedBy(source.id)
-      .map((id) => `<a class="chip" href="#rule-${slug(id)}">${esc(id)}</a>`)
-      .join(' ');
+    const used =
+      usedBy(source.id)
+        .map(({ rule }) => `<a class="chip" href="#${htmlAnchor(rule)}">${esc(rule)}</a>`)
+        .join(' ') || '<span class="none">unused</span>';
     const link = source.url
       ? `<a href="${esc(source.url)}" target="_blank" rel="noopener">open source ↗</a>`
       : 'no link';

@@ -330,7 +330,7 @@ Sources: [butterick-nbsp](#src-butterick-nbsp), [butterick-legal](#src-butterick
 
 Confidence: `general-knowledge`.
 
-Why: A lone &, + or = between two words stays on the line of the word before it and of the word after it, so a line neither ends on the operator nor starts with it (Tom & Jerry, rock + roll).
+Why: A lone &, + or = between two words stays on the line of the word before it and of the word after it, so a line neither ends on the operator nor starts with it (Tom & Jerry, rock + roll). The ’n’ of rock ’n’ roll is an "and" with its letters dropped and is bound the same way (0.13.0).
 
 Alternative: No source found. Practical Typography "Nonbreaking spaces" was read (as a fetch-tool summary) and does not mention an ampersand or any operator; a web search for a guide on binding an ampersand between names found only general pages on no-break spaces and a LaTeX tie guide for forenames, none a style guide on this point, so none is cited. The rule is a judgement: a line ending on "&" or starting with it reads as a break in the pair. It binds both sides, so "Tom & Jerry" is one unbreakable unit, and a chain of operators binds end to end ("Tom & Jerry & Co" is five tokens in one unit; "one + two + three + four + five" is one run, and a pathological chain could bind a whole line); a guide may prefer a break before the operator instead. Two shapes stay unbound: an operator next to an inline tag in HTML or Markdown ("Tom &amp; <em>Jerry</em>": the tag placeholder is not a letter) and a word ending in a combining mark (decomposed "café & bar"). Numbers (2 + 2, x = 5) are left to the author; doubled operators (&&, ==, +=) and operators with no typed spaces (R&D, x+y) are untouched.
 

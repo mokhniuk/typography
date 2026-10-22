@@ -764,7 +764,7 @@ export const RULE_SOURCES: Record<string, Decision> = {
   },
   'space.operator': {
     ...general(
-      'A lone &, + or = between two words stays on the line of the word before it and of the word after it, so a line neither ends on the operator nor starts with it (Tom & Jerry, rock + roll).',
+      'A lone &, + or = between two words stays on the line of the word before it and of the word after it, so a line neither ends on the operator nor starts with it (Tom & Jerry, rock + roll). The ’n’ of rock ’n’ roll is an "and" with its letters dropped and is bound the same way (0.13.0).',
     ),
     alternative:
       'No source found. Practical Typography "Nonbreaking spaces" was read (as a fetch-tool summary) and does not mention an ampersand or any operator; a web search for a guide on binding an ampersand between names found only general pages on no-break spaces and a LaTeX tie guide for forenames, none a style guide on this point, so none is cited. The rule is a judgement: a line ending on "&" or starting with it reads as a break in the pair. It binds both sides, so "Tom & Jerry" is one unbreakable unit, and a chain of operators binds end to end ("Tom & Jerry & Co" is five tokens in one unit; "one + two + three + four + five" is one run, and a pathological chain could bind a whole line); a guide may prefer a break before the operator instead. Two shapes stay unbound: an operator next to an inline tag in HTML or Markdown ("Tom &amp; <em>Jerry</em>": the tag placeholder is not a letter) and a word ending in a combining mark (decomposed "café & bar"). Numbers (2 + 2, x = 5) are left to the author; doubled operators (&&, ==, +=) and operators with no typed spaces (R&D, x+y) are untouched.',
@@ -884,6 +884,44 @@ const KIND_TITLES: Record<Source['kind'], string> = {
 
 const anchor = (id: string): string => `src-${id}`;
 
+/** HTML-escapes text for the generated pages. One definition, shared by both HTML generators. */
+export const esc = (text: string): string =>
+  text
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;');
+
+/** The anchor of a rule on sources.html (`rule-space-orphan`), one format for every page that links there. */
+export const htmlAnchor = (ruleId: string): string => `rule-${ruleId.replaceAll('.', '-')}`;
+
+/**
+ * The anchor of a rule's heading on sources.md as GitHub derives it from `` ### `space.orphan` ``:
+ * lowercase, punctuation dropped (`spaceorphan`). `docs/rules.md` links with it; the test checks the link lands.
+ */
+export const mdAnchor = (ruleId: string): string => ruleId.replaceAll('.', '');
+
+/** The decision of a rule; a built-in rule without one is a mistake the generators must not paper over. */
+export function decisionOf(ruleId: string): Decision {
+  const decision = RULE_SOURCES[ruleId];
+  if (!decision) {
+    throw new Error(`rule "${ruleId}" has no decision in RULE_SOURCES (resources/sources.ts)`);
+  }
+  return decision;
+}
+
+/** The rules that cite a source, each with the languages it is cited for (empty when cited in general). */
+export function usedBy(sourceId: string): { rule: string; langs: string[] }[] {
+  return RULES.flatMap((rule) => {
+    const decision = decisionOf(rule.id);
+    const langs = Object.entries(decision.langs ?? {})
+      .filter(([, ids]) => ids.includes(sourceId))
+      .map(([lang]) => lang);
+    if (!decision.sources.includes(sourceId) && !langs.length) return [];
+    return [{ rule: rule.id, langs }];
+  });
+}
+
 export function render(): string {
   const link = (id: string): string => `[${id}](#${anchor(id)})`;
   const out: string[] = [
@@ -901,8 +939,7 @@ export function render(): string {
     '',
   ];
   for (const rule of RULES) {
-    const decision = RULE_SOURCES[rule.id];
-    if (!decision) continue;
+    const decision = decisionOf(rule.id);
     out.push(`### \`${rule.id}\``, '', `Confidence: \`${decision.confidence}\`.`, '');
     out.push(`Why: ${decision.why}`, '', `Alternative: ${decision.alternative}`, '');
     if (decision.sources.length) out.push(`Sources: ${decision.sources.map(link).join(', ')}`, '');
