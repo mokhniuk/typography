@@ -49,14 +49,14 @@ English text in one piece, best of three (one run at 1 MB), text mode. "not run"
 | Tool | 10 KB | 100 KB | 1000 KB |
 |---|---|---|---|
 | typography-engine | 0 ms | 3 ms | 30 ms |
-| typography-engine literary | 0 ms | 3 ms | 28 ms |
-| typograf | 1 ms | 6 ms | 58 ms |
-| typograf +nbsp | 1 ms | 5 ms | 59 ms |
-| typopo | 20 ms | 1053 ms | 99056 ms |
-| richtypo | 2493 ms | not run (~248 s) | not run (~24774 s) |
-| tipograph | 0 ms | 1 ms | 13 ms |
+| typography-engine literary | 0 ms | 3 ms | 29 ms |
+| typograf | 1 ms | 6 ms | 61 ms |
+| typograf +nbsp | 1 ms | 5 ms | 57 ms |
+| typopo | 20 ms | 1081 ms | 99292 ms |
+| richtypo | 2537 ms | not run (~253 s) | not run (~25213 s) |
+| tipograph | 0 ms | 1 ms | 14 ms |
 | smartypants | 0 ms | 1 ms | 10 ms |
-| retext-smartypants | 4 ms | 28 ms | 545 ms |
+| retext-smartypants | 4 ms | 28 ms | 554 ms |
 
 ## Every case
 
@@ -544,8 +544,8 @@ Input: `the '90s`
 
 Input: `rock 'n' roll`
 
-- ✓ typography-engine: `rock ’n’ roll`
-- ✓ typography-engine literary: `rock ’n’ roll`
+- ✓ typography-engine: `rock~’n’~roll`
+- ✓ typography-engine literary: `rock~’n’~roll`
 - ✓ typograf: `rock 'n' roll`
 - ✓ typograf +nbsp: `rock 'n' roll`
 - ✓ typopo: `rock~’n’~roll`
@@ -2338,8 +2338,8 @@ Input: `Use `a -> b` here`
 
 Input: `3 x 4`
 
-- ✓ typography-engine: `3~× 4`
-- ✓ typography-engine literary: `3~× 4`
+- ✓ typography-engine: `3~×~4`
+- ✓ typography-engine literary: `3~×~4`
 - ✓ typograf: `3×4`
 - ✓ typograf +nbsp: `3×4`
 - ✓ typopo: `3~×~4`
