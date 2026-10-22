@@ -24,7 +24,7 @@ const reference = {
         /(?<![\w.,-])(?!0[xX])(\d+(?:[.,]\d+)?)((?:x\d+(?:[.,]\d+)?)+)(?![A-Za-z]*\d)/g,
         (_m, first: string, rest: string) => `${first}${rest.replaceAll('x', '×')}`,
       )
-      .replace(/(?<=\d)[ ]+x[ ]+(?=\d)/g, ' × '),
+      .replace(/(?<=\d)[ ]+x[ ]+(?=\d)/g, ' × '),
   titles: (text: string) =>
     text.replace(
       /(?<![\p{L}\p{N}])(Prof|Dr|Mr|Mrs|Ms|Mx|St|Hon|Rev|Sr|Jr)\.[ ]+(?=\p{L})/gu,

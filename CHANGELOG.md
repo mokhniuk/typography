@@ -2,6 +2,20 @@
 
 Versions follow semver while the package is below 1.0.0: a **minor** release may change the output of the engine or the API (every entry says whether it can change output you already have), a **patch** release fixes a bug without changing output you rely on. If you depend on exact output, pin a tag and read this file before you move it.
 
+## Unreleased
+
+### Changes
+
+- `rock ’n’ roll` stays on one line: `space.operator` binds the `’n’` of an elided "and" on both sides, as it binds a lone `&`, `+` or `=` between two words (`rock~’n’~roll`). The two marks are set curly by `quote` first, as before; a `’n’` with no letter on one side, or the `n` of a word, is untouched. Can change existing output: yes, wherever `’n’` stands between two words.
+- `3 x 4` becomes `3~×~4`, a no-break space on each side of the multiplication sign, so the product stays on one line; it was `3~× 4`, which could start a line on `4`. `1920x1080` is as before. Can change existing output: yes, for a spaced `x` between numbers.
+- `space.short-word` (opt-in) binds a short word to a word that opens with a quotation mark, an apostrophe or a bracket (`the~’90s`, `to~“the” shop`, `of~(two)`); it stopped before such a mark. Can change existing output: only when the rule is enabled.
+
+### Tooling and docs
+
+- The sources scripts share one `esc`, one `usedBy` (rules citing a source, with their languages) and one anchor function per page (`htmlAnchor`, `mdAnchor` in `resources/sources.ts`), so `sources.html`, `bibliography.html` and the links from `docs/rules.md` cannot disagree; a test checks that every rule link in `docs/rules.md` lands on a heading in `sources.md`. `sources.html` says "unused" for a source no decision cites, as `bibliography.html` did. The generators throw on a rule with no decision instead of skipping it. No output change.
+- The benchmark's sources, cases and configuration (`apps/bench/*.ts`, `cases/`, `package.json`, `tsconfig.json`) are tracked; `node_modules` and the lockfile stay out. Until now only `RESULTS.md` was, so the scripts lived on one machine. No output change.
+- The tags `v0.10.0` and `v0.11.0`, which the release workflow had failed to make, were created by hand on their release commits and pushed; `v0.12.0` was made by the workflow.
+
 ## 0.12.0 (2026-10-22)
 
 ### Fixes

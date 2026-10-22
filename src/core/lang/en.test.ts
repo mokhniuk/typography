@@ -32,7 +32,7 @@ describe('English', () => {
   });
 
   test('elided words are apostrophes, not quotation marks', () => {
-    expect(t("rock 'n' roll and 'til dawn, 'em all")).toBe('rock ’n’ roll and ’til dawn, ’em all');
+    expect(t("rock 'n' roll and 'til dawn, 'em all")).toBe('rock~’n’~roll and ’til dawn, ’em all');
   });
 
   test('short words stay with the next word when space.short-word is on', () => {

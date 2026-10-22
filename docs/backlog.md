@@ -91,7 +91,7 @@ The pack exists but is thin, because the Irish edition of the Interinstitutional
 
 ### Short words, conjunctions and the end of the line: what is left
 
-Shipped in 0.10.0: the opt-in rule `space.short-word` and the pack field `shortWords`, with editorial lists for cs, en, pl, sk and uk, for titles and headings — the read sources (PWN Poradnia, ÚJČ) say such a word may stay at a line end in body text and must travel with what it belongs to in a title. `space.orphan` (one-letter words), `space.number`, `space.title`, `space.initial` and `space.abbreviation` were there already. Still open:
+Shipped in 0.13.0: `rock ’n’ roll` is bound on both sides of the `’n’` (`space.operator`, which already bound `&`, `+` and `=`), and `space.short-word` binds a short word to a word that opens with a quotation mark, an apostrophe or a bracket (`the~’90s`). Shipped in 0.10.0: the opt-in rule `space.short-word` and the pack field `shortWords`, with editorial lists for cs, en, pl, sk and uk, for titles and headings — the read sources (PWN Poradnia, ÚJČ) say such a word may stay at a line end in body text and must travel with what it belongs to in a title. `space.orphan` (one-letter words), `space.number`, `space.title`, `space.initial` and `space.abbreviation` were there already. Still open:
 
 - **The word lists are editorial.** No style guide read gives a list of two- and three-letter words for any language. Find one per language, or have a native reader settle each list; five packs have one, the other twenty-one have none.
 - **The rule does not know a title from body text.** It is switched on where titles are set. A rule that binds in a heading only would need the markup, so it belongs in the HTML, Markdown and rehype modes, not in the string engine.
@@ -104,16 +104,6 @@ Shipped in 0.10.0: the opt-in rule `space.short-word` and the pack field `shortW
 Nothing superlinear is known (0.2.1). Typical text costs 30 ms per MB on the machine of the run above (60 on a busier one); with every rule on, the biggest are `space.short-word` (17%, opt-in), `quote`, `space.abbreviation` at about 5 ms per MB each, then `space.title` at 3. `space.number` doubled in 0.10.0 when money and hand-grouped numbers were added to it, and is one scan since 0.12.0 (about 3 ms per MB). Further gains would be constant-factor work on those; tipograph and smartypants (10 to 20 ms) do much less. The zone scan (`shield`, zones.ts) is timed as a row of its own by the profile and `scripts/stress.ts` since 0.12.0, and the profile runs on the fuzz corpus as well as on prose; a 300 ms per MB cost in the scan went unseen until then because both tools timed the rules only, on prose with no backtick or address. React already memoises per component (`useMemo` in `Typeset`), so no paragraph cache is needed.
 
 ## P2 (deferred by choice)
-
-### Cleanups in the sources scripts
-
-Found in the review (2026-10-21), none changes output:
-
-- `resources/bibliography-html.ts` `usage()` repeats `usedBy()` of `resources/sources-html.ts` (which rules cite a source), and `esc` is defined in both. Export one of each (from `sources.ts`) so the two pages cannot disagree.
-- The anchor slug is written two ways (`slug()` and `rule.replaceAll('.', '-')`, and `replaceAll('.', '')` in `gen-rules-doc.ts`). One function, one anchor format, checked by a test that every `docs/rules.md` link lands on an anchor in `sources.md`.
-- `sources.html` prints an empty "Used by:" for a source no decision cites, `bibliography.html` says "unused". Say "unused" in both.
-- `render()` in `sources.ts` and `sources-html.ts` skip a rule with no decision, while `gen-rules-doc.ts` links it as `general-knowledge`. `resources/sources.test.ts` stops that from shipping today; make the generators fail loudly instead of skipping, so a run outside the test cannot write a page that disagrees with its counts.
-- Ten opt-in rules have `general-knowledge` entries with no source (`space.before-punctuation`, `space.after-comma`, `punctuation.double`, `symbol.implies`, `phone.bind`, `number.group`, `symbol.plusminus`, `symbol.fraction`, `space.short-word`, `space.trailing`; `symbol.degree` is `verified` since 0.8.0). Read a source for each and upgrade; a guide for the grouping separator of each language for `number.group` (the SI brochure is cited there already, but says nothing on `±`). Counted in "Finish the sources registry" above.
 
 ### Phone numbers: locale formats
 

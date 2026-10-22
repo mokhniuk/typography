@@ -176,13 +176,14 @@ export const section = (text: string): string =>
   text.replace(/([§¶]{1,2})[ \u00a0]+(?=\p{N})/gu, `$1${NBSP}`);
 
 /**
- * A lone `&`, `+` or `=` with a single typed space or no-break space on each side, a letter before
- * the first and a letter after the second, gets no-break spaces on both sides. `2 + 2`, `x = 5`,
- * `a == b`, `R&D` and `x+y` do not match. Matches do not overlap on the letter between two operators
- * because only the letter before and the one after (a lookahead) are read.
+ * A lone `&`, `+` or `=`, or the `’n’` of rock ’n’ roll (an "and" with its letters dropped, set curly
+ * by the quote rule before this one runs), with a single typed space or no-break space on each side,
+ * a letter before the first and a letter after the second, gets no-break spaces on both sides.
+ * `2 + 2`, `x = 5`, `a == b`, `R&D` and `x+y` do not match. Matches do not overlap on the letter
+ * between two operators because only the letter before and the one after (a lookahead) are read.
  */
 export const operator = (text: string): string =>
-  text.replace(/(\p{L})[ \u00a0]([&+=])[ \u00a0](?=\p{L})/gu, `$1${NBSP}$2${NBSP}`);
+  text.replace(/(\p{L})[ \u00a0]([&+=]|’n’)[ \u00a0](?=\p{L})/gu, `$1${NBSP}$2${NBSP}`);
 
 /**
  * The pack's orphan pattern without its leading `(?<![\p{L}\p{N}])`, when it has exactly that one
@@ -221,6 +222,12 @@ const escapeRegex = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'
 const capitalised = (word: string) => word.charAt(0).toUpperCase() + word.slice(1);
 
 /** The pattern of a language's short words, built once: the word in either case, its spaces, and a word after it. */
+/**
+ * Marks that may stand before the first letter of the next word: a quotation mark of any language
+ * (German turns its pairs, so the closing shapes are openers there too), the apostrophe of ’90s, a
+ * bracket, the Spanish opening marks. `to~“the”`, `the~’90s`, `of~(two)`.
+ */
+const OPENS_WORD = '«»„“”‚‘’‹›"\'(\\[¿¡';
 const shortWordPatterns = new Map<Lang, RegExp | null>();
 
 function shortWordPattern(lang: Lang): RegExp | null {
@@ -232,7 +239,7 @@ function shortWordPattern(lang: Lang): RegExp | null {
         `(?:${list
           .flatMap((word) => [word, capitalised(word)])
           .map(escapeRegex)
-          .join('|')})(?![\\p{L}\\p{N}])[ ]+(?=[\\p{L}\\p{N}])`,
+          .join('|')})(?![\\p{L}\\p{N}])[ ]+(?=[\\p{L}\\p{N}${OPENS_WORD}])`,
         'gu',
       )
     : null;

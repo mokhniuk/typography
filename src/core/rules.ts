@@ -328,8 +328,9 @@ export const RULES: readonly Rule[] = [
   {
     id: 'space.operator',
     category: 'symbols',
-    about: 'No-break spaces around & + = standing alone between two words',
-    when: hasAny('&', '+', '='),
+    about:
+      'No-break spaces around & + = and ’n’ standing alone between two words (Tom & Jerry, rock ’n’ roll)',
+    when: hasAny('&', '+', '=', '’n’'),
     apply: operator,
   },
   {

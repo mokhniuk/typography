@@ -99,7 +99,7 @@ function multiplySpaced(text: string): string {
     while (start > from && text.charCodeAt(start - 1) === 0x20) start--;
     const prev = text.charCodeAt(start - 1);
     if (start < m.index && start > 0 && prev >= 0x30 && prev <= 0x39) {
-      out += `${text.slice(from, start)}\u00A0\u00D7 `;
+      out += `${text.slice(from, start)}\u00A0\u00D7\u00A0`;
       from = m.index + m[0].length;
     }
   }
@@ -109,8 +109,8 @@ function multiplySpaced(text: string): string {
 
 /**
  * The letter x between numbers is a multiplication sign: 1920x1080 becomes 1920×1080,
- * 3 x 4 becomes 3 × 4. Not a hex number (0x1F), and not an identifier that runs on
- * (v2x3, a.1x2).
+ * 3 x 4 becomes 3 × 4 with a no-break space on each side of the sign, so the product stays on one
+ * line. Not a hex number (0x1F), and not an identifier that runs on (v2x3, a.1x2).
  *
  * Both patterns used to open with a lookbehind (`(?<![\w.,-])` and `(?<=\d)`), which is tried at
  * every position (20 ms per MB). Now each is found without it and the character before the match is

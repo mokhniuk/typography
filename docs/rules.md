@@ -494,7 +494,7 @@ Characters it can insert, in any language: `×`. A font that lacks one of them i
 ```text
 (en)
 before  A 1920x1080 screen, a 3 x 4 grid.
-after   A 1920×1080 screen, a 3~× 4 grid.
+after   A 1920×1080 screen, a 3~×~4 grid.
 ```
 
 ## `symbol.fraction`
@@ -717,7 +717,7 @@ after   ©~2026 Studio
 
 ## `space.operator`
 
-No-break spaces around & + = standing alone between two words
+No-break spaces around & + = and ’n’ standing alone between two words (Tom & Jerry, rock ’n’ roll)
 
 Category: `symbols`.
 
@@ -730,6 +730,14 @@ Characters it can insert, in any language: `~`. A font that lacks one of them is
 before  Tom & Jerry, rock + roll
 after   Tom~&~Jerry, rock~+~roll
 ```
+
+```text
+(en)
+before  rock ’n’ roll
+after   rock~’n’~roll
+```
+
+The `’n’` of rock ’n’ roll is an "and" with its letters dropped, so it is bound like one; `quote` sets the two marks curly before this rule runs.
 
 ## `space.short-word`
 

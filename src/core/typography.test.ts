@@ -326,8 +326,8 @@ describe('text that is left alone', () => {
 
 describe('an apostrophe that stands for dropped letters', () => {
   test("rock 'n' roll is not a quotation", () => {
-    expect(t("rock 'n' roll")).toBe('rock ’n’ roll');
-    expect(t("“rock 'n' roll” forever")).toBe('«rock ’n’ roll» forever');
+    expect(t("rock 'n' roll")).toBe('rock~’n’~roll');
+    expect(t("“rock 'n' roll” forever")).toBe('«rock~’n’~roll» forever');
     expect(t("Rock 'N' Roll")).toBe('Rock ’N’ Roll');
   });
 
@@ -575,7 +575,7 @@ describe('symbols between numbers and with them', () => {
 
   test('the letter x between numbers is a multiplication sign', () => {
     expect(t('1920x1080 and 10x15cm and 1x2x3')).toBe('1920×1080~and 10×15cm and 1×2×3');
-    expect(t('3 x 4')).toBe('3~× 4');
+    expect(t('3 x 4')).toBe('3~×~4');
     expect(t('12.5x3,5')).toBe('12.5×3,5');
   });
 
@@ -849,5 +849,29 @@ describe('avoid on a long paragraph', () => {
     const out = t(text, 'en', { avoid: '™' });
     expect(out.startsWith('©~2026')).toBe(true);
     expect(out.endsWith('Brand(TM) rocks.')).toBe(true);
+  });
+});
+
+describe("rock 'n' roll and short words before a mark", () => {
+  test('the ’n’ of rock ’n’ roll is bound on both sides, like an operator', () => {
+    expect(t("rock 'n' roll")).toBe('rock~’n’~roll');
+    expect(t('rock ’n’ roll')).toBe('rock~’n’~roll');
+    expect(explain("rock 'n' roll").changes.map((c) => c.rule)).toEqual([
+      'quote',
+      'quote',
+      'space.operator',
+      'space.operator',
+    ]);
+    // Not an operator: no letter on one side, or the n of a word.
+    expect(t("'n' roll")).toBe('’n’ roll');
+    expect(t('an n roll')).toBe('an n roll');
+  });
+
+  test('a short word stays with a word that opens with a quotation mark, an apostrophe or a bracket', () => {
+    const on = { enable: ['space.short-word'] };
+    expect(t("It's the '90s", 'en', on)).toBe('It’s the~’90s');
+    expect(t('Go to "the" shop', 'en', on)).toBe('Go to~«the» shop');
+    expect(t('one of (two)', 'en', on)).toBe('one of~(two)');
+    expect(t('Welcome to the city', 'en', on)).toBe('Welcome to~the city');
   });
 });
