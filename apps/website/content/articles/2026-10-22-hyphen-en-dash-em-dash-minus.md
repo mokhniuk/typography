@@ -22,7 +22,7 @@ Three of the engine's rules draw the lines. `dash.range` turns a hyphen between 
 
 ## The sentence dash depends on the language
 
-English display text gets a spaced em dash. German gets a spaced en dash — the em dash is simply not German practice. British literary text gets a spaced en dash too, which is why the engine's `literary` register changes the dash along with the quotation marks.
+English display text gets a spaced em dash. German gets a spaced en dash — the em dash is simply not German practice — and so do Czech, Estonian, Finnish, Croatian, Hungarian, Lithuanian, Latvian, Romanian, Slovak, Slovenian and Swedish. British literary text gets a spaced en dash too, which is why the engine's `literary` register changes the dash along with the quotation marks.
 
 The space before the sentence dash is a no-break space, so a line never begins with a dash that belongs to the sentence before it.
 

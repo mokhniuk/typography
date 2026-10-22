@@ -7,7 +7,7 @@ summary: A quotation mark at the start of a line should hang in the margin so th
 
 # Hanging punctuation without measuring line breaks
 
-Look at a well-set page and you will see the left edge of the text is straight, except that the opening quotation marks stand outside it. The mark hangs in the margin, and the letter after it sits on the line. This is called *hanging punctuation* (or optical margin alignment), and print has done it for centuries. On the web, CSS has `hanging-punctuation`, but only Safari implements it, and only for the first line of a block.
+Look at a well-set page and you will see the left edge of the text is straight, except that the opening quotation marks stand outside it. The mark hangs in the margin, and the letter after it sits on the line. This is called *hanging punctuation* (or optical margin alignment), and print has done it for centuries. On the web, CSS has `hanging-punctuation`, but only Safari implements it, and only for the edges of a block (`first`, `last`) and for stops at a line end (`allow-end`), not for a mark at the start of any line.
 
 ## The obvious way, and why it fails
 
@@ -30,7 +30,7 @@ The same trick works on the other side. A closing run (`» ) “ ’`, with `.,;
 
 ## Without a jump at first paint
 
-The exact width needs the font, so before it is measured each mark carries a rough width of 0.4em, close for quotes and brackets in most text faces. The text hangs at first paint with that width and is refined when the real one arrives. On a prerendered page the inline script, about 1.5 kB, does this as the page is parsed, so the marks do not move when the bundle loads.
+The exact width needs the font, so before it is measured each mark carries a rough width of 0.4em, close for quotes and brackets in most text faces. The text hangs at first paint with that width and is refined when the real one arrives. On a prerendered page the inline script, about 2.2 kB, does this as the page is parsed, so the marks do not move when the bundle loads.
 
 This article is set that way. Resize the window and watch the quotation marks at the start of a line: the letters stay on one edge.
 

@@ -15,7 +15,7 @@ English groups thousands with a comma, German and Ukrainian with a (no-break) sp
 
 ## Ranges take an en dash
 
-`21-26 September`, `10:00-12:00`, `pages 5 - 9`: a hyphen between two numbers becomes an unspaced en dash (`21–26`), even when the writer spaced it. The en dash is the range character; the hyphen only looks like one.
+`21-26 September`, `10:00-12:00`, `pages 5 - 9`: a hyphen between two numbers becomes an unspaced en dash (`21–26`), even when the writer spaced it. Only a range that ascends is set, so `10-5` keeps its hyphen, and a local phone number such as `555-1234` stays as typed. The en dash is the range character; the hyphen only looks like one.
 
 ## Units stay with their number
 

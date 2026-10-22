@@ -16,17 +16,17 @@ The right character for an apostrophe is `’` (U+2019) — the same character a
 - `'90s` — the mark opens the word, but it is an apostrophe standing for the missing `19`, so it must curl right: `’90s`. A naive opener-by-position turns it into `‘90s`, and you will find that bug in shipped word processors.
 - Ukrainian `п'ять` — an apostrophe between a consonant and an iotated vowel, inside a word that a Latin-only test does not recognise as one.
 
-The engine's `apostrophe` rule handles the word-internal case and the year; the `quote` rule then pairs what is left. The order matters: apostrophes must be claimed before quote-pairing sees them.
+The `quote` rule runs first, and it sets apostrophes aside before it pairs anything, so pairing never sees them: the word-internal case, the year and the elisions of the language pack. The `apostrophe` rule, second, then curls them.
 
 ## Feet and inches stay straight
 
-In `5'10"` the marks are measurements, not punctuation. The engine's quote rules refuse to read a straight mark after a digit as a closing quote, so `a 2" pipe and a 4" pipe` keeps both inch marks rather than turning the text between them into a quotation. The [known limits](/docs/limits/) page lists the case that still goes wrong — an inch mark inside a quotation closes it early — because listing it beats guessing.
+In `5'10"` the marks are measurements, not punctuation. A straight `"` right after a digit never opens a quotation (it can still close one, as in `"call 911"`), so `a 2" pipe and a 4" pipe` keeps both inch marks rather than turning the text between them into a quotation. The [known limits](/docs/limits/) page lists the case that still goes wrong — an inch mark inside a quotation closes it early — because listing it beats guessing.
 
 Strictly set text uses the prime `′` (U+2032) and double prime `″` (U+2033) for feet, inches, minutes and seconds: `5′10″`, `48°51′24″`. The engine does not set primes for you — deciding that a `"` is an inch and not a quote is already the hard part, and it errs on the side of leaving measurements exactly as typed.
 
 ## What the right characters buy
 
-Set side by side, the difference is not pedantry: `"It's 5'10", maybe," she said` is a thicket, and `«It’s 5'10", maybe,» she said` reads at a glance — every mark now says what it is. Quotation marks pair up, apostrophes curl, measurements stay straight.
+Set side by side, the difference is not pedantry, and this example also shows where the engine stops. `"It's 5'10", maybe," she said` comes out as `«It’s 5'10», maybe,» she said`: the apostrophe curls and the foot mark stays, but the inch mark closes the quotation early. That is the known limit above. The workaround is to type the prime yourself: `"It's 5′10″, maybe," she said` becomes `«It’s 5′10″, maybe,» she said`, the engine leaves typed primes alone, and every mark now says what it is.
 
 ## Try it
 

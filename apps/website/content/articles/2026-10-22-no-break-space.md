@@ -11,20 +11,23 @@ The no-break space (U+00A0) looks exactly like a space and does one thing a spac
 
 ## Where it belongs
 
-More than half of the engine's rules exist to place this one character:
+Eighteen of the engine's 33 rules can place this one character:
 
 - **A number and the short word after it.** `15~people`, `21~September`, `5~%`. A line that ends on `15` and begins on `people` makes the reader re-parse the number (`space.number`).
 - **An initial and the surname.** `K.~Słoboda` — an initial stranded at a line end reads as a sentence that stopped (`space.initial`), and a title stays with the name: `Prof.~Dr.~Oksana` (`space.title`).
 - **The parts of an abbreviation.** German `z.~B.`, Ukrainian `т.~д.`, English `Fig.~2` and `p.~14` (`space.abbreviation`).
-- **One-letter words.** Polish and Ukrainian typography does not let `i`, `w`, `z` end a line; English keeps `A~cat` together. Which words count comes from the language pack (`space.orphan`).
+- **One-letter words.** Polish, Czech, Slovak and Ukrainian typography does not let `i`, `w`, `z` end a line; English keeps `A~cat` together. Which words count comes from the language pack (`space.orphan`).
 - **Percent and euro, by language.** German, French, Czech and fourteen other languages set `5~%` and most of them `49~€`; English `5%` is left alone (`space.percent`).
 - **After ©** (`©~2026 Studio`), **after § and ¶** (`§~5`), **before a sentence dash** (`word~— word`, so a line never opens with the dash), **before →**, and **after the dialogue dash** in the languages that space it.
+- **Around a lone operator** between words: `Tom~&~Jerry` (`space.operator`).
+- **Money.** A sign or code stays with its amount, and a number grouped by hand stays whole: `USD~5~000` (`space.number`).
+- **Two opt-in rules** go further: `phone.bind` keeps an international phone number on one line (`+380~44~123~45~67`), and `space.short-word` binds a short word to the next one in titles (`in~the house`).
 
 ## Why CSS cannot do this
 
 `text-wrap: pretty` fixes orphan words at a paragraph's end and `white-space: nowrap` can pin one phrase, but neither knows that Polish forbids a trailing `i`, that French spaces `%` and English does not, or that `Fig.` belongs to its number. These are language conventions, not layout preferences, and they live in the text itself — which also means they survive into RSS, email, and anywhere else your CSS does not follow.
 
-One boundary worth knowing: French famously sets a space before `:` `;` `!` `?`. The engine does not insert one where the writer typed none — the French guides disagree with each other on which space and where, and the sources registry would rather record the dispute than guess. The optional `space.before-punctuation` rule, which strips stray spaces before punctuation, does keep the French ones the writer typed.
+One boundary worth knowing: French famously sets a space before `:` `;` `!` `?`. The engine does not insert one where the writer typed none. The only French guide read so far is the OQLF's, from Québec, which asks for a no-break space before `:`; the guides of France and Switzerland have not been read, and they may differ. Until they are, it stays an open gap in the backlog rather than a guess. The optional `space.before-punctuation` rule, which strips stray spaces before punctuation, does keep the French ones the writer typed.
 
 ## The nbsp option
 

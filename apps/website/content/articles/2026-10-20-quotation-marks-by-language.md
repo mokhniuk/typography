@@ -24,17 +24,19 @@ The pack for each language lists its marks by nesting level. A few, from the gen
 | Czech, Slovak | `„…“` | `‚…‘` |
 | Swedish, Finnish | `”…”` | `’…’` |
 
+English is the one language where the default is a house style rather than the language's own: it sets `«…»` with `„…“` inside, and `quoteStyle: 'us'` gives `“…”` with `‘…’` inside.
+
 The table is a summary. The language pages hold the exact marks per level, the sources each pack was written from, and the status: **no pack has been read by a native speaker yet**. They were written from published style guides, and some of those could only be read in part. Where the engine and the Unicode CLDR data disagree (English, German, French, Swiss German), the sources registry marks the decision `disputed` rather than hiding it.
 
 ## Registers
 
-The engine has two registers. `display`, the default, is for marketing and interface text. `literary` is for book-like text and has its own rules for English (British `‘…’` with `“…”` inside) and Ukrainian. A language without a literary profile falls back to display.
+The engine has two registers. `display`, the default, is for marketing and interface text. `literary` is for book-like text and has its own rules only for English: British `‘…’` with `“…”` inside, and a spaced en dash. Every other language, Ukrainian included, sets the same marks in both registers.
 
 ## Reading what you wrote
 
 The input may already be curly, low, straight or guillemets, in any mix. The engine reads all of them, pairs them, and sets the marks of the language and level. It handles an apostrophe (`we're`, `п'ять`) differently from a closing single quote, and does not take an inch mark (`5"`) for a quotation.
 
-That last case is the hard one, and the backlog is honest about it: a quotation glued to a digit (`5"a"`) and an inch mark inside a quotation (`a 5" hole`) are limits we have listed rather than guessed at.
+That last case is the hard one. A quotation glued to a digit (`5"a"`) is kept exactly as typed since 0.8.0. The case still open is an inch mark inside a quotation: in `"a 5" hole"` the inch mark closes the quotation early. It is listed in the [known limits](/docs/limits/) rather than guessed at.
 
 ## Try it
 
