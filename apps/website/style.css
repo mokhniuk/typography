@@ -526,6 +526,10 @@ body > header button:hover {
   }
 }
 
+/* The landing ends on the inverted support band: there the footer sits flush against it. */
+main:has(> section[data-support]:last-child) + footer {
+  margin-top: 0;
+}
 body > footer {
   margin-top: var(--space-8);
   padding: var(--space-7) 0;
@@ -594,7 +598,8 @@ body > footer a:hover {
 
 /*
  * The design grid, an overlay for checking alignment: pink columns over the container, 12 on a
- * desktop, 8 on a tablet, 4 on a phone. <html data-grid>: on in development, G toggles it (main.ts).
+ * desktop, 8 on a tablet, 4 on a phone. <html data-grid>, set by main.ts in development only: a
+ * build drops that code, so the published site never draws it.
  */
 :root {
   --grid-columns: 12;

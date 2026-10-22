@@ -11,29 +11,36 @@ const save = (key: string, value: string) => {
   } catch {}
 };
 
-// The design grid: pink columns and blue baseline rows over the page. G toggles it (remembered);
-// until then it is on in development (localhost) and off on the site, or on anywhere with ?grid.
-const GRID = 'typography-grid';
-const showGrid = (on: boolean) => {
-  if (on) document.documentElement.dataset.grid = '';
-  else delete document.documentElement.dataset.grid;
-  save(GRID, on ? 'on' : 'off');
-};
-const local = ['localhost', '127.0.0.1'].includes(location.hostname);
-let chosen: string | null = null;
-try {
-  chosen = localStorage.getItem(GRID);
-} catch {}
-if (new URLSearchParams(location.search).has('grid') || (chosen ?? (local ? 'on' : 'off')) === 'on')
-  showGrid(true);
-document.addEventListener('keydown', (event) => {
-  if (event.key !== 'g' && event.key !== 'G') return;
-  if (event.metaKey || event.ctrlKey || event.altKey) return;
-  const target = event.target;
-  if (target instanceof Element && target.closest('input, textarea, select, [contenteditable]'))
-    return;
-  showGrid(document.documentElement.dataset.grid === undefined);
-});
+/*
+ * The design grid: pink columns and blue baseline rows over the page, for checking alignment while
+ * building. It is a development tool and nothing else, so the whole of it sits behind
+ * `import.meta.env.DEV`: a build replaces that with `false` and drops this code, which is why the
+ * published site cannot show the overlay however it was left here — a remembered `on`, a `?grid` in
+ * the address or the G key do nothing there.
+ *
+ * In development it is on by default, G toggles it (remembered), and `?grid` turns it on.
+ */
+if (import.meta.env.DEV) {
+  const GRID = 'typography-grid';
+  const showGrid = (on: boolean) => {
+    if (on) document.documentElement.dataset.grid = '';
+    else delete document.documentElement.dataset.grid;
+    save(GRID, on ? 'on' : 'off');
+  };
+  let chosen: string | null = null;
+  try {
+    chosen = localStorage.getItem(GRID);
+  } catch {}
+  if (new URLSearchParams(location.search).has('grid') || (chosen ?? 'on') === 'on') showGrid(true);
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'g' && event.key !== 'G') return;
+    if (event.metaKey || event.ctrlKey || event.altKey) return;
+    const target = event.target;
+    if (target instanceof Element && target.closest('input, textarea, select, [contenteditable]'))
+      return;
+    showGrid(document.documentElement.dataset.grid === undefined);
+  });
+}
 
 // Theme: the switch sets `data-theme` on <html>; with none set, the system preference rules.
 for (const toggle of document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]')) {
