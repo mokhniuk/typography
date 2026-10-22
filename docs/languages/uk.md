@@ -25,7 +25,7 @@ An apostrophe before a dropped-letter word is not a quotation mark: `'em`, `'til
 
 ## Spaces
 
-- One-letter words kept with the next word: \ u 0 4 3 0 \ u 0 4 1 0 \ u 0 4 3 2 \ u 0 4 1 2 \ u 0 4 5 6 \ u 0 4 0 6 \ u 0 4 5 7 \ u 0 4 0 7 \ u 0 4 3 9 \ u 0 4 1 9 \ u 0 4 3 7 \ u 0 4 1 7 \ u 0 4 4 3 \ u 0 4 2 3 \ u 0 4 3 E \ u 0 4 1 E.
+- One-letter words kept with the next word: а А в В і І ї Ї й Й з З у У о О.
 - Short words kept with the next word, in a title (the opt-in rule `space.short-word`): `до` `на` `за` `по` `із` `від` `під` `над` `при` `без` `для` `та` `що`.
 - A no-break space between a number and %: no.
 - A no-break space between a number and € after it: no.

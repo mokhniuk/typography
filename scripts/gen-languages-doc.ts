@@ -39,7 +39,6 @@ const marks = (text: string): string =>
     )
     .join('');
 
-/** The letters of a one-letter-word pattern, `([aAI])` → `a A I`; the pattern itself if it is not that shape. */
 function dialogueSetting(pack: LangPack): string {
   const style = pack.dialogueDash;
   if (!style) return 'not set (dialogue is quoted)';
@@ -47,9 +46,16 @@ function dialogueSetting(pack: LangPack): string {
   return `${dash} ${style.attached ? 'attached to the text' : 'and a no-break space'}, in both registers`;
 }
 
+/**
+ * The letters of a one-letter-word pattern, `([aAI])` → `a A I`; the pattern itself if it is not that shape.
+ * `source` may hold a non-ASCII letter as `\uXXXX` (Bun escapes Cyrillic), so the escapes are read back first.
+ */
 function orphanLetters(pattern: RegExp): string {
   const match = /\(\[([^\]]+)\]\)/.exec(pattern.source);
-  return match?.[1] ? [...(match[1] ?? '')].join(' ') : `pattern ${code(pattern.source)}`;
+  const letters = match?.[1]?.replace(/\\u([0-9a-fA-F]{4})/g, (_, hex: string) =>
+    String.fromCharCode(Number.parseInt(hex, 16)),
+  );
+  return letters ? [...letters].join(' ') : `pattern ${code(pattern.source)}`;
 }
 
 export function renderPack(pack: LangPack): string {
