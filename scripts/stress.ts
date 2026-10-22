@@ -11,6 +11,9 @@ const all = args.includes('--all');
 const dir = resolve(args.find((a) => !a.startsWith('--')) ?? 'src');
 const only = args.find((a) => a.startsWith('--rule='))?.slice(7);
 const mod = (await import(`${dir}/core/rules.ts`)) as typeof import('../src/core/rules');
+const zones = (await import(`${dir}/core/zones.ts`)) as typeof import('../src/core/zones');
+/** The zone scan runs before every rule and is timed like one: it is where a lone backtick or `@` costs. */
+const SHIELD = { id: 'shield (zones)', about: '', apply: (text: string) => zones.shield(text)[0] };
 const context = {
   lang: 'en',
   register: 'display',
@@ -118,14 +121,14 @@ const variants = Object.entries(classes).flatMap(([name, unit]) =>
 
 const sizes = [20_000, 40_000, 80_000];
 const rows: string[] = [];
-for (const rule of mod.RULES) {
+for (const rule of [SHIELD, ...mod.RULES]) {
   if (only && rule.id !== only) continue;
   for (const [label, unit, wrap] of variants) {
     const name = label;
     const ms = sizes.map((n) => {
       const text = wrap(unit.repeat(Math.ceil(n / unit.length)));
       return time(() => {
-        if (!rule.when || rule.when(text, context)) rule.apply(text, context);
+        if (!('when' in rule) || !rule.when || rule.when(text, context)) rule.apply(text, context);
       });
     });
     const r1 = (ms[1] ?? 0) / Math.max(ms[0] ?? 0, 0.05);

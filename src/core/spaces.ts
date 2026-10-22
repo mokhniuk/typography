@@ -37,11 +37,11 @@ export const initials = (text: string): string =>
     () => `.${NBSP}`,
   );
 
-/** A number and a short word, a percent sign, a degree sign or a currency sign after it. */
-const NUMBER_UNIT = new RegExp(
-  `(\\d)[ ]+(?=[\\p{L}]{1,9}(?![\\p{L}])|[${PERCENT}°${CURRENCY_SIGNS}])`,
-  'gu',
-);
+/**
+ * What may follow the spaces after a number for them to become a no-break space: a word of one to
+ * nine letters, a percent sign, a degree sign or a currency sign. Tried where the spaces end (sticky).
+ */
+const UNIT_AFTER = new RegExp(`[\\p{L}]{1,9}(?![\\p{L}])|[${PERCENT}°${CURRENCY_SIGNS}]`, 'yu');
 
 /** The longest currency name read back from before an amount (`lei`, `USD`, `zł`). */
 const SIGN_LETTERS = 3;
@@ -64,36 +64,14 @@ function currencyEndsAt(text: string, end: number): boolean {
   return false;
 }
 
-const DIGIT = /\d/g;
-
-/**
- * A currency sign or code before the amount stays with it: `USD 5`, `€ 49.99`. The digit is found
- * first and the typed spaces and the sign before it are read back by hand (a forward `[ ]+` would be
- * tried from every space of a run and scan to its end each time, see `association`).
- */
-function currencyBefore(text: string): string {
-  let out = '';
-  let from = 0;
-  DIGIT.lastIndex = 0;
-  for (let m = DIGIT.exec(text); m; m = DIGIT.exec(text)) {
-    const at = m.index;
-    let start = at;
-    while (start > from && text.charCodeAt(start - 1) === 0x20) start--;
-    if (start === at || !currencyEndsAt(text, start)) continue;
-    out += text.slice(from, start) + NBSP;
-    from = at;
-  }
-  DIGIT.lastIndex = 0;
-  return from === 0 ? text : out + text.slice(from);
-}
-
 /**
  * The digit groups of a number written in threes (1 000 000), with nothing that would make the run
  * something else: no leading zero (a phone number or a code: 09 123 456), no digit, letter, sign or
  * separator directly before it, no digit group before it (+380 44 123 45 67), and no further digits
- * after it (555 123 4567).
+ * after it (555 123 4567). Tried where a run of digits starts (sticky), the only place it can match
+ * once `groupsStandFree` is asked: a start inside a run has a digit before it.
  */
-const GROUP_RUN = /[1-9]\d{0,2}(?:[ ]\d{3})+(?![\d\p{L}])(?![  ]\d)/gu;
+const GROUP_RUN = /[1-9]\d{0,2}(?:[ ]\d{3})+(?![\d\p{L}])(?![  ]\d)/yu;
 const NOT_BEFORE_GROUPS = /[\d\p{L}+,.:/'’‑-]/u;
 const isSpace = (code: number): boolean => code === 0x20 || code === 0xa0;
 
@@ -107,22 +85,61 @@ function groupsStandFree(text: string, at: number): boolean {
   return !/[\d)]/.test(before(text, start));
 }
 
-/**
- * A number the writer grouped by hand keeps its groups on one line: `1 000 000`, `5 000 zł`. This is
- * what the opt-in `number.group` does to a number of its own, so the two agree on an amount that is
- * already grouped.
- */
-const bindGroups = (text: string): string =>
-  replaceBehind(text, GROUP_RUN, groupsStandFree, (m) => m[0].replaceAll(' ', NBSP));
+const DIGITS = /\d+/g;
 
 /**
  * A number stays with a short word after it (a unit, a month): 21 September, 15 people, 5 %.
  * A longer word is left free, so a chain of bound words never outgrows a narrow column. Money is
  * kept whole as well: the sign or code before the amount (`USD 5 000`, `€ 49.99`) and the digit
- * groups of an amount written in threes (`1 000 грн`). The engine never moves or adds a sign.
+ * groups of an amount written in threes (`1 000 грн`, what the opt-in `number.group` does to a bare
+ * number, so the two agree on an amount that is already grouped). The engine never moves or adds a sign.
+ *
+ * One scan over the runs of digits; at each run three things are read, in the order of the text:
+ * the typed spaces before it and whether a currency sign or code ends before them (`USD 5`, `€ 49.99`:
+ * the digit is found first and the spaces read back by hand, since a forward `[ ]+` would be tried from
+ * every space of a run and scan to its end each time, see `association`); whether the run opens a
+ * number grouped by hand; and the spaces after the number, with what follows them (`UNIT_AFTER`). Each
+ * reads the text as typed: none of the three can change what another one reads, since each binds its
+ * own spaces (after a sign, between digit groups, after the last digit) and a space or a no-break
+ * space before a name or a group counts the same, which is what let the three passes this was become one.
  */
-export const numberUnit = (text: string): string =>
-  bindGroups(currencyBefore(text.replace(NUMBER_UNIT, `$1${NBSP}`)));
+export function numberUnit(text: string): string {
+  let out = '';
+  let from = 0;
+  DIGITS.lastIndex = 0;
+  for (let m = DIGITS.exec(text); m; m = DIGITS.exec(text)) {
+    const start = m.index;
+    let end = start + m[0].length;
+    // The sign or code before the amount.
+    let sign = start;
+    while (sign > 0 && text.charCodeAt(sign - 1) === 0x20) sign--;
+    if (sign < start && currencyEndsAt(text, sign)) {
+      out += text.slice(from, sign) + NBSP;
+      from = start;
+    }
+    // The digit groups of a number written in threes.
+    GROUP_RUN.lastIndex = start;
+    const group = GROUP_RUN.exec(text);
+    if (group && groupsStandFree(text, start)) {
+      out += text.slice(from, start) + group[0].replaceAll(' ', NBSP);
+      end = start + group[0].length;
+      from = end;
+      DIGITS.lastIndex = end;
+    }
+    // The short word or unit after the number.
+    let after = end;
+    while (after < text.length && text.charCodeAt(after) === 0x20) after++;
+    if (after > end) {
+      UNIT_AFTER.lastIndex = after;
+      if (UNIT_AFTER.test(text)) {
+        out += text.slice(from, end) + NBSP;
+        from = after;
+      }
+    }
+  }
+  DIGITS.lastIndex = 0;
+  return from === 0 ? text : out + text.slice(from);
+}
 
 const ASSOCIATION = /e\.V\./g;
 
