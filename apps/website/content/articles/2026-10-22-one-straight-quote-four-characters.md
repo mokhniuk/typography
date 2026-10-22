@@ -20,7 +20,7 @@ The engine's `apostrophe` rule handles the word-internal case and the year; the 
 
 ## Feet and inches stay straight
 
-In `5'10"` the marks are measurements, not punctuation. The engine's quote rules refuse to read a straight mark after a digit as a closing quote, so `a 2" pipe and a 4" pipe` keeps both inch marks rather than turning the text between them into a quotation. The [known limits](/docs/limits/) page lists the cases that still go wrong — a quotation glued directly to a digit, an inch mark inside a quotation — because listing them beats guessing.
+In `5'10"` the marks are measurements, not punctuation. The engine's quote rules refuse to read a straight mark after a digit as a closing quote, so `a 2" pipe and a 4" pipe` keeps both inch marks rather than turning the text between them into a quotation. The [known limits](/docs/limits/) page lists the case that still goes wrong — an inch mark inside a quotation closes it early — because listing it beats guessing.
 
 Strictly set text uses the prime `′` (U+2032) and double prime `″` (U+2033) for feet, inches, minutes and seconds: `5′10″`, `48°51′24″`. The engine does not set primes for you — deciding that a `"` is an inch and not a quote is already the hard part, and it errs on the side of leaving measurements exactly as typed.
 

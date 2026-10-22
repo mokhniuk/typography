@@ -15,7 +15,7 @@ Every rule in this engine carries a decision record naming its source, so this l
 - **Office québécois de la langue française, [Banque de dépannage linguistique](https://vitrinelinguistique.oqlf.gouv.qc.ca/)**. The clearest free reference for French spacing around punctuation — with the usual warning that Québec usage and France usage differ.
 - **[Unicode CLDR](https://cldr.unicode.org/)**. Not prose but data: which quotation marks and number separators each locale declares. The engine checked its 26 languages against CLDR 46 and marks the places where published style guides disagree with it as `disputed` rather than picking silently.
 - **[UAX #14, the Unicode line breaking algorithm](https://www.unicode.org/reports/tr14/)**. Why a no-break space works and where a browser may break a line.
-- **NIST, [SI unit rules and style conventions](https://physics.nist.gov/cuu/Units/checklist.html)**. The checklist behind `25 °C` and the space between a value and its unit.
+- **BIPM, [the SI Brochure, 9th edition](https://www.bipm.org/en/publications/si-brochure)**, section 5.4, with NIST's [checklist](https://physics.nist.gov/cuu/Units/checklist.html) as the short version. The rules behind `25 °C` and the space between a value and its unit; the brochure is read in full and cited by the degree rule.
 
 ## National guides, one per language
 

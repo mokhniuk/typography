@@ -19,7 +19,7 @@ Quotation marks come in pairs and nest. A second-level quotation inside a first 
 
 ## The language decides, not the rule
 
-The same rule writes `«…»` for Ukrainian, `»…«` for German and `”…”` for Swedish; gives English a spaced em dash and German a spaced en; puts a no-break space before `%` in French and none in English. In this engine no rule names a language. Each of the 26 [language packs](/docs/languages/) declares its marks, dashes, orphan words and spacing, and the rules read the pack. Adding a language means writing one file, not touching 29 rules.
+The same rule writes `«…»` for Ukrainian, `»…«` for German and `”…”` for Swedish; gives English a spaced em dash and German a spaced en; puts a no-break space before `%` in French and none in English. In this engine no rule names a language. Each of the 26 [language packs](/docs/languages/) declares its marks, dashes, orphan words and spacing, and the rules read the pack. Adding a language means writing one file, not touching 31 rules.
 
 ## Most of the text must not change
 
@@ -27,11 +27,11 @@ Prose is full of text that only looks like prose: code spans, URLs, email addres
 
 ## Order is a dependency graph
 
-The 29 rules run in a fixed order, each on the output of the one before, and the order encodes dependencies: apostrophes are claimed before quote-pairing sees them, quotes are set before the spacing rules count characters, the sentence dash is set before the rule that puts a no-break space in front of it. The order is pinned by a test, because swapping two rules is the kind of change that passes every example you thought of.
+The 31 rules run in a fixed order, each on the output of the one before, and the order encodes dependencies: apostrophes are claimed before quote-pairing sees them, quotes are set before the spacing rules count characters, the sentence dash is set before the rule that puts a no-break space in front of it. The order is pinned by a test, because swapping two rules is the kind of change that passes every example you thought of.
 
 ## And it has to be fast
 
-Running 29 rules over a megabyte of text naively means 29 full passes. Each rule here carries a cheap trigger — no `%` in the text, skip the percent rule — and a comparison harness proves every fast path returns byte-identical output to the plain one. What still goes wrong is listed just as carefully in the [known limits](/docs/limits/).
+Running 31 rules over a megabyte of text naively means 31 full passes. Each rule here carries a cheap trigger — no `%` in the text, skip the percent rule — and a comparison harness proves every fast path returns byte-identical output to the plain one. What still goes wrong is listed just as carefully in the [known limits](/docs/limits/).
 
 ## The moral
 

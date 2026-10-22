@@ -58,4 +58,4 @@ The multiplication sign `×`, the true minus `−`, the primes `′ ″` and the
 
 ## Or stop memorising
 
-A crib sheet is the manual approach. The reason this site exists: paste your text into the [playground](/playground/) — or run the engine in your build — and the straight marks you actually typed become the right characters, by language, with [29 documented rules](/docs/rules/). The combinations above are still worth knowing for the odd character in a chat message; for anything you publish, let software set it.
+A crib sheet is the manual approach. The reason this site exists: paste your text into the [playground](/playground/) — or run the engine in your build — and the straight marks you actually typed become the right characters, by language, with [31 documented rules](/docs/rules/). The combinations above are still worth knowing for the odd character in a chat message; for anything you publish, let software set it.

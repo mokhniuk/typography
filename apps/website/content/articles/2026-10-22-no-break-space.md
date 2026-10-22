@@ -18,7 +18,7 @@ More than half of the engine's rules exist to place this one character:
 - **The parts of an abbreviation.** German `z.~B.`, Ukrainian `т.~д.`, English `Fig.~2` and `p.~14` (`space.abbreviation`).
 - **One-letter words.** Polish and Ukrainian typography does not let `i`, `w`, `z` end a line; English keeps `A~cat` together. Which words count comes from the language pack (`space.orphan`).
 - **Percent and euro, by language.** German, French, Czech and fourteen other languages set `5~%` and most of them `49~€`; English `5%` is left alone (`space.percent`).
-- **After ©** (`©~2026 Studio`), **before a sentence dash** (`word~— word`, so a line never opens with the dash), **before →**, and **after the dialogue dash** in the languages that space it.
+- **After ©** (`©~2026 Studio`), **after § and ¶** (`§~5`), **before a sentence dash** (`word~— word`, so a line never opens with the dash), **before →**, and **after the dialogue dash** in the languages that space it.
 
 ## Why CSS cannot do this
 
