@@ -19,7 +19,7 @@
     <div class="container">
       <div data-intro>
         <h1>Real quotation marks, dashes and spaces, in {{langs}} languages.</h1>
-        <p data-lede>A library that fixes the typography of running text. Give it a string and a language. It gives the string back with the right quotation marks, dashes where there were hyphens, an ellipsis, and no-break spaces where a line should not break. Tags, links and code are left alone.</p>
+        <p data-lede>A library that fixes the typography of running text. Give it a string and a language. It gives the string back with the right quotation marks, dashes where there were hyphens, an ellipsis, and no-break spaces where a line should not break.</p>
 
         <section aria-labelledby="install" data-install>
           <h2 id="install" class="sr-only">Install</h2>
@@ -46,39 +46,6 @@
         </p>
       </div>
       <!--specimen-->
-    </div>
-  </section>
-
-  <section aria-labelledby="figures" data-figures>
-    <div class="container">
-      <h2 id="figures" class="sr-only">In numbers</h2>
-      <dl>
-        <div>
-          <dt>Languages</dt>
-          <dd>{{langs}}</dd>
-          <dd>The 24 official languages of the EU, Ukrainian, and Swiss usage. Each one a pack, not a translation of English.</dd>
-        </div>
-        <div>
-          <dt>Rules</dt>
-          <dd>{{rules}}</dd>
-          <dd>{{rulesOn}} run by default; {{rulesOff}} wait until you ask for them. Each one switchable by name.</dd>
-        </div>
-        <div>
-          <dt>Benchmark checks passed</dt>
-          <dd>{{checks}}</dd>
-          <dd>Against {{tools}} other tools on the same cases, {{checksLiterary}} in the literary register. The cases were written by this project, which is the first thing to <a href="./docs/limits/">read about them</a>.</dd>
-        </div>
-        <div>
-          <dt>A megabyte of English</dt>
-          <dd>{{speed}}</dd>
-          <dd>Linear in the length of the text. The closest tool in scope took {{speedOther}} in the same run.</dd>
-        </div>
-        <div>
-          <dt>Runtime dependencies</dt>
-          <dd>0</dd>
-          <dd>Nothing in the package imports anything outside it. React is an optional peer, for one entry point.</dd>
-        </div>
-      </dl>
     </div>
   </section>
 
@@ -136,18 +103,6 @@
         <p data-lede>Each language has its own pack: its quotation marks and how they nest, its dash, its habits with spaces. These four are not translations of one sentence; each is written the way that language is.</p>
         <!--examples-->
       </div>
-    </div>
-  </section>
-
-  <section aria-labelledby="why" data-quote>
-    <div class="container">
-      <h2 id="why" class="sr-only">Why it matters</h2>
-      <figure>
-        <blockquote data-hanging>
-          <p>"Typography is what language looks like. A straight quote, a hyphen standing in for a dash, a number torn from the word it counts: each is a small lie about the text, and a reader feels all of them at once without being able to name one."</p>
-        </blockquote>
-        <figcaption>The opening mark of that quotation hangs in the margin, where the engine put it. Turn it off in <a href="./playground/">the playground</a> and watch the first line step inward. <a href="./articles/why-typography-is-hard-to-automate/">Why this is hard to automate</a></figcaption>
-      </figure>
     </div>
   </section>
 
@@ -215,15 +170,27 @@ explain('He said "hi"... 21-26', 'en', { quoteStyle: 'us' }).changes;
     </div>
   </section>
 
-  <section aria-labelledby="notes" data-section>
+  <section aria-labelledby="why" data-quote>
+    <div class="container">
+      <h2 id="why" class="sr-only">Why it matters</h2>
+      <figure>
+        <blockquote data-hanging>
+          <p>"Typography is what language looks like. A straight quote, a hyphen standing in for a dash, a number torn from the word it counts: each is a small lie about the text, and a reader feels all of them at once without being able to name one."</p>
+        </blockquote>
+        <figcaption>The opening mark of that quotation hangs in the margin, where the engine put it. Turn it off in <a href="./playground/">the playground</a> and watch the first line step inward. <a href="./articles/why-typography-is-hard-to-automate/">Why this is hard to automate</a></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section aria-labelledby="articles" data-section>
     <div class="container">
       <header>
-        <h2 id="notes">Notes</h2>
+        <h2 id="articles">Articles</h2>
       </header>
       <div>
         <p data-lede>Where each decision came from, and what a reader should know about the marks themselves. Written while building the engine.</p>
-        <!--notes-->
-        <p><a href="./articles/">All the notes</a></p>
+        <!--articles-->
+        <p><a href="./articles/">All the articles</a></p>
       </div>
     </div>
   </section>

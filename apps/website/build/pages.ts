@@ -162,11 +162,11 @@ ${items}
 }
 
 /**
- * The newest notes on the landing page (`<!--notes-->`): three articles, each with its date, how
- * long it takes to read, and what it is about. Built from the same `articles()` the index uses, so
- * a new file in `content/articles/` appears here by itself.
+ * The newest articles on the landing page (`<!--articles-->`): three of them, each with its date,
+ * how long it takes to read, and what it is about. Built from the same `articles()` the index uses,
+ * so a new file in `content/articles/` appears here by itself.
  */
-export function notesRow(count = 3): string {
+export function latestArticles(count = 3): string {
   const items = articles()
     .slice(0, count)
     .map(
@@ -179,7 +179,7 @@ export function notesRow(count = 3): string {
 </li>`,
     )
     .join('\n');
-  return `<ol data-notes>\n${items}\n</ol>`;
+  return `<ol data-latest>\n${items}\n</ol>`;
 }
 
 /** Every page the site builds from content, keyed by its path ("docs/api/"). */

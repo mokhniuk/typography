@@ -28,12 +28,7 @@ export const issueUrl = (title: string, body: string): string =>
 /** How the site sets its own text: the engine, with American quotes because the readers are English. */
 export const TYPESET = { lang: 'en', quoteStyle: 'us' } as const;
 
-/**
- * Numbers the pages quote. The engine's own are read from it, so they cannot go stale; the
- * benchmark's come from one run of `apps/bench` and are written down here, in one place, with the
- * run they are from (`apps/bench/RESULTS.md`, 2026-10-22 — read the caveats in docs/limits.md: the
- * cases were written by this package's author, and only the ratios between the tools mean much).
- */
+/** Numbers the pages quote, read from the engine so they cannot go stale. */
 export const FACTS: Record<string, string> = {
   version: pkg.version,
   rules: String(RULES.length),
@@ -42,13 +37,6 @@ export const FACTS: Record<string, string> = {
   langs: String(LANGS.length),
   issues: ISSUES,
   git: `git+ssh://git@github.com/mokhniuk/typography.git#v${pkg.version}`,
-  /** Benchmark: checks passed in the default setup, and in the literary register. */
-  checks: '242 / 250',
-  checksLiterary: '250 / 250',
-  /** 1 MB of English in one piece, text mode, and the closest tool in scope in the same run. */
-  speed: '63 ms',
-  speedOther: '118 ms',
-  tools: '6',
 };
 
 export const NAV = [

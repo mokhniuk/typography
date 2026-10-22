@@ -2,7 +2,7 @@ import { describe, expect, test } from 'bun:test';
 import { posix } from 'node:path';
 import { articles, latestDateOnly } from './build/content';
 import { EXAMPLES, exampleResult } from './build/examples';
-import { generatedPages, notesRow } from './build/pages';
+import { generatedPages, latestArticles } from './build/pages';
 import { externalLinks, rootLinks, source } from './build/plugin';
 import { FACTS, fill } from './build/site';
 
@@ -51,11 +51,11 @@ describe('website pages', () => {
     }
   });
 
-  test('the landing page builds its figures and its notes from the engine and the articles', () => {
+  test('the landing page builds its numbers and its articles from the engine and the content', () => {
     const landing = fill(source('index.html'));
-    for (const fact of ['langs', 'rules', 'rulesOn', 'rulesOff', 'checks', 'speed', 'tools'])
+    for (const fact of ['langs', 'rules', 'rulesOn', 'rulesOff', 'version'])
       expect(landing, fact).toContain(FACTS[fact] as string);
-    const notes = notesRow();
+    const notes = latestArticles();
     expect([...notes.matchAll(/<li>/g)]).toHaveLength(3);
     expect(notes).toContain('min read');
     // The newest article first, and a link that lands on a page of the site.

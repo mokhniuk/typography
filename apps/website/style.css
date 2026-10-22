@@ -1403,52 +1403,6 @@ input[type="radio"]:focus-visible + span {
   color: var(--color-muted);
 }
 
-/* The figures band: what the engine is, in five numbers, under the hero */
-
-section[data-figures] {
-  border-bottom: 1px solid var(--color-rule);
-  background: var(--color-paper);
-}
-section[data-figures] > .container {
-  padding: var(--space-6) 0;
-}
-section[data-figures] dl {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(176px, 1fr));
-  gap: var(--space-5) var(--space-7);
-  margin: 0;
-}
-section[data-figures] dl > div {
-  display: grid;
-  gap: var(--space-2);
-  align-content: start;
-}
-section[data-figures] dt {
-  font: 500 var(--size-xs) var(--font-ui);
-  line-height: calc(var(--baseline) * 3);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--color-muted);
-}
-/* The figure itself: the first value, set at a heading's size and aligned across the row */
-section[data-figures] dd:first-of-type {
-  margin: 0;
-  font: 600 var(--size-2xl) var(--font-ui);
-  /* The figure is fluid (a clamp), so its line box is rounded up to the grid at any size. */
-  line-height: 1.2;
-  /* biome-ignore lint/suspicious/noDuplicateProperties: the plain number above is the fallback for a browser without round() */
-  line-height: round(up, 1.15em, var(--baseline));
-  letter-spacing: -0.02em;
-  font-variant-numeric: tabular-nums;
-}
-section[data-figures] dd:last-of-type {
-  margin: 0;
-  max-width: 24em;
-  font-size: var(--size-sm);
-  line-height: calc(var(--baseline) * 3);
-  color: var(--color-muted);
-}
-
 /* What it does: a term and its explanation, two to a row */
 
 dl[data-features] {
@@ -1482,9 +1436,9 @@ section[data-quote] {
 section[data-quote] > .container {
   padding: var(--space-8) 0;
 }
+/* Eight of the twelve columns, centred: see the grid section at the end of this file. */
 section[data-quote] figure {
   margin: 0;
-  max-width: 30em;
 }
 section[data-quote] blockquote {
   margin: 0;
@@ -1499,7 +1453,7 @@ section[data-quote] blockquote p {
   text-wrap: pretty;
 }
 section[data-quote] figcaption {
-  margin-top: var(--space-6);
+  margin-top: var(--space-5);
   padding-top: var(--space-5);
   border-top: 1px solid var(--color-line);
   font-size: var(--size-sm);
@@ -1508,9 +1462,9 @@ section[data-quote] figcaption {
   max-width: 34em;
 }
 
-/* The notes: the three newest articles, each a date, a title and what it is about */
+/* The three newest articles, each a date, a title and what it is about */
 
-ol[data-notes] {
+ol[data-latest] {
   list-style: none;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
@@ -1518,32 +1472,32 @@ ol[data-notes] {
   margin: 0 0 var(--space-6);
   padding: 0;
 }
-ol[data-notes] > li > article {
+ol[data-latest] > li > article {
   display: grid;
   gap: var(--space-2);
   padding-top: var(--space-4);
   border-top: 1px solid var(--color-rule);
 }
-ol[data-notes] [data-meta] {
+ol[data-latest] [data-meta] {
   margin: 0;
   font-size: var(--size-xs);
   line-height: calc(var(--baseline) * 3);
   color: var(--color-muted);
   font-variant-numeric: tabular-nums;
 }
-ol[data-notes] h3 {
+ol[data-latest] h3 {
   margin: 0;
   font-size: var(--size-md);
   line-height: calc(var(--baseline) * 3);
   letter-spacing: -0.01em;
 }
-ol[data-notes] h3 a {
+ol[data-latest] h3 a {
   text-decoration: none;
 }
-ol[data-notes] h3 a:hover {
+ol[data-latest] h3 a:hover {
   text-decoration: underline;
 }
-ol[data-notes] p:last-child {
+ol[data-latest] p:last-child {
   margin: 0;
   font-size: var(--size-sm);
   line-height: calc(var(--baseline) * 3);
@@ -2383,14 +2337,14 @@ table[data-samples] small {
   /* One column's width in the container: for a width written in columns. */
   --grid-inner: min(100vw - 2 * var(--space-5), var(--container));
 }
-:is([data-hero], section[data-section]) > .container,
+:is([data-hero], section[data-section], section[data-quote]) > .container,
 main[data-layout="docs"],
 [data-page="playground"] [data-wide],
 ol[data-articles] {
   grid-template-columns: var(--grid);
   column-gap: var(--grid-gutter);
 }
-:is([data-hero], section[data-section]) > .container > *,
+:is([data-hero], section[data-section], section[data-quote]) > .container > *,
 main[data-layout="docs"] > *,
 [data-page="playground"] [data-wide] > * {
   grid-column: 1 / -1;
@@ -2410,6 +2364,10 @@ ol[data-articles] > li {
   }
   section[data-section] > .container > :not(header) {
     grid-column: 4 / -1;
+  }
+  /* The pull quote: the middle eight columns, so it is wider than a text column and centred. */
+  section[data-quote] > .container > figure {
+    grid-column: 3 / -3;
   }
   main[data-layout="docs"] > nav {
     grid-column: 1 / 3;
