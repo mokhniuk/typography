@@ -1439,6 +1439,8 @@ section[data-quote] {
   border-bottom: 1px solid var(--color-rule);
 }
 section[data-quote] > .container {
+  /* A grid, so the figure can take whole columns of it (the grid section sets the tracks). */
+  display: grid;
   padding: var(--space-8) 0;
 }
 /* Eight of the twelve columns, centred: see the grid section at the end of this file. */
