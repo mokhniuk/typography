@@ -1061,22 +1061,22 @@ main[data-layout="article"] > article > header [data-crumbs] {
   margin-bottom: var(--space-5);
 }
 
-/* Index pages: docs, articles, 404 */
+/* Index pages: docs, articles, 404. The playground and the font checker share their page header. */
 
 main[data-layout="index"] {
   padding-top: var(--space-8);
 }
-main[data-layout="index"] > .container > header {
+:is(main[data-layout="index"] > .container, [data-wide]) > header {
   max-width: 40em;
   margin-bottom: var(--space-7);
 }
-main[data-layout="index"] > .container > header h1 {
+:is(main[data-layout="index"] > .container, [data-wide]) > header h1 {
   font-size: var(--size-3xl);
   line-height: 1.05;
   /* biome-ignore lint/suspicious/noDuplicateProperties: the plain number above is the fallback for a browser without round() */
   line-height: round(up, 1.05em, var(--baseline));
 }
-main[data-layout="index"] > .container > header p {
+:is(main[data-layout="index"] > .container, [data-wide]) > header p {
   margin: var(--space-5) 0 0;
   font: var(--size-lg) / calc(var(--baseline) * 4) var(--font-text);
   color: var(--color-muted);
@@ -1747,17 +1747,7 @@ table[data-samples] small {
 [data-page="playground"] [data-wide] {
   width: min(100% - 2 * var(--space-5), var(--container));
   margin: 0 auto;
-  padding: var(--space-7) 0 0;
-}
-[data-page="playground"] [data-wide] > header {
-  margin-bottom: var(--space-6);
-}
-[data-page="playground"] [data-wide] > header h1 {
-  font-size: var(--size-2xl);
-}
-[data-page="playground"] [data-wide] > header p {
-  margin: var(--space-2) 0 0;
-  color: var(--color-muted);
+  padding: var(--space-8) 0 0;
 }
 /*
  * The layout: settings in a column on the left, the two panes beside it. The panes share their rows
@@ -2152,17 +2142,13 @@ table[data-samples] small {
 [data-page="font-checker"] [data-wide] {
   width: min(100% - 2 * var(--space-5), var(--container));
   margin: 0 auto;
-  padding: var(--space-7) 0 var(--space-8);
+  padding: var(--space-8) 0;
   display: grid;
   gap: var(--space-6);
 }
-[data-page="font-checker"] [data-wide] > header h1 {
-  font-size: var(--size-2xl);
-}
-[data-page="font-checker"] [data-wide] > header p {
-  margin: var(--space-3) 0 0;
-  max-width: var(--measure);
-  color: var(--color-muted);
+/* The grid gap already gives 24px below the header; together they make the shared 48px. */
+main[data-page="font-checker"] [data-wide] > header {
+  margin-bottom: calc(var(--space-7) - var(--space-6));
 }
 [data-page="font-checker"] h2 {
   font-size: var(--size-lg);
