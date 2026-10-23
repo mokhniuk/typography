@@ -141,7 +141,9 @@ console.log(entries.length + ' entries; ' + text + '; ' + html);
       if (!out.includes('«привіт»')) throw new Error(`printed ${JSON.stringify(out)}`);
     });
   } else {
-    console.log(`smoke: skipped: a .ts config needs Node 22.18, 23.6 or 24 and later (this is ${nodeVersion})`);
+    console.log(
+      `smoke: skipped: a .ts config needs Node 22.18, 23.6 or 24 and later (this is ${nodeVersion})`,
+    );
   }
   console.log('smoke: all passed');
 } catch (error) {
