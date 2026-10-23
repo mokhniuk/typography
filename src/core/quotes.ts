@@ -55,8 +55,8 @@ const opensHere = (text: string, at: number): boolean =>
 // An inch mark is read only inside a quotation opened at the start, after a space, a bracket, an opener
 // or ¿ ¡ (not one glued to a word, as in a URL: q="1"&r), and only where a space on the same line or
 // punctuation follows it (a 5" hole, a 2", 3" pipe), not a letter, a digit or a line break.
-const INCH_OPENER_AFTER = /[\s([¿¡]/;
-const INCH_FOLLOWED_BY = /[ \t  ,.;:!?)\]]/;
+const INCH_OPENER_AFTER = /[\s([\uE000¿¡]/;
+const INCH_FOLLOWED_BY = /[ \t\u00A0\u202F,.;:!?)\]]/;
 /** The " at `end`, the next mark after the opener at `at`, may be an inch mark (a 5" hole) inside it. */
 const mayBeInch = (text: string, at: number, end: number): boolean => {
   if (!DIGIT.test(codePointBefore(text, end) ?? '')) return false;
@@ -69,7 +69,7 @@ const mayBeInch = (text: string, at: number, end: number): boolean => {
 // The next quote mark, or a paragraph break (a line break, blanks, a line break).
 const NEXT_MARK_OR_BREAK = new RegExp(`[${RAW}]|\\n[^\\S\\n]*\\n`, 'g');
 // What a closer stands after: a letter, closing punctuation, a closed quotation or an apostrophe.
-const CLOSES_AFTER = /[\p{L}.,;:!?…)\]'’]/u;
+const CLOSES_AFTER = /[\p{L}.,;:!?\u2026)\]\uE001\uE002'\u2019]/u;
 /**
  * The straight " at `inch` stands after a digit inside an open quotation. Read on to the next mark that
  * is not another inch mark: when it is a " in the same paragraph that stands where a quotation closes
