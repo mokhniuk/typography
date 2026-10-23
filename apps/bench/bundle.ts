@@ -68,6 +68,18 @@ export const PARTS: Entry[] = [
   { name: `${ENGINE}/rehype`, code: `export * from '${SRC}/rehype';`, runs: false },
   { name: `${ENGINE}/dom`, code: `export * from '${SRC}/dom';`, runs: false },
   { name: `${ENGINE}/react`, code: `export * from '${SRC}/react';`, runs: false, external: ['react'] },
+  { name: `${ENGINE}/lite (no language pack)`, code: `export * from '${SRC}/lite';`, runs: false },
+  { name: `${ENGINE}/lite text (no pack)`, code: `export { typesetText } from '${SRC}/lite';`, runs: false },
+  {
+    name: `${ENGINE}/lite text + lang/en`,
+    code: `export { typesetText } from '${SRC}/lite';\nexport { en } from '${SRC}/core/lang/en';`,
+    runs: false,
+  },
+  {
+    name: `${ENGINE}/lite text + lang/uk`,
+    code: `export { typesetText } from '${SRC}/lite';\nexport { uk } from '${SRC}/core/lang/uk';`,
+    runs: false,
+  },
   { name: `${ENGINE}: the language packs alone`, code: `export { PACKS } from '${SRC}/core/lang';`, runs: false },
 ];
 

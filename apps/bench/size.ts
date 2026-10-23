@@ -38,7 +38,7 @@ export async function sizeSection(paths?: Map<string, string>): Promise<string[]
     '',
     ...table(ENTRIES, built),
     '',
-    "This package's entry points one by one (`react` is a peer dependency, left out of its bundle). The last row is the language packs on their own: every entry point carries all of them.",
+    "This package's entry points one by one (`react` is a peer dependency, left out of its bundle). Every entry point but `/lite` carries all the language packs; `/lite` carries none, and a page adds the packs it uses from `/lang/<code>` (the `lite text` rows: `typesetText` and one pack, the same call as the first table's). The last row is the language packs on their own.",
     '',
     ...table(PARTS, built),
     '',
