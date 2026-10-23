@@ -3,7 +3,7 @@
  * feature table can be filled in from what the tools do, not from what they claim.
  * `bun apps/bench/features.ts`. A no-break space is printed as `~`.
  */
-import { TOOLS } from './tools';
+import { BASE_TOOLS } from './tools';
 const probes: [string, string, 'text' | 'html'][] = [
   ['double quotes', 'He said "stone" now', 'text'],
   ['nested quotes', 'He said "she said \'go\' to me" now', 'text'],
@@ -40,8 +40,7 @@ const probes: [string, string, 'text' | 'html'][] = [
 ];
 for (const [name, input, fmt] of probes) {
   console.log(`\n## ${name}\n   in : ${JSON.stringify(input)}`);
-  for (const t of TOOLS) {
-    if (t.name === 'typography-engine literary' || t.name === 'typograf +nbsp') continue;
+  for (const t of BASE_TOOLS()) {
     let out: string | null;
     try { out = t.run(input, 'en', fmt); } catch (e) { out = 'ERR ' + e; }
     console.log(`   ${t.name.padEnd(19)}: ${out === null ? '(n/a)' : JSON.stringify(out.replaceAll(' ', '~'))}`);

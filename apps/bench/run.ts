@@ -167,13 +167,14 @@ const BY_INPUT: { label: string; lang: Lang; format: Format; make: () => string 
     },
   },
 ];
+const inputs = BY_INPUT.map((b) => ({ ...b, input: b.make() }));
 const byInput = TOOLS.map((tool) => {
   const at100 = perf.find((p) => p.name === tool.name)?.timings[1];
   return {
     name: tool.name,
-    cells: BY_INPUT.map((b) => {
+    cells: inputs.map((b) => {
       if (!at100 || at100.ms === null) return 'not run';
-      const t = time(tool, b.make(), b.lang, b.format, at100.ms);
+      const t = time(tool, b.input, b.lang, b.format, at100.ms);
       return t ? msOf(t) : '–';
     }),
   };

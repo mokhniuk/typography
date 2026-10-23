@@ -1,6 +1,7 @@
 import { expect, test } from 'bun:test';
 import { readdirSync, readFileSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
+import { packedFiles } from '../scripts/pack';
 
 /**
  * What a consumer installs is what `bun pm pack` packs (the `files` list in package.json), and a
@@ -12,15 +13,7 @@ const ROOT = resolve(import.meta.dir, '..');
 const TEST_ONLY = /\.test\.tsx?$|\.fixture\.json$|^src\/snapshot\.digests\.json$/;
 const OUTSIDE_SRC = new Set(['package.json', 'README.md', 'CHANGELOG.md']);
 
-const packed = Bun.spawnSync({
-  cmd: [process.execPath, 'pm', 'pack', '--dry-run'],
-  cwd: ROOT,
-  stdout: 'pipe',
-})
-  .stdout.toString()
-  .split('\n')
-  .map((line) => /^packed \S+ (.+)$/.exec(line.trim())?.[1])
-  .filter((path): path is string => !!path);
+const packed = packedFiles(ROOT);
 const shipped = new Set(packed);
 
 const tree = (dir: string): string[] =>

@@ -4,7 +4,7 @@
  * Each probe runs in its own process with a time limit. `bun apps/bench/probes.ts`.
  */
 import { fileURLToPath } from 'node:url';
-import { TOOLS } from './tools';
+import { BASE_TOOLS, TOOLS } from './tools';
 
 const SIZE = 10_000;
 const LIMIT_MS = 10_000;
@@ -25,8 +25,7 @@ export const PROBES: { id: string; about: string; input: string; format: 'text' 
   { id: 'open tags', about: '`<a` repeated, never closed', input: fill('<a '), format: 'html' },
 ];
 
-// The tool variants run the same code as their base tool.
-const tools = TOOLS.filter((t) => t.name !== 'typography-engine literary' && t.name !== 'typograf +nbsp');
+const tools = BASE_TOOLS();
 
 function probe(tool: string, id: string): string {
   const r = Bun.spawnSync({

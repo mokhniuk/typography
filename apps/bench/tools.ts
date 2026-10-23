@@ -19,7 +19,11 @@ export type Format = 'text' | 'html';
 /** Returns the typeset text, or null when the tool does not do this language or format. */
 export type Run = (input: string, lang: Lang, format: Format) => string | null;
 
-export type Tool = { name: string; version: string; about: string; run: Run };
+/** `variantOf` names the tool whose code a variant runs; the tables that measure code, not configuration, skip variants. */
+export type Tool = { name: string; version: string; about: string; run: Run; variantOf?: string };
+
+/** The tools without their variants. */
+export const BASE_TOOLS = (): Tool[] => TOOLS.filter((t) => !t.variantOf);
 
 // A language with no entry is one typograf has no locale for.
 const TYPOGRAF_LOCALE: Partial<Record<Lang, string[]>> = {
@@ -149,6 +153,7 @@ export const TOOLS: Tool[] = [
   },
   {
     name: 'typography-engine literary',
+    variantOf: 'typography-engine',
     version: 'this repo',
     about: 'literary register (British English quotes)',
     run: (input, lang, format) =>
@@ -164,6 +169,7 @@ export const TOOLS: Tool[] = [
   },
   {
     name: 'typograf +nbsp',
+    variantOf: 'typograf',
     version: version('typograf'),
     about: 'typograf with its one default-off typographic rule on: common/nbsp/afterNumber',
     run: (input, lang) => typografRun(input, lang, ['common/nbsp/afterNumber']),

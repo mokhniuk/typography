@@ -3,10 +3,9 @@
  * page does; `bun apps/bench/run.ts` measures large text. `bun apps/bench/latency.ts`.
  */
 import { short } from './inputs';
-import { TOOLS } from './tools';
+import { BASE_TOOLS } from './tools';
 const sizes = [200, 1000, 5000];
-for (const t of TOOLS) {
-  if (t.name === 'typography-engine literary' || t.name === 'typograf +nbsp') continue;
+for (const t of BASE_TOOLS()) {
   const row: string[] = [];
   for (const n of sizes) {
     const input = short(n);

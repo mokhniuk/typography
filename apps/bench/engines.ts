@@ -5,6 +5,7 @@
  */
 import { fileURLToPath } from 'node:url';
 import { buildAll, ENTRIES, OUT } from './bundle';
+import { spread } from './inputs';
 
 type Engine = { name: string; cmd: string[] };
 
@@ -42,7 +43,7 @@ function drive(engine: Engine, args: string[], timeoutMs: number): Outcome {
   }
 }
 
-const median = (xs: number[]) => [...xs].sort((a, b) => a - b)[Math.floor(xs.length / 2)] ?? Number.NaN;
+const median = (xs: number[]) => spread(xs).median;
 const ms = (n: number | null | undefined) =>
   n === null || n === undefined ? '–' : n < 10 ? `${n.toFixed(1)} ms` : `${Math.round(n)} ms`;
 const us = (n: number | null | undefined) =>

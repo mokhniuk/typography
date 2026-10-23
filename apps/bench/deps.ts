@@ -6,6 +6,7 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { packedFiles } from '../../scripts/pack';
 
 const BENCH = dirname(fileURLToPath(import.meta.url));
 const REPO = join(BENCH, '../..');
@@ -95,11 +96,7 @@ const TOOLS: [string, string[]][] = [
 
 /** This package installs from a git tag whose commit holds what `bun pm pack` packs (scripts/release-commit.ts). */
 function enginePackage(): { files: number; bytes: number } {
-  const listed = Bun.spawnSync({ cmd: [process.execPath, 'pm', 'pack', '--dry-run'], cwd: REPO, stdout: 'pipe' })
-    .stdout.toString()
-    .split('\n')
-    .map((line) => /^packed \S+ (.+)$/.exec(line.trim())?.[1])
-    .filter((file): file is string => !!file);
+  const listed = packedFiles(REPO);
   const bytes = listed.reduce((sum, file) => sum + statSync(join(REPO, file)).size, 0);
   return { files: listed.length, bytes };
 }
