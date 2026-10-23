@@ -14,6 +14,9 @@ const mod = (await import(`${dir}/core/rules.ts`)) as typeof import('../src/core
 const zones = (await import(`${dir}/core/zones.ts`)) as typeof import('../src/core/zones');
 /** The zone scan runs before every rule and is timed like one: it is where a lone backtick or `@` costs. */
 const SHIELD = { id: 'shield (zones)', about: '', apply: (text: string) => zones.shield(text)[0] };
+const text = (await import(`${dir}/text/index.ts`)) as typeof import('../src/text/index');
+/** The text mode wraps the rules (trim, split, rejoin) and is timed like one: a long run of spaces inside a line cost there. */
+const TEXT_MODE = { id: 'text mode', about: '', apply: (input: string) => text.typesetText(input) };
 const context = {
   lang: 'en',
   register: 'display',
@@ -121,7 +124,7 @@ const variants = Object.entries(classes).flatMap(([name, unit]) =>
 
 const sizes = [20_000, 40_000, 80_000];
 const rows: string[] = [];
-for (const rule of [SHIELD, ...mod.RULES]) {
+for (const rule of [SHIELD, TEXT_MODE, ...mod.RULES]) {
   if (only && rule.id !== only) continue;
   for (const [label, unit, wrap] of variants) {
     const name = label;

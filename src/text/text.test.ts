@@ -39,3 +39,32 @@ describe('typesetText', () => {
     expect(seen).not.toContain('ellipsis');
   });
 });
+
+// A long run of spaces inside a line: the trailing-space trim was a regex tried from every space (40,000
+// spaces took 1.3 s). Loose on purpose: a flat ceiling about 10x the measured time.
+describe('a long run of spaces inside a line', () => {
+  const fastest = (text: string) => {
+    let best = Number.POSITIVE_INFINITY;
+    for (let i = 0; i < 3; i++) {
+      const start = performance.now();
+      typesetText(text);
+      best = Math.min(best, performance.now() - start);
+    }
+    return best;
+  };
+
+  test('40,000 spaces are typeset in under 100 ms, and doubling them costs under 2.5x', () => {
+    const at = (n: number) => `a${' '.repeat(n)}b`;
+    typesetText(at(2000));
+    const small = fastest(at(20_000));
+    const large = fastest(at(40_000));
+    expect(large).toBeLessThan(100);
+    expect(large).toBeLessThan(Math.max(small, 2) * 2.5);
+  });
+
+  test('trailing spaces and tabs are kept, whatever the paragraph holds', () => {
+    for (const text of ['', ' ', '   ', '\t \t', 'a \t ', 'a \tb \t\n  c  ', ' a ', '\n\n  \n']) {
+      expect(typesetText(text)).toBe(text);
+    }
+  });
+});

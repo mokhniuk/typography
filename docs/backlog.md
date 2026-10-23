@@ -22,14 +22,13 @@ Every pack has `reviewed: false`: bg cs da el es et fi ga hr hu it lt lv mt nl p
 
 ## P1
 
-### Two quadratic inputs found by the hard-input probes
+### A quadratic input found by the hard-input probes
 
-The probes table in `apps/bench/RESULTS.md` (`bun run probes`, 2026-10-22) found two inputs that grow with the square of their length; `scripts/stress.ts` misses both because it times the rules, not the modes around them.
+The probes table in `apps/bench/RESULTS.md` (`bun run probes`, 2026-10-22) found an input that grows with the square of its length; `scripts/stress.ts` misses it because it times the rules, not the HTML mode around them. (The other one found, a long run of spaces inside a line in the text mode, is fixed and timed by `scripts/stress.ts`.)
 
-- **A long run of spaces inside a line, text mode.** `a` + 40 000 spaces + `b` takes 1.3 s (10 000: 90 ms, 20 000: 350 ms); `typesetBlock` on the same string takes 2 ms. The cause is `/[ \t]+$/` in `setParagraph` (`src/text/index.ts`), tried from every space. Strip the trailing run with a backward scan instead.
 - **Unclosed `<` repeated, HTML mode.** `<a ` × 4 000 (12 KB) takes 200 ms, × 8 000 takes 800 ms. Most likely the tag token (`TOKEN_SOURCE`, `src/html/index.ts`) scanning to the end for every `<` that never closes; confirm, then fix so a `<` with no `>` is read once.
 
-Add both to `scripts/stress.ts` (or a test in `src/speed.test.ts`) when fixing, so they stay linear.
+Add it to `scripts/stress.ts` (or a test in `src/speed.test.ts`) when fixing, so it stays linear.
 
 ### Finish the sources registry
 
@@ -110,7 +109,7 @@ Shipped in 0.14.0: `space.short-word` is on by default (the sources allow either
 
 ### Speed: what is left
 
-Two quadratic inputs in the text and HTML modes are known (see the P1 item above); nothing superlinear is known in the rules (0.2.1). Typical text costs 30 ms per MB on a quiet machine (74 in the 0.14.0 run, on a busier one and with the short-word rule on by default since 0.14.0); with every rule on, the biggest are `space.short-word` (17%), `quote`, `space.abbreviation` at about 5 ms per MB each, then `space.title` at 3. `space.number` doubled in 0.10.0 when money and hand-grouped numbers were added to it, and is one scan since 0.12.0 (about 3 ms per MB). Further gains would be constant-factor work on those; tipograph and smartypants (10 to 20 ms) do much less. The zone scan (`shield`, zones.ts) is timed as a row of its own by the profile and `scripts/stress.ts` since 0.12.0, and the profile runs on the fuzz corpus as well as on prose; a 300 ms per MB cost in the scan went unseen until then because both tools timed the rules only, on prose with no backtick or address. React already memoises per component (`useMemo` in `Typeset`), so no paragraph cache is needed. German prose costs about three times English, French or Ukrainian (19 ms against 6 to 8 per 100 KB, the "Speed by input" table, 2026-10-22) where typograf costs the same in all four; profile `de` to find the rule.
+One quadratic input in the HTML mode is known (see the P1 item above); nothing superlinear is known in the rules (0.2.1). Typical text costs 30 ms per MB on a quiet machine (74 in the 0.14.0 run, on a busier one and with the short-word rule on by default since 0.14.0); with every rule on, the biggest are `space.short-word` (17%), `quote`, `space.abbreviation` at about 5 ms per MB each, then `space.title` at 3. `space.number` doubled in 0.10.0 when money and hand-grouped numbers were added to it, and is one scan since 0.12.0 (about 3 ms per MB). Further gains would be constant-factor work on those; tipograph and smartypants (10 to 20 ms) do much less. The zone scan (`shield`, zones.ts) is timed as a row of its own by the profile and `scripts/stress.ts` since 0.12.0, and the profile runs on the fuzz corpus as well as on prose; a 300 ms per MB cost in the scan went unseen until then because both tools timed the rules only, on prose with no backtick or address. React already memoises per component (`useMemo` in `Typeset`), so no paragraph cache is needed. German prose costs about three times English, French or Ukrainian (19 ms against 6 to 8 per 100 KB, the "Speed by input" table, 2026-10-22) where typograf costs the same in all four; profile `de` to find the rule.
 
 ## P2 (deferred by choice)
 

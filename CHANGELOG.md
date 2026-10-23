@@ -4,6 +4,10 @@ Versions follow semver while the package is below 1.0.0: a **minor** release may
 
 ## Unreleased
 
+### Fixes
+
+- The text mode cost the square of the input on a long run of spaces inside one line: `'a' + ' '.repeat(40000) + 'b'` took about 1.3 s (10,000 spaces 90 ms, 20,000 350 ms), while `typesetBlock` on the same string took 2 ms. The trailing-space trim `/[ \t]+$/` in `setParagraph` (`src/text/index.ts`) was tried from every space of the run, and each try read on to the end. It is a backward scan from the end of the line now, and 40,000 spaces take about 2 ms. `scripts/stress.ts` times the text mode as a row of its own, and `src/text/text.test.ts` holds a loose budget. The same characters are kept and trimmed (the differential run against the engine as it was reports 0 differences). No output change.
+
 ### Tooling and docs
 
 - The sources under `src/` carry their file extensions in every relative import and re-export (`./run.ts`, `../core/index.ts`; Biome's `useImportExtensions` enforces it for `src/`), so they are valid ESM for Node as well as Bun. `src/cli/run.ts` imports `package.json` with `with { type: 'json' }`, and `typo` starts with `#!/usr/bin/env node`: the command line needs Bun today, because the sources ship as TypeScript, and from the npm release it runs on Node 20 or later as well (a `--config` file in TypeScript then needs Bun, or Node 22.18 or later). The Bun-only test helper `pack-checks.ts` is now `pack-checks.test-utils.ts` and stays out of the pack. No output change.
