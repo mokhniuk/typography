@@ -1,11 +1,8 @@
 /**
  * `@mokhniuk/typography/lite`: the engine and the text, HTML and Markdown modes without a single
  * language pack. Every call takes the pack itself, imported from `@mokhniuk/typography/lang/<code>`,
- * so a page that sets one language loads one pack:
- *
- *     import { typesetText } from '@mokhniuk/typography/lite';
- *     import { uk } from '@mokhniuk/typography/lang/uk';
- *     typesetText('Він сказав "привіт"', { lang: uk });
+ * so a page that sets one language loads one pack: `typesetText` from this entry and `uk` from
+ * `@mokhniuk/typography/lang/uk` give `typesetText('Він сказав "привіт"', { lang: uk })`.
  *
  * Nothing here imports `core/lang/index.ts`, directly or through another module (`lite.test.ts`
  * walks the import graph), so the saving does not depend on a bundler's tree-shaking: unbundled ESM
