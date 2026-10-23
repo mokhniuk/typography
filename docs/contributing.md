@@ -75,7 +75,7 @@ The pack:
 | `literary` | The same for the literary register, if it differs. |
 | `orphans` | A global regex with one capture group: one-letter words kept with the next word. |
 | `shortWords` | Two- and three-letter words kept with the next word, for the rule `space.short-word` (on by default). Lower case, each once; the rule matches the capitalised form too. Editorial by nature (no guide read lists them), so say so in `notes`. |
-| `abbreviations` | `{ together, bind, page }`, short lists, only from a style guide. |
+| `abbreviations` | `{ together, bind, page, bare }`, short lists, only from a style guide (`bare`: written without a full stop, bound to a number: `klo 17`). |
 | `sentenceDash`, `sentenceDashLiterary` | The spaced dash of a break in the sentence, when it is not an em dash. |
 | `percentSpace` | A no-break space between a number and a `%` typed against it (`5%` becomes `5~%`). |
 | `currencySpace` | A no-break space between a number and a `€` typed after it (`49€` becomes `49~€`); `€49` is never touched. Set it apart from `percentSpace`: a style guide may space `%` and write `€30` or only the code `EUR`. |

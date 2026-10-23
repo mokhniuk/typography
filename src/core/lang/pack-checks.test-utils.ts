@@ -35,6 +35,11 @@ export function wellFormed(pack: LangPack, file: string) {
     for (const list of Object.values(pack.abbreviations ?? {})) {
       for (const word of list) expect(word.trim()).toBe(word);
     }
+    // A bare abbreviation is one word written without a full stop (klo, nr): the pattern adds none.
+    for (const word of pack.abbreviations?.bare ?? []) {
+      expect(word.length).toBeGreaterThan(0);
+      expect(word).not.toMatch(/[.\s]/);
+    }
     if (pack.numbers) {
       expect(pack.numbers.group.length).toBeGreaterThan(0);
       expect(pack.numbers.decimal.length).toBeGreaterThan(0);
