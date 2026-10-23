@@ -31,3 +31,5 @@ export const nl = {
     'Percent: Team Taaladvies says it is usually written without a space (the Belgian standard NBN Z 01-002 asks for one, for exact-science fields), so percentSpace is off. ' +
     'Not implemented, not verified: the EU Interinstitutional Style Guide could not be read (its pages are scripted and gave no text); number format, sentence dash, abbreviations, one-letter words (none is a Dutch convention in any page read).',
 } as const satisfies LangPack;
+
+export default nl;

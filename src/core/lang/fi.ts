@@ -42,3 +42,5 @@ export const fi = {
     'Not implemented, not verified: one-letter words (the ISG gives no list), the hyphen rules of 10.4.7, the colon before case endings (p:ssa), dates (1.4.–30.4.), and Kotus guidance beyond the two pages named in the sources.',
   ].join(' '),
 } as const satisfies LangPack;
+
+export default fi;

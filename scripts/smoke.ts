@@ -1,7 +1,8 @@
 /**
  * The package as npm installs it, run under Node: builds, packs with `npm pack`, installs the tarball
  * and `react` into a temporary project, then imports every entry point in `exports`, typesets a line
- * of text and of HTML, checks the React entry, and runs the installed `typo` command.
+ * of text and of HTML, checks the React entry, typesets with `/lite` and the pack from `/lang/uk`
+ * (the same output as the text entry), and runs the installed `typo` command.
  *
  *     bun scripts/smoke.ts [node-binary]     node-binary defaults to `node` on the path
  *
@@ -97,11 +98,20 @@ const html = typesetHtml('<p>"hi"</p>', { lang: 'en' });
 if (!html.includes('\\u201chi\\u201d')) throw new Error('typesetHtml gave ' + JSON.stringify(html));
 const { Typeset } = await import(${JSON.stringify(`${pkg.name}/react`)});
 if (typeof Typeset !== 'function') throw new Error('Typeset is ' + typeof Typeset);
-console.log(entries.length + ' entries; ' + text + '; ' + html);
+const lite = await import(${JSON.stringify(`${pkg.name}/lite`)});
+const { uk } = await import(${JSON.stringify(`${pkg.name}/lang/uk`)});
+const { default: ukDefault } = await import(${JSON.stringify(`${pkg.name}/lang/uk`)});
+if (ukDefault !== uk) throw new Error('lang/uk: the default export is not the named one');
+const lited = lite.typesetText('Він сказав "привіт"', { lang: uk });
+if (!lited.includes('\\u00abпривіт\\u00bb')) throw new Error('lite typesetText gave ' + JSON.stringify(lited));
+if (lited !== (await import(${JSON.stringify(`${pkg.name}/text`)})).typesetText('Він сказав "привіт"', { lang: 'uk' }))
+  throw new Error('lite and the text entry differ');
+console.log(entries.length + ' entries; ' + text + '; ' + html + '; lite + lang/uk: ' + lited);
 `;
   writeFileSync(join(project, 'probe.mjs'), probe);
-  const probed = step('import every entry point, typeset text and HTML, React entry', () =>
-    sh(node, ['probe.mjs'], { cwd: project }).trim(),
+  const probed = step(
+    'import every entry point, typeset text and HTML, React entry, lite with lang/uk',
+    () => sh(node, ['probe.mjs'], { cwd: project }).trim(),
   );
   console.log(`smoke: ${probed}`);
 

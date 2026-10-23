@@ -39,3 +39,5 @@ export const pt = {
     'Not implemented, not verified: no source read gives a list of one-letter words (a, e, o) to keep off the end of a line, so there are no orphans; the travessão of 10.4.8 is the em dash, which is the default, and the dialogue dash is the same em dash, set from Ciberdúvidas above; the ordinals n.º and the forms Dr.ª, Sr.ª of annex A3 are not covered; elisions: a Portuguese apostrophe inside a word (d’Ouro) is already read as an apostrophe by the engine and no word starting with an apostrophe was found in a source; the ISG table read shows the space before % only, so the pack sets percentSpace and not currencySpace (49€ stays 49€).',
   ].join(' '),
 } as const satisfies LangPack;
+
+export default pt;
