@@ -122,5 +122,6 @@ Where the time goes in this package, and what to do about it, is in [backlog.md]
 
 ## Distribution
 
-- The package is private, ships `.ts` sources and has no build step. It needs Bun or a TypeScript-aware bundler.
-- No licence is granted. See the README.
+- The package ships compiled ESM with `.d.ts` declarations, has no dependencies, and is MIT-licensed (see the README). The command line needs Node 20 or later, or Bun.
+- Every entry point carries all 27 language packs (16 of the 26 KB brotli of one call), so a one-language page pays for the other 26; the backlog has the item "Load only the languages used".
+- There is no CommonJS build: the package is ESM only.

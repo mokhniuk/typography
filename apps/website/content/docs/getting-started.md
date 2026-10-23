@@ -4,13 +4,19 @@ Install the package, typeset a string, then pick the mode that matches where you
 
 ## Install
 
-The package is `@mokhniuk/typography`. It reaches npm with 1.0; until then it is a git dependency on a release tag. The repository is private, so the machine needs SSH access to it.
+The package is `@mokhniuk/typography`, on npm from 0.16.0. It is compiled ESM with TypeScript declarations, so Node and plain tooling work.
+
+```sh
+npm install @mokhniuk/typography
+```
+
+`pnpm add`, `bun add` and `yarn add` work the same. A release tag also installs from git; the repository is private, so the machine needs SSH access to it:
 
 ```sh
 bun add git+ssh://git@github.com/mokhniuk/typography.git#v{{version}}
 ```
 
-After 1.0 this becomes `npm install @mokhniuk/typography` (or `pnpm add`, `bun add`, `yarn add`). The package ships TypeScript sources and has no build step, so it needs Bun or a TypeScript-aware bundler. The core has no dependencies; `react` 18 or later is an optional peer, needed only by the React entry.
+The core has no dependencies; `react` 18 or later is an optional peer, needed only by the React entry. The `typo` command runs on Node 20 or later, or Bun. Below 1.0.0 the package follows semver, so a minor release may change output.
 
 ## Typeset a string
 
