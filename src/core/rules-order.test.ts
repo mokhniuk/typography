@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { RULE_IDS } from './index';
+import { RULE_IDS } from './index.ts';
 
 /**
  * The order is part of the behaviour, and several rules are planned that have to land in a

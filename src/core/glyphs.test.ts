@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'bun:test';
-import { EXAMPLES, runOnly } from '../../scripts/gen-rules-doc';
-import { insertedCharacters, insertedGlyphs, ruleGlyphs } from './glyphs';
-import { explain, LANGS, NBSP, RULE_IDS, RULES, typographic } from './index';
+import { EXAMPLES, runOnly } from '../../scripts/gen-rules-doc.ts';
+import { insertedCharacters, insertedGlyphs, ruleGlyphs } from './glyphs.ts';
+import { explain, LANGS, NBSP, RULE_IDS, RULES, typographic } from './index.ts';
 
 describe('the characters the rules insert', () => {
   test('every rule has an entry, and no entry names a rule that is gone', () => {

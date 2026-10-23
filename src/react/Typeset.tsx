@@ -7,9 +7,9 @@ import {
   type Rule,
   type TypographyConfig,
   typographic,
-} from '../core';
-import { TypographyContext, type TypographySetting } from './context';
-import { HangText } from './HangText';
+} from '../core/index.ts';
+import { TypographyContext, type TypographySetting } from './context.ts';
+import { HangText } from './HangText.tsx';
 
 /** Sets `text` with the language, register and rules of `setting`; what `Typeset` renders. */
 export function typesetFor(text: string, setting: TypographySetting, atStart: boolean): string {

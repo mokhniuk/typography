@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
-import { quotesFor } from '../quotes';
-import type { LangPack } from './pack';
+import { quotesFor } from '../quotes.ts';
+import type { LangPack } from './pack.ts';
 
 /** A pack for the tests: only what the engine reads from it matters here. */
 const pack = (fields: Partial<LangPack>): LangPack => ({

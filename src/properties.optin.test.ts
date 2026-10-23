@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { LANGS, type Lang, type QuoteStyle, typographic } from './core';
+import { LANGS, type Lang, type QuoteStyle, typographic } from './core/index.ts';
 
 /**
  * The properties of properties.test.ts, run for each opt-in rule switched on (`enable`), with a

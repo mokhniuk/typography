@@ -1,4 +1,4 @@
-import { dashRange, dashSentence, dialogue } from './dashes';
+import { dashRange, dashSentence, dialogue } from './dashes.ts';
 import {
   afterComma,
   beforePunctuation,
@@ -8,13 +8,13 @@ import {
   implies,
   plusMinus,
   trailingSpace,
-} from './extra';
-import { PACK, PACKS } from './lang';
-import { apostrophe, arrows, ellipsis, legal, minus, multiply } from './marks';
-import { groupNumbers } from './numbers';
-import { bindPhones } from './phone';
-import { ORPHANS, SENTENCE_DASH, SENTENCE_DASH_LITERARY, SHORT_WORDS } from './profiles';
-import { quotes } from './quotes';
+} from './extra.ts';
+import { PACK, PACKS } from './lang/index.ts';
+import { apostrophe, arrows, ellipsis, legal, minus, multiply } from './marks.ts';
+import { groupNumbers } from './numbers.ts';
+import { bindPhones } from './phone.ts';
+import { ORPHANS, SENTENCE_DASH, SENTENCE_DASH_LITERARY, SHORT_WORDS } from './profiles.ts';
+import { quotes } from './quotes.ts';
 import {
   abbreviations,
   arrowSpace,
@@ -30,8 +30,8 @@ import {
   shortWords,
   titles,
   unitSymbol,
-} from './spaces';
-import type { Context } from './types';
+} from './spaces.ts';
+import type { Context } from './types.ts';
 
 /**
  * Why a reader would want a rule, as opposed to its id, which names the mechanism:

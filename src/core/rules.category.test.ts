@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { addRule, RULE_CATEGORIES, RULES, type Rule, typographic } from './index';
+import { addRule, RULE_CATEGORIES, RULES, type Rule, typographic } from './index.ts';
 
 describe('rule categories', () => {
   test('the categories are tradition, symbols, math and data, in that order', () => {

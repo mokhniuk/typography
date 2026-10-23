@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { LANGS, typographic } from './core';
+import { LANGS, typographic } from './core/index.ts';
 
 /** Properties of the opt-in rule `number.group`, on seeded random strings with a vocabulary of its own. */
 function random(seed: number) {

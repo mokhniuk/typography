@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { diff } from './diff';
+import { diff } from './diff.ts';
 
 describe('diff', () => {
   test('equal text is one run', () => {

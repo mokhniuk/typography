@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
-import { addRule, DEFAULT_RULES, RULES, type Rule } from '../core';
-import { formatRules, type Io, run } from './run';
+import { addRule, DEFAULT_RULES, RULES, type Rule } from '../core/index.ts';
+import { formatRules, type Io, run } from './run.ts';
 
 function fake(files: Record<string, string> = {}, stdin = '') {
   const out: string[] = [];

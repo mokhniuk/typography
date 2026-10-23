@@ -1,6 +1,6 @@
 import { expect, test } from 'bun:test';
-import { PACK } from './index';
-import type { LangPack } from './pack';
+import { PACK } from './index.ts';
+import type { LangPack } from './pack.ts';
 
 /** The tests every pack must pass, whoever wrote it: its data is complete and in the shape the engine reads. */
 export function wellFormed(pack: LangPack, file: string) {

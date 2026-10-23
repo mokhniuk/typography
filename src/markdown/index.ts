@@ -1,4 +1,4 @@
-import { type ModeOptions, typesetBlock } from '../core';
+import { type ModeOptions, typesetBlock } from '../core/index.ts';
 
 /**
  * Typesets the prose of a Markdown document and leaves its structure and code as

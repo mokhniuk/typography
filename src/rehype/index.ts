@@ -1,5 +1,11 @@
-import { LANGS, type Lang, type ModeOptions, type QuoteStyle, typesetBlock } from '../core';
-import { BLOCK, RAW_BLOCK, RAW_INLINE } from '../shared/elements';
+import {
+  LANGS,
+  type Lang,
+  type ModeOptions,
+  type QuoteStyle,
+  typesetBlock,
+} from '../core/index.ts';
+import { BLOCK, RAW_BLOCK, RAW_INLINE } from '../shared/elements.ts';
 
 /**
  * A rehype plugin (and a function for any hast tree) that typesets the text of an

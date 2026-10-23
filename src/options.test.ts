@@ -2,11 +2,11 @@ import { describe, expect, test } from 'bun:test';
 import rehypeParse from 'rehype-parse';
 import rehypeStringify from 'rehype-stringify';
 import { unified } from 'unified';
-import { addRule, NBSP, RULES, type Rule, typographic } from './core';
-import { typesetHtml } from './html';
-import { typesetMarkdown } from './markdown';
-import rehypeTypography from './rehype';
-import { typesetText } from './text';
+import { addRule, NBSP, RULES, type Rule, typographic } from './core/index.ts';
+import { typesetHtml } from './html/index.ts';
+import { typesetMarkdown } from './markdown/index.ts';
+import rehypeTypography from './rehype/index.ts';
+import { typesetText } from './text/index.ts';
 
 /** Every mode must pass `enable` and `rules` on: a rule list that one mode drops is a silent bug. */
 const shout: Rule = {

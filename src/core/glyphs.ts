@@ -10,10 +10,10 @@
  * rule given its own characters to avoid changes nothing.
  */
 
-import { type LangPack, PACKS } from './lang';
-import { RULE_IDS } from './rules';
-import type { Lang } from './types';
-import { NBSP } from './types';
+import { type LangPack, PACKS } from './lang/index.ts';
+import { RULE_IDS } from './rules.ts';
+import type { Lang } from './types.ts';
+import { NBSP } from './types.ts';
 
 /** The quote marks of the `us` style, which any language can be set in. */
 const US_QUOTES = '“”‘’';

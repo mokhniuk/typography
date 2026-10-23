@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { LANGS, NBSP, typographic } from './index';
+import { LANGS, NBSP, typographic } from './index.ts';
 
 const us = { quoteStyle: 'us' } as const;
 const t = (text: string, lang: Parameters<typeof typographic>[1] = 'en', options = us) =>

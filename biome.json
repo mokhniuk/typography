@@ -29,5 +29,11 @@
       "style": { "noDescendingSpecificity": "off" },
       "suspicious": { "noTemplateCurlyInString": "off" }
     }
-  }
+  },
+  "overrides": [
+    {
+      "includes": ["src/**"],
+      "linter": { "rules": { "correctness": { "useImportExtensions": "error" } } }
+    }
+  ]
 }

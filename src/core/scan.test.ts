@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { before, isLetter, isLetterOrNumber } from './scan';
+import { before, isLetter, isLetterOrNumber } from './scan.ts';
 
 /**
  * The helpers stand in for a `u`-flag lookbehind, so they must answer as the lookbehind does on the

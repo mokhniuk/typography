@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'bun:test';
-import { addRule, RULES, type Rule } from '../core';
-import type { TypographySetting } from './context';
-import { typesetFor } from './Typeset';
+import { addRule, RULES, type Rule } from '../core/index.ts';
+import type { TypographySetting } from './context.ts';
+import { typesetFor } from './Typeset.tsx';
 
 /**
  * `Typeset` sets its text with `typesetFor`, from the setting of the surrounding root plus its own

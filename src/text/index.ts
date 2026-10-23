@@ -1,4 +1,4 @@
-import { type ModeOptions, typesetBlock } from '../core';
+import { type ModeOptions, typesetBlock } from '../core/index.ts';
 
 /**
  * Typesets plain text a paragraph at a time. Paragraphs are separated by blank

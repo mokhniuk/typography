@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
-import { explain, NBSP, typographic } from './index';
-import { SHORT_WORDS } from './profiles';
+import { explain, NBSP, typographic } from './index.ts';
+import { SHORT_WORDS } from './profiles.ts';
 
 /** The rule is off by default, so every case names it; `~` is a no-break space. */
 const on = (text: string, lang: Parameters<typeof typographic>[1] = 'en') =>

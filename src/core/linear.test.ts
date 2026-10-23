@@ -1,11 +1,11 @@
 import { describe, expect, test } from 'bun:test';
-import { corpus, lcg, longText } from '../../scripts/corpus';
-import { dashSentence } from './dashes';
-import { beforePunctuation, degrees, doubleMarks, trailingSpace } from './extra';
-import { groupDigits, groupNumbers } from './numbers';
-import { arrowSpace, association } from './spaces';
-import type { Lang } from './types';
-import { shield } from './zones';
+import { corpus, lcg, longText } from '../../scripts/corpus.ts';
+import { dashSentence } from './dashes.ts';
+import { beforePunctuation, degrees, doubleMarks, trailingSpace } from './extra.ts';
+import { groupDigits, groupNumbers } from './numbers.ts';
+import { arrowSpace, association } from './spaces.ts';
+import type { Lang } from './types.ts';
+import { shield } from './zones.ts';
 
 /**
  * Rules and passes that were quadratic on a long run of one character (a regex tried from every

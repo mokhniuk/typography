@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { type HtmlOptions, typesetHtml } from './index';
+import { type HtmlOptions, typesetHtml } from './index.ts';
 
 /** A no-break space is written `&nbsp;`; show it as ~ so the expectations read. */
 const h = (html: string, options?: HtmlOptions) =>

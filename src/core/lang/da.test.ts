@@ -1,8 +1,8 @@
 import { describe, expect, test } from 'bun:test';
-import { NBSP } from '../types';
-import { typographic } from '../typography';
-import { da } from './da';
-import { wellFormed } from './pack-checks';
+import { NBSP } from '../types.ts';
+import { typographic } from '../typography.ts';
+import { da } from './da.ts';
+import { wellFormed } from './pack-checks.test-utils.ts';
 
 const t = (text: string, options?: Parameters<typeof typographic>[2]) =>
   typographic(text, 'da', options).replaceAll(NBSP, '~');

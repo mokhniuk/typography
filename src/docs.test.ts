@@ -1,8 +1,8 @@
 import { describe, expect, test } from 'bun:test';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { EXAMPLES, render, runOnly } from '../scripts/gen-rules-doc';
-import { addRule, DEFAULT_RULES, RULE_IDS, RULES, type Rule } from './core';
+import { EXAMPLES, render, runOnly } from '../scripts/gen-rules-doc.ts';
+import { addRule, DEFAULT_RULES, RULE_IDS, RULES, type Rule } from './core/index.ts';
 
 describe('docs/rules.md', () => {
   test('is what `bun run docs:rules` writes', () => {

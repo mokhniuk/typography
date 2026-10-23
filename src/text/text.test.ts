@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
-import { NBSP } from '../core';
-import { type TextOptions, typesetText } from './index';
+import { NBSP } from '../core/index.ts';
+import { type TextOptions, typesetText } from './index.ts';
 
 const x = (text: string, options?: TextOptions) => typesetText(text, options).replaceAll(NBSP, '~');
 

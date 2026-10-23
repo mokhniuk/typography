@@ -1,9 +1,9 @@
-export { TypographyContext, type TypographySetting } from './context';
-export { HangText } from './HangText';
-export { Typeset } from './Typeset';
+export { TypographyContext, type TypographySetting } from './context.ts';
+export { HangText } from './HangText.tsx';
+export { Typeset } from './Typeset.tsx';
 export {
   HangScript,
   TypographyRoot,
   useHangingPunctuation,
   useMissingGlyphs,
-} from './TypographyRoot';
+} from './TypographyRoot.tsx';

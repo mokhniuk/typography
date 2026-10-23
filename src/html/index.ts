@@ -1,5 +1,5 @@
-import { type ModeOptions, NBSP, typesetBlock } from '../core';
-import { BLOCK, RAW_BLOCK, RAW_INLINE } from '../shared/elements';
+import { type ModeOptions, NBSP, typesetBlock } from '../core/index.ts';
+import { BLOCK, RAW_BLOCK, RAW_INLINE } from '../shared/elements.ts';
 
 /**
  * Typesets the text of an HTML string and leaves everything else exactly as it was:

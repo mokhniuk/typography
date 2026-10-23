@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, test } from 'bun:test';
-import { insertedGlyphs } from '../core';
-import { glyphStatus, missingGlyphs, supports } from './glyphs';
+import { insertedGlyphs } from '../core/index.ts';
+import { glyphStatus, missingGlyphs, supports } from './glyphs.ts';
 
 /**
  * The glyph measure runs in a browser; here the browser is one stub canvas. Each fake font has the

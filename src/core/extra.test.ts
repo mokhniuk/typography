@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { type Lang, RULE_IDS, typographic } from './index';
+import { type Lang, RULE_IDS, typographic } from './index.ts';
 
 /** The engine with only `id` switched on (it is off by default). */
 const only = (id: string, text: string, lang: Lang = 'en'): string =>

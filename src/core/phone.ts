@@ -10,8 +10,8 @@
  * alone whole, so a number that stands against a date or another figure is not joined to it.
  */
 
-import { before, isLetterOrNumber } from './scan';
-import { NBSP } from './types';
+import { before, isLetterOrNumber } from './scan.ts';
+import { NBSP } from './types.ts';
 
 /** U+2011, the non-breaking hyphen. */
 export const NB_HYPHEN = '‑';

@@ -20,6 +20,7 @@
     "!src/**/*.test.ts",
     "!src/**/*.test.tsx",
     "!src/**/*.fixture.json",
+    "!src/**/*.test-utils.ts",
     "!src/snapshot.digests.json",
     "CHANGELOG.md"
   ],

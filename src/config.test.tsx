@@ -4,7 +4,7 @@ import { renderToString } from 'react-dom/server';
 import rehypeParse from 'rehype-parse';
 import rehypeStringify from 'rehype-stringify';
 import { unified } from 'unified';
-import { type Io, run } from './cli/run';
+import { type Io, run } from './cli/run.ts';
 import {
   addRule,
   checkConfig,
@@ -14,12 +14,12 @@ import {
   type Rule,
   type TypographyConfig,
   typographic,
-} from './core';
-import { typesetHtml } from './html';
-import { typesetMarkdown } from './markdown';
-import { Typeset, TypographyRoot } from './react';
-import rehypeTypography from './rehype';
-import { typesetText } from './text';
+} from './core/index.ts';
+import { typesetHtml } from './html/index.ts';
+import { typesetMarkdown } from './markdown/index.ts';
+import { Typeset, TypographyRoot } from './react/index.ts';
+import rehypeTypography from './rehype/index.ts';
+import { typesetText } from './text/index.ts';
 
 /**
  * One config drives every site: the functions, the rehype plugin, React and the command line (from

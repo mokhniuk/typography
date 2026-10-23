@@ -1,8 +1,8 @@
-#!/usr/bin/env bun
+#!/usr/bin/env node
 import { readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { run } from './run';
+import { run } from './run.ts';
 
 async function readStdin(): Promise<string> {
   const chunks: Uint8Array[] = [];

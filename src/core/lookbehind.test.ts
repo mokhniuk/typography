@@ -1,11 +1,11 @@
 import { describe, expect, test } from 'bun:test';
-import { corpus, lcg } from '../../scripts/corpus';
-import { dashRange, dashSentence } from './dashes';
-import { fractions, implies, plusMinus } from './extra';
-import { apostrophe, minus, multiply } from './marks';
-import { ABBREVIATIONS, LANGS, ORPHANS } from './profiles';
-import { abbreviations, arrowSpace, initials, orphans, titles, unitSymbol } from './spaces';
-import { type Lang, NBSP } from './types';
+import { corpus, lcg } from '../../scripts/corpus.ts';
+import { dashRange, dashSentence } from './dashes.ts';
+import { fractions, implies, plusMinus } from './extra.ts';
+import { apostrophe, minus, multiply } from './marks.ts';
+import { ABBREVIATIONS, LANGS, ORPHANS } from './profiles.ts';
+import { abbreviations, arrowSpace, initials, orphans, titles, unitSymbol } from './spaces.ts';
+import { type Lang, NBSP } from './types.ts';
 
 /**
  * The rules below were rewritten so that no regex opens with a lookbehind (tried at every position, 20+ ms

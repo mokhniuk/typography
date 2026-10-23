@@ -2,6 +2,12 @@
 
 Versions follow semver while the package is below 1.0.0: a **minor** release may change the output of the engine or the API (every entry says whether it can change output you already have), a **patch** release fixes a bug without changing output you rely on. If you depend on exact output, pin a tag and read this file before you move it.
 
+## Unreleased
+
+### Tooling and docs
+
+- The sources under `src/` carry their file extensions in every relative import and re-export (`./run.ts`, `../core/index.ts`; Biome's `useImportExtensions` enforces it for `src/`), so they are valid ESM for Node as well as Bun. `src/cli/run.ts` imports `package.json` with `with { type: 'json' }`, and `typo` starts with `#!/usr/bin/env node`: the command line runs on Node 20 or later and on Bun (a `--config` file in TypeScript needs Bun, or Node 22.18 or later). The Bun-only test helper `pack-checks.ts` is now `pack-checks.test-utils.ts` and stays out of the pack. No output change.
+
 ## 0.14.0 (2026-10-23)
 
 ### Changes

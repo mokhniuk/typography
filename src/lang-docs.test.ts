@@ -1,8 +1,8 @@
 import { describe, expect, test } from 'bun:test';
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { renderAll, renderPack } from '../scripts/gen-languages-doc';
-import { PACKS } from './core';
+import { renderAll, renderPack } from '../scripts/gen-languages-doc.ts';
+import { PACKS } from './core/index.ts';
 
 const DIR = join(import.meta.dir, '..', 'docs', 'languages');
 

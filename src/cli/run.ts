@@ -1,5 +1,5 @@
 import { parseArgs } from 'node:util';
-import pkg from '../../package.json';
+import pkg from '../../package.json' with { type: 'json' };
 import {
   type Change,
   checkConfig,
@@ -12,10 +12,10 @@ import {
   type Rule,
   type TypographyConfig,
   typographic,
-} from '../core';
-import { typesetHtml } from '../html';
-import { typesetMarkdown } from '../markdown';
-import { typesetText } from '../text';
+} from '../core/index.ts';
+import { typesetHtml } from '../html/index.ts';
+import { typesetMarkdown } from '../markdown/index.ts';
+import { typesetText } from '../text/index.ts';
 
 /** What the command line touches in the world, so it can be tested without it. */
 export type Io = {

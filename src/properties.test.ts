@@ -1,8 +1,8 @@
 import { describe, expect, test } from 'bun:test';
-import { LANGS, REGISTERS, typographic } from './core';
-import { typesetHtml } from './html';
-import { typesetMarkdown } from './markdown';
-import { typesetText } from './text';
+import { LANGS, REGISTERS, typographic } from './core/index.ts';
+import { typesetHtml } from './html/index.ts';
+import { typesetMarkdown } from './markdown/index.ts';
+import { typesetText } from './text/index.ts';
 
 /**
  * Properties that must hold for any input, checked on seeded random strings built

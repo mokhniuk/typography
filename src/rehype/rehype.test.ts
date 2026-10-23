@@ -4,8 +4,8 @@ import rehypeStringify from 'rehype-stringify';
 import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
 import { unified } from 'unified';
-import { NBSP } from '../core';
-import rehypeTypography, { type RehypeOptions } from './index';
+import { NBSP } from '../core/index.ts';
+import rehypeTypography, { type RehypeOptions } from './index.ts';
 
 const fromHtml = (html: string, options?: RehypeOptions) =>
   String(

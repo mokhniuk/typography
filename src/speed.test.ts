@@ -1,6 +1,6 @@
 import { expect, test } from 'bun:test';
-import { longText } from '../scripts/corpus';
-import { typographic } from './core';
+import { longText } from '../scripts/corpus.ts';
+import { typographic } from './core/index.ts';
 
 /** Fastest of a few runs: a load spike slows one run, rarely all of them. */
 function best(text: string, runs = 3): number {

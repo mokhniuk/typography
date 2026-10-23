@@ -1,5 +1,5 @@
-import { type Abbreviations, type Lang, type LangPack, type Level, PACKS } from './lang';
-import type { Register } from './types';
+import { type Abbreviations, type Lang, type LangPack, type Level, PACKS } from './lang/index.ts';
+import type { Register } from './types.ts';
 
 export type { Abbreviations, Level };
 

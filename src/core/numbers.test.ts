@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
-import { LANGS, PACK, typographic } from './index';
-import { GROUP_MIN_DIGITS } from './numbers';
+import { LANGS, PACK, typographic } from './index.ts';
+import { GROUP_MIN_DIGITS } from './numbers.ts';
 
 const on = (text: string, lang: (typeof LANGS)[number] = 'en') =>
   typographic(text, lang, { enable: ['number.group'] });

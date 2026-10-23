@@ -8,8 +8,8 @@ import {
   RULES,
   splitHangs,
   typographic,
-} from './index';
-import { LITERARY } from './profiles';
+} from './index.ts';
+import { LITERARY } from './profiles.ts';
 
 /** The rules output (and expect) non-breaking spaces, which look like spaces: show them as ~. */
 const t = (

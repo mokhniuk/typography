@@ -1,8 +1,8 @@
-import { CURRENCY_CODES, CURRENCY_SIGNS, CURRENCY_WORDS, EURO, PERCENT } from './currency';
-import { PACK } from './lang';
-import { ABBREVIATIONS, type Abbreviations, ORPHANS, SHORT_WORDS } from './profiles';
-import { before, isLetter, isLetterOrNumber, replaceBehind } from './scan';
-import { type Lang, NBSP } from './types';
+import { CURRENCY_CODES, CURRENCY_SIGNS, CURRENCY_WORDS, EURO, PERCENT } from './currency.ts';
+import { PACK } from './lang/index.ts';
+import { ABBREVIATIONS, type Abbreviations, ORPHANS, SHORT_WORDS } from './profiles.ts';
+import { before, isLetter, isLetterOrNumber, replaceBehind } from './scan.ts';
+import { type Lang, NBSP } from './types.ts';
 
 /** `(?<![\p{L}\p{N}])` before `index`: no letter or number stands directly before it. */
 const freeBefore = (text: string, index: number): boolean => !isLetterOrNumber(before(text, index));

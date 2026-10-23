@@ -1,4 +1,4 @@
-import type { Lang } from './lang';
+import type { Lang } from './lang/index.ts';
 
 /** A no-break space. */
 export const NBSP = '\u00A0';

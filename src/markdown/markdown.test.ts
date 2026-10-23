@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
-import { NBSP } from '../core';
-import { type MarkdownOptions, typesetMarkdown } from './index';
+import { NBSP } from '../core/index.ts';
+import { type MarkdownOptions, typesetMarkdown } from './index.ts';
 
 const m = (md: string, options?: MarkdownOptions) =>
   typesetMarkdown(md, options).replaceAll(NBSP, '~');

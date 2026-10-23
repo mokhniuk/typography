@@ -2,8 +2,8 @@ import { describe, expect, test } from 'bun:test';
 import rehypeParse from 'rehype-parse';
 import rehypeStringify from 'rehype-stringify';
 import { unified } from 'unified';
-import { typesetHtml } from './html';
-import rehypeTypography from './rehype';
+import { typesetHtml } from './html/index.ts';
+import rehypeTypography from './rehype/index.ts';
 
 /**
  * The HTML mode reads markup with a tokenizer of its own; the rehype mode walks a tree a real parser

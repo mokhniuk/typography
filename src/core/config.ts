@@ -1,6 +1,6 @@
-import { LANGS } from './profiles';
-import { type Rule, selectRules } from './rules';
-import type { Lang, QuoteStyle, Register } from './types';
+import { LANGS } from './profiles.ts';
+import { type Rule, selectRules } from './rules.ts';
+import type { Lang, QuoteStyle, Register } from './types.ts';
 
 /**
  * A project's typography in one object: the options every function, component and the command line

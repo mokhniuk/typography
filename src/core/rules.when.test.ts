@@ -1,9 +1,9 @@
 import { describe, expect, test } from 'bun:test';
-import { corpus } from '../../scripts/corpus';
-import { PACKS } from './lang';
-import { RULES } from './rules';
-import type { Context, Lang, Register } from './types';
-import { typographic } from './typography';
+import { corpus } from '../../scripts/corpus.ts';
+import { PACKS } from './lang/index.ts';
+import { RULES } from './rules.ts';
+import type { Context, Lang, Register } from './types.ts';
+import { typographic } from './typography.ts';
 
 /**
  * A rule's `when` is a cheap test the loop in `typographic()` runs before `apply`. It is sound only if,

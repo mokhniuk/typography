@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { LANGS, REGISTERS, RULE_IDS, typographic } from './core';
+import { LANGS, REGISTERS, RULE_IDS, typographic } from './core/index.ts';
 
 /**
  * The properties of properties.test.ts, run with `quoteStyle: 'us'` for every language. The

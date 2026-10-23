@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, describe, expect, test } from 'bun:test';
-import { hangPunctuation } from './hang';
+import { hangPunctuation } from './hang.ts';
 
 /**
  * `hangPunctuation` runs in a browser; here the browser is a few stubs, enough to count the

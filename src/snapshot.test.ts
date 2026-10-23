@@ -3,8 +3,8 @@ import { spawnSync } from 'node:child_process';
 import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
-import { loadEngine, SNAPSHOT_N, SNAPSHOT_VARIANTS, snapshotDigests } from '../scripts/corpus';
-import { LANGS } from './core';
+import { loadEngine, SNAPSHOT_N, SNAPSHOT_VARIANTS, snapshotDigests } from '../scripts/corpus.ts';
+import { LANGS } from './core/index.ts';
 import committed from './snapshot.digests.json';
 
 /**

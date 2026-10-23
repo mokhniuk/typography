@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
-import { buildHangScript } from '../../scripts/gen-hang-script';
-import { hangScript } from './hang';
+import { buildHangScript } from '../../scripts/gen-hang-script.ts';
+import { hangScript } from './hang.ts';
 
 describe('hangScript', () => {
   test('is one self-contained expression that runs on the parent of the current script', () => {

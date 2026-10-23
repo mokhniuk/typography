@@ -1,5 +1,5 @@
-import { NBSP } from '../types';
-import type { LangPack } from './pack';
+import { NBSP } from '../types.ts';
+import type { LangPack } from './pack.ts';
 
 export const hr = {
   code: 'hr',

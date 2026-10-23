@@ -1,4 +1,4 @@
-import type { LangPack } from './pack';
+import type { LangPack } from './pack.ts';
 
 /**
  * Words that start with an apostrophe for dropped letters ('em, 'til, 'cause), and 'n' as in rock 'n'

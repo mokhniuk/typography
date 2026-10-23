@@ -1,5 +1,5 @@
-import { type LangPack, type Level, PACK } from './lang';
-import type { Lang, QuoteStyle, Register } from './types';
+import { type LangPack, type Level, PACK } from './lang/index.ts';
+import type { Lang, QuoteStyle, Register } from './types.ts';
 
 // Pairs found in source text are first swapped for these placeholders, then
 // given the marks of their level, so a text can mix any source styles.

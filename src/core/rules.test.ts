@@ -8,7 +8,7 @@ import {
   selectRules,
   typographic,
   without,
-} from './index';
+} from './index.ts';
 
 /** A rule that is off unless asked for, and one that is on, for a list that is not the built-in one. */
 const shout: Rule = {

@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
-import { explain, NBSP, typographic } from './index';
-import { NB_HYPHEN } from './phone';
+import { explain, NBSP, typographic } from './index.ts';
+import { NB_HYPHEN } from './phone.ts';
 
 /** The rule is off by default, so every case names it; `~` is a no-break space, `‑` U+2011. */
 const on = (text: string, lang: Parameters<typeof typographic>[1] = 'en') =>

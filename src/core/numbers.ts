@@ -1,5 +1,5 @@
-import { PACK } from './lang';
-import type { Lang } from './types';
+import { PACK } from './lang/index.ts';
+import type { Lang } from './types.ts';
 
 /** A run of digits is grouped only when it has at least this many (so 2026 and 9999 stay whole). */
 export const GROUP_MIN_DIGITS = 5;

@@ -1,7 +1,7 @@
 import { expect, test } from 'bun:test';
 import { readdirSync, readFileSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
-import { packedFiles } from '../scripts/pack';
+import { packedFiles } from '../scripts/pack.ts';
 
 /**
  * What a consumer installs is what `bun pm pack` packs (the `files` list in package.json), and a
@@ -10,7 +10,7 @@ import { packedFiles } from '../scripts/pack';
  * nothing else may come along: no tests, no fixtures, no apps, docs or tooling.
  */
 const ROOT = resolve(import.meta.dir, '..');
-const TEST_ONLY = /\.test\.tsx?$|\.fixture\.json$|^src\/snapshot\.digests\.json$/;
+const TEST_ONLY = /\.test\.tsx?$|\.test-utils\.ts$|\.fixture\.json$|^src\/snapshot\.digests\.json$/;
 const OUTSIDE_SRC = new Set(['package.json', 'README.md', 'CHANGELOG.md']);
 
 const packed = packedFiles(ROOT);

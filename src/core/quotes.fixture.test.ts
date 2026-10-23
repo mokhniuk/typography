@@ -1,9 +1,9 @@
 import { describe, expect, test } from 'bun:test';
-import { digest } from '../../scripts/gen-quote-fixture';
-import { PACKS } from './lang';
-import { quotes } from './quotes';
+import { digest } from '../../scripts/gen-quote-fixture.ts';
+import { PACKS } from './lang/index.ts';
 import mainFixture from './quotes.fixture.json';
 import loneFixture from './quotes.lone.fixture.json';
+import { quotes } from './quotes.ts';
 
 // `quotes.fixture.json` was generated once from the frozen engine (the source before the speed work, commit 8a34c24; `speed-baseline` has since moved) by
 // `scripts/gen-quote-fixture.ts`: adversarial quote inputs run through every language, register and
