@@ -4,7 +4,7 @@
 typo [options] [file...]
 ```
 
-The `typo` bin points at the compiled `dist/cli/main.js` and runs on Node 20.10 or later and on Bun: after `npm install @mokhniuk/typography`, `npx typo ...` (or `bunx typo ...`) runs the installed bin; with no install, `npx --package @mokhniuk/typography typo ...` runs it once; `npm install -g @mokhniuk/typography` puts `typo` on the path (from 0.16.0). A `--config` file written in TypeScript (`typography.config.ts`) needs Bun or a Node that strips types (22.18 or later, 24); a `.json` config works everywhere. From a source checkout, run `bun run src/cli/main.ts ...` from the package folder (or `bun /path/to/typography/src/cli/main.ts`).
+The `typo` bin points at the compiled `dist/cli/main.js` and runs on Node 20.10 or later and on Bun: after `npm install @mokhniuk/typography`, `npx typo ...` (or `bunx typo ...`) runs the installed bin; with no install, `npx --package @mokhniuk/typography typo ...` runs it once; `npm install -g @mokhniuk/typography` puts `typo` on the path. A `--config` file written in TypeScript (`typography.config.ts`) needs Bun or a Node that strips types (22.18 or later, 24); a `.json` config works everywhere. From a source checkout, run `bun run src/cli/main.ts ...` from the package folder (or `bun /path/to/typography/src/cli/main.ts`).
 
 It typesets text, HTML or Markdown with the same engine as the library functions (`typesetText`, `typesetHtml`, `typesetMarkdown`).
 

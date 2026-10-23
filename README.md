@@ -74,7 +74,7 @@ The tools that beat it on speed (tipograph, smartypants) score far below it on t
 
 ## Install
 
-From npm, with any package manager (from 0.16.0):
+From npm, with any package manager:
 
 ```sh
 npm install @mokhniuk/typography
@@ -83,13 +83,13 @@ bun add @mokhniuk/typography
 yarn add @mokhniuk/typography
 ```
 
-A release tag also installs, over SSH (the repository is private, so the machine needs access); the tag's commit holds the built package:
+Every release tag also installs, over SSH (the repository is private, so the machine needs access). The tag's commit holds the built package:
 
 ```sh
 bun add git+ssh://git@github.com/mokhniuk/typography.git#vX.Y.Z
 ```
 
-Replace `vX.Y.Z` with a version from [CHANGELOG.md](CHANGELOG.md). The package is compiled ESM with `.d.ts` declarations and has no dependencies (`react` is an optional peer, for the `./react` entry only). The `typo` command runs on Node 20.10 or later and on Bun. Versions are semver below 1.0.0: a minor release may change output. Tag handling in Bun, local linking and bundler notes: [docs/contributing.md](docs/contributing.md#using-it-from-another-project).
+Replace `vX.Y.Z` with a version from [CHANGELOG.md](CHANGELOG.md). The package is compiled ESM with `.d.ts` declarations and has no dependencies (`react` is an optional peer, for the `./react` entry only). The `typo` command runs on Node 20.10 or later and on Bun. Versions follow semver, and a minor release may change output. Tag handling in Bun, local linking and bundler notes: [docs/contributing.md](docs/contributing.md#using-it-from-another-project).
 
 ## Use
 

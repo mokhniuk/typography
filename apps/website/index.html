@@ -14,12 +14,11 @@
 <!--header-->
 <main id="content" data-page="home">
 
-  <!-- Draft copy: written for review, not final. -->
   <section data-hero>
     <div class="container">
       <div data-intro>
         <h1>Real quotation marks, dashes and spaces, in {{langs}} languages.</h1>
-        <p data-lede>A library that fixes the typography of running text. Give it a string and a language. It gives the string back with the right quotation marks, dashes where there were hyphens, an ellipsis, and no-break spaces where a line should not break.</p>
+        <p data-lede>A library that fixes the typography of running text. Give it a string and a language, and you get the string back with the right quotation marks, real dashes where there were hyphens, an ellipsis, and no-break spaces where a line should not break.</p>
 
         <section aria-labelledby="install" data-install>
           <h2 id="install" class="sr-only">Install</h2>
@@ -27,8 +26,8 @@
             <fieldset>
               <legend class="sr-only">Package manager</legend>
               <label><input type="radio" name="pm" value="npm install @mokhniuk/typography" checked /><span>npm</span></label>
-              <label><input type="radio" name="pm" value="pnpm add @mokhniuk/typography" /><span>pnpm</span></label>
               <label><input type="radio" name="pm" value="bun add @mokhniuk/typography" /><span>bun</span></label>
+              <label><input type="radio" name="pm" value="pnpm add @mokhniuk/typography" /><span>pnpm</span></label>
               <label><input type="radio" name="pm" value="yarn add @mokhniuk/typography" /><span>yarn</span></label>
               <label><input type="radio" name="pm" value="bun add {{git}}" /><span>git</span></label>
             </fieldset>
@@ -37,7 +36,7 @@
             <pre><code>npm install @mokhniuk/typography</code></pre>
             <button type="button" data-copy aria-label="Copy the install command">Copy</button>
           </div>
-          <p data-status>Version {{version}}, on npm since 0.16.0. Compiled ESM with TypeScript declarations and no dependencies; the command line needs Node 20.10 or later, or Bun. Below 1.0.0 it follows semver, so a minor release may change output. A release tag also installs from git (the repository is private, so the machine needs SSH access).</p>
+          <p data-status>Version {{version}}, on npm. It is compiled ESM with TypeScript declarations and has no dependencies. The command line runs on Node 20.10 or later, or on Bun. A minor release may change output, so read the changelog before you move up. Every release tag also installs from git, if the machine has SSH access to the private repository.</p>
         </section>
 
         <p data-actions>
@@ -55,7 +54,7 @@
         <h2 id="does">What it does</h2>
       </header>
       <div>
-        <p data-lede>The engine is one function over a string. Everything else is a way of getting your text into it, or a way of seeing what it did.</p>
+        <p data-lede>The engine is one function over a string. Everything else is a way to get your text into it, or to see what it did.</p>
         <dl data-features>
           <div>
             <dt>Every format your text lives in</dt>
@@ -79,7 +78,7 @@
           </div>
           <div>
             <dt>It knows what your font cannot draw</dt>
-            <dd>A rule that would insert a character the font has no glyph for leaves that stretch of text as you typed it, and the rest of the line is still set: better a straight quote than a box. A quotation keeps both its marks or neither. In React the list fills itself from the page's own font (<code>TypographyRoot</code>, <code>avoidMissing</code>); <code>…/dom</code> exposes the measure. <a href="./font-checker/">The font checker</a></dd>
+            <dd>A rule that would insert a character the font cannot draw leaves that stretch of text as you typed it, and the rest of the line is still set. A straight quote is better than a box. A quotation keeps both its marks or neither. In React the list fills itself from the page's own font (<code>TypographyRoot</code>, <code>avoidMissing</code>); <code>…/dom</code> exposes the measure. <a href="./font-checker/">The font checker</a></dd>
           </div>
           <div>
             <dt>Safe on what is not prose</dt>
@@ -87,7 +86,7 @@
           </div>
           <div>
             <dt>Proved, not promised</dt>
-            <dd>Property tests on seeded random text in every language: no letter or digit is lost or added, and a second pass changes nothing. A differential harness proves a speed change rewrote no output. <a href="./docs/limits/">Known limits</a></dd>
+            <dd>Property tests run seeded random text in every language: no letter or digit is lost or added, and a second pass changes nothing. A differential harness checks that a speed change rewrote no output. <a href="./docs/limits/">Known limits</a></dd>
           </div>
         </dl>
       </div>
@@ -100,7 +99,7 @@
         <h2 id="languages">Other languages</h2>
       </header>
       <div>
-        <p data-lede>Each language has its own pack: its quotation marks and how they nest, its dash, its habits with spaces. These four are not translations of one sentence; each is written the way that language is.</p>
+        <p data-lede>Each language has its own pack: its quotation marks and how they nest, its dash, its habits with spaces. These four are not translations of one sentence. Each is set the way that language is written.</p>
         <!--examples-->
       </div>
     </div>
@@ -159,10 +158,10 @@ explain('He said "hi"... 21-26', 'en', { quoteStyle: 'us' }).changes;
         <h2 id="gaps">What isn't finished</h2>
       </header>
       <div>
-        <p data-lede>Before you depend on it, you should know where it is weak.</p>
+        <p data-lede>Know where it is weak before you depend on it.</p>
         <ul data-plain>
-          <li><strong>No language has been read by a native speaker.</strong> Twenty packs follow published style guides, and some of those we could only read in part. English, Ukrainian, German, Polish, French and the two Swiss packs (German and French) come from general knowledge. Each language page lists what it was written from.</li>
-          <li><strong>Where the engine and Unicode's CLDR disagree about quotation marks</strong> (German, French, Swiss German), the decision record says so, instead of choosing quietly.</li>
+          <li><strong>No language has been read by a native speaker.</strong> Twenty packs follow published style guides, and I could read some of those guides only in part. English, Ukrainian, German, Polish, French and the two Swiss packs come from general knowledge. Each language page lists what it was written from.</li>
+          <li><strong>Where the engine and Unicode's CLDR disagree about quotation marks</strong> (German, French, Swiss German), the decision record says so instead of choosing quietly.</li>
           <li><strong>Some input can't be read with certainty.</strong> An inch mark inside a quotation (<code>"a 5" hole"</code>) is one: the engine closes the quotation early, at the inch mark. Such cases are listed in the known limits.</li>
         </ul>
         <p><a href="./docs/limits/">Known limits</a> · <a href="./docs/languages/">Languages and their review status</a></p>

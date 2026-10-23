@@ -1,6 +1,6 @@
 # API reference
 
-Every entry point in `package.json` `exports`, plus the `typo` command (see [cli.md](cli.md)). All of them ship as compiled ESM with `.d.ts` declarations: the Source column names the files in `src/`, the shipped files are the same paths under `dist/`. The package is published on npm (from 0.16.0) and also installs from a git tag whose commit holds the built package (see [contributing.md](contributing.md#using-it-from-another-project)); the import names below are its package name `@mokhniuk/typography`.
+Every entry point in `package.json` `exports`, plus the `typo` command (see [cli.md](cli.md)). All of them ship as compiled ESM with `.d.ts` declarations: the Source column names the files in `src/`, the shipped files are the same paths under `dist/`. The package is published on npm and also installs from a git tag whose commit holds the built package (see [contributing.md](contributing.md#using-it-from-another-project)); the import names below are its package name `@mokhniuk/typography`.
 
 | Entry | Source | What it exports |
 |---|---|---|

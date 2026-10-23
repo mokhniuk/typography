@@ -142,12 +142,12 @@ A page of the website (`apps/website/playground/`; `bun run website` serves it).
 
 ## Releasing
 
-Versions are semver while below 1.0.0.
+Versions are semver.
 
 - A **minor** release (0.1.0 to 0.2.0) may change the output of the engine or the API. Any entry in the changelog marked "Can change existing output: yes" needs a minor release.
 - A **patch** release (0.1.0 to 0.1.1) fixes a bug without changing output you rely on.
 
-From 1.0.0 the output stays out of the major version: the engine's output is not its API, and a better rule or a corrected language pack is a **minor** release (a **patch** if it fixes a bug). A **major** release is for a breaking change to the API: a removed or renamed export, option or rule id, or a changed signature.
+A **major** release is for a breaking change to the API: a removed or renamed export, option or rule id, or a changed signature.
 
 To release:
 
@@ -157,18 +157,17 @@ To release:
 4. Push or merge to `main`. `.github/workflows/release.yml` runs three jobs: `check` (lint, build, tests, typecheck, the website build and `@arethetypeswrong/cli --profile esm-only`), `smoke` (`bun scripts/smoke.ts` on Node 20, 22 and 24) and `tag`, which runs on a push to `main` or a run by hand from `main` (`workflow_dispatch`) and, if the tag `vX.Y.Z` (from `version` in `package.json`) does not exist yet, builds the release commit and tags it. The release commit holds only what `bun pm pack` packs (the `files` list in `package.json`: the built `dist/`, `LICENSE`, `README.md`, `CHANGELOG.md`, `package.json`); it sits on the `release` branch, each one the child of the previous release, and is built by `scripts/release-commit.ts` without touching the working tree. The tag goes on that commit, not on `main`, because Bun installs a git dependency as the whole tagged tree and ignores `files`. Do not tag by hand; if you must, run `bun scripts/release-commit.ts <previous release commit>`, tag the commit it prints with a plain `git tag vX.Y.Z <commit>` (not `-a`, see below) and push both: `git push origin <commit>:refs/heads/release refs/tags/vX.Y.Z`.
 5. After the tag, the same job publishes to npm when the tag exists and `npm view @mokhniuk/typography@X.Y.Z` finds no such version, so a version reaches npm once and a run for a version npm already has does nothing (nor does one whose tag holds a private package, 0.15.0 and older). It checks out the tag and runs `npm publish --access public` there: the release commit holds the built `dist/` and a `package.json` with no `scripts`, so nothing is rebuilt and an npm install and a git install give the same files. Auth is trusted publishing (the workflow's OIDC token, no secret stored; npm 11.5.1 or later, which Node 24 ships) unless the repository secret `NPM_TOKEN` is set, which is then used too (npm tries OIDC first and falls back to the token). There is no `--provenance`: npm makes none for a private repository and the flag would fail the publish; the package gets provenance once the repository is public (trusted publishing adds it by itself). If the publish fails after the tag was pushed, recover by (a) re-running the workflow (Actions, "Run workflow" on `main`, or "Re-run jobs"): the tag exists and the version is not on npm, so it publishes; or (b) if trusted publishing is what failed, putting a granular npm access token with publish rights in the `NPM_TOKEN` secret and re-running the same way. A local `npm publish` needs such a token too (trusted publishing works only in CI); run it from a checkout of the tag, not of `main`.
 
-Before the first publish (npmjs.com, which nothing here can check):
+One-time setup on npmjs.com, done for 0.16.0 and kept here in case the package or the account changes (nothing in the repository can check it):
 
 - The `@mokhniuk` scope exists on npmjs.com for the publishing account.
 - A trusted publisher is saved for `@mokhniuk/typography`: GitHub Actions, repository `mokhniuk/typography`, workflow `release.yml`, no environment.
-- If npmjs.com will not save a trusted publisher for a package that does not exist yet, set the `NPM_TOKEN` secret (granular token, publish rights, bypass 2FA) for the first publish, then add the trusted publisher and remove the secret.
-- A new trusted-publisher configuration must make its first successful publish within 2 days, or it expires and must be made again.
+- If a publish fails because trusted publishing is not set up, put a granular token (publish rights, bypass 2FA) in the `NPM_TOKEN` secret and re-run the workflow; remove the secret once the trusted publisher works.
 
 What ships is checked by `src/package.test.ts` (see Build). A new file in `src/` that tests alone use must not reach the pack; the test fails if it does.
 
 ## Using it from another project
 
-- From npm (from 0.16.0): `npm install @mokhniuk/typography` (or `pnpm add`, `bun add`, `yarn add`). The package is compiled ESM with `.d.ts` declarations, so Node and plain tooling work with no TypeScript setup.
+- From npm: `npm install @mokhniuk/typography` (or `pnpm add`, `bun add`, `yarn add`). The package is compiled ESM with `.d.ts` declarations, so Node and plain tooling work with no TypeScript setup.
 - From a git tag, over SSH (the repository is private, so it needs SSH access): `"@mokhniuk/typography": "git+ssh://git@github.com/<owner>/typography.git#vX.Y.Z"`. The tag's commit holds the built package. The consumer takes a new version only when it changes the tag.
 - Tag releases with a plain `git tag vX.Y.Z`, not `git tag -a`: Bun 1.3 cannot resolve an annotated tag by name, and it cannot resolve a version range (`#semver:`) either.
 - Bun keeps its own copy of a git repository and does not see tags pushed after it made that copy. If the consumer's install says "no commit matching", run `bun pm cache rm` once and retry. A consumer that already installed a tag keeps working: `bun.lock` holds the commit.

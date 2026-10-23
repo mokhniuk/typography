@@ -1,18 +1,19 @@
 # Changelog
 
-Versions follow semver while the package is below 1.0.0: a **minor** release may change the output of the engine or the API (every entry says whether it can change output you already have), a **patch** release fixes a bug without changing output you rely on. If you depend on exact output, pin a tag and read this file before you move it.
+Versions follow semver: a **minor** release may change the output of the engine or the API (every entry says whether it can change output you already have), a **patch** release fixes a bug without changing output you rely on. If you depend on exact output, pin a version and read this file before you move it.
 
 ## Unreleased
 
 ### Changes
 
+- The landing page, the getting-started page and the README no longer mention 1.0.0, and the install tabs on the landing page list npm first, then bun, with git last. Several passages of the landing page were reworded. The semver policy in `docs/contributing.md` no longer sets out a separate rule for 1.0.0. No output change.
 - The standalone playground app (`apps/playground/`, never published) is gone; its modules and tests now live with the page that uses them, `apps/website/playground/`. `bun run playground` and `playground:build` are removed (`bun run website` serves the page), and the test command is `bun test src apps/website resources`. The README screenshots are WebP. No output change.
 
 ## 0.16.0 (2026-10-23)
 
 ### Changes
 
-- The package ships compiled ESM with TypeScript declarations in `dist/` (built by `bun run build` from `tsconfig.build.json`; `bun pm pack` builds it first through `prepack`), so it runs on Node 20.10 or later and in any bundler without a TypeScript step. Every entry point moves there (`exports` gives each a `types` and a `default`: `./dist/index.js`, `./dist/text/index.js`, ...), and so does the command line: `typo` is `dist/cli/main.js` and starts with `#!/usr/bin/env node`, so it no longer needs Bun. The sources no longer ship. The package is MIT-licensed (`LICENSE`), no longer `private`, and from the next release installs with `npm install @mokhniuk/typography`; CI publishes each new version to npm, from the release commit, when npm does not have it yet (with provenance once the repository is public: trusted publishing adds it by itself); `package.json` also exports `./package.json`. The git-tag path stays: the `release` branch and the `vX.Y.Z` tag hold the packed package, now the build. `src/package.test.ts` checks the built pack (and so builds it once per test run) and `scripts/smoke.ts` installs it under Node and runs every entry point and `typo`. No output change.
+- The package ships compiled ESM with TypeScript declarations in `dist/` (built by `bun run build` from `tsconfig.build.json`; `bun pm pack` builds it first through `prepack`), so it runs on Node 20.10 or later and in any bundler without a TypeScript step. Every entry point moves there (`exports` gives each a `types` and a `default`: `./dist/index.js`, `./dist/text/index.js`, ...), and so does the command line: `typo` is `dist/cli/main.js` and starts with `#!/usr/bin/env node`, so it no longer needs Bun. The sources no longer ship. The package is MIT-licensed (`LICENSE`), no longer `private`, and installs with `npm install @mokhniuk/typography`; CI publishes each new version to npm, from the release commit, when npm does not have it yet (with provenance once the repository is public: trusted publishing adds it by itself); `package.json` also exports `./package.json`. The git-tag path stays: the `release` branch and the `vX.Y.Z` tag hold the packed package, now the build. `src/package.test.ts` checks the built pack (and so builds it once per test run) and `scripts/smoke.ts` installs it under Node and runs every entry point and `typo`. No output change.
 
 ## 0.15.0 (2026-10-23)
 
