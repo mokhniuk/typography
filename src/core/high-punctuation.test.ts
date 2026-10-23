@@ -81,6 +81,10 @@ describe('space.high-punctuation (French)', () => {
     expect(fr('C:\\Users et C:/x')).toBe('C:\\Users et C:/x');
   });
 
+  test('the ; that ends a character reference is not punctuation', () => {
+    expect(fr('a&nbsp;b &amp; c &#8239; d &#x202F;')).toBe('a&nbsp;b &amp; c &#8239; d &#x202F;');
+  });
+
   test('web addresses, emails and code spans are set aside', () => {
     expect(fr('Voir https://exemple.fr/a?b=1! et www.exemple.fr:8080 ou `x? y; z!`')).toBe(
       'Voir https://exemple.fr/a?b=1! et www.exemple.fr:8080 ou `x? y; z!`',

@@ -33,15 +33,33 @@ const isNumber = (codePoint: string): boolean =>
 const AFTER_COLON = "-)(/|\\'*–—−©®™";
 
 /**
+ * Whether a `;` at `index` ends a character reference typed as text (`&nbsp;`, `&#8239;`): the run of
+ * letters, digits and `#` before it, at most 32 long, opens with `&`.
+ */
+function endsReference(text: string, index: number): boolean {
+  const stop = Math.max(0, index - 33);
+  for (let at = index - 1; at >= stop; at--) {
+    const code = text.charCodeAt(at);
+    if (code === 0x26) return at < index - 1;
+    const alnum =
+      (code >= 0x30 && code <= 0x39) || ((code | 0x20) >= 0x61 && (code | 0x20) <= 0x7a);
+    if (!alnum && code !== 0x23) return false;
+  }
+  return false;
+}
+
+/**
  * Whether the mark at `index` is not sentence punctuation, by what follows it: a letter or digit
  * (`a:b`, `x?y`, `10:30`, `Note:3`), an emoticon or a path after `:` `;` (`:)`, `;-)`, `C:\`,
- * `C:/`), `!=` `?=` `:=` (and `⇒`, what `symbol.implies` makes of `=>`), a Markdown image (`![`), optional chaining (`?.`). A spaced colon between
- * digits is a time or a ratio (`10 : 30`).
+ * `C:/`), `!=` `?=` `:=` (and `⇒`, what `symbol.implies` makes of `=>`), a Markdown image (`![`),
+ * optional chaining (`?.`), the `;` of a character reference (`&nbsp;`). A spaced colon between
+ * numbers is a time or a ratio (`10 : 30`).
  */
 function notPunctuation(text: string, index: number, mark: string, start: number): boolean {
   const next = codePointAt(text, index + 1);
   if (isLetterOrNumber(next) || next === '=' || next === '⇒') return true;
   if ((mark === ':' || mark === ';') && AFTER_COLON.includes(next)) return true;
+  if (mark === ';' && endsReference(text, index)) return true;
   if (mark === '!' && next === '[') return true;
   if (mark === '?' && next === '.') return true;
   if (mark === ':' && isNumber(before(text, start))) {
