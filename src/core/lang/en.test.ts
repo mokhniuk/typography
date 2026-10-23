@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
+import { typographic } from '../index.ts';
 import { NBSP } from '../types.ts';
-import { typographic } from '../typography.ts';
 import { en } from './en.ts';
 import { wellFormed } from './pack-checks.test-utils.ts';
 

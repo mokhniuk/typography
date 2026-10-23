@@ -9,6 +9,7 @@ export { insertedCharacters, insertedGlyphs, ruleGlyphs } from './glyphs.ts';
 export { type HangPiece, hangPieces, splitHangs, type TextPart } from './hang.ts';
 export { type LangPack, type Level, PACK, PACKS } from './lang/index.ts';
 export { LANGS, REGISTERS } from './profiles.ts';
+export { explain, resolvePack, typesetBlock, typographic } from './resolve.ts';
 export {
   addRule,
   DEFAULT_RULES,
@@ -24,10 +25,7 @@ export {
 export { type Context, type Lang, NBSP, type QuoteStyle, type Register } from './types.ts';
 export {
   type Change,
-  explain,
   keepAvoided,
   type ModeOptions,
   type TypographicOptions,
-  typesetBlock,
-  typographic,
 } from './typography.ts';

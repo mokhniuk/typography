@@ -6,10 +6,18 @@
 import { type Lang, PACK } from './lang/index.ts';
 import { isPack, type LangPack } from './lang/pack.ts';
 import { LANGS } from './profiles.ts';
+import {
+  type Change,
+  explain as explainWith,
+  type ModeOptions,
+  type TypographicOptions,
+  typesetBlock as typesetBlockWith,
+  typographic as typographicWith,
+} from './typography.ts';
 
 /**
- * The pack of `lang`: a pack is returned as it is, a code is looked up, nothing is English. An unknown
- * code throws an `Error` that lists the codes (the wording of `checkConfig`).
+ * The pack of `lang`: a pack is returned as it is, a code is looked up, `undefined` is English. An
+ * unknown code (or a value that is neither) throws an `Error` that lists the codes (the wording of `checkConfig`).
  */
 export function resolvePack(lang?: Lang | LangPack): LangPack {
   if (lang === undefined) return PACK.en;
@@ -21,4 +29,38 @@ export function resolvePack(lang?: Lang | LangPack): LangPack {
   throw new Error(
     `lang is ${LANGS.map((code) => `"${code}"`).join(', ')}, not ${JSON.stringify(lang) ?? String(lang)}`,
   );
+}
+
+/** `options` with `lang` resolved to its pack (see `resolvePack`): what the pack-only modes take. */
+export const withPack = <T extends { lang?: Lang | LangPack | undefined }>(
+  options: T,
+): Omit<T, 'lang'> & { lang: LangPack } => ({ ...options, lang: resolvePack(options.lang) });
+
+/**
+ * Applies the house rules to a plain string (see `typographic` in typography.ts). `lang` is a
+ * language code or a pack (the `uk` export of `@mokhniuk/typography/lang/uk`); English unless given.
+ */
+export function typographic(
+  text: string,
+  lang: Lang | LangPack = 'en',
+  options?: TypographicOptions,
+): string {
+  return typographicWith(text, resolvePack(lang), options);
+}
+
+/** The typeset text and every change that was made to it, with the rule that made it. */
+export function explain(
+  text: string,
+  lang: Lang | LangPack = 'en',
+  options?: Omit<TypographicOptions, 'onChange'>,
+): { output: string; changes: Change[] } {
+  return explainWith(text, resolvePack(lang), options);
+}
+
+/** Typesets one block of text for a mode (see `typesetBlock` in typography.ts); `lang` may be a code. */
+export function typesetBlock(
+  joined: string,
+  options: ModeOptions,
+): { text: string; keep: () => void } {
+  return typesetBlockWith(joined, withPack(options));
 }

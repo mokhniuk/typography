@@ -52,7 +52,7 @@
 
 import type { TypographyConfig } from './config.ts';
 import { type DiffRun, diff } from './diff.ts';
-import { resolvePack } from './resolve.ts';
+import type { LangPack } from './lang/pack.ts';
 import { DEFAULT_RULES, type Rule, selectRules } from './rules.ts';
 import type { Context, Lang, QuoteStyle, Register } from './types.ts';
 import { shield } from './zones.ts';
@@ -137,14 +137,22 @@ function changesOf(rule: string, runs: readonly DiffRun[]): Change[] {
   return out;
 }
 
+/** Thrown where a pack-only function is given a language code (or nothing) instead of a pack. */
+function notAPack(): never {
+  throw new Error('lang is a language pack here: import one from @mokhniuk/typography/lang/<code>');
+}
+
 /**
- * Applies the house rules (see the header) to a plain string. Running it again on
- * its own output changes nothing, in every language (German reads its own »…« and
- * ›…‹ by where each mark stands, see `turnedPairs` on the pack and quotes.ts).
+ * Applies the house rules (see the header) to a plain string, in the language of `pack`. Running it
+ * again on its own output changes nothing, in every language (German reads its own »…« and ›…‹ by
+ * where each mark stands, see `turnedPairs` on the pack and quotes.ts).
+ *
+ * This is the engine's own entry, which takes a pack and never loads one: it imports nothing from
+ * `lang/index.ts`. The public `typographic` (resolve.ts) also takes a language code and resolves it.
  */
 export function typographic(
   text: string,
-  lang: Lang = 'en',
+  pack: LangPack,
   {
     register = 'display',
     quoteStyle = 'language',
@@ -156,11 +164,12 @@ export function typographic(
     avoid,
   }: TypographicOptions = {},
 ): string {
+  if (typeof pack !== 'object' || pack === null) notAPack();
   const rules =
     disable?.length || enable?.length || custom
       ? selectRules({ rules: custom, disable, enable })
       : DEFAULT_RULES;
-  const context: Context = { lang, pack: resolvePack(lang), register, quoteStyle, blockStart };
+  const context: Context = { lang: pack.code as Lang, pack, register, quoteStyle, blockStart };
   const avoided = avoid ? new Set([...avoid]) : null;
   const [shielded, restore] = shield(text);
   let out = shielded;
@@ -185,11 +194,11 @@ export function typographic(
 /** The typeset text and every change that was made to it, with the rule that made it. */
 export function explain(
   text: string,
-  lang: Lang = 'en',
+  pack: LangPack,
   options: Omit<TypographicOptions, 'onChange'> = {},
 ): { output: string; changes: Change[] } {
   const changes: Change[] = [];
-  const output = typographic(text, lang, { ...options, onChange: (c) => changes.push(c) });
+  const output = typographic(text, pack, { ...options, onChange: (c) => changes.push(c) });
   return { output, changes };
 }
 
@@ -203,6 +212,9 @@ export type ModeOptions = TypographyConfig & {
   onChange?: ((change: Change) => void) | undefined;
 };
 
+/** `ModeOptions` with the language resolved to its pack: what the pack-only mode bodies take. */
+export type PackModeOptions = Omit<ModeOptions, 'lang'> & { lang: LangPack };
+
 /**
  * Typesets one block of text for a mode. Its changes are held back until `keep()`,
  * so a block the mode throws away (it cannot map the result back onto its markup)
@@ -210,7 +222,7 @@ export type ModeOptions = TypographyConfig & {
  */
 export function typesetBlock(
   joined: string,
-  options: ModeOptions,
+  options: PackModeOptions,
 ): { text: string; keep: () => void } {
   const found: Change[] = [];
   const { onChange } = options;
