@@ -1,0 +1,44 @@
+import { NBSP } from '../types';
+import type { LangPack } from './pack';
+
+export const fi = {
+  code: 'fi',
+  name: 'Finnish (suomi)',
+  sample:
+    'Hän sanoi "olemme täällä" - ja lähti... Kurssi kestää 21-26 syyskuuta, 10:00-12:00. Lue lisää ->',
+  // ”outer ’inner’ outer”: the same mark opens and closes, at both levels (ISG 4.2.3, 10.4.5; Kotus).
+  quotes: [
+    ['”', '”'],
+    ['’', '’'],
+  ],
+  sameMarkQuotes: true,
+  // ISG 10.7.1: p. (puhelin) and v. (vuonna) before a number, mrd. before the noun; 4.2.3 and 10.7.1: s. before a number.
+  abbreviations: {
+    bind: ['p', 'v', 'mrd'],
+    page: ['s'],
+  },
+  // ISG 6.4 and 10.4.8: a spaced short dash for a break in the sentence (the long dash is the list dash).
+  sentenceDash: '–',
+  // ISG 6.4: a fixed space between the figure and %.
+  percentSpace: true,
+  // ISG part 3, 7 (euro): the € sign follows the figure, separated by a fixed space (30 €); read in the Finnish edition.
+  currencySpace: true,
+  // ISG 6.5 and 10.2.1: a comma for the decimals, a thin fixed space between groups of three digits.
+  numbers: { group: NBSP, decimal: ',' },
+  dialogueDash: { mark: '–' },
+  reviewed: false,
+  sources: [
+    'https://kielitoimistonohjepankki.fi/ohje/lainausmerkit-ja-vuorosanaviiva/',
+    'https://publications.europa.eu/resource/cellar/01ed788a-d266-11ec-a95f-01aa75ed71a1.0017.01/DOC_1 (Toimielinten yhteiset tekstinlaadinnan ohjeet, PDF of 19 April 2022: 4.2.3 tekstin valmistelu, 6.4 välilyönnit välimerkkien yhteydessä, 6.5 välit ja välimerkit numeroissa, 10.2.1 numerot, 10.4.5 lainausmerkit, 10.4.8 ajatusviiva, 10.7.1 lyhenteet)',
+    'https://kotus.fi/joudutko-lainaamaan-kieli-keskella-suuta/ (Kotus: an inner quotation takes puolilainausmerkit ’…’, the same character as the apostrophe)',
+    'https://kielitoimistonohjepankki.fi/ohje/lainausmerkit-ja-suora-lainaus/ (Kielitoimiston ohjepankki: ”…” at both ends, examples)',
+  ],
+  notes: [
+    'Dialogue: the ajatusviiva is used as a dialogue dash instead of quotes, especially in interviews and fiction (Kielitoimiston ohjepankki, "Lainausmerkit ja vuorosanaviiva"); the attribution follows a comma.',
+    'Quotes: ”…” (ISG 10.4.5 "kokolainausmerkit"; the ISG shows ”…” for all levels in 4.2.3 and uses ’…’ only for the definitions of legal acts, 3.6). The inner level ’…’ is from Kotus, not from the ISG. The same mark opens and closes, so a quotation is read by where each mark stands, not by pairing. The alternative »…» (also used in Finnish) is not implemented, and the ISG and Kotus say nothing about a third level.',
+    'Dash: the ISG 6.4 table spaces a short dash (Alt 0150) and 10.4.8 keeps the long dash for list dashes only, so a break in the sentence is a spaced en dash; 4.2.3 notes that the long list dash of EU texts departs from the Finnish standard language, which uses the shorter dash.',
+    'Numbers: a comma and a "ohuke" (thin fixed space) between groups of three (ISG 6.5, 10.2.1); the pack uses the ordinary no-break space.',
+    'Abbreviations: only those the ISG lists in 10.7.1 as examples and that end with a period (p., s., v., mrd.). The ISG also lists hra, klo, nro, rva, tsto, which have no period; the pack contract can only bind an abbreviation written with a period, so "klo 17" and "nro 5" are not kept together (the ISG uses a fixed space after nro and s. in 4.2.3).',
+    'Not implemented, not verified: one-letter words (the ISG gives no list), the hyphen rules of 10.4.7, the colon before case endings (p:ssa), dates (1.4.–30.4.), and Kotus guidance beyond the two pages named in the sources.',
+  ].join(' '),
+} as const satisfies LangPack;

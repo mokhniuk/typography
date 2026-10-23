@@ -1,0 +1,67 @@
+{
+  "name": "@mokhniuk/typography",
+  "version": "0.13.1",
+  "private": true,
+  "type": "module",
+  "description": "Typography for running text: quotation by language and register, dashes, non-breaking spaces, measured hanging punctuation.",
+  "homepage": "https://typography.mokhni.uk",
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./text": "./src/text/index.ts",
+    "./html": "./src/html/index.ts",
+    "./markdown": "./src/markdown/index.ts",
+    "./rehype": "./src/rehype/index.ts",
+    "./dom": "./src/dom/index.ts",
+    "./react": "./src/react/index.ts"
+  },
+  "files": [
+    "src",
+    "!src/**/*.test.ts",
+    "!src/**/*.test.tsx",
+    "!src/**/*.fixture.json",
+    "!src/snapshot.digests.json",
+    "CHANGELOG.md"
+  ],
+  "bin": {
+    "typo": "./src/cli/main.ts"
+  },
+  "scripts": {
+    "test": "bun test src apps/playground apps/website resources",
+    "typecheck": "tsc -p tsconfig.json",
+    "playground": "vite --config apps/playground/vite.config.ts",
+    "playground:build": "vite build --config apps/playground/vite.config.ts",
+    "docs:rules": "bun scripts/gen-rules-doc.ts",
+    "docs:sources": "bun resources/gen-sources.ts",
+    "docs:languages": "bun scripts/gen-languages-doc.ts",
+    "gen:script": "bun scripts/gen-hang-script.ts",
+    "compare": "bun scripts/compare-engines.ts",
+    "snapshot": "bun scripts/update-snapshot.ts",
+    "website": "vite --config apps/website/vite.config.ts",
+    "website:build": "vite build --config apps/website/vite.config.ts"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.6.2",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19",
+    "bun-types": "^1.3.14",
+    "react": "^19.0.0",
+    "react-dom": "19.3.1",
+    "rehype-parse": "^9.0.1",
+    "rehype-stringify": "^10.0.1",
+    "remark-gfm": "^4.0.1",
+    "remark-parse": "^11.0.0",
+    "remark-rehype": "^11.1.2",
+    "typescript": "^7.0.2",
+    "unified": "^11.0.5",
+    "vite": "^8.2.1"
+  }
+}
