@@ -9,7 +9,7 @@ Priorities: **P0** blocks the audience, **P1** closes a gap other tools do not h
 | | typography-engine | best other | Source |
 |---|---|---|---|
 | Benchmark checks passed (default / literary register) | 250 / 250, 250 / 250 | typograf 132 / 226 | `apps/bench/RESULTS.md` |
-| 1 MB of English, text mode | 38 ms (0.16.1 run, short-word rule on; 49 in the 0.15.0 run, 74 in the 0.14.0 run on a busier machine against typograf's 115) | typograf 58 ms, tipograph 11 ms, smartypants 10 ms | `cd apps/bench && bun run bench` (the ratios are what count) |
+| 1 MB of English, text mode | 38 ms (0.16.1 run, short-word rule on; the 0.17.0 run, on a machine busy with a virtual machine, gave 72 against typograf's 111, the same 1.5 ratio; 49 in the 0.15.0 run, 74 in the 0.14.0 run against 115) | typograf 58 ms, tipograph 11 ms, smartypants 10 ms | `cd apps/bench && bun run bench` (the ratios are what count) |
 | Target languages covered (27) | 27 | typograf 21 of 27, tipograph 11 | [languages/index.md](languages/index.md) |
 
 The 27 target languages are the 24 official languages of the EU, Ukrainian, and German and French as written in Switzerland (`de-CH`, `fr-CH`); US English is not a pack but the option `quoteStyle: 'us'`. The 8 default-run misses of the 0.14.0 run were the house `«…»` for English, which the checks count as a failure; since 0.15.0 English defaults to `“…”` and the house style is `quoteStyle: 'guillemets'`, and the default run passes every check: 250/250. The cases were written by this package's author; read the caveats in [limits.md](limits.md). The cases for the twenty new languages come from the same style guides as the packs, so they are not an independent test.

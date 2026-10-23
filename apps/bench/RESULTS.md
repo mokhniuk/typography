@@ -50,15 +50,15 @@ English text in one piece, text mode: the median of seven runs (three at 1 MB), 
 
 | Tool | 10 KB | 100 KB | 1000 KB |
 |---|---|---|---|
-| typography-engine | 1 ms (3) | 7 ms (8) | 72 ms (73) |
-| typography-engine literary | 1 ms (1) | 7 ms (8) | 73 ms (73) |
-| typograf | 1 ms (2) | 11 ms (11) | 125 ms (136) |
-| typograf +nbsp | 1 ms (1) | 11 ms (12) | 111 ms (114) |
-| typopo | 41 ms (484) | 2202 ms (2450) | not run (~220 s) |
-| richtypo | 5074 ms (14338) | not run (~505 s) | not run (~50414 s) |
-| tipograph | 0 ms (3) | 2 ms (7) | 23 ms (23) |
-| smartypants | 0 ms (7) | 2 ms (7) | 18 ms (26) |
-| retext-smartypants | 6 ms (19) | 70 ms (260) | 2269 ms (2432) |
+| typography-engine | 1 ms (4) | 8 ms (9) | 72 ms (73) |
+| typography-engine literary | 1 ms (2) | 7 ms (7) | 70 ms (71) |
+| typograf | 1 ms (2) | 11 ms (11) | 111 ms (114) |
+| typograf +nbsp | 1 ms (1) | 11 ms (13) | 135 ms (171) |
+| typopo | 46 ms (585) | 2464 ms (3248) | not run (~246 s) |
+| richtypo | 4999 ms (5143) | not run (~498 s) | not run (~49668 s) |
+| tipograph | 0 ms (1) | 2 ms (18) | 23 ms (24) |
+| smartypants | 0 ms (1) | 2 ms (2) | 18 ms (20) |
+| retext-smartypants | 6 ms (11) | 48 ms (51) | 1063 ms (2138) |
 
 ### Speed by input
 
@@ -66,15 +66,15 @@ About 100 KB of each language's prose from `scripts/corpus.ts` (paragraphs, with
 
 | Tool | en text | de text | fr text | uk text | en HTML |
 |---|---|---|---|---|---|
-| typography-engine | 8 ms (12) | 7 ms (9) | 6 ms (6) | 9 ms (9) | 8 ms (10) |
-| typography-engine literary | 8 ms (10) | 7 ms (8) | 7 ms (9) | 11 ms (12) | 11 ms (13) |
-| typograf | 21 ms (25) | 18 ms (24) | 11 ms (15) | 19 ms (23) | 13 ms (23) |
-| typograf +nbsp | 12 ms (12) | 13 ms (14) | 11 ms (11) | 12 ms (13) | 17 ms (21) |
-| typopo | 862 ms | 629 ms | – | – | – |
+| typography-engine | 8 ms (13) | 6 ms (7) | 6 ms (6) | 9 ms (10) | 8 ms (9) |
+| typography-engine literary | 8 ms (8) | 7 ms (7) | 6 ms (6) | 10 ms (17) | 9 ms (13) |
+| typograf | 14 ms (16) | 16 ms (20) | 10 ms (12) | 11 ms (13) | 14 ms (16) |
+| typograf +nbsp | 14 ms (15) | 14 ms (23) | 16 ms (22) | 11 ms (16) | 13 ms (13) |
+| typopo | 1278 ms | 440 ms | – | – | – |
 | richtypo | not run | not run | not run | not run | not run |
-| tipograph | 3 ms (3) | 3 ms (3) | 3 ms (3) | – | 3 ms (3) |
+| tipograph | 3 ms (5) | 3 ms (3) | 3 ms (4) | – | 3 ms (4) |
 | smartypants | 2 ms (3) | – | – | – | – |
-| retext-smartypants | 59 ms (72) | – | – | – | – |
+| retext-smartypants | 76 ms (105) | – | – | – | – |
 
 ## Engines
 
@@ -86,13 +86,13 @@ Time to import the bundle, and the first call on 1 KB of English (it includes th
 
 | Tool | Bun import | Bun first call | Node import | Node first call | Deno import | Deno first call |
 |---|---|---|---|---|---|---|
-| typography-engine | 5.9 ms | 5.9 ms | 6.4 ms | 7.7 ms | 3.7 ms | 7.8 ms |
-| typograf | 7.6 ms | 2.3 ms | 5.4 ms | 4.4 ms | 3.8 ms | 4.5 ms |
-| typopo | 3.1 ms | 352 ms | 1.0 ms | 259 ms | 0.9 ms | 584 ms |
-| richtypo | 1.4 ms | 50 ms | 0.6 ms | 3.6 ms | 0.9 ms | 4.4 ms |
-| tipograph | 9.4 ms | 0.5 ms | 12 ms | 0.8 ms | 8.5 ms | 1.2 ms |
-| smartypants | 1.2 ms | 0.6 ms | 0.4 ms | 0.5 ms | 1.0 ms | 0.8 ms |
-| retext-smartypants | 3.4 ms | 6.3 ms | 1.9 ms | 5.8 ms | 1.4 ms | 5.3 ms |
+| typography-engine | 6.2 ms | 6.3 ms | 6.6 ms | 7.9 ms | 3.7 ms | 7.7 ms |
+| typograf | 7.4 ms | 2.3 ms | 4.6 ms | 4.0 ms | 3.6 ms | 4.4 ms |
+| typopo | 3.1 ms | 364 ms | 1.0 ms | 262 ms | 0.9 ms | 583 ms |
+| richtypo | 1.4 ms | 51 ms | 0.7 ms | 3.7 ms | 0.7 ms | 4.3 ms |
+| tipograph | 8.4 ms | 0.5 ms | 12 ms | 0.8 ms | 9.0 ms | 1.2 ms |
+| smartypants | 1.6 ms | 0.7 ms | 0.5 ms | 0.6 ms | 0.7 ms | 0.7 ms |
+| retext-smartypants | 3.1 ms | 5.9 ms | 2.0 ms | 5.9 ms | 1.4 ms | 5.4 ms |
 
 ### Speed
 
@@ -100,13 +100,13 @@ A warm call on 1 KB of English (median of 300, p95 in brackets): what a page pay
 
 | Tool | Bun 1 KB | Node 1 KB | Deno 1 KB | Bun 100 KB | Node 100 KB | Deno 100 KB |
 |---|---|---|---|---|---|---|
-| typography-engine | 86 µs (112 µs) | 61 µs (93 µs) | 54 µs (90 µs) | 7.2 ms (8.5 ms) | 5.8 ms (6.1 ms) | 4.8 ms (6.2 ms) |
-| typograf | 137 µs (165 µs) | 112 µs (152 µs) | 92 µs (141 µs) | 12 ms (13 ms) | 9.7 ms (11 ms) | 7.6 ms (8.9 ms) |
-| typopo | 2.6 ms (6.2 ms) | 2.3 ms (2.7 ms) | 1.7 ms (2.2 ms) | 2098 ms | 2907 ms | 2895 ms |
-| richtypo | 50 ms (54 ms) | 1.5 ms (1.9 ms) | 1.4 ms (2.2 ms) | not run | 8872 ms | 9147 ms |
-| tipograph | 26 µs (31 µs) | 20 µs (26 µs) | 19 µs (26 µs) | 2.2 ms (2.4 ms) | 1.6 ms (2.4 ms) | 1.4 ms (2.4 ms) |
-| smartypants | 22 µs (30 µs) | 21 µs (27 µs) | 22 µs (55 µs) | 1.8 ms (1.8 ms) | 1.8 ms (1.8 ms) | 1.7 ms (2.6 ms) |
-| retext-smartypants | 312 µs (420 µs) | 508 µs (665 µs) | 590 µs (748 µs) | 46 ms (48 ms) | 69 ms (82 ms) | 78 ms (89 ms) |
+| typography-engine | 88 µs (114 µs) | 61 µs (97 µs) | 55 µs (95 µs) | 7.7 ms (8.5 ms) | 5.7 ms (6.1 ms) | 4.8 ms (5.0 ms) |
+| typograf | 136 µs (169 µs) | 113 µs (159 µs) | 91 µs (131 µs) | 12 ms (13 ms) | 9.8 ms (11 ms) | 8.3 ms (11 ms) |
+| typopo | 2.6 ms (4.0 ms) | 2.3 ms (2.8 ms) | 1.7 ms (2.0 ms) | 2119 ms | 2727 ms | 2980 ms |
+| richtypo | 51 ms (54 ms) | 1.5 ms (2.5 ms) | 1.4 ms (2.3 ms) | not run | 8942 ms | 9380 ms |
+| tipograph | 26 µs (39 µs) | 20 µs (24 µs) | 20 µs (50 µs) | 2.3 ms (2.9 ms) | 1.5 ms (1.6 ms) | 1.5 ms (1.7 ms) |
+| smartypants | 22 µs (30 µs) | 21 µs (30 µs) | 21 µs (32 µs) | 2.0 ms (2.3 ms) | 1.9 ms (3.3 ms) | 1.7 ms (1.9 ms) |
+| retext-smartypants | 366 µs (564 µs) | 514 µs (696 µs) | 592 µs (786 µs) | 48 ms (86 ms) | 75 ms (83 ms) | 79 ms (96 ms) |
 
 ### Memory
 
@@ -114,13 +114,13 @@ Peak resident memory of the process that typesets 1 MB of English in one call, a
 
 | Tool | Bun | Node | Deno |
 |---|---|---|---|
-| typography-engine | 88 MB (+57) | 89 MB (+41) | 90 MB (+42) |
-| typograf | 107 MB (+70) | 134 MB (+85) | 133 MB (+83) |
-| typopo | 48 MB (+16) at 100 KB | 55 MB (+9) at 100 KB | 89 MB (+42) at 100 KB |
-| richtypo | > 20 s | 47 MB (+1) at 100 KB | 47 MB (+0) at 100 KB |
+| typography-engine | 84 MB (+54) | 89 MB (+41) | 89 MB (+42) |
+| typograf | 102 MB (+65) | 134 MB (+85) | 133 MB (+83) |
+| typopo | 46 MB (+15) at 100 KB | 55 MB (+9) at 100 KB | 86 MB (+39) at 100 KB |
+| richtypo | > 20 s | 48 MB (+2) at 100 KB | 48 MB (+1) at 100 KB |
 | tipograph | 48 MB (+14) | 68 MB (+18) | 65 MB (+15) |
 | smartypants | 44 MB (+14) | 62 MB (+16) | 62 MB (+15) |
-| retext-smartypants | 369 MB (+340) | 382 MB (+336) | 293 MB (+246) |
+| retext-smartypants | 370 MB (+341) | 381 MB (+334) | 297 MB (+250) |
 
 ## Bundle size
 
@@ -159,7 +159,7 @@ What `npm install` (or a git dependency) puts on disk for one tool: its package 
 
 | Tool | Packages installed | Install footprint | Licence | Types | Format | Version published |
 |---|---|---|---|---|---|---|
-| typography-engine | 1 (react is an optional peer) | 504 KB (148 files) | MIT | yes | ESM | not published yet (0.16.1) |
+| typography-engine | 1 (react is an optional peer) | 507 KB (148 files) | MIT | yes | ESM | not published yet (0.16.1) |
 | typograf | 1 | 604 KB | MIT | yes | ESM and CommonJS | 2026-08-14 (7.8.0) |
 | typopo | 1 | 105 KB | MIT | yes | ESM and CommonJS | 2026-05-25 (3.1.0) |
 | richtypo | 1 | 22 KB | MIT | yes | ESM | 2026-04-27 (8.0.0) |
@@ -173,18 +173,18 @@ About 10 KB built to find a slow path (a regex that backtracks, a loop that resc
 
 | Probe | typography-engine | typograf | typopo | richtypo | tipograph | smartypants | retext-smartypants |
 |---|---|---|---|---|---|---|---|
-| double quotes: `"` repeated | 6.7 ms | 6.5 ms | 588 ms | **6.1 s** | 1.0 ms | 1.8 ms | 2.9 ms |
-| single quotes: `'` repeated | 6.7 ms | 2.6 ms | > 10 s | **6.4 s** | 0.9 ms | 1.9 ms | 3.0 ms |
-| quoted words: `"a ` repeated | 8.1 ms | 6.0 ms | > 10 s | **5.3 s** | 1.0 ms | 1.3 ms | 23 ms |
-| hyphens: `-` repeated | 4.1 ms | 2.7 ms | 175 ms | **2.0 s** | 1.0 ms | 1.1 ms | 2.9 ms |
-| spaced hyphens: `a - ` repeated | 4.4 ms | 3.3 ms | 348 ms | **4.9 s** | 1.1 ms | 0.9 ms | 23 ms |
-| digit ranges: `1-2-` repeated | 5.3 ms | 2.8 ms | 608 ms | **6.3 s** | 1.5 ms | 0.8 ms | 21 ms |
-| dots: `.` repeated | 3.7 ms | 2.6 ms | 345 ms | **3.9 s** | 0.9 ms | 1.0 ms | 3.0 ms |
-| spaces: spaces between two words | 2.9 ms | 79 ms | 168 ms | 1.1 ms | 206 ms | 0.7 ms | 2.8 ms |
-| one word: one word of 10 000 letters | 3.0 ms | 2.6 ms | 654 ms | **6.1 s** | 0.9 ms | 0.7 ms | 3.1 ms |
-| initials: `A. ` repeated | 4.5 ms | 3.3 ms | 181 ms | **4.2 s** | 1.0 ms | 0.8 ms | 26 ms |
-| nested HTML: 1 000 nested `<b>` | 8.7 ms | 8.4 ms | – | 434 ms | 3.4 ms | – | – |
-| open tags: `<a` repeated, never closed | 4.2 ms | 41 ms | – | **1.3 s** | 1.4 ms | – | – |
+| double quotes: `"` repeated | 6.5 ms | 6.4 ms | 597 ms | **6.0 s** | 1.0 ms | 1.8 ms | 3.0 ms |
+| single quotes: `'` repeated | 6.8 ms | 2.7 ms | > 10 s | **6.3 s** | 0.8 ms | 1.7 ms | 2.9 ms |
+| quoted words: `"a ` repeated | 8.8 ms | 5.4 ms | > 10 s | **5.4 s** | 1.0 ms | 1.3 ms | 24 ms |
+| hyphens: `-` repeated | 4.1 ms | 2.7 ms | 176 ms | **1.8 s** | 1.0 ms | 1.1 ms | 2.9 ms |
+| spaced hyphens: `a - ` repeated | 4.7 ms | 3.2 ms | 351 ms | **4.8 s** | 1.1 ms | 0.9 ms | 23 ms |
+| digit ranges: `1-2-` repeated | 4.9 ms | 3.5 ms | 493 ms | **6.4 s** | 1.3 ms | 0.9 ms | 25 ms |
+| dots: `.` repeated | 5.2 ms | 3.9 ms | 352 ms | **4.0 s** | 1.0 ms | 1.0 ms | 3.1 ms |
+| spaces: spaces between two words | 2.9 ms | 94 ms | 165 ms | 0.9 ms | 210 ms | 0.9 ms | 3.3 ms |
+| one word: one word of 10 000 letters | 3.1 ms | 2.6 ms | 698 ms | **6.3 s** | 0.9 ms | 0.7 ms | 3.2 ms |
+| initials: `A. ` repeated | 4.4 ms | 3.3 ms | 203 ms | **4.3 s** | 1.0 ms | 0.8 ms | 24 ms |
+| nested HTML: 1 000 nested `<b>` | 12 ms | 8.6 ms | – | 437 ms | 3.5 ms | – | – |
+| open tags: `<a` repeated, never closed | 4.2 ms | 33 ms | – | **1.6 s** | 1.5 ms | – | – |
 
 ## Every case
 
