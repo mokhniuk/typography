@@ -266,7 +266,7 @@ describe('defineConfig and checkConfig', () => {
     };
     bad({ language: 'en' }, /unknown key "language"/);
     bad({ lang: 'xx' }, /lang is .*"uk".*not "xx"/);
-    // `ch` was the Swiss pack until 0.15.0; it is now de-CH and fr-CH, and the code is matched as written.
+    // `ch` was the Swiss pack until this release; it is now de-CH and fr-CH, and the code is matched as written.
     bad({ lang: 'ch' }, /lang is .*"de-CH", "fr-CH".*not "ch"/);
     bad({ lang: 'de-ch' }, /lang is .*not "de-ch"/);
     bad({ register: 'book' }, /register is "display", "literary", not "book"/);
