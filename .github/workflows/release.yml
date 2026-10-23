@@ -19,28 +19,61 @@ jobs:
           bun-version: 1.3.11
       - run: bun install --frozen-lockfile
       - run: bunx biome ci .
+      - run: bun run build
       - run: bun test src apps/playground apps/website resources
       - run: bun run typecheck
       - run: bun run playground:build
       - run: bun run website:build
+      # ESM only, on purpose: the profile leaves out CommonJS `require` and node10 resolution, and
+      # fails on any other problem with the types or the entry points of the pack.
+      - run: bunx @arethetypeswrong/cli --pack . --profile esm-only
 
-  tag:
+  # The package as npm installs it (scripts/smoke.ts), under every Node version `engines` allows.
+  smoke:
     needs: check
-    if: github.event_name == 'push'
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [20, 22, 24]
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: 1.3.11
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - run: bun install --frozen-lockfile
+      - run: bun scripts/smoke.ts "$(command -v node)"
+
+  tag:
+    needs: [check, smoke]
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.11
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+      # The build (`prepack`, run by `bun pm pack` and `npm publish`) needs the dev dependencies.
+      - run: bun install --frozen-lockfile
       # The tag points at a commit on the `release` branch that holds only the packed package
       # (scripts/release-commit.ts): Bun installs a git dependency as the whole tagged tree and
       # ignores the `files` list, so tagging a commit of main would ship the whole repository.
       - name: Tag the version in package.json
+        id: tag
         run: |
           version="v$(jq -r .version package.json)"
           if git ls-remote --exit-code --tags origin "refs/tags/$version" >/dev/null; then
             echo "$version already tagged"
+            echo "created=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           git config user.name "github-actions[bot]"
@@ -52,3 +85,9 @@ jobs:
           git tag "$version" "$commit"
           # atomic: a rejected branch update (the tip moved since the fetch) must not leave a tag on an orphan commit
           git push --atomic origin "$commit:refs/heads/release" "refs/tags/$version"
+          echo "created=true" >> "$GITHUB_OUTPUT"
+      # Only when the tag was just created, so a version reaches npm once. Trusted publishing: npm
+      # takes the workflow's OIDC token (id-token: write), no secret; `prepack` builds dist/ first.
+      - name: Publish to npm
+        if: steps.tag.outputs.created == 'true'
+        run: npm publish --provenance --access public
