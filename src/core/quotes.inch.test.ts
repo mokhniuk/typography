@@ -1,4 +1,5 @@
 import { describe, expect, test } from 'bun:test';
+import { typesetHtml } from '../html/index.ts';
 import { typographic } from './index.ts';
 import { NBSP } from './types.ts';
 
@@ -41,8 +42,30 @@ describe('an inch mark inside a quotation', () => {
     same('"call 911" and the 4" pipe', '“call 911” and~the 4" pipe');
   });
 
+  test('only a quotation that opens where one opens holds an inch mark, and only before a space or punctuation', () => {
+    // Glued to a word, as in a URL: read as before.
+    same('see https://a.b/x?q="1"&r=a b" ok', 'see https://a.b/x?q=“1”&r=a~b” ok');
+    // A letter straight after the mark: not an inch mark.
+    same('"a 5"x y"', '“a~5”x y”');
+    // A line break straight after the mark: the quotation ends there (a time, a list).
+    same('"from 10:00-12:00"\n-- bc"', '“from 10:00–12:00”\n-- bc”');
+  });
+
+  test('the later " closes only after a letter or closing punctuation', () => {
+    same('"5" --" kg', '“5” --” kg');
+  });
+
+  test('in HTML the later " closes across a tag', () => {
+    expect(typesetHtml('<p>"a 5" <b>hole</b>" ok</p>', { lang: 'en', nbsp: 'char' })).toBe(
+      `<p>“a${NBSP}5" <b>hole</b>” ok</p>`,
+    );
+  });
+
   test('a later " in another paragraph does not close the quotation', () => {
     same('"call 911"\n\nthen he" left', '“call 911”\n\nthen he” left');
+    same('"call 911" now.\n\nThen he" left', '“call 911” now.\n\nThen he” left');
+    // A single line break is inside the paragraph.
+    same('"a 5" hole\nand more" ok', '“a~5" hole\nand~more” ok');
   });
 
   test('a quotation glued to a digit keeps both marks, as before', () => {

@@ -13,8 +13,9 @@ const ANY_RAW = new RegExp(`[${RAW}]`, 'g');
 /**
  * Marks the straight pair `"…"`. A straight " cannot open a quotation straight after a digit: there it
  * is an inch mark (2" pipe), so two inch marks in one text do not pair. Closing after a digit is still
- * allowed ("call 911"), unless a later " closes the quotation (`laterCloser`: "a 5" hole"). Found by a scan from one mark to the next, not by a regex: an opener with no
- * closer (an inch mark) would make a regex read on to the end of the text each time.
+ * allowed ("call 911"), unless a later " closes the quotation instead (`laterCloser`: "a 5" hole").
+ * Found by a scan from one mark to the next, not by a regex: an opener with no closer (an inch mark)
+ * would make a regex read on to the end of the text each time.
  */
 const OPENS_HERE = /[\s([]/;
 const STRAIGHT: unique symbol = Symbol('straight');
@@ -39,8 +40,7 @@ function pairStraight(text: string): string {
       at = end;
       continue;
     }
-    // A " after a digit is an inch mark (a 5" hole) when a later " can close the quotation instead.
-    if (DIGIT.test(codePointBefore(text, end) ?? '')) end = laterCloser(text, end);
+    if (mayBeInch(text, at, end)) end = laterCloser(text, end);
     out += text.slice(last, at) + setPair(text.slice(at + 1, end), text[at - 1], text[end + 1]);
     last = end + 1;
     at = text.indexOf('"', last);
@@ -52,22 +52,39 @@ const opensHere = (text: string, at: number): boolean =>
   OPENS_HERE.test(text[at - 1] as string) &&
   at + 1 < text.length &&
   NON_SPACE.test(text[at + 1] as string);
+// An inch mark is read only inside a quotation opened at the start, after a space, a bracket, an opener
+// or ¿ ¡ (not one glued to a word, as in a URL: q="1"&r), and only where a space on the same line or
+// punctuation follows it (a 5" hole, a 2", 3" pipe), not a letter, a digit or a line break.
+const INCH_OPENER_AFTER = /[\s([¿¡]/;
+const INCH_FOLLOWED_BY = /[ \t  ,.;:!?)\]]/;
+/** The " at `end`, the next mark after the opener at `at`, may be an inch mark (a 5" hole) inside it. */
+const mayBeInch = (text: string, at: number, end: number): boolean => {
+  if (!DIGIT.test(codePointBefore(text, end) ?? '')) return false;
+  const before = charBefore(text, at);
+  return (
+    (before === undefined || INCH_OPENER_AFTER.test(before)) &&
+    INCH_FOLLOWED_BY.test(text[end + 1] ?? '')
+  );
+};
 // The next quote mark, or a paragraph break (a line break, blanks, a line break).
 const NEXT_MARK_OR_BREAK = new RegExp(`[${RAW}]|\\n[^\\S\\n]*\\n`, 'g');
+// What a closer stands after: a letter, closing punctuation, a closed quotation or an apostrophe.
+const CLOSES_AFTER = /[\p{L}.,;:!?…)\]'’]/u;
 /**
  * The straight " at `inch` stands after a digit inside an open quotation. Read on to the next mark that
- * is not another inch mark: when it is a " in the same paragraph glued to what stands before it (not a
- * space or a bracket, so it neither opens a quotation nor stands alone), that " closes the quotation and
- * `inch` is an inch mark (a 5" hole); otherwise `inch` closes it, as a quotation that ends in a digit
- * does (call 911"). The marks read past are inch marks inside
- * the quotation, so the caller goes on after the closer and nothing is read twice.
+ * is not another inch mark: when it is a " in the same paragraph that stands where a quotation closes
+ * (after a letter or closing punctuation, past any tags), that " closes the quotation and `inch` is an
+ * inch mark (a 5" hole); otherwise `inch` closes it, as a quotation that ends in a digit does (call
+ * 911"). The marks read past are inch marks inside the quotation, so the caller goes on after the
+ * closer and nothing is read twice.
  */
 function laterCloser(text: string, inch: number): number {
   NEXT_MARK_OR_BREAK.lastIndex = inch + 1;
   for (let m = NEXT_MARK_OR_BREAK.exec(text); m; m = NEXT_MARK_OR_BREAK.exec(text)) {
     const at = m.index;
-    if (m[0] !== '"' || OPENS_HERE.test(text[at - 1] as string)) return inch;
-    if (!DIGIT.test(codePointBefore(text, at) ?? '')) return at;
+    if (m[0] !== '"') return inch;
+    if (DIGIT.test(codePointBefore(text, at) ?? '')) continue;
+    return CLOSES_AFTER.test(charBefore(text, at) ?? '') ? at : inch;
   }
   return inch;
 }
@@ -255,20 +272,9 @@ const caseless = (word: string) => {
   const [first = ''] = word;
   return `${first.toLowerCase() === first.toUpperCase() ? escapeRegex(first) : `[${first.toUpperCase()}${first.toLowerCase()}]`}${escapeRegex(word.slice(first.length))}`;
 };
-// Words that end in an apostrophe for dropped letters (Italian po', va', Maltese ta'), listed in
-// `truncations` on the pack: after one of them (a whole word), a ' or ’ followed by a space, punctuation
-// or the end is an apostrophe, set curly, never a closer ('dammi un po' di pane', 'un po'').
-function elisionOf(
-  words: readonly string[],
-  truncations: readonly string[],
-): { source: string; groups: number } {
+function elisionOf(words: readonly string[]): { source: string; groups: number } {
   const plain = words.filter((word) => word !== 'n');
   const alternatives: string[] = [];
-  if (truncations.length) {
-    alternatives.push(
-      `(?<=(?:^|[^\\p{L}\\p{N}])(?:${truncations.map(caseless).join('|')}))(['’])(?![\\p{L}\\p{N}])`,
-    );
-  }
   if (plain.length) {
     alternatives.push(`${EDGE}(')(?=(?:${plain.map(caseless).join('|')})(?![\\p{L}'’]))`);
   }
@@ -280,6 +286,14 @@ function elisionOf(
   }
   return { source: alternatives.join('|'), groups: alternatives.length };
 }
+// Words that end in an apostrophe for dropped letters (Italian po', va', Maltese ta'), listed in
+// `truncations` on the pack: after one of them (a whole word), a ' or ’ followed by a space, punctuation
+// or the end is an apostrophe, never a closer ('dammi un po' di pane', 'un po''). It holds no group: the
+// mark is put back as typed, and the `apostrophe` rule sets it, as it does outside a quotation.
+const truncationOf = (words: readonly string[]): string =>
+  words.length
+    ? `(?<=(?:^|[^\\p{L}\\p{N}])(?:${words.map(caseless).join('|')}))['’](?![\\p{L}\\p{N}])`
+    : '';
 
 /** What is read from a language's pack, built once per language. */
 type Setup = {
@@ -324,17 +338,19 @@ function setupOf(pack: LangPack): Setup {
         ),
     ),
   ];
-  const elision = elisionOf(pack.elisions ?? [], pack.truncations ?? []);
+  const elision = elisionOf(pack.elisions ?? []);
+  const truncation = truncationOf(pack.truncations ?? []);
   const made: Setup = {
     pairs,
     single: new RegExp(`(${before})'([^']+)'(?=[\\s).,;:!?\\]${CLOSE}]|$)`, 'g'),
     openerBefore,
     // Inside a word, or a leading apostrophe on a year (the ’90s: two digits). A straight ' there may open
     // a quoted number ('12'), a curly ’ cannot, so only the straight one is told apart by what follows.
-    // The last alternatives are an apostrophe for dropped letters, rock 'n' roll, 'til and po': it is set
-    // curly here, since the `apostrophe` rule only turns a straight ' after a letter or before a digit.
+    // Then an apostrophe for dropped letters, rock 'n' roll and 'til: it is set curly here, since the
+    // `apostrophe` rule only turns a straight ' after a letter or before a digit. Last, a truncation (po'),
+    // which follows a letter, so it is left to the `apostrophe` rule.
     apostrophe: new RegExp(
-      `(?<=\\p{L})['’](?=\\p{L})|(?<=^|[\\s([])’(?=\\d{2}s?(?![\\d\\p{L}]))|(?<=^|[\\s([])'(?=\\d{2}s?(?![\\d'’\\p{L}]))${elision.source ? `|${elision.source}` : ''}`,
+      `(?<=\\p{L})['’](?=\\p{L})|(?<=^|[\\s([])’(?=\\d{2}s?(?![\\d\\p{L}]))|(?<=^|[\\s([])'(?=\\d{2}s?(?![\\d'’\\p{L}]))${elision.source ? `|${elision.source}` : ''}${truncation ? `|${truncation}` : ''}`,
       'yu',
     ),
     elisionGroups: elision.groups,
