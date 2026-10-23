@@ -5,7 +5,7 @@ import type { LangPack } from './pack.ts';
 /** The tests every pack must pass, whoever wrote it: its data is complete and in the shape the engine reads. */
 export function wellFormed(pack: LangPack, file: string) {
   test(`${pack.code}: the pack is well-formed and registered`, () => {
-    expect(file).toBe(`${pack.code}.test.ts`);
+    expect(file).toBe(`${pack.code.toLowerCase()}.test.ts`);
     expect(PACK[pack.code as keyof typeof PACK]).toBe(pack);
     expect(pack.name.length).toBeGreaterThan(0);
     expect(pack.sample.length).toBeGreaterThan(0);

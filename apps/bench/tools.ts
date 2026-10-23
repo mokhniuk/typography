@@ -164,7 +164,7 @@ export const TOOLS: Tool[] = [
   {
     name: 'typograf',
     version: version('typograf'),
-    about: 'every locale it ships that this package has a pack for (21 of 26; none for pt, hr, lt, mt, ch); default rules; handles HTML',
+    about: 'every locale it ships that this package has a pack for (21 of 27; none for pt, hr, lt, mt, de-CH, fr-CH); default rules; handles HTML',
     run: (input, lang) => typografRun(input, lang),
   },
   {

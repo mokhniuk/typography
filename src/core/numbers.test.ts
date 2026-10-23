@@ -18,8 +18,10 @@ describe('number.group', () => {
     expect(on('1234567', 'pl')).toBe(`1${N}234${N}567`);
     expect(on('1234567', 'fr')).toBe(`1${N}234${N}567`);
     expect(on('1234567', 'de')).toBe(`1${N}234${N}567`);
-    const ch = PACK.ch.numbers?.group;
-    expect(on('1234567', 'ch')).toBe(`1${ch}234${ch}567`);
+    for (const lang of ['de-CH', 'fr-CH'] as const) {
+      const group = PACK[lang].numbers?.group;
+      expect(on('1234567', lang)).toBe(`1${group}234${group}567`);
+    }
   });
 
   test('the threshold is a constant: a run shorter than it is left', () => {

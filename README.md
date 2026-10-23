@@ -2,11 +2,11 @@
 
 The package is `@mokhniuk/typography`. Website, docs and playground: [typography.mokhni.uk](https://typography.mokhni.uk).
 
-**Real quotation marks, dashes and spaces, in 26 languages.** A typography engine for running text: plain strings in, typeset strings out, nothing marked up in the source. Tags, links and code are left alone.
+**Real quotation marks, dashes and spaces, in 27 languages.** A typography engine for running text: plain strings in, typeset strings out, nothing marked up in the source. Tags, links and code are left alone.
 
 [![CI](https://github.com/mokhniuk/typography/actions/workflows/release.yml/badge.svg)](https://github.com/mokhniuk/typography/actions/workflows/release.yml)
 ![33 rules](https://img.shields.io/badge/rules-33-4c72b0)
-![26 languages](https://img.shields.io/badge/languages-26-4c72b0)
+![27 languages](https://img.shields.io/badge/languages-27-4c72b0)
 ![Zero dependencies](https://img.shields.io/badge/dependencies-0-2ca02c)
 ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6)
 ![1 MB in 74 ms](https://img.shields.io/badge/1%20MB%20of%20text-74%20ms-2ca02c)
@@ -64,7 +64,7 @@ The tools that beat it on speed (tipograph, smartypants) score far below it on t
 ## What is in the box
 
 - **33 rules** — quotes, apostrophes, dashes, ranges, no-break spaces, symbols, numbers, money, phone numbers; 23 on by default, 10 opt-in ([docs/rules.md](docs/rules.md)).
-- **26 languages** — the 24 official EU languages, `uk` and `ch`, each one pack with its quote marks, dash habits, elisions and abbreviations ([docs/languages.md](docs/languages.md)).
+- **27 languages** — the 24 official EU languages, `uk`, `de-CH` and `fr-CH`, each one pack with its quote marks, dash habits, elisions and abbreviations ([docs/languages.md](docs/languages.md)).
 - **Two registers** — `display` for interface and marketing text, `literary` for book-like text.
 - **Every format** — plain text, HTML, Markdown, hast trees (rehype plugin), React components, the DOM, a CLI.
 - **`explain`** — every change comes with the rule that made it and the before/after, so nothing is a mystery.

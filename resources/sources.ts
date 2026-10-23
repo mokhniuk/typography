@@ -598,7 +598,8 @@ export const RULE_SOURCES: Record<string, Decision> = {
       de: ['cldr-delimiters'],
       pl: ['cldr-delimiters'],
       fr: ['cldr-delimiters', 'oqlf-espacement'],
-      ch: ['cldr-delimiters'],
+      'de-CH': ['cldr-delimiters'],
+      'fr-CH': ['cldr-delimiters'],
     },
   },
   apostrophe: {
@@ -648,7 +649,7 @@ export const RULE_SOURCES: Record<string, Decision> = {
     ],
     why: 'In these languages a line of dialogue opens with a dash, not a quotation mark, so a paragraph that opens with a typed hyphen and a space is such a line. The dash is the one the language uses for it, followed by a no-break space (attached with no space in Spanish), in both registers.',
     alternative:
-      'Which dash: the sources set the em dash for uk, es and pt; pl uses whatever dash the text uses (the pack uses the em dash); fr accepts both (em set); bg says long dash but renders the en dash and it shows the en dash, and for both the pack keeps the em dash of its ISG sentence dash so that dialogue and the narrator match; ro, hr, hu, sk, lt, cs, sl, fi and sv set the en dash; da says the same form as the tankestreg, the em dash in the pack. Only the OQLF asks for a no-break space after the dash; the engine sets one everywhere but Spanish so that the dash never ends a line alone. Not set: et (quotes are the norm, EKI), lv and el (the dash is not confirmed by a source read), and en, de, ch, nl, mt, ga (dialogue is quoted). A paragraph whose later line also opens with a dash is read as a list and left alone. The 2019 Ukrainian Pravopys (§ 161) could not be read; § 125 of the earlier edition was. In cs, sl and da a dash is one of several allowed forms.',
+      'Which dash: the sources set the em dash for uk, es and pt; pl uses whatever dash the text uses (the pack uses the em dash); fr accepts both (em set); bg says long dash but renders the en dash and it shows the en dash, and for both the pack keeps the em dash of its ISG sentence dash so that dialogue and the narrator match; ro, hr, hu, sk, lt, cs, sl, fi and sv set the en dash; da says the same form as the tankestreg, the em dash in the pack. Only the OQLF asks for a no-break space after the dash; the engine sets one everywhere but Spanish so that the dash never ends a line alone. Not set: et (quotes are the norm, EKI), lv and el (the dash is not confirmed by a source read), and en, de, de-CH, fr-CH, nl, mt, ga (dialogue is quoted). A paragraph whose later line also opens with a dash is read as a list and left alone. The 2019 Ukrainian Pravopys (§ 161) could not be read; § 125 of the earlier edition was. In cs, sl and da a dash is one of several allowed forms.',
     confidence: 'verified',
     langs: {
       uk: ['pravopys-125'],

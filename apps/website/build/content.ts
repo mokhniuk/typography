@@ -1,5 +1,6 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { join, posix, relative } from 'node:path';
+import { PACKS } from '../../../src/core';
 import { frontMatter, type Heading, render } from './markdown';
 import { GITHUB, REPO_ROOT, SITE_ROOT, SITE_URL } from './site';
 
@@ -92,13 +93,15 @@ export function docs(): Doc[] {
   });
   for (const name of readdirSync(join(REPO_ROOT, 'docs/languages')).sort()) {
     if (!name.endsWith('.md') || name === 'index.md') continue;
-    const code = name.slice(0, -3);
+    const file = name.slice(0, -3);
+    // The page is named in lower case (de-ch.md); the label is the pack's code as written (de-CH).
+    const code = PACKS.find((pack) => pack.code.toLowerCase() === file)?.code ?? file;
     entries.push({
       source: `docs/languages/${name}`,
-      slug: code,
+      slug: file,
       group: 'Languages',
       label: code,
-      path: `docs/languages/${code}/`,
+      path: `docs/languages/${file}/`,
     });
   }
   return entries.map((entry) => {

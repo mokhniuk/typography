@@ -4,6 +4,10 @@ Versions follow semver while the package is below 1.0.0: a **minor** release may
 
 ## Unreleased
 
+### Changes
+
+- The pack `ch` ("Swiss (Schweiz)") is replaced by two packs, `de-CH` (German (Switzerland)) and `fr-CH` (French (Switzerland)); `ch` is Chamorro in ISO 639-1. Both set `«outer ‹inner› outer»` with no space inside the marks, group digits with a no-break space (`number.group`) and write a decimal point, as the Swiss Federal Chancellery Schreibweisungen set. `de-CH` takes the rest from `de`: its abbreviation lists, the spaced en dash (`ch` set the em dash), the no-break space before `%` and `€`, and quoted dialogue. `fr-CH` takes the rest from `fr`, without the no-break space inside the guillemets: the no-break space before `%` and `€`, and quoted dialogue (no dialogue dash); no space is set before `; ! ?` or `:`. Both are `reviewed: false`. `lang: 'ch'` now throws from `checkConfig` (`config: lang is "en", "uk", "de", "pl", "fr", "de-CH", "fr-CH", ..., not "ch"`) and `typo -l ch` exits 2 with `typo: unknown language "ch" (en, uk, de, pl, fr, de-CH, fr-CH, ...)`. The rehype plugin reads an element's `lang` by the longest run of its leading subtags that is a pack code, in any case: `lang="de-CH"`, `de-ch` or `de-CH-1996` now picks `de-CH` (it was read as `de`), `fr-CH` picks `fr-CH` (it was `fr`), `de-AT` is still `de`. The language pages are `docs/languages/de-ch.md` and `fr-ch.md`; `ch.md` is gone. Can change existing output: yes, for text set with `ch` (use `de-CH` or `fr-CH`) and for HTML typeset with the rehype plugin whose `lang` is `de-CH` or `fr-CH`.
+
 ### Fixes
 
 - HTML mode: many `<` that never close no longer cost the square of the input. `'<a '.repeat(8000)` (24 KB) took about 800 ms and 4 000 repeats about 200 ms; both now take under 1 ms. The tag pattern read to the end of the input from every `<` that had no `>` after it; it is now shown the input only up to the last `>` (every token ends at one), and what follows is text. `src/html/linear.test.ts` holds a loose budget and `scripts/stress.ts` times the input. No output change.

@@ -56,7 +56,7 @@ The order is part of the behaviour. For example, `dash.range` runs before `dash.
 
 A language is one object, a pack, and no code names a language: rules read the pack's fields.
 
-1. Create `src/core/lang/<code>.ts` exporting the pack (`as const satisfies LangPack`, the type is in `src/core/lang/pack.ts`).
+1. Create `src/core/lang/<code>.ts` exporting the pack (`as const satisfies LangPack`, the type is in `src/core/lang/pack.ts`). File names use the code in lower case: the pack `de-CH` is `de-ch.ts`, its test `de-ch.test.ts`, its page `docs/languages/de-ch.md`; the `code` field keeps the case (`de-CH`), and the rehype plugin matches an HTML `lang` against it in any case.
 2. Add it to `PACKS` in `src/core/lang/index.ts`: one import, one list entry. `Lang`, `LANGS`, `PROFILES` and the other tables in `profiles.ts`, the command line, the rehype plugin and the playground all follow from the list.
 3. Create `src/core/lang/<code>.test.ts`: call `wellFormed(pack, '<code>.test.ts')` from `pack-checks.test-utils.ts` and add golden tests for what the pack sets. Golden tests for a language live in that file, not in `typography.test.ts`.
 4. Run `bun run docs:languages` and commit `docs/languages/<code>.md` and `index.md`; `src/lang-docs.test.ts` fails if a page differs from its pack. Never edit them by hand.

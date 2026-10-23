@@ -62,6 +62,21 @@ describe('rehypeTypography', () => {
     );
   });
 
+  test('a lang tag picks the pack of its longest matching subtags, in any case', () => {
+    const quoted = (lang: string) => fromHtml(`<p lang="${lang}">"a"</p>`);
+    // de-CH and fr-CH are packs of their own: «a», no space inside.
+    expect(quoted('de-CH')).toBe('<p lang="de-CH">«a»</p>');
+    expect(quoted('de-ch')).toBe('<p lang="de-ch">«a»</p>');
+    expect(quoted('fr-ch')).toBe('<p lang="fr-ch">«a»</p>');
+    expect(quoted('de-CH-1996')).toBe('<p lang="de-CH-1996">«a»</p>');
+    // A region with no pack of its own falls back to the language: de-AT is de, fr-BE is fr.
+    expect(quoted('de-AT')).toBe('<p lang="de-AT">»a«</p>');
+    expect(quoted('fr-BE')).toBe('<p lang="fr-BE">«~a~»</p>');
+    expect(quoted('DE')).toBe('<p lang="DE">»a«</p>');
+    // ch alone is no pack (it is Chamorro): the option's language stays.
+    expect(fromHtml('<p lang="ch">"a"</p>', { lang: 'de' })).toBe('<p lang="ch">»a«</p>');
+  });
+
   test('takes the language, register and disabled rules, and reports changes', () => {
     const seen: string[] = [];
     const out = fromHtml('<p>"x" - 1-2</p>', {

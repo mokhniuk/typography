@@ -74,7 +74,7 @@ export const LONG: Record<Lang, Long> = {
     run: `Lancez {code} et lisez {link}.`,
     link: `le "guide"`,
   },
-  ch: {
+  'de-CH': {
     title: `"Gute Typografie" - ein kurzer Leitfaden`,
     body: [
       `Anna sagte: "Am Schild stand wieder 'Geschlossen'" - und lachte... Wir sind's gewohnt.   `,
@@ -85,6 +85,18 @@ export const LONG: Record<Lang, Long> = {
     ],
     run: `Starten Sie {code} und lesen Sie {link}.`,
     link: `den "Leitfaden"`,
+  },
+  'fr-CH': {
+    title: `"La bonne typographie" - un petit guide`,
+    body: [
+      `Anne a dit : "Sur la porte du kiosque, encore 'Fermé'" - et elle a ri... On s'y est habitués.   `,
+      `"On attend ?", a demandé le professeur K. Novak.`,
+      `L'atelier dure 21-26 septembre, 10:00-12:00, à Lausanne, dans une salle de 125000 places , et les écrans font 1920x1080. Les billets coûtent CHF 49,soit 15% de moins.`,
+      `Sur le Léman il fait -5°C, la nuit +-2 °C.  Ajoutez 1/2 tasse de sucre. Génial!!! Lire la suite -> p. 12 => fini.`,
+      `Voir l'annexe de Mme A. Rochat. (c) 2026 Atelier.`,
+    ],
+    run: `Lancez {code} et lisez {link}.`,
+    link: `le "guide"`,
   },
   cs: {
     title: `"Dobrá typografie" - krátký průvodce`,

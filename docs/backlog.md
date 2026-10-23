@@ -10,15 +10,15 @@ Priorities: **P0** blocks the audience, **P1** closes a gap other tools do not h
 |---|---|---|---|
 | Benchmark checks passed (default / literary register) | 242 / 250, 250 / 250 | typograf 131 / 226 | `apps/bench/RESULTS.md` |
 | 1 MB of English, text mode | 74 ms (0.14.0 run, short-word rule on, a machine about twice as slow for every tool as the 0.12.0 run's 30 ms) | typograf 115 ms, tipograph 23 ms, smartypants 19 ms | `cd apps/bench && bun run bench` (the ratios are what count) |
-| Target languages covered (26) | 26 | typograf 21 of 26, tipograph 11 | [languages/index.md](languages/index.md) |
+| Target languages covered (27) | 27 | typograf 21 of 27, tipograph 11 | [languages/index.md](languages/index.md) |
 
-The 26 target languages are the 24 official languages of the EU, Ukrainian and Swiss German (`ch`); US English is not a pack but the option `quoteStyle: 'us'`. This engine's 8 default-run misses are all the house `«…»` for English, which the checks count as a failure; the literary register passes every check. The cases were written by this package's author; read the caveats in [limits.md](limits.md). The cases for the twenty new languages come from the same style guides as the packs, so they are not an independent test.
+The 27 target languages are the 24 official languages of the EU, Ukrainian, and German and French as written in Switzerland (`de-CH`, `fr-CH`); US English is not a pack but the option `quoteStyle: 'us'`. This engine's 8 default-run misses are all the house `«…»` for English, which the checks count as a failure; the literary register passes every check. The cases were written by this package's author; read the caveats in [limits.md](limits.md). The cases for the twenty new languages come from the same style guides as the packs, so they are not an independent test.
 
 ## P0
 
 ### Native-speaker review of the 20 new languages
 
-Every pack has `reviewed: false`: bg cs da el es et fi ga hr hu it lt lv mt nl pt ro sk sl sv (plus the older uk de pl fr ch en, never reviewed either). They were written from style guides, and several sources (Pravidla 2000, Svenska skrivregler, the RAE, the Maltese Language Council, DOOM) could only be read in part. For each language: a native reader goes through its generated page ([languages/index.md](languages/index.md)), corrects the pack, and flips `reviewed` to `true`.
+Every pack has `reviewed: false`: bg cs da el es et fi ga hr hu it lt lv mt nl pt ro sk sl sv (plus the older uk de pl fr en and the Swiss de-CH fr-CH, never reviewed either). They were written from style guides, and several sources (Pravidla 2000, Svenska skrivregler, the RAE, the Maltese Language Council, DOOM) could only be read in part. For each language: a native reader goes through its generated page ([languages/index.md](languages/index.md)), corrects the pack, and flips `reviewed` to `true`.
 
 ## P1
 
@@ -26,7 +26,7 @@ Every pack has `reviewed: false`: bg cs da el es et fi ga hr hu it lt lv mt nl p
 
 [sources.md](../resources/sources.md) has 17 of 33 decisions still `general-knowledge` (ten of them opt-in rules with no source read, seven default-on), one `disputed`, 15 `verified` for the cases and languages named in each entry (mostly English; `dash.dialogue` since 0.4.0 for 17 languages). Read the sources and upgrade them, and have a native speaker check each language. Found while building it (2026-10-20, CLDR 46):
 
-- `quote` is `disputed`: CLDR has English `“ ” ‘ ’`, German `„ “ ‚ ‘` (the engine sets `» « › ‹`), French `« »` with `« »` inside (the engine uses `“ ”`), and de-CH `„ “ ‚ ‘` (the engine's `ch` profile is the fr-CH one: `« » ‹ ›`). Decide per language whether the engine or CLDR is right, citing a guide. The English default is settled with the named configs (built on `TypographyConfig`, which exists since the per-project config): the engine defaults to the language standard and ships `standard` and a house config (guillemets in English; perhaps named `display`, a name the register already uses) that restores the house style.
+- `quote` is `disputed`: CLDR has English `“ ” ‘ ’`, German `„ “ ‚ ‘` (the engine sets `» « › ‹`), French `« »` with `« »` inside (the engine uses `“ ”`), and de-CH `„ “ ‚ ‘` (the engine's `de-CH` pack sets `« » ‹ ›`). Decide per language whether the engine or CLDR is right, citing a guide. The English default is settled with the named configs (built on `TypographyConfig`, which exists since the per-project config): the engine defaults to the language standard and ships `standard` and a house config (guillemets in English; perhaps named `display`, a name the register already uses) that restores the house style.
 - `space.percent` / currency: CLDR sets a no-break space before the currency sign in `uk`, `pl` and `fr-CH`; the engine leaves `49€` alone there.
 - Gaps found against Practical Typography and OQLF (2026-10-20, probed in the engine; both sources were read as fetch-tool summaries, check them first):
   - French `:` gets a no-break space before it, and `;` `!` `?` none or a fine space (OQLF). The engine sets none of these. A France or Swiss guide may differ, so read one before building it.
@@ -56,7 +56,7 @@ Each is a limit of the pack format or an unverified choice, not a crash:
 - **Swedish level 3** restarts oddly, because Swedish defines no third level.
 - **Three levels of straight quotes** are ambiguous and not stable on a second pass (inherent, all languages).
 - **`rock 'n' roll`** is handled only in the packs that list the elision `n`.
-- **`number.group`** treats `ch` as no-break-space grouped (Swiss Federal Chancellery); five-digit amounts after a capital word are skipped; the ZIP-code guard is English, German, Italian and French in shape.
+- **`number.group`** treats `de-CH` and `fr-CH` as no-break-space grouped (Swiss Federal Chancellery); five-digit amounts after a capital word are skipped; the ZIP-code guard is English, German, Italian and French in shape.
 - **`symbol.degree`** knows an English label list only (`Type C`, `Vitamin C`).
 - **`space.short-word`** lists are editorial in all five packs, and twenty-one languages have none (see the item below); on by default since 0.14.0.
 - The opt-in rules' own limits are in [limits.md](limits.md#opt-in-rules).
@@ -111,7 +111,7 @@ No quadratic input is known outside the rules since 0.15.0 (the two the probes f
 
 ### Publish to npm, with a licence and compiled output (1.0.0)
 
-The package ships `.ts` sources, is private, installs from a git tag, and has no licence. A consumer needs Bun or a TypeScript-aware bundler. This is the last step of 1.0.0, after the website, the open bugs and the docs: ship JavaScript with `.d.ts` files (ESM) so Node and plain tooling work, a `LICENSE`, a CI matrix with Node, then publish. Two numbers from `bun run size` and `bun run deps` (2026-10-22) belong to this step. The install size is done (Unreleased: a `files` list and release tags on a commit that holds only the pack, 69 files instead of 303). Every entry point carries all 26 language packs, 57 KB of the 87 KB minified bundle of `/text` (16 of 26 KB brotli), and `/dom` weighs 89 KB as well (check what of the engine hanging punctuation really pulls in). A way to load only the languages used (a pack registry the caller fills, or one entry per language) would bring a one-language bundle near typograf's 15 KB brotli. Output changes stay minor releases after 1.0.0 (see [contributing.md](contributing.md#releasing)); only API breaks are major, so an API change such as the `ch` code or a renamed option is best made before it.
+The package ships `.ts` sources, is private, installs from a git tag, and has no licence. A consumer needs Bun or a TypeScript-aware bundler. This is the last step of 1.0.0, after the website, the open bugs and the docs: ship JavaScript with `.d.ts` files (ESM) so Node and plain tooling work, a `LICENSE`, a CI matrix with Node, then publish. Two numbers from `bun run size` and `bun run deps` (2026-10-22) belong to this step. The install size is done (Unreleased: a `files` list and release tags on a commit that holds only the pack, 69 files instead of 303). Every entry point carries all 27 language packs, 57 KB of the 87 KB minified bundle of `/text` (16 of 26 KB brotli), and `/dom` weighs 89 KB as well (check what of the engine hanging punctuation really pulls in). A way to load only the languages used (a pack registry the caller fills, or one entry per language) would bring a one-language bundle near typograf's 15 KB brotli. Output changes stay minor releases after 1.0.0 (see [contributing.md](contributing.md#releasing)); only API breaks are major, so an API change such as a renamed option is best made before it (the `ch` code became `de-CH` and `fr-CH` in Unreleased).
 
 ### A larger real-text benchmark
 
