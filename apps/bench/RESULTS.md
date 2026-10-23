@@ -22,23 +22,23 @@ Passed / scored. "–" means the tool has no such feature or language (not score
 
 | Group | typography-engine | typography-engine literary | typograf | typograf +nbsp | typopo | richtypo | tipograph | smartypants | retext-smartypants |
 |---|---|---|---|---|---|---|---|---|---|
-| Quotes | 40/40 | 40/40 | 33/36 | 33/36 | 19/19 | 14/17 | 24/26 | 14/16 | 13/16 |
+| Quotes | 41/41 | 41/41 | 33/37 | 33/37 | 20/20 | 14/18 | 24/27 | 14/17 | 13/17 |
 | Nested quotes | 25/25 | 25/25 | 0/21 | 0/21 | 4/4 | 0/2 | 10/11 | 1/1 | 1/1 |
 | Apostrophes and ellipsis | 3/3 | 3/3 | 3/3 | 3/3 | 2/2 | 1/2 | 2/2 | 2/2 | 2/2 |
-| Dashes | 36/36 | 36/36 | 7/32 | 7/32 | 11/15 | 9/13 | 20/22 | 6/12 | 6/12 |
+| Dashes | 37/37 | 37/37 | 7/33 | 7/33 | 11/15 | 9/13 | 20/22 | 6/12 | 6/12 |
 | Ranges | 25/25 | 25/25 | 0/21 | 0/21 | 4/4 | 0/2 | 11/11 | 0/1 | 0/1 |
 | Left alone | 5/5 | 5/5 | 5/5 | 5/5 | 1/5 | 5/5 | 1/5 | 5/5 | 5/5 |
-| No-break spaces | 9/9 | 9/9 | 4/9 | 8/9 | 4/6 | 3/5 | 0/7 | 0/5 | 0/5 |
+| No-break spaces | 13/13 | 13/13 | 5/13 | 9/13 | 4/6 | 4/9 | 1/11 | 0/5 | 0/5 |
 | Abbreviations | 5/5 | 5/5 | 0/5 | 0/5 | 2/3 | 0/1 | 0/4 | 0/1 | 0/1 |
-| Symbols | 17/17 | 17/17 | 10/17 | 10/17 | 7/16 | 5/16 | 12/17 | 5/15 | 5/15 |
+| Symbols | 19/19 | 19/19 | 10/19 | 10/19 | 7/16 | 5/16 | 12/18 | 5/15 | 5/15 |
+| Spacing | 15/15 | 15/15 | 11/15 | 13/15 | 9/13 | 12/13 | 8/14 | 7/13 | 7/13 |
 | Protected text | 3/3 | 3/3 | 2/3 | 2/3 | 2/3 | 2/3 | 1/3 | 1/3 | 1/3 |
 | HTML | 6/6 | 6/6 | 5/6 | 5/6 | – | 5/6 | 6/6 | – | – |
 | Safety | 33/33 | 33/33 | 28/29 | 28/29 | 11/12 | 9/10 | 17/19 | 7/9 | 7/9 |
 | Registers | – | 2/2 | – | – | – | – | – | – | – |
 | Ellipsis | 5/5 | 5/5 | 5/5 | 5/5 | 5/5 | 3/5 | 3/5 | 4/5 | 4/5 |
-| Spacing | 13/13 | 13/13 | 9/13 | 11/13 | 9/13 | 12/13 | 8/13 | 7/13 | 7/13 |
 | Stability | 25/25 | 25/25 | 21/21 | 21/21 | 4/4 | 1/2 | 11/11 | 1/1 | 1/1 |
-| **All (without Registers)** | **250/250** | **250/250** | **132/226** | **138/226** | **85/111** | **69/102** | **126/162** | **53/89** | **52/89** |
+| **All (without Registers)** | **260/260** | **260/260** | **135/236** | **141/236** | **86/112** | **70/107** | **127/169** | **53/90** | **52/90** |
 
 A language a tool does not support is not scored, so the totals compare different numbers of cases: read each tool's row against its own denominator.
 
@@ -50,15 +50,15 @@ English text in one piece, text mode: the median of seven runs (three at 1 MB), 
 
 | Tool | 10 KB | 100 KB | 1000 KB |
 |---|---|---|---|
-| typography-engine | 1 ms (4) | 8 ms (9) | 72 ms (73) |
-| typography-engine literary | 1 ms (2) | 7 ms (7) | 70 ms (71) |
-| typograf | 1 ms (2) | 11 ms (11) | 111 ms (114) |
-| typograf +nbsp | 1 ms (1) | 11 ms (13) | 135 ms (171) |
-| typopo | 46 ms (585) | 2464 ms (3248) | not run (~246 s) |
-| richtypo | 4999 ms (5143) | not run (~498 s) | not run (~49668 s) |
-| tipograph | 0 ms (1) | 2 ms (18) | 23 ms (24) |
-| smartypants | 0 ms (1) | 2 ms (2) | 18 ms (20) |
-| retext-smartypants | 6 ms (11) | 48 ms (51) | 1063 ms (2138) |
+| typography-engine | 1 ms (3) | 8 ms (9) | 74 ms (75) |
+| typography-engine literary | 1 ms (2) | 7 ms (8) | 72 ms (73) |
+| typograf | 1 ms (2) | 11 ms (13) | 117 ms (118) |
+| typograf +nbsp | 1 ms (2) | 11 ms (13) | 111 ms (111) |
+| typopo | 40 ms (383) | 2150 ms (2181) | not run (~215 s) |
+| richtypo | 4966 ms (5047) | not run (~494 s) | not run (~49349 s) |
+| tipograph | 0 ms (1) | 2 ms (2) | 23 ms (26) |
+| smartypants | 0 ms (1) | 2 ms (2) | 18 ms (19) |
+| retext-smartypants | 5 ms (9) | 50 ms (57) | 1094 ms (1167) |
 
 ### Speed by input
 
@@ -66,15 +66,15 @@ About 100 KB of each language's prose from `scripts/corpus.ts` (paragraphs, with
 
 | Tool | en text | de text | fr text | uk text | en HTML |
 |---|---|---|---|---|---|
-| typography-engine | 8 ms (13) | 6 ms (7) | 6 ms (6) | 9 ms (10) | 8 ms (9) |
-| typography-engine literary | 8 ms (8) | 7 ms (7) | 6 ms (6) | 10 ms (17) | 9 ms (13) |
-| typograf | 14 ms (16) | 16 ms (20) | 10 ms (12) | 11 ms (13) | 14 ms (16) |
-| typograf +nbsp | 14 ms (15) | 14 ms (23) | 16 ms (22) | 11 ms (16) | 13 ms (13) |
-| typopo | 1278 ms | 440 ms | – | – | – |
+| typography-engine | 8 ms (10) | 6 ms (7) | 6 ms (7) | 11 ms (12) | 9 ms (9) |
+| typography-engine literary | 8 ms (10) | 7 ms (9) | 7 ms (11) | 12 ms (16) | 10 ms (12) |
+| typograf | 15 ms (22) | 18 ms (19) | 11 ms (12) | 13 ms (19) | 15 ms (17) |
+| typograf +nbsp | 12 ms (13) | 14 ms (15) | 13 ms (15) | 15 ms (19) | 14 ms (18) |
+| typopo | 895 ms | 682 ms | – | – | – |
 | richtypo | not run | not run | not run | not run | not run |
-| tipograph | 3 ms (5) | 3 ms (3) | 3 ms (4) | – | 3 ms (4) |
+| tipograph | 3 ms (3) | 3 ms (3) | 3 ms (3) | – | 3 ms (4) |
 | smartypants | 2 ms (3) | – | – | – | – |
-| retext-smartypants | 76 ms (105) | – | – | – | – |
+| retext-smartypants | 56 ms (73) | – | – | – | – |
 
 ## Engines
 
@@ -86,13 +86,13 @@ Time to import the bundle, and the first call on 1 KB of English (it includes th
 
 | Tool | Bun import | Bun first call | Node import | Node first call | Deno import | Deno first call |
 |---|---|---|---|---|---|---|
-| typography-engine | 6.2 ms | 6.3 ms | 6.6 ms | 7.9 ms | 3.7 ms | 7.7 ms |
-| typograf | 7.4 ms | 2.3 ms | 4.6 ms | 4.0 ms | 3.6 ms | 4.4 ms |
-| typopo | 3.1 ms | 364 ms | 1.0 ms | 262 ms | 0.9 ms | 583 ms |
-| richtypo | 1.4 ms | 51 ms | 0.7 ms | 3.7 ms | 0.7 ms | 4.3 ms |
-| tipograph | 8.4 ms | 0.5 ms | 12 ms | 0.8 ms | 9.0 ms | 1.2 ms |
-| smartypants | 1.6 ms | 0.7 ms | 0.5 ms | 0.6 ms | 0.7 ms | 0.7 ms |
-| retext-smartypants | 3.1 ms | 5.9 ms | 2.0 ms | 5.9 ms | 1.4 ms | 5.4 ms |
+| typography-engine | 6.4 ms | 6.1 ms | 7.5 ms | 8.5 ms | 4.6 ms | 8.3 ms |
+| typograf | 7.6 ms | 2.3 ms | 6.1 ms | 4.3 ms | 3.8 ms | 4.5 ms |
+| typopo | 3.4 ms | 354 ms | 1.0 ms | 269 ms | 1.0 ms | 594 ms |
+| richtypo | 1.7 ms | 52 ms | 0.6 ms | 3.6 ms | 0.8 ms | 4.2 ms |
+| tipograph | 8.6 ms | 0.4 ms | 11 ms | 0.9 ms | 8.1 ms | 1.3 ms |
+| smartypants | 1.3 ms | 0.7 ms | 0.5 ms | 0.6 ms | 0.7 ms | 0.7 ms |
+| retext-smartypants | 3.4 ms | 5.9 ms | 2.0 ms | 6.0 ms | 1.5 ms | 5.5 ms |
 
 ### Speed
 
@@ -100,13 +100,13 @@ A warm call on 1 KB of English (median of 300, p95 in brackets): what a page pay
 
 | Tool | Bun 1 KB | Node 1 KB | Deno 1 KB | Bun 100 KB | Node 100 KB | Deno 100 KB |
 |---|---|---|---|---|---|---|
-| typography-engine | 88 µs (114 µs) | 61 µs (97 µs) | 55 µs (95 µs) | 7.7 ms (8.5 ms) | 5.7 ms (6.1 ms) | 4.8 ms (5.0 ms) |
-| typograf | 136 µs (169 µs) | 113 µs (159 µs) | 91 µs (131 µs) | 12 ms (13 ms) | 9.8 ms (11 ms) | 8.3 ms (11 ms) |
-| typopo | 2.6 ms (4.0 ms) | 2.3 ms (2.8 ms) | 1.7 ms (2.0 ms) | 2119 ms | 2727 ms | 2980 ms |
-| richtypo | 51 ms (54 ms) | 1.5 ms (2.5 ms) | 1.4 ms (2.3 ms) | not run | 8942 ms | 9380 ms |
-| tipograph | 26 µs (39 µs) | 20 µs (24 µs) | 20 µs (50 µs) | 2.3 ms (2.9 ms) | 1.5 ms (1.6 ms) | 1.5 ms (1.7 ms) |
-| smartypants | 22 µs (30 µs) | 21 µs (30 µs) | 21 µs (32 µs) | 2.0 ms (2.3 ms) | 1.9 ms (3.3 ms) | 1.7 ms (1.9 ms) |
-| retext-smartypants | 366 µs (564 µs) | 514 µs (696 µs) | 592 µs (786 µs) | 48 ms (86 ms) | 75 ms (83 ms) | 79 ms (96 ms) |
+| typography-engine | 89 µs (122 µs) | 63 µs (116 µs) | 56 µs (100 µs) | 7.6 ms (8.9 ms) | 6.9 ms (12 ms) | 5.3 ms (5.7 ms) |
+| typograf | 146 µs (290 µs) | 115 µs (213 µs) | 93 µs (140 µs) | 12 ms (13 ms) | 9.9 ms (14 ms) | 8.7 ms (11 ms) |
+| typopo | 2.5 ms (3.0 ms) | 2.3 ms (2.8 ms) | 1.7 ms (2.4 ms) | 2093 ms | 2523 ms | 2971 ms |
+| richtypo | 50 ms (53 ms) | 2.1 ms (2.4 ms) | 2.2 ms (2.5 ms) | not run | 8889 ms | 9017 ms |
+| tipograph | 26 µs (30 µs) | 20 µs (24 µs) | 20 µs (28 µs) | 2.3 ms (2.7 ms) | 1.5 ms (1.6 ms) | 1.4 ms (1.6 ms) |
+| smartypants | 22 µs (32 µs) | 21 µs (28 µs) | 21 µs (32 µs) | 1.9 ms (2.0 ms) | 1.8 ms (2.0 ms) | 1.6 ms (1.7 ms) |
+| retext-smartypants | 325 µs (480 µs) | 512 µs (790 µs) | 598 µs (785 µs) | 47 ms (69 ms) | 75 ms (86 ms) | 82 ms (97 ms) |
 
 ### Memory
 
@@ -114,13 +114,13 @@ Peak resident memory of the process that typesets 1 MB of English in one call, a
 
 | Tool | Bun | Node | Deno |
 |---|---|---|---|
-| typography-engine | 84 MB (+54) | 89 MB (+41) | 89 MB (+42) |
-| typograf | 102 MB (+65) | 134 MB (+85) | 133 MB (+83) |
-| typopo | 46 MB (+15) at 100 KB | 55 MB (+9) at 100 KB | 86 MB (+39) at 100 KB |
+| typography-engine | 86 MB (+55) | 89 MB (+41) | 90 MB (+42) |
+| typograf | 103 MB (+66) | 133 MB (+84) | 133 MB (+83) |
+| typopo | 59 MB (+27) at 100 KB | 55 MB (+9) at 100 KB | 90 MB (+43) at 100 KB |
 | richtypo | > 20 s | 48 MB (+2) at 100 KB | 48 MB (+1) at 100 KB |
 | tipograph | 48 MB (+14) | 68 MB (+18) | 65 MB (+15) |
 | smartypants | 44 MB (+14) | 62 MB (+16) | 62 MB (+15) |
-| retext-smartypants | 370 MB (+341) | 381 MB (+334) | 297 MB (+250) |
+| retext-smartypants | 356 MB (+326) | 379 MB (+332) | 304 MB (+257) |
 
 ## Bundle size
 
@@ -128,7 +128,7 @@ One call that typesets English text, bundled for the browser with `Bun.build` (E
 
 | Bundle | Minified | gzip | brotli |
 |---|---|---|---|
-| typography-engine | 89.6 KB | 31.2 KB | 26.6 KB |
+| typography-engine | 101.2 KB | 34.9 KB | 30.0 KB |
 | typograf | 49.3 KB | 17.2 KB | 14.7 KB |
 | typopo | 29.3 KB | 7.4 KB | 6.5 KB |
 | richtypo | 3.2 KB | 1.4 KB | 1.2 KB |
@@ -140,18 +140,18 @@ This package's entry points one by one (`react` is a peer dependency, left out o
 
 | Bundle | Minified | gzip | brotli |
 |---|---|---|---|
-| typography-engine (everything, `.`) | 94.9 KB | 33.0 KB | 28.2 KB |
-| typography-engine/text | 89.6 KB | 31.2 KB | 26.6 KB |
-| typography-engine/html | 92.7 KB | 32.6 KB | 27.8 KB |
-| typography-engine/markdown | 91.3 KB | 32.1 KB | 27.4 KB |
-| typography-engine/rehype | 90.5 KB | 31.6 KB | 27.0 KB |
+| typography-engine (everything, `.`) | 106.7 KB | 36.8 KB | 31.7 KB |
+| typography-engine/text | 101.2 KB | 34.9 KB | 30.0 KB |
+| typography-engine/html | 104.3 KB | 36.3 KB | 31.3 KB |
+| typography-engine/markdown | 102.9 KB | 35.7 KB | 30.9 KB |
+| typography-engine/rehype | 102.2 KB | 35.3 KB | 30.4 KB |
 | typography-engine/dom | 7.6 KB | 2.8 KB | 2.4 KB |
-| typography-engine/react | 99.2 KB | 34.4 KB | 29.4 KB |
-| typography-engine/lite (no language pack) | 37.5 KB | 14.8 KB | 13.2 KB |
-| typography-engine/lite text (no pack) | 29.2 KB | 11.5 KB | 10.2 KB |
-| typography-engine/lite text + lang/en | 30.5 KB | 12.1 KB | 10.8 KB |
-| typography-engine/lite text + lang/uk | 30.6 KB | 12.3 KB | 10.8 KB |
-| typography-engine: the language packs alone | 59.7 KB | 19.7 KB | 16.4 KB |
+| typography-engine/react | 110.9 KB | 38.2 KB | 32.9 KB |
+| typography-engine/lite (no language pack) | 40.8 KB | 15.9 KB | 14.1 KB |
+| typography-engine/lite text (no pack) | 32.5 KB | 12.5 KB | 11.1 KB |
+| typography-engine/lite text + lang/en | 33.9 KB | 13.2 KB | 11.7 KB |
+| typography-engine/lite text + lang/uk | 35.0 KB | 13.8 KB | 12.2 KB |
+| typography-engine: the language packs alone | 68.0 KB | 22.6 KB | 18.9 KB |
 
 ## Dependencies
 
@@ -159,7 +159,7 @@ What `npm install` (or a git dependency) puts on disk for one tool: its package 
 
 | Tool | Packages installed | Install footprint | Licence | Types | Format | Version published |
 |---|---|---|---|---|---|---|
-| typography-engine | 1 (react is an optional peer) | 507 KB (148 files) | MIT | yes | ESM | not published yet (0.16.1) |
+| typography-engine | 1 (react is an optional peer) | 546 KB (150 files) | MIT | yes | ESM | not published yet (0.17.0) |
 | typograf | 1 | 604 KB | MIT | yes | ESM and CommonJS | 2026-08-14 (7.8.0) |
 | typopo | 1 | 105 KB | MIT | yes | ESM and CommonJS | 2026-05-25 (3.1.0) |
 | richtypo | 1 | 22 KB | MIT | yes | ESM | 2026-04-27 (8.0.0) |
@@ -173,18 +173,18 @@ About 10 KB built to find a slow path (a regex that backtracks, a loop that resc
 
 | Probe | typography-engine | typograf | typopo | richtypo | tipograph | smartypants | retext-smartypants |
 |---|---|---|---|---|---|---|---|
-| double quotes: `"` repeated | 6.5 ms | 6.4 ms | 597 ms | **6.0 s** | 1.0 ms | 1.8 ms | 3.0 ms |
-| single quotes: `'` repeated | 6.8 ms | 2.7 ms | > 10 s | **6.3 s** | 0.8 ms | 1.7 ms | 2.9 ms |
-| quoted words: `"a ` repeated | 8.8 ms | 5.4 ms | > 10 s | **5.4 s** | 1.0 ms | 1.3 ms | 24 ms |
-| hyphens: `-` repeated | 4.1 ms | 2.7 ms | 176 ms | **1.8 s** | 1.0 ms | 1.1 ms | 2.9 ms |
-| spaced hyphens: `a - ` repeated | 4.7 ms | 3.2 ms | 351 ms | **4.8 s** | 1.1 ms | 0.9 ms | 23 ms |
-| digit ranges: `1-2-` repeated | 4.9 ms | 3.5 ms | 493 ms | **6.4 s** | 1.3 ms | 0.9 ms | 25 ms |
-| dots: `.` repeated | 5.2 ms | 3.9 ms | 352 ms | **4.0 s** | 1.0 ms | 1.0 ms | 3.1 ms |
-| spaces: spaces between two words | 2.9 ms | 94 ms | 165 ms | 0.9 ms | 210 ms | 0.9 ms | 3.3 ms |
-| one word: one word of 10 000 letters | 3.1 ms | 2.6 ms | 698 ms | **6.3 s** | 0.9 ms | 0.7 ms | 3.2 ms |
-| initials: `A. ` repeated | 4.4 ms | 3.3 ms | 203 ms | **4.3 s** | 1.0 ms | 0.8 ms | 24 ms |
-| nested HTML: 1 000 nested `<b>` | 12 ms | 8.6 ms | – | 437 ms | 3.5 ms | – | – |
-| open tags: `<a` repeated, never closed | 4.2 ms | 33 ms | – | **1.6 s** | 1.5 ms | – | – |
+| double quotes: `"` repeated | 6.9 ms | 6.4 ms | 595 ms | **6.2 s** | 0.9 ms | 1.6 ms | 2.8 ms |
+| single quotes: `'` repeated | 7.5 ms | 3.2 ms | > 10 s | **6.1 s** | 0.9 ms | 1.7 ms | 2.7 ms |
+| quoted words: `"a ` repeated | 8.2 ms | 5.2 ms | > 10 s | **5.2 s** | 0.9 ms | 1.2 ms | 25 ms |
+| hyphens: `-` repeated | 4.3 ms | 2.7 ms | 178 ms | **1.9 s** | 0.9 ms | 0.9 ms | 2.8 ms |
+| spaced hyphens: `a - ` repeated | 5.2 ms | 3.2 ms | 374 ms | **4.9 s** | 0.9 ms | 0.7 ms | 26 ms |
+| digit ranges: `1-2-` repeated | 5.0 ms | 2.6 ms | 491 ms | **6.4 s** | 1.3 ms | 0.6 ms | 21 ms |
+| dots: `.` repeated | 4.1 ms | 2.7 ms | 389 ms | **4.0 s** | 0.8 ms | 0.8 ms | 2.8 ms |
+| spaces: spaces between two words | 2.7 ms | 88 ms | 185 ms | 0.8 ms | 212 ms | 0.8 ms | 2.8 ms |
+| one word: one word of 10 000 letters | 2.9 ms | 2.5 ms | 687 ms | **6.1 s** | 0.7 ms | 0.5 ms | 3.0 ms |
+| initials: `A. ` repeated | 5.1 ms | 2.8 ms | 177 ms | **4.0 s** | 0.8 ms | 0.7 ms | 24 ms |
+| nested HTML: 1 000 nested `<b>` | 9.8 ms | 8.5 ms | – | 423 ms | 3.3 ms | – | – |
+| open tags: `<a` repeated, never closed | 4.5 ms | 35 ms | – | **1.3 s** | 1.3 ms | – | – |
 
 ## Every case
 
@@ -695,6 +695,20 @@ Input: `A 5'10" frame`
 - ✓ tipograph: `A 5′10″ frame`
 - ✗ smartypants: `A 5’10” frame`
 - ✗ retext-smartypants: `A 5’10” frame`
+
+**en-quote-inch-inside** (en): an inch mark inside a quotation does not close it
+
+Input: `He said "a 5" hole" ok`
+
+- ✓ typography-engine: `He said “a~5" hole” ok`
+- ✓ typography-engine literary: `He said ‘a~5" hole’ ok`
+- ✗ typograf: `He~said “a~5” hole” ok`
+- ✗ typograf +nbsp: `He~said “a~5” hole” ok`
+- ✓ typopo: `He said “a~5″ hole” ok`
+- ✗ richtypo: `He~said “a~5” hole”~ok`
+- ✗ tipograph: `He said “a 5” hole" ok`
+- ✗ smartypants: `He said “a 5” hole” ok`
+- ✗ retext-smartypants: `He said “a 5” hole” ok`
 
 **en-quote-unbalanced** (en): an unclosed quote does not crash or lose text
 
@@ -1500,6 +1514,20 @@ Input: `Πέτρα - μνήμη - και χρόνος`
 - – smartypants: 
 - – retext-smartypants: 
 
+**dash-range-time-dotted** (lv): a time range written with full stops uses an en dash (ISG 10.1.7)
+
+Input: `Biroja darba laiks: 9.00-18.30`
+
+- ✓ typography-engine: `Biroja darba laiks: 9.00–18.30`
+- ✓ typography-engine literary: `Biroja darba laiks: 9.00–18.30`
+- ✗ typograf: `Biroja darba laiks: 9.00-18.30`
+- ✗ typograf +nbsp: `Biroja darba laiks: 9.00-18.30`
+- – typopo: 
+- – richtypo: 
+- – tipograph: 
+- – smartypants: 
+- – retext-smartypants: 
+
 **en-dash-spaced-hyphen** (en): a spaced hyphen between words is a dash
 
 Input: `Stone - memory`
@@ -2206,6 +2234,62 @@ Input: `Stone - memory`
 - ✗ smartypants: `Stone - memory`
 - ✗ retext-smartypants: `Stone - memory`
 
+**nbsp-high-punctuation-fr** (fr): a no-break space before ? ! : ;
+
+Input: `Pourquoi? Attention! Voici: le plan; sinon rien.`
+
+- ✓ typography-engine: `Pourquoi~? Attention~! Voici~: le plan~; sinon rien.`
+- ✓ typography-engine literary: `Pourquoi~? Attention~! Voici~: le plan~; sinon rien.`
+- ✗ typograf: `Pourquoi? Attention! Voici: le~plan; sinon rien.`
+- ✗ typograf +nbsp: `Pourquoi? Attention! Voici: le~plan; sinon rien.`
+- – typopo: 
+- ✓ richtypo: `Pourquoi~? Attention~! Voici~: le~plan~; sinon~rien.`
+- ✗ tipograph: `Pourquoi? Attention! Voici: le plan; sinon rien.`
+- – smartypants: 
+- – retext-smartypants: 
+
+**nbsp-high-punctuation-typed-fr** (fr): the typed space before ? and : becomes a no-break space
+
+Input: `Pourquoi ? Voici : le plan`
+
+- ✓ typography-engine: `Pourquoi~? Voici~: le plan`
+- ✓ typography-engine literary: `Pourquoi~? Voici~: le plan`
+- ✗ typograf: `Pourquoi? Voici: le~plan`
+- ✗ typograf +nbsp: `Pourquoi? Voici: le~plan`
+- – typopo: 
+- ✗ richtypo: `Pourquoi~? Voici~: le~plan`
+- ✗ tipograph: `Pourquoi ? Voici : le plan`
+- – smartypants: 
+- – retext-smartypants: 
+
+**nbsp-high-punctuation-time-fr** (fr): no space inside a time or a ratio
+
+Input: `Rendez-vous à 10:30, écran 16:9.`
+
+- ✓ typography-engine: `Rendez-vous à 10:30, écran 16:9.`
+- ✓ typography-engine literary: `Rendez-vous à 10:30, écran 16:9.`
+- ✓ typograf: `Rendez-vous à~10:30, écran 16:9.`
+- ✓ typograf +nbsp: `Rendez-vous à~10:30, écran 16:9.`
+- – typopo: 
+- ✗ richtypo: `Rendez-vous à~10~:30, écran~16~:9.`
+- ✓ tipograph: `Rendez-vous à 10:30, écran 16:9.`
+- – smartypants: 
+- – retext-smartypants: 
+
+**nbsp-high-punctuation-run-fr** (fr): one no-break space before ?!, none between the marks or after the ellipsis
+
+Input: `Quoi?! Vraiment...?`
+
+- ✓ typography-engine: `Quoi~?! Vraiment…?`
+- ✓ typography-engine literary: `Quoi~?! Vraiment…?`
+- ✗ typograf: `Quoi?! Vraiment…?`
+- ✗ typograf +nbsp: `Quoi?! Vraiment…?`
+- – typopo: 
+- ✗ richtypo: `Quoi~?~! Vraiment…~?`
+- ✗ tipograph: `Quoi⁈ Vraiment…?`
+- – smartypants: 
+- – retext-smartypants: 
+
 ### Abbreviations
 
 **abbr-de-zb** (de): z. B. and d. h. kept together
@@ -2392,6 +2476,34 @@ Input: `Cela fait 5% de 49€`
 - – smartypants: 
 - – retext-smartypants: 
 
+**currency-uk** (uk): a no-break space before € after the number (CLDR uk)
+
+Input: `Ціна 49€`
+
+- ✓ typography-engine: `Ціна 49~€`
+- ✓ typography-engine literary: `Ціна 49~€`
+- ✗ typograf: `Ціна 49€`
+- ✗ typograf +nbsp: `Ціна 49€`
+- – typopo: 
+- – richtypo: 
+- – tipograph: 
+- – smartypants: 
+- – retext-smartypants: 
+
+**currency-pl** (pl): a no-break space before € after the number (CLDR pl)
+
+Input: `Cena 49€`
+
+- ✓ typography-engine: `Cena 49~€`
+- ✓ typography-engine literary: `Cena 49~€`
+- ✗ typograf: `Cena 49€`
+- ✗ typograf +nbsp: `Cena 49€`
+- – typopo: 
+- – richtypo: 
+- ✗ tipograph: `Cena 49€`
+- – smartypants: 
+- – retext-smartypants: 
+
 **en-symbol-trademark** (en): (TM) becomes ™
 
 Input: `Typography Engine (TM)`
@@ -2517,6 +2629,218 @@ Input: `Score 5 - 3 = 2`
 - ✓ tipograph: `Score 5 – 3 = 2`
 - ✓ smartypants: `Score 5 - 3 = 2`
 - ✓ retext-smartypants: `Score 5 - 3 = 2`
+
+### Spacing
+
+**abbr-bare-fi** (fi): klo, written without a full stop, stays with the hour (ISG 10.7.1)
+
+Input: `Kokous alkaa klo 17`
+
+- ✓ typography-engine: `Kokous alkaa klo~17`
+- ✓ typography-engine literary: `Kokous alkaa klo~17`
+- ✓ typograf: `Kokous alkaa klo~17`
+- ✓ typograf +nbsp: `Kokous alkaa klo~17`
+- – typopo: 
+- – richtypo: 
+- ✗ tipograph: `Kokous alkaa klo 17`
+- – smartypants: 
+- – retext-smartypants: 
+
+**abbr-bare-et** (et): nr and lk, written without a full stop, stay with the number (ISG 4.2.3)
+
+Input: `otsus nr 5, vt lk 12`
+
+- ✓ typography-engine: `otsus nr~5, vt lk~12`
+- ✓ typography-engine literary: `otsus nr~5, vt lk~12`
+- ✓ typograf: `otsus nr~5, vt~lk~12`
+- ✓ typograf +nbsp: `otsus nr~5, vt~lk~12`
+- – typopo: 
+- – richtypo: 
+- – tipograph: 
+- – smartypants: 
+- – retext-smartypants: 
+
+**en-space-percent** (en): a percent keeps its number
+
+Input: `50 %`
+
+- ✓ typography-engine: `50~%`
+- ✓ typography-engine literary: `50~%`
+- ✓ typograf: `50%`
+- ✓ typograf +nbsp: `50%`
+- ✓ typopo: `50%`
+- ✓ richtypo: `50~%`
+- ✓ tipograph: `50 %`
+- ✓ smartypants: `50 %`
+- ✓ retext-smartypants: `50 %`
+
+**en-space-number-unit** (en): no-break space between number and unit
+
+Input: `5 km away`
+
+- ✓ typography-engine: `5~km away`
+- ✓ typography-engine literary: `5~km away`
+- ✗ typograf: `5 km~away`
+- ✓ typograf +nbsp: `5~km~away`
+- ✓ typopo: `5~km away`
+- ✓ richtypo: `5~km~away`
+- ✗ tipograph: `5 km away`
+- ✗ smartypants: `5 km away`
+- ✗ retext-smartypants: `5 km away`
+
+**en-space-number-unit-glued** (en): a glued unit is left readable
+
+Input: `5km away`
+
+- ✓ typography-engine: `5km away`
+- ✓ typography-engine literary: `5km away`
+- ✓ typograf: `5km away`
+- ✓ typograf +nbsp: `5km away`
+- ✓ typopo: `5km away`
+- ✓ richtypo: `5km~away`
+- ✓ tipograph: `5km away`
+- ✓ smartypants: `5km away`
+- ✓ retext-smartypants: `5km away`
+
+**en-space-thousand-kept** (en): thousands separators are untouched
+
+Input: `1,000,000 people`
+
+- ✓ typography-engine: `1,000,000~people`
+- ✓ typography-engine literary: `1,000,000~people`
+- ✓ typograf: `1,000,000 people`
+- ✓ typograf +nbsp: `1,000,000 people`
+- ✓ typopo: `1,000,000 people`
+- ✓ richtypo: `1,000,000~people`
+- ✓ tipograph: `1,000,000 people`
+- ✓ smartypants: `1,000,000 people`
+- ✓ retext-smartypants: `1,000,000 people`
+
+**en-space-collapse** (en): repeated spaces collapse
+
+Input: `a  b   c`
+
+- ✓ typography-engine: `a~b c`
+- ✓ typography-engine literary: `a~b c`
+- ✓ typograf: `a~b~c`
+- ✓ typograf +nbsp: `a~b~c`
+- ✗ typopo: `a~b~  c`
+- ✓ richtypo: `a~b~c`
+- ✓ tipograph: `a b c`
+- ✗ smartypants: `a  b   c`
+- ✗ retext-smartypants: `a  b   c`
+
+**en-space-newline-kept** (en): blank lines survive
+
+Input: `a⏎⏎b`
+
+- ✓ typography-engine: `a⏎⏎b`
+- ✓ typography-engine literary: `a⏎⏎b`
+- ✓ typograf: `a⏎⏎b`
+- ✓ typograf +nbsp: `a⏎⏎b`
+- ✗ typopo: `a⏎b`
+- ✓ richtypo: `a⏎⏎b`
+- ✓ tipograph: `a⏎⏎b`
+- ✓ smartypants: `a⏎⏎b`
+- ✓ retext-smartypants: `a⏎⏎b`
+
+**en-space-leading-kept** (en): text mode keeps a leading indent
+
+Input: `  indented`
+
+- ✓ typography-engine: `  indented`
+- ✓ typography-engine literary: `  indented`
+- ✓ typograf: `indented`
+- ✓ typograf +nbsp: `indented`
+- ✓ typopo: `indented`
+- ✓ richtypo: `~indented`
+- ✓ tipograph: ` indented`
+- ✓ smartypants: `  indented`
+- ✓ retext-smartypants: `  indented`
+
+**en-space-orphan-a** (en): no short word is left at a line end
+
+Input: `I saw a cat in the yard`
+
+- ✓ typography-engine: `I~saw a~cat in~the yard`
+- ✓ typography-engine literary: `I~saw a~cat in~the yard`
+- ✓ typograf: `I~saw a~cat in~the~yard`
+- ✓ typograf +nbsp: `I~saw a~cat in~the~yard`
+- ✓ typopo: `I~saw a~cat in the yard`
+- ✓ richtypo: `I~saw a~cat in~the~yard`
+- ✗ tipograph: `I saw a cat in the yard`
+- ✗ smartypants: `I saw a cat in the yard`
+- ✗ retext-smartypants: `I saw a cat in the yard`
+
+**en-space-title-mr** (en): a title stays with the name
+
+Input: `Mr. Smith left`
+
+- ✓ typography-engine: `Mr.~Smith left`
+- ✓ typography-engine literary: `Mr.~Smith left`
+- ✗ typograf: `Mr. Smith left`
+- ✗ typograf +nbsp: `Mr. Smith left`
+- ✓ typopo: `Mr.~Smith left`
+- ✗ richtypo: `Mr. Smith~left`
+- ✗ tipograph: `Mr. Smith left`
+- ✗ smartypants: `Mr. Smith left`
+- ✗ retext-smartypants: `Mr. Smith left`
+
+**en-space-month-day** (en): a day stays with its month
+
+Input: `on 21 September`
+
+- ✓ typography-engine: `on~21~September`
+- ✓ typography-engine literary: `on~21~September`
+- ✗ typograf: `on~21 September`
+- ✓ typograf +nbsp: `on~21~September`
+- ✓ typopo: `on 21~September`
+- ✓ richtypo: `on~21~September`
+- ✗ tipograph: `on 21 September`
+- ✗ smartypants: `on 21 September`
+- ✗ retext-smartypants: `on 21 September`
+
+**en-space-initials** (en): initials stay with the surname
+
+Input: `J. R. R. Tolkien`
+
+- ✓ typography-engine: `J.~R.~R.~Tolkien`
+- ✓ typography-engine literary: `J.~R.~R.~Tolkien`
+- ✓ typograf: `J. R. R. Tolkien`
+- ✓ typograf +nbsp: `J. R. R. Tolkien`
+- ✗ typopo: `J.R.R. Tolkien`
+- ✓ richtypo: `J. R. R.~Tolkien`
+- ✓ tipograph: `J. R. R. Tolkien`
+- ✓ smartypants: `J. R. R. Tolkien`
+- ✓ retext-smartypants: `J. R. R. Tolkien`
+
+**en-space-fig** (en): Fig. stays with its number
+
+Input: `see Fig. 3`
+
+- ✓ typography-engine: `see Fig.~3`
+- ✓ typography-engine literary: `see Fig.~3`
+- ✗ typograf: `see Fig. 3`
+- ✗ typograf +nbsp: `see Fig. 3`
+- ✗ typopo: `see Fig. 3`
+- ✓ richtypo: `see Fig.~3`
+- ✗ tipograph: `see Fig. 3`
+- ✗ smartypants: `see Fig. 3`
+- ✗ retext-smartypants: `see Fig. 3`
+
+**en-space-eg-kept** (en): e.g. is not split or lost
+
+Input: `e.g. this`
+
+- ✓ typography-engine: `e.g. this`
+- ✓ typography-engine literary: `e.g. this`
+- ✓ typograf: `e.g. this`
+- ✓ typograf +nbsp: `e.g. this`
+- ✓ typopo: `e.g. this`
+- ✓ richtypo: `e.g.~this`
+- ✓ tipograph: `e.g. this`
+- ✓ smartypants: `e.g. this`
+- ✓ retext-smartypants: `e.g. this`
 
 ### Protected text
 
@@ -3213,190 +3537,6 @@ Input: `see http://a.com/x...y now`
 - ✗ tipograph: `see http://a.com/x…y now`
 - ✗ smartypants: `see http://a.com/x…y now`
 - ✗ retext-smartypants: `see http://a.com/x…y now`
-
-### Spacing
-
-**en-space-percent** (en): a percent keeps its number
-
-Input: `50 %`
-
-- ✓ typography-engine: `50~%`
-- ✓ typography-engine literary: `50~%`
-- ✓ typograf: `50%`
-- ✓ typograf +nbsp: `50%`
-- ✓ typopo: `50%`
-- ✓ richtypo: `50~%`
-- ✓ tipograph: `50 %`
-- ✓ smartypants: `50 %`
-- ✓ retext-smartypants: `50 %`
-
-**en-space-number-unit** (en): no-break space between number and unit
-
-Input: `5 km away`
-
-- ✓ typography-engine: `5~km away`
-- ✓ typography-engine literary: `5~km away`
-- ✗ typograf: `5 km~away`
-- ✓ typograf +nbsp: `5~km~away`
-- ✓ typopo: `5~km away`
-- ✓ richtypo: `5~km~away`
-- ✗ tipograph: `5 km away`
-- ✗ smartypants: `5 km away`
-- ✗ retext-smartypants: `5 km away`
-
-**en-space-number-unit-glued** (en): a glued unit is left readable
-
-Input: `5km away`
-
-- ✓ typography-engine: `5km away`
-- ✓ typography-engine literary: `5km away`
-- ✓ typograf: `5km away`
-- ✓ typograf +nbsp: `5km away`
-- ✓ typopo: `5km away`
-- ✓ richtypo: `5km~away`
-- ✓ tipograph: `5km away`
-- ✓ smartypants: `5km away`
-- ✓ retext-smartypants: `5km away`
-
-**en-space-thousand-kept** (en): thousands separators are untouched
-
-Input: `1,000,000 people`
-
-- ✓ typography-engine: `1,000,000~people`
-- ✓ typography-engine literary: `1,000,000~people`
-- ✓ typograf: `1,000,000 people`
-- ✓ typograf +nbsp: `1,000,000 people`
-- ✓ typopo: `1,000,000 people`
-- ✓ richtypo: `1,000,000~people`
-- ✓ tipograph: `1,000,000 people`
-- ✓ smartypants: `1,000,000 people`
-- ✓ retext-smartypants: `1,000,000 people`
-
-**en-space-collapse** (en): repeated spaces collapse
-
-Input: `a  b   c`
-
-- ✓ typography-engine: `a~b c`
-- ✓ typography-engine literary: `a~b c`
-- ✓ typograf: `a~b~c`
-- ✓ typograf +nbsp: `a~b~c`
-- ✗ typopo: `a~b~  c`
-- ✓ richtypo: `a~b~c`
-- ✓ tipograph: `a b c`
-- ✗ smartypants: `a  b   c`
-- ✗ retext-smartypants: `a  b   c`
-
-**en-space-newline-kept** (en): blank lines survive
-
-Input: `a⏎⏎b`
-
-- ✓ typography-engine: `a⏎⏎b`
-- ✓ typography-engine literary: `a⏎⏎b`
-- ✓ typograf: `a⏎⏎b`
-- ✓ typograf +nbsp: `a⏎⏎b`
-- ✗ typopo: `a⏎b`
-- ✓ richtypo: `a⏎⏎b`
-- ✓ tipograph: `a⏎⏎b`
-- ✓ smartypants: `a⏎⏎b`
-- ✓ retext-smartypants: `a⏎⏎b`
-
-**en-space-leading-kept** (en): text mode keeps a leading indent
-
-Input: `  indented`
-
-- ✓ typography-engine: `  indented`
-- ✓ typography-engine literary: `  indented`
-- ✓ typograf: `indented`
-- ✓ typograf +nbsp: `indented`
-- ✓ typopo: `indented`
-- ✓ richtypo: `~indented`
-- ✓ tipograph: ` indented`
-- ✓ smartypants: `  indented`
-- ✓ retext-smartypants: `  indented`
-
-**en-space-orphan-a** (en): no short word is left at a line end
-
-Input: `I saw a cat in the yard`
-
-- ✓ typography-engine: `I~saw a~cat in~the yard`
-- ✓ typography-engine literary: `I~saw a~cat in~the yard`
-- ✓ typograf: `I~saw a~cat in~the~yard`
-- ✓ typograf +nbsp: `I~saw a~cat in~the~yard`
-- ✓ typopo: `I~saw a~cat in the yard`
-- ✓ richtypo: `I~saw a~cat in~the~yard`
-- ✗ tipograph: `I saw a cat in the yard`
-- ✗ smartypants: `I saw a cat in the yard`
-- ✗ retext-smartypants: `I saw a cat in the yard`
-
-**en-space-title-mr** (en): a title stays with the name
-
-Input: `Mr. Smith left`
-
-- ✓ typography-engine: `Mr.~Smith left`
-- ✓ typography-engine literary: `Mr.~Smith left`
-- ✗ typograf: `Mr. Smith left`
-- ✗ typograf +nbsp: `Mr. Smith left`
-- ✓ typopo: `Mr.~Smith left`
-- ✗ richtypo: `Mr. Smith~left`
-- ✗ tipograph: `Mr. Smith left`
-- ✗ smartypants: `Mr. Smith left`
-- ✗ retext-smartypants: `Mr. Smith left`
-
-**en-space-month-day** (en): a day stays with its month
-
-Input: `on 21 September`
-
-- ✓ typography-engine: `on~21~September`
-- ✓ typography-engine literary: `on~21~September`
-- ✗ typograf: `on~21 September`
-- ✓ typograf +nbsp: `on~21~September`
-- ✓ typopo: `on 21~September`
-- ✓ richtypo: `on~21~September`
-- ✗ tipograph: `on 21 September`
-- ✗ smartypants: `on 21 September`
-- ✗ retext-smartypants: `on 21 September`
-
-**en-space-initials** (en): initials stay with the surname
-
-Input: `J. R. R. Tolkien`
-
-- ✓ typography-engine: `J.~R.~R.~Tolkien`
-- ✓ typography-engine literary: `J.~R.~R.~Tolkien`
-- ✓ typograf: `J. R. R. Tolkien`
-- ✓ typograf +nbsp: `J. R. R. Tolkien`
-- ✗ typopo: `J.R.R. Tolkien`
-- ✓ richtypo: `J. R. R.~Tolkien`
-- ✓ tipograph: `J. R. R. Tolkien`
-- ✓ smartypants: `J. R. R. Tolkien`
-- ✓ retext-smartypants: `J. R. R. Tolkien`
-
-**en-space-fig** (en): Fig. stays with its number
-
-Input: `see Fig. 3`
-
-- ✓ typography-engine: `see Fig.~3`
-- ✓ typography-engine literary: `see Fig.~3`
-- ✗ typograf: `see Fig. 3`
-- ✗ typograf +nbsp: `see Fig. 3`
-- ✗ typopo: `see Fig. 3`
-- ✓ richtypo: `see Fig.~3`
-- ✗ tipograph: `see Fig. 3`
-- ✗ smartypants: `see Fig. 3`
-- ✗ retext-smartypants: `see Fig. 3`
-
-**en-space-eg-kept** (en): e.g. is not split or lost
-
-Input: `e.g. this`
-
-- ✓ typography-engine: `e.g. this`
-- ✓ typography-engine literary: `e.g. this`
-- ✓ typograf: `e.g. this`
-- ✓ typograf +nbsp: `e.g. this`
-- ✓ typopo: `e.g. this`
-- ✓ richtypo: `e.g.~this`
-- ✓ tipograph: `e.g. this`
-- ✓ smartypants: `e.g. this`
-- ✓ retext-smartypants: `e.g. this`
 
 ### Stability
 
