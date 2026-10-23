@@ -96,15 +96,19 @@ was found, and the headers and their tests keep it so.
 
 - `Content-Security-Policy`: `default-src 'self'`, with `script-src 'self'` plus the SHA-256 hashes of
   the only two inline scripts (the theme script in each page head and the hang script the build
-  appends), `object-src 'none'`, and `base-uri`, `form-action`, `frame-ancestors` and the frame,
-  font and connect sources limited to `'self'`.
+  appends) and the statistics origin, `connect-src 'self'` plus the same origin, `object-src 'none'`,
+  and `base-uri`, `form-action`, `frame-ancestors` and the frame and font sources limited to `'self'`.
 - `X-Content-Type-Options: nosniff`, `X-Frame-Options: SAMEORIGIN`, `Referrer-Policy:
   strict-origin-when-cross-origin` and `Permissions-Policy: camera=(), microphone=(), geolocation=()`.
 - No `Strict-Transport-Security`: the container speaks plain HTTP and the proxy in front of it owns TLS.
 
 `style-src` allows `'unsafe-inline'` because the hanging punctuation is placed with `style`
 attributes, and `img-src` allows `data:` because the select arrow in `style.css` is a data URI;
-scripts get no such exception. `apps/website/nginx.test.ts` hashes the inline scripts of the generated
+scripts get no such exception. The statistics are a self-hosted Umami (no cookie): `ANALYTICS` in
+`build/site.ts` holds its origin and website id, and the build adds the one `<script defer>` tag to every
+page head. Its origin is the only one outside the site that the policy names, in `script-src` (the script
+is loaded from it) and `connect-src` (each visit is sent back to it). Move or replace it and change the
+constant and the two directives together; `nginx.test.ts` fails if they disagree. `apps/website/nginx.test.ts` hashes the inline scripts of the generated
 pages and fails when either changes; the fix is to replace that hash in `nginx.conf`. The headers are
 all set at the server level because a location that sets any header drops every server-level one,
 which is why `Cache-Control` is a `map` and not an `add_header` per location.

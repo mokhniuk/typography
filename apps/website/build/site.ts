@@ -23,6 +23,17 @@ export const GITHUB = 'https://github.com/mokhniuk/typography';
 export const NAME = 'Typography Engine';
 export const AUTHOR = { name: 'Oleg Mokhniuk', url: 'https://oleg.berlin' } as const;
 export const NPM_URL = 'https://www.npmjs.com/package/@mokhniuk/typography';
+/**
+ * The site's visitor statistics: a self-hosted Umami, which sets no cookie. Its origin is in the
+ * `script-src` and `connect-src` of the Content-Security-Policy (`nginx.conf`), because the script is
+ * loaded from it and reports each visit back to it.
+ */
+export const ANALYTICS = {
+  origin: 'https://umami.mokhni.uk',
+  websiteId: 'ecef9bb1-f636-445c-8a7b-72d4e4600b70',
+} as const;
+/** The tag every page carries, last in its head. */
+export const ANALYTICS_TAG = `<script defer src="${ANALYTICS.origin}/script.js" data-website-id="${ANALYTICS.websiteId}"></script>`;
 /** The image a link to any page shows when it is shared; made by `scripts/site-images.ts`. */
 export const SHARE_IMAGE = { file: 'og.png', width: 1200, height: 630 } as const;
 export const SHARE_ALT =

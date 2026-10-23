@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { generatedPages } from './build/pages';
 import { finish, source } from './build/plugin';
-import { SITE_ROOT } from './build/site';
+import { ANALYTICS, ANALYTICS_TAG, SITE_ROOT } from './build/site';
 
 // Comment lines are dropped first, so a directive that was commented out cannot satisfy a check.
 export const uncommented = (text: string): string => text.replace(/^\s*#.*$/gm, '');
@@ -78,11 +78,27 @@ describe('security headers', () => {
       expect(allowed, `${script.slice(0, 40)}...`).toContain(hash(script));
   });
 
-  test('script-src lists nothing but self and the two hashes', () => {
+  test('script-src lists nothing but self, the statistics origin and the two hashes', () => {
     const allowed = policy().get('script-src') ?? [];
     expect(allowed).not.toContain("'unsafe-inline'");
-    expect(allowed.filter((value) => !value.startsWith("'sha256-"))).toEqual(["'self'"]);
-    expect(allowed).toHaveLength(3);
+    expect(allowed.filter((value) => !value.startsWith("'sha256-"))).toEqual([
+      "'self'",
+      ANALYTICS.origin,
+    ]);
+    expect(allowed).toHaveLength(4);
+  });
+
+  test('the statistics origin may be reached by script and by request, and nothing else is opened', () => {
+    expect(policy().get('connect-src')).toEqual(["'self'", ANALYTICS.origin]);
+    for (const name of ['default-src', 'img-src', 'font-src', 'frame-src', 'form-action'])
+      expect(policy().get(name) ?? [], name).not.toContain(ANALYTICS.origin);
+  });
+
+  test('every page loads the statistics script once, from that origin, deferred', () => {
+    for (const html of pages) {
+      expect(html.split(ANALYTICS.origin).length - 1, html.slice(0, 80)).toBe(1);
+      expect(html).toContain(ANALYTICS_TAG);
+    }
   });
 
   test('plugins are off and everything else falls back to the site itself', () => {

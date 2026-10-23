@@ -8,7 +8,7 @@ import { markHangsInPage } from './hang';
 import { highlightHtml } from './highlight';
 import { generatedPages, latestArticles } from './pages';
 import { feed, forget, robots, seoHead, sitemap } from './seo';
-import { BASE, fill, SITE_ROOT, TYPESET } from './site';
+import { ANALYTICS_TAG, BASE, fill, SITE_ROOT, TYPESET } from './site';
 
 /** The path of a page on the site: "docs/api/", "" for the landing page. */
 const pathOf = (file: string): string => {
@@ -55,7 +55,7 @@ export function finish(html: string, path: string): string {
   // The head tags are made from the finished title and description, so they come last.
   const withHead = filled.replace(
     '</head>',
-    () => `${seoHead(filled, path)}\n${preload(path)}\n</head>`,
+    () => `${seoHead(filled, path)}\n${preload(path)}\n${ANALYTICS_TAG}\n</head>`,
   );
   return markHangsInPage(typesetHtml(externalLinks(highlightHtml(withHead)), TYPESET));
 }
