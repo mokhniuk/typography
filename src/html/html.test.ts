@@ -16,6 +16,18 @@ describe('typesetHtml', () => {
     expect(h('<p>x</p> "', { lang: 'en' })).toBe('<p>x</p> "');
   });
 
+  test('a narrow no-break space is written &#8239; by default, the character with nbsp: char', () => {
+    expect(typesetHtml('<p>Oui; non: bien!</p>', { lang: 'fr' })).toBe(
+      '<p>Oui&#8239;; non&nbsp;: bien&#8239;!</p>',
+    );
+    expect(typesetHtml('<p>Oui; non: bien!</p>', { lang: 'fr', nbsp: 'char' })).toBe(
+      '<p>Oui\u202f; non\u00a0: bien\u202f!</p>',
+    );
+    // Read back, &#8239; is the space already right: nothing changes.
+    const once = typesetHtml('<p>Oui; non!</p>', { lang: 'fr' });
+    expect(typesetHtml(once, { lang: 'fr' })).toBe(once);
+  });
+
   test('typesets the text of a block', () => {
     expect(h('<p>He said "hi" - and left.</p>')).toBe('<p>He said “hi”~— and~left.</p>');
   });

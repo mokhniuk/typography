@@ -37,6 +37,11 @@ describe('French', () => {
     expect(t('Pourquoi ? Voici : le plan')).toBe('Pourquoi^? Voici~: le plan');
   });
 
+  test('a colon or semicolon at the end of the text takes its space too', () => {
+    expect(t('Voici:')).toBe('Voici~:');
+    expect(t('Quoi;')).toBe('Quoi^;');
+  });
+
   test('no space between two marks, in a time or a ratio, or at a line start', () => {
     expect(t('Quoi?! Bien...! à 10:30\n? non')).toBe('Quoi^?! Bien…! à 10:30\n? non');
   });

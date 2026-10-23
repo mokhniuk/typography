@@ -35,7 +35,7 @@ export type TypographyConfig = {
    * website writes the list for a font.
    */
   avoid?: string | undefined;
-  /** HTML only: a no-break space as `&nbsp;` (the default) or the character. Ignored by the other modes. */
+  /** HTML only: the no-break spaces as entities (the default: U+00A0 as `&nbsp;`, the narrow U+202F as `&#8239;`) or as the characters. Ignored by the other modes. */
   nbsp?: 'entity' | 'char' | undefined;
   /** How far hanging punctuation hangs, 0 to 1 (`--hang-amount`); set by `TypographyRoot`. Ignored by the string modes. */
   hangAmount?: number | undefined;

@@ -22,6 +22,10 @@ const codePointAt = (text: string, index: number): string => {
   return code === undefined ? '' : String.fromCodePoint(code);
 };
 
+const COMBINING = /\p{M}/u;
+/** A combining mark (an accent typed after its letter, as in NFD text). */
+const isCombining = (codePoint: string): boolean => codePoint !== '' && COMBINING.test(codePoint);
+
 /** A digit or another number (`½`, which `symbol.fraction` may write after this rule ran). */
 const isNumber = (codePoint: string): boolean =>
   isLetterOrNumber(codePoint) && !isLetter(codePoint);
@@ -59,8 +63,8 @@ function notPunctuation(text: string, index: number, mark: string, start: number
   const next = codePointAt(text, index + 1);
   // U+E003 stands for a web address, an email or a code span set aside (zones.ts): a mark glued to
   // one (`voir:https://…`) is part of what it starts, as before a letter.
-  if (isLetterOrNumber(next) || next === '=' || next === '⇒' || next === '') return true;
-  if ((mark === ':' || mark === ';') && AFTER_COLON.includes(next)) return true;
+  if (isLetterOrNumber(next) || next === '=' || next === '⇒' || next === '\uE003') return true;
+  if ((mark === ':' || mark === ';') && next !== '' && AFTER_COLON.includes(next)) return true;
   if (mark === ';' && endsReference(text, index)) return true;
   if (mark === '!' && next === '[') return true;
   if (mark === '?' && next === '.') return true;
@@ -90,7 +94,10 @@ export function highPunctuation(text: string, setting: HighPunctuation): string 
     if (!space) continue;
     let start = index;
     while (start > from && isSpace(text.charCodeAt(start - 1))) start--;
-    if (!isLetterOrNumber(before(text, start))) continue;
+    // A letter with combining accents typed after it (NFD `e` U+0301) is a letter: step over them.
+    let base = start;
+    while (base > from && isCombining(before(text, base))) base -= before(text, base).length;
+    if (!isLetterOrNumber(before(text, base))) continue;
     if (text.slice(start, index) === space) continue;
     if (notPunctuation(text, index, mark, start)) continue;
     out += text.slice(from, start) + space;

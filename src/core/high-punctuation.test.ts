@@ -1,4 +1,6 @@
 import { describe, expect, test } from 'bun:test';
+import { typesetHtml } from '../html/index.ts';
+import { typesetMarkdown } from '../markdown/index.ts';
 import { highPunctuation } from './high-punctuation.ts';
 import { type Lang, typographic } from './index.ts';
 import { NBSP } from './types.ts';
@@ -16,6 +18,19 @@ describe('space.high-punctuation (French)', () => {
     expect(fr('à demain; sinon')).toBe('à demain^; sinon');
     expect(fr('Attention!')).toBe('Attention^!');
     expect(fr('Pourquoi?')).toBe('Pourquoi^?');
+  });
+
+  test('at the end of the text, : and ; take their space like ? and !', () => {
+    expect(fr('Voici:')).toBe('Voici~:');
+    expect(fr('Quoi;')).toBe('Quoi^;');
+    expect(fr('Il y en a 3:')).toBe('Il y en a 3~:');
+    expect(fr('Pourquoi?')).toBe('Pourquoi^?');
+  });
+
+  test('a letter written with a combining accent (NFD) counts as a letter', () => {
+    expect(fr('Un cafe\u0301? Voici\u0301:')).toBe('Un cafe\u0301^? Voici\u0301~:');
+    // A combining mark with no letter under it is not a letter.
+    expect(fr('\u0301? et (\u0301:')).toBe('\u0301? et (\u0301:');
   });
 
   test('after a digit too', () => {
@@ -97,6 +112,10 @@ describe('space.high-punctuation (French)', () => {
     );
   });
 
+  test('nothing after %, an email or an address (docs/limits.md)', () => {
+    expect(fr('100 %: oui et a@b.fr: ok')).toBe('100~%: oui et a@b.fr: ok');
+  });
+
   test('a ? or ! before a closing bracket takes its space', () => {
     expect(fr('(vraiment?) et [non!]')).toBe('(vraiment^?) et [non^!]');
   });
@@ -116,6 +135,17 @@ describe('space.high-punctuation (French)', () => {
 
   test('a font that cannot draw the narrow space keeps the text as typed there', () => {
     expect(fr('Voici: oui?', { avoid: NNBSP })).toBe('Voici~: oui?');
+  });
+});
+
+describe('space.high-punctuation in the HTML and Markdown modes', () => {
+  test('a paragraph that ends in a colon, before a list', () => {
+    expect(show(typesetMarkdown('Voici la liste:\n\n- un\n- deux', { lang: 'fr' }))).toBe(
+      'Voici la liste~:\n\n- un\n- deux',
+    );
+    expect(typesetHtml('<p>Voici la liste:</p><ul><li>un</li></ul>', { lang: 'fr' })).toBe(
+      '<p>Voici la liste&nbsp;:</p><ul><li>un</li></ul>',
+    );
   });
 });
 

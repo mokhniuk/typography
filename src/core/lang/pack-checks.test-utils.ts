@@ -39,6 +39,11 @@ export function wellFormed(pack: LangPack, file: string) {
       expect(pack.numbers.group.length).toBeGreaterThan(0);
       expect(pack.numbers.decimal.length).toBeGreaterThan(0);
     }
+    // The space before high punctuation: one no-break (U+00A0), narrow no-break (U+202F) or thin
+    // (U+2009) space each, the characters `space.high-punctuation` also reads as a typed space.
+    for (const space of Object.values(pack.highPunctuation ?? {})) {
+      expect(['\u00A0', '\u202F', '\u2009']).toContain(space);
+    }
     for (const [open, close] of pack.turnedPairs ?? []) {
       expect(open).not.toBe(close);
     }

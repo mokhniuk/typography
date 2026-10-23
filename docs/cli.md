@@ -24,7 +24,7 @@ It typesets text, HTML or Markdown with the same engine as the library functions
 | `--write` | `-w` | | | Rewrite the files in place. |
 | `--check` | `-c` | | | Change nothing; exit 1 if any input would change. |
 | `--avoid` | | characters | none | Characters the font cannot draw (`--avoid "⇒½¼¾−"`): a rule that would insert one of them leaves the text as it was typed, for that one change; quotation marks are kept whole, so if one mark of a quotation is avoided, every quotation mark stays as typed. See [api.md](api.md#avoid). |
-| `--nbsp` | | `entity`, `char` | `entity` | HTML only: write a no-break space as `&nbsp;` or as the character. Checked for every format, used only for HTML. |
+| `--nbsp` | | `entity`, `char` | `entity` | HTML only: write a no-break space as `&nbsp;` (a narrow one as `&#8239;`) or as the character. Checked for every format, used only for HTML. |
 | `--config` | | a file | `typography` in `./package.json` | Read the options from a config (see [Config](#config) below). |
 | `--help` | `-h` | | | Show the help and exit 0. |
 | `--version` | `-v` | | | Print the version of the package (from `package.json`) and exit 0. |

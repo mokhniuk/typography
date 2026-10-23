@@ -45,11 +45,20 @@ What the engine deliberately leaves alone, what it knowingly does not do, and wh
 - **In React the text can change after the fonts load.** The first paint is the ordinary typeset text; once `document.fonts.ready` resolves and a gap is found, the texts under the root are set again. Set `avoidMissing={false}` for a page that must not do that.
 - **The font checker's verdict and preset are a starting point**, not research: the score is the share of characters the font draws itself, and the size, line height, measure and hang amount are measured from the font with editorial rules of thumb.
 
+## French high punctuation
+
+`space.high-punctuation` sets the French space before `: ; ! ?` only where a letter or digit stands before the mark (or before the spaces typed in front of it), and errs towards leaving text alone:
+
+- Nothing is set after anything else: a closing bracket or quote mark (`(oui)?`), a full stop or `…`, `%` (`100 %: oui`), a web address, an email or a code span (`a@b.fr: ok`), or a tag in HTML and an emphasis in Markdown (`<em>Pourquoi</em>?`, `**Attention**!`). Each of these keeps the text as typed.
+- A tab or a line break before the mark is not replaced, and a mark glued to a letter after it (`Quoi?Non`, `a:b`) is not read as punctuation.
+- A letter written with a combining accent (NFD, `e` and U+0301) counts as a letter; a combining mark with no letter under it does not.
+- `fr-CH` gets no space: no Swiss French source was read (see its language page).
+
 ## Opt-in rules
 
 Ten rules are off until named in `enable` (`number.group` is described in the rules page) ([rules.md](rules.md)). Their known limits:
 
-- **`space.before-punctuation`** removes a space before `, . ; : ! ? )` only when the mark is not followed by a letter or digit, so a decimal (` .5`), a file extension (` .gitignore`), `!=` and `??` stay. A colon between digits (`10 : 30`) and an emoticon (` :)`, ` ;-)`) are left. A dot is not pulled against another dot, so `. . .` never becomes `...`. French keeps its space before `: ; ! ?` (it needs one) but loses it before `, . )`. It is not aware of prose that is really code: `a ?. b` outside a code span is left only because of its guards.
+- **`space.before-punctuation`** removes a space before `, . ; : ! ? )` only when the mark is not followed by a letter or digit, so a decimal (` .5`), a file extension (` .gitignore`), `!=` and `??` stay. A colon between digits (`10 : 30`) and an emoticon (` :)`, ` ;-)`) are left. A dot is not pulled against another dot, so `. . .` never becomes `...`. French keeps its space before `: ; ! ?` (it needs one; `space.high-punctuation` then makes it the no-break one) but loses it before `, . )`. It is not aware of prose that is really code: `a ?. b` outside a code span is left only because of its guards.
 - **`space.after-comma`** adds a space only when a letter follows the comma. `1,5`, `1,000` and `3,14` are untouched, and so is `a,b` inside a web address, email or code span. It cannot tell `a,b` in a CSV or a list of variables from a missed space, so use it on prose.
 - **`punctuation.double`** collapses a run of `!` or `?` that is attached to the word before it and not followed by a letter or digit (`Wow!!!` becomes `Wow!`). `?!` and `!?` stay. `a ?? b`, `!!x` and `(!!y)` are left. `...` belongs to `ellipsis`.
 - **`space.trailing`** trims spaces and tabs at the end of each line (not a no-break space, not a line break). `typesetText` strips and restores trailing spaces itself by design, so the rule matters for `typographic()` and the HTML and Markdown modes only. `typographic()` removes a Markdown hard break (two trailing spaces); `typesetMarkdown` keeps it.
