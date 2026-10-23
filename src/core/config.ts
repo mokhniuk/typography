@@ -14,7 +14,9 @@ import type { Lang, QuoteStyle, Register } from './types.ts';
 export type TypographyConfig = {
   /**
    * Language of the text: a code (`'uk'`) or a pack (the `uk` export of
-   * `@mokhniuk/typography/lang/uk`); `en` unless given. JSON can only give a code.
+   * `@mokhniuk/typography/lang/uk`); `en` unless given. A pack may come from JSON too (an object
+   * with `code`, `name` and `quotes` pairs), but its `orphans` RegExp, or any other field JSON
+   * cannot hold, needs a module.
    */
   lang?: Lang | LangPack | undefined;
   /** `display` (the default) or `literary`. */

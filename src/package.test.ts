@@ -90,9 +90,10 @@ test('one entry per language pack, `./lang/<code>`, and the pack-free `./lite`',
   // Each built pack gives the pack as its default export and under its own name.
   for (const pack of PACKS) {
     const file = join(ROOT, 'dist', 'core', 'lang', `${pack.code.toLowerCase()}.js`);
-    const mod = (await import(file)) as { default: { code: string } };
+    const mod = (await import(file)) as { default: { code: string } } & Record<string, unknown>;
     expect(mod.default.code).toBe(pack.code);
-    expect(Object.values(mod)).toContain(mod.default);
+    // The named export (`uk`, `deCH`, ...) is the very object the default export is.
+    expect(Object.entries(mod).some(([k, v]) => k !== 'default' && v === mod.default)).toBe(true);
   }
   expect(pkg.exports['./lite']).toEqual({
     types: './dist/lite/index.d.ts',

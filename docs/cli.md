@@ -118,7 +118,7 @@ The options can come from a config (`TypographyConfig`, see [api.md](api.md#conf
 }
 ```
 
-Precedence: a flag beats the config, and `--config` beats `package.json`, which is then not read; nothing is merged, so `--disable quote` replaces the config's `disable` list rather than adding to it. The config is checked like `defineConfig` (unknown key, bad value, a rule name that matches no rule): a mistake is a usage error (exit 2) that names the file. Custom `rules` can only come from a module; in JSON they are an error. `nbsp` is used for HTML only, and `hangAmount` is accepted and ignored (it is for `TypographyRoot`).
+Precedence: a flag beats the config, and `--config` beats `package.json`, which is then not read; nothing is merged, so `--disable quote` replaces the config's `disable` list rather than adding to it. The config is checked like `defineConfig` (unknown key, bad value, a rule name that matches no rule): a mistake is a usage error (exit 2) that names the file. Custom `rules` can only come from a module; in JSON they are an error. A module config may give `lang` as a pack object (`import { uk } from '@mokhniuk/typography/lang/uk'`); `--lang` stays a code. `nbsp` is used for HTML only, and `hangAmount` is accepted and ignored (it is for `TypographyRoot`).
 
 ```sh
 typo --config typography.config.ts -w docs/*.md

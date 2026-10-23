@@ -83,7 +83,7 @@ A project's typography in one object, `TypographyConfig`: the options above unde
 
 ```ts
 type TypographyConfig = {
-  lang?: Lang | LangPack;    // a pack only from a module, not JSON
+  lang?: Lang | LangPack;    // a pack may come from JSON too; its `orphans` RegExp needs a module
   register?: Register;
   quoteStyle?: QuoteStyle;
   disable?: readonly string[];
@@ -206,7 +206,7 @@ Every mode takes the whole config: `nbsp` is read by the HTML mode only, `hangAm
 | Export | What it is |
 |---|---|
 | `TypographyConfig`, `defineConfig`, `checkConfig` | See [Config](#config). |
-| `RULES: readonly Rule[]` | The rules in the order they run. `Rule` is `{ id: string; about: string; category?: RuleCategory; defaultOn?: boolean; avoidWhole?: boolean; when?(text, context): boolean; apply(text, context): string }`; `defaultOn: false` means the rule runs only when named in `enable`. `avoidWhole: true` makes [`avoid`](#avoid) all or nothing for the rule: if one of its changes would bring in an avoided character, every change it made to that text is dropped (`quote` sets it). `category` says what the rule is for (see `RULE_CATEGORIES`); every built-in rule has one, a custom rule may leave it out. `when` is an optional cheap test: when it returns false `apply` is skipped, so it must be false only if `apply` would return the text unchanged. A rule without `when` always runs. A custom rule made by spreading a built-in (`{ ...RULES[i], apply }`) copies its `when`: set `when: undefined`. |
+| `RULES: readonly Rule[]` | The rules in the order they run. `Rule` is `{ id: string; about: string; category?: RuleCategory; defaultOn?: boolean; avoidWhole?: boolean; packFields?: readonly (keyof LangPack)[]; when?(text, context): boolean; apply(text, context): string }`; `defaultOn: false` means the rule runs only when named in `enable`. `avoidWhole: true` makes [`avoid`](#avoid) all or nothing for the rule: if one of its changes would bring in an avoided character, every change it made to that text is dropped (`quote` sets it). `category` says what the rule is for (see `RULE_CATEGORIES`); every built-in rule has one, a custom rule may leave it out. `when` is an optional cheap test: when it returns false `apply` is skipped, so it must be false only if `apply` would return the text unchanged. `packFields` names the pack fields whose languages the rule acts in (`space.percent`: `percentSpace` and `currencySpace`): a note for readers that `docs/rules.md` and `typo --rules` list, which does not change what the rule does. A rule without `when` always runs. A custom rule made by spreading a built-in (`{ ...RULES[i], apply }`) copies its `when`: set `when: undefined`. |
 | `selectRules({ rules?, disable?, enable? })` | The rules that run, in order. Names are checked against `rules` (the built-in list unless given); an unknown name, or a rule named in both `disable` and `enable`, throws. `without(disable)` is `selectRules({ disable })`. |
 | `addRule(list, rule, position)` | A new list with `rule` at `{ before: id }`, `{ after: id }`, `{ first: true }` or `{ last: true }`. Does not change `list` or `RULES`; an unknown anchor or a duplicate id throws. |
 | `RULE_IDS: readonly string[]` | `RULES.map(r => r.id)`. |
@@ -361,8 +361,16 @@ No module of `./lite` imports the pack table, directly or through another module
 One entry per pack, the code in lower case: `./lang/en`, `./lang/uk`, `./lang/de`, `./lang/de-ch`, `./lang/fr-ch`, ... (27; `LANGS` lists the codes). Each exports the pack under its name (`en`, `uk`, `de`, `deCH`, `frCH`, ...) and as its default export, for a dynamic `import()`:
 
 ```ts
-const { default: pack } = await import(`@mokhniuk/typography/lang/${code}`);
+// A static map: a bundler (Vite, Rollup, webpack) sees every entry and splits one chunk per pack.
+const packs = {
+  uk: () => import('@mokhniuk/typography/lang/uk'),
+  'de-CH': () => import('@mokhniuk/typography/lang/de-ch'),
+  // and so on
+};
+const { default: pack } = await packs[code]();
 ```
+
+The template form, `import(\`@mokhniuk/typography/lang/${code.toLowerCase()}\`)`, works on Node, Bun and in a browser with an import map, but a bundler does not resolve a bare-package template specifier, and the entries are lower case (`de-ch`, not `de-CH`).
 
 A pack is a plain object (`LangPack`, documented in `src/core/lang/pack.ts` and in [languages.md](languages.md)); it loads no other language, except `de-ch`, which builds on `de`, and `fr-ch` on `fr`. It works with every entry: `typographic(text, uk)` on the main entry gives what `typographic(text, 'uk')` gives.
 
@@ -374,12 +382,12 @@ Every full entry carries all 27 packs, because it resolves a code at run time. `
 |---|---|---|
 | `./text` (`typesetText`, every pack) | 89.6 KB | 26.6 KB |
 | `./lite`, the whole entry, no pack | 37.5 KB | 13.2 KB |
-| `typesetText` from `./lite`, no pack | 28.7 KB | 10.2 KB |
+| `typesetText` from `./lite`, no pack | 29.2 KB | 10.2 KB |
 | `typesetText` from `./lite` + `./lang/en` | 30.5 KB | 10.8 KB |
 | `typesetText` from `./lite` + `./lang/uk` | 30.6 KB | 10.8 KB |
 | the 27 packs alone | 59.7 KB | 16.4 KB |
 
-A pack adds 0.5 to 1.5 KB of brotli on top of the engine (English and Ukrainian 0.6 KB, Lithuanian, the largest, 1.5 KB). For several languages, import each pack you need; for a language picked at run time, `import()` its `./lang/<code>` entry.
+A pack adds 0.4 to 1.5 KB of brotli on top of the engine (German 0.4 KB, English and Ukrainian 0.6 KB, Lithuanian, the largest, 1.5 KB). For several languages, import each pack you need; for a language picked at run time, `import()` its `./lang/<code>` entry.
 
 ## Hanging punctuation
 
