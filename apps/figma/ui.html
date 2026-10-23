@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Typography settings</title>
+<style>/*style*/</style>
+</head>
+<body>
+<main>
+  <h1>Typography settings</h1>
+  <form aria-label="Settings">
+    <label>Language
+      <select id="lang"></select>
+    </label>
+    <label>Register
+      <select id="register">
+        <option value="display">Display (UI and marketing)</option>
+        <option value="literary">Literary (books)</option>
+      </select>
+    </label>
+    <label>Quotes
+      <select id="quoteStyle">
+        <option value="language">Of the language</option>
+        <option value="us">US: “…” and ‘…’</option>
+        <option value="guillemets">Guillemets: «…» and „…“</option>
+      </select>
+    </label>
+    <details>
+      <summary>Rules <output id="badge"></output></summary>
+      <div id="rules"></div>
+      <button type="button" id="reset">Reset rules</button>
+    </details>
+  </form>
+  <p data-hint>Saved as you change it. It applies to Format selection and Format page.</p>
+  <footer><button type="button" id="done" class="primary">Done</button></footer>
+</main>
+<script>/*script*/</script>
+</body>
+</html>

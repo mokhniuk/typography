@@ -15,3 +15,7 @@ apps/bench/*
 
 # Agent worktrees
 .claude/worktrees/
+
+# The Figma plugin: sources are tracked, its build output and dependencies are not.
+apps/figma/out/
+apps/figma/bun.lock

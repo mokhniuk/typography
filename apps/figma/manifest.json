@@ -1,0 +1,16 @@
+{
+  "name": "Typography",
+  "id": "0000000000000000000",
+  "api": "1.0.0",
+  "main": "out/code.js",
+  "ui": "out/ui.html",
+  "editorType": ["figma"],
+  "documentAccess": "dynamic-page",
+  "networkAccess": { "allowedDomains": ["none"] },
+  "menu": [
+    { "name": "Format selection", "command": "format-selection" },
+    { "name": "Format page", "command": "format-page" },
+    { "command": "separator" },
+    { "name": "Settings…", "command": "settings" }
+  ]
+}
