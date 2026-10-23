@@ -10,7 +10,7 @@ The package is `@mokhniuk/typography`. Website, docs and playground: [typography
 ![27 languages](https://img.shields.io/badge/languages-27-4c72b0)
 ![Zero dependencies](https://img.shields.io/badge/dependencies-0-2ca02c)
 ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6)
-![1 MB in 49 ms](https://img.shields.io/badge/1%20MB%20of%20text-49%20ms-2ca02c)
+![1 MB in 38 ms](https://img.shields.io/badge/1%20MB%20of%20text-38%20ms-2ca02c)
 
 ```diff
 - Ada said: "The sign read 'Closed' again" - and laughed... We're used to it by now.
@@ -47,16 +47,16 @@ Passed / scored; `–` means the tool has no such feature or language, and is no
 | Safety | **33/33** | **33/33** | 28/29 | 11/12 | 9/10 | 17/19 | 7/9 |
 | **Total, all 16 groups** | **250/250** | **250/250** | 132/226 | 85/111 | 69/102 | 126/162 | 53/89 |
 
-Speed, English text in one piece, the median of several runs (typograf is the closest tool in scope; the 0.15.0 run):
+Speed, English text in one piece, the median of several runs (typograf is the closest tool in scope; the 0.16.1 run):
 
 | Tool | 10 KB | 100 KB | 1 MB |
 |---|---|---|---|
-| **typography-engine** | **0 ms** | **5 ms** | **49 ms** |
-| typograf | 1 ms | 8 ms | 71 ms |
-| tipograph | 0 ms | 2 ms | 15 ms |
-| smartypants | 0 ms | 1 ms | 12 ms |
-| retext-smartypants | 5 ms | 35 ms | 1416 ms |
-| typopo | 27 ms | 1407 ms | 121877 ms |
+| **typography-engine** | **0 ms** | **4 ms** | **38 ms** |
+| typograf | 1 ms | 6 ms | 58 ms |
+| tipograph | 0 ms | 1 ms | 11 ms |
+| smartypants | 0 ms | 1 ms | 10 ms |
+| retext-smartypants | 4 ms | 27 ms | 577 ms |
+| typopo | 21 ms | 1089 ms | 98742 ms |
 | richtypo | 3189 ms | not run (~317 s) | not run (~31690 s) |
 
 The tools that beat it on speed (tipograph, smartypants) score far below it on the checks; typograf, the closest in scope, is about 1.45× slower on large text, and typopo and richtypo slow down quadratically.

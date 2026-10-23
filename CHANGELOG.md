@@ -4,6 +4,13 @@ Versions follow semver: a **minor** release may change the output of the engine 
 
 ## Unreleased
 
+### Fixes
+
+- Speed: German, Danish and Hungarian prose cost as much as English. The turned quotation pairs (`»…«` and `›…‹`, `turnedPairs` on the pack) were matched with a regex that opened with a lookbehind, tried at every position, and in JavaScriptCore a lookbehind anywhere in a pattern also stops the engine from jumping to the first character; the pair is now found by its opening mark and the characters around it are read by hand. 100 KB of German prose takes the rules 3 ms instead of 13 (`bun run profile -- de`, which now takes a language). Output identical (`bun run compare` 0 differences over 972,001 comparisons). No output change.
+- Release workflow: the publish gate asks the registry without credentials (a plain request for the version: 200 skips, 404 publishes, anything else fails closed), so setup-node's placeholder token can no longer fail it. The Node smoke test (`scripts/smoke.ts`, CI on Node 20, 22 and 24) also runs `typo --config` with a JSON config everywhere and with a TypeScript config on Node 22.18 or later. README: npm version badge. No output change.
+- `@mokhniuk/typography/dom` imports the hanging-punctuation code from `core/hang` directly instead of the core barrel, so no bundler can pull the engine and the 27 packs into it (7.6 KB minified, 2.4 KB brotli; the earlier benchmark row that said 91.6 KB was stale, bundlers that honour `sideEffects: false` already dropped the barrel). No output change.
+- Quote fixtures and snapshot digests cover `quoteStyle: 'guillemets'` (54 fixture combinations and 27 digests added, nothing changed); the API docs say `lang` codes are exact-case (`de-CH`, not `de-ch`) and how the rehype plugin matches a `lang` attribute (the longest run of leading subtags that is a pack code, case-insensitively; the text that said `de-CH` maps to `de` was wrong); HTML goldens for text outside any element; the CLI help test checks `de-CH` and `fr-CH`. No output change.
+
 ### Changes
 
 - Every page of the website loads the visitor statistics script of the site's own Umami (`umami.mokhni.uk`, no cookie), added by the build from `ANALYTICS` in `apps/website/build/site.ts`; the Content-Security-Policy names that origin in `script-src` and `connect-src` and nothing else outside the site, and `apps/website/nginx.test.ts` pins both. No output change.
