@@ -22,6 +22,15 @@ describe('Polish', () => {
     expect(t('ul. Marszałkowska 5')).toBe('ul.~Marszałkowska 5');
   });
 
+  test('€ after the number stands apart by a no-break space (CLDR 48 pl); % keeps no space (PWN: 50%)', () => {
+    expect(t('Cena 49€')).toBe('Cena 49~€');
+    expect(t('Cena 49 €')).toBe('Cena 49~€');
+    expect(t('Rabat 50%')).toBe('Rabat 50%');
+    // PWN allows 38,4 % since 2020: a space the writer typed is kept (bound, as before), not taken away.
+    expect(t('Wynik 38,4 %')).toBe('Wynik 38,4~%');
+    expect(t('€49')).toBe('€49');
+  });
+
   test('a paragraph that opens with a dash is a line of dialogue, in both registers', () => {
     expect(t('- Poczekamy? - zapytał.')).toBe('—~Poczekamy?~— zapytał.');
     expect(t('- Poczekamy? - zapytał.', { register: 'literary' })).toBe('—~Poczekamy?~— zapytał.');
