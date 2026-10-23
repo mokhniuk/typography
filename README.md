@@ -4,6 +4,7 @@ The package is `@mokhniuk/typography`. Website, docs and playground: [typography
 
 **Real quotation marks, dashes and spaces, in 27 languages.** A typography engine for running text: plain strings in, typeset strings out, nothing marked up in the source. Tags, links and code are left alone.
 
+[![npm](https://img.shields.io/npm/v/@mokhniuk/typography)](https://www.npmjs.com/package/@mokhniuk/typography)
 [![CI](https://github.com/mokhniuk/typography/actions/workflows/release.yml/badge.svg)](https://github.com/mokhniuk/typography/actions/workflows/release.yml)
 ![33 rules](https://img.shields.io/badge/rules-33-4c72b0)
 ![27 languages](https://img.shields.io/badge/languages-27-4c72b0)
