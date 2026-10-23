@@ -6,7 +6,7 @@ The package is `@mokhniuk/typography`. Website, docs and playground: [typography
 
 [![npm](https://img.shields.io/npm/v/@mokhniuk/typography)](https://www.npmjs.com/package/@mokhniuk/typography)
 [![CI](https://github.com/mokhniuk/typography/actions/workflows/release.yml/badge.svg)](https://github.com/mokhniuk/typography/actions/workflows/release.yml)
-![33 rules](https://img.shields.io/badge/rules-33-4c72b0)
+![34 rules](https://img.shields.io/badge/rules-34-4c72b0)
 ![27 languages](https://img.shields.io/badge/languages-27-4c72b0)
 ![Zero dependencies](https://img.shields.io/badge/dependencies-0-2ca02c)
 ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6)
@@ -63,7 +63,7 @@ The tools that beat it on speed (tipograph, smartypants) score far below it on t
 
 ## What is in the box
 
-- **33 rules** — quotes, apostrophes, dashes, ranges, no-break spaces, symbols, numbers, money, phone numbers; 23 on by default, 10 opt-in ([docs/rules.md](docs/rules.md)).
+- **34 rules** — quotes, apostrophes, dashes, ranges, no-break spaces, symbols, numbers, money, phone numbers; 24 on by default, 10 opt-in ([docs/rules.md](docs/rules.md)).
 - **27 languages** — the 24 official EU languages, `uk`, `de-CH` and `fr-CH`, each one pack with its quote marks, dash habits, elisions and abbreviations ([docs/languages.md](docs/languages.md)).
 - **Two registers** — `display` for interface and marketing text, `literary` for book-like text.
 - **Every format** — plain text, HTML, Markdown, hast trees (rehype plugin), React components, the DOM, a CLI.

@@ -11,7 +11,7 @@ The no-break space (U+00A0) looks exactly like a space and does one thing a spac
 
 ## Where it belongs
 
-Eighteen of the engine's 33 rules can place this one character:
+Nineteen of the engine's 34 rules can place this one character:
 
 - **A number and the short word after it.** `15~people`, `21~September`, `5~%`. A line that ends on `15` and begins on `people` makes the reader re-parse the number (`space.number`).
 - **An initial and the surname.** `K.~Słoboda` — an initial stranded at a line end reads as a sentence that stopped (`space.initial`), and a title stays with the name: `Prof.~Dr.~Oksana` (`space.title`).
@@ -22,6 +22,7 @@ Eighteen of the engine's 33 rules can place this one character:
 - **Around a lone operator** between words: `Tom~&~Jerry`, and around the `’n’` of `rock~’n’~roll`, an "and" with its letters dropped (`space.operator`).
 - **Money.** A sign or code stays with its amount, and a number grouped by hand stays whole: `USD~5~000` (`space.number`).
 - **A short word and the word after it.** `Welcome to~the city`, `Zapraszamy do~Gdańska` (`space.short-word`). On by default since 0.14.0, and worth a paragraph of its own below.
+- **French high punctuation.** French sets a no-break space before `:` and a narrow no-break space (U+202F) before `;`, `!` and `?`, so a line never opens with the mark: `Voici~:`, `Pourquoi^?` (`space.high-punctuation`, new in 0.18.0).
 - **One opt-in rule** goes further: `phone.bind` keeps an international phone number on one line (`+380~44~123~45~67`).
 
 ## Short words, and why they bind everywhere
@@ -32,7 +33,7 @@ Polish and Czech typography has a name for a preposition left at the end of a li
 
 `text-wrap: pretty` fixes orphan words at a paragraph's end and `white-space: nowrap` can pin one phrase, but neither knows that Polish forbids a trailing `i`, that French spaces `%` and English does not, or that `Fig.` belongs to its number. These are language conventions, not layout preferences, and they live in the text itself — which also means they survive into RSS, email, and anywhere else your CSS does not follow.
 
-One boundary worth knowing: French famously sets a space before `:` `;` `!` `?`. The engine does not insert one where the writer typed none. The only French guide read so far is the OQLF's, from Québec, which asks for a no-break space before `:`; the guides of France and Switzerland have not been read, and they may differ. Until they are, it stays an open gap in the backlog rather than a guess. The optional `space.before-punctuation` rule, which strips stray spaces before punctuation, does keep the French ones the writer typed.
+One boundary worth knowing: since 0.18.0 the engine sets the French space before `:` `;` `!` `?` itself (`space.high-punctuation`), a no-break space before the colon and a narrow one before the others, as Lacroux's Orthotypographie describes it for France; the OQLF, from Québec, agrees on the colon. Swiss French (`fr-CH`) is left as typed: the Federal Chancellery's French instructions are silent and no Swiss typographers' guide has been read. The optional `space.before-punctuation` rule, which strips stray spaces before punctuation, keeps the French ones the writer typed.
 
 ## The nbsp option
 

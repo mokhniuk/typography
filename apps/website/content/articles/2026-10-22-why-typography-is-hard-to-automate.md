@@ -27,11 +27,11 @@ Prose is full of text that only looks like prose: code spans, URLs, email addres
 
 ## Order is a dependency graph
 
-The 33 rules run in a fixed order, each on the output of the one before, and the order encodes dependencies: `phone.bind` runs before `number.group`, `dash.range` and `symbol.minus`, so none of them reads a phone number; `symbol.plusminus` runs right before `symbol.minus`, which would otherwise take the `-` of `+-5`; `symbol.fraction` runs before `space.number`, so `1/2` is already `½` when a unit is bound to it. The order is pinned by a test, because swapping two rules is the kind of change that passes every example you thought of.
+The 34 rules run in a fixed order, each on the output of the one before, and the order encodes dependencies: `phone.bind` runs before `number.group`, `dash.range` and `symbol.minus`, so none of them reads a phone number; `symbol.plusminus` runs right before `symbol.minus`, which would otherwise take the `-` of `+-5`; `symbol.fraction` runs before `space.number`, so `1/2` is already `½` when a unit is bound to it. The order is pinned by a test, because swapping two rules is the kind of change that passes every example you thought of.
 
 ## And it has to be fast
 
-Running 33 rules over a megabyte of text naively means 33 full passes. Most rules here carry a cheap trigger — no `%` in the text, skip the percent rule — and a comparison harness proves every fast path returns byte-identical output to the plain one. What still goes wrong is listed just as carefully in the [known limits](/docs/limits/).
+Running 34 rules over a megabyte of text naively means 34 full passes. Most rules here carry a cheap trigger — no `%` in the text, skip the percent rule — and a comparison harness proves every fast path returns byte-identical output to the plain one. What still goes wrong is listed just as carefully in the [known limits](/docs/limits/).
 
 ## The moral
 

@@ -7,7 +7,7 @@ summary: The guides, standards and books behind this engine's rules — what we 
 
 # What to read about typography
 
-Every rule in this engine carries a decision record: 20 of the 33 name a source, and the rest say plainly that none has been read yet. So this list is not a shelf of good intentions: it is what the project actually reads, plus the books waiting their turn. Where we have only skimmed something, it says so.
+Every rule in this engine carries a decision record: 22 of the 34 name a source, and the rest say plainly that none has been read yet. So this list is not a shelf of good intentions: it is what the project actually reads, plus the books waiting their turn. Where we have only skimmed something, it says so.
 
 ## Free, online, read first
 

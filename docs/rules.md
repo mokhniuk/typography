@@ -236,7 +236,7 @@ Languages with `highPunctuation`: French.
 
 Category: `tradition`.
 
-Why: [sources.md](../resources/sources.md#spacehigh-punctuation), `general-knowledge`.
+Why: [sources.md](../resources/sources.md#spacehigh-punctuation), `verified`.
 
 Characters it can insert, in any language: `~` `^`. A font that lacks one of them is handled by `avoid` (see [api.md](api.md#avoid)).
 
@@ -666,7 +666,7 @@ after   On 21~September, 15~people paid 5~%.
 
 ## `space.percent`
 
-In languages whose pack sets percentSpace: a no-break space between a number and % (5 %); where the pack also sets currencySpace, before € after the number too (49 €)
+In languages whose pack sets percentSpace: a no-break space between a number and % (5 %). In languages whose pack sets currencySpace: before € after a number (49 €). The two fields are independent
 
 Languages with `percentSpace`: German, French, German (Switzerland), French (Switzerland), Czech, Spanish, Italian, Portuguese, Irish, Maltese, Bulgarian, Croatian, Slovenian, Lithuanian, Latvian, Estonian, Danish, Finnish and Greek.
 

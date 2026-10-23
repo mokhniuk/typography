@@ -24,10 +24,10 @@ Every pack has `reviewed: false`: bg cs da el es et fi ga hr hu it lt lv mt nl p
 
 ### Finish the sources registry
 
-[sources.md](../resources/sources.md) has 16 of 33 decisions still `general-knowledge` (eight of them opt-in rules with no source read, eight default-on), two `disputed` (`quote` and `space.percent`, both against CLDR) and 15 `verified` for the cases and languages named in each entry (mostly English; `dash.dialogue` since 0.4.0 for 17 languages; `number.group` since 0.17.0 for the two Swiss packs). Read the sources and upgrade them, and have a native speaker check each language. Found while building it (2026-10-20, CLDR 46; re-read 2026-10-23, CLDR 48.2.3):
+[sources.md](../resources/sources.md) has 16 of 34 decisions still `general-knowledge` (eight of them opt-in rules with no source read, eight default-on), two `disputed` (`quote` and `space.percent`, both against CLDR) and 16 `verified` for the cases and languages named in each entry (mostly English; `dash.dialogue` since 0.4.0 for 17 languages; `number.group` since 0.17.0 for the two Swiss packs; `space.high-punctuation` since 0.18.0 for French). Read the sources and upgrade them, and have a native speaker check each language. Found while building it (2026-10-20, CLDR 46; re-read 2026-10-23, CLDR 48.2.3):
 
 - `quote` and `space.percent` are `disputed` against CLDR: German `„ “ ‚ ‘` (the engine sets `» « › ‹`), French `« »` with `« »` inside (the engine uses `“ ”`), de-CH `„ “ ‚ ‘` (the pack sets `« » ‹ ›`, confirmed by the Federal Chancellery, Rz. 202; the Chancellery binds federal texts only), uk inside `„ “` (allowed by Pravopys 2019 § 164, which recommends `“ ”`), and the `%` space in de-CH and fr-CH (CLDR none, the Chancellery a no-break space; the packs follow the Chancellery). Decide per language whether the engine or CLDR is right, citing a guide. English follows CLDR since 0.15.0 (`“ ” ‘ ’`; the house `«…»` is `quoteStyle: 'guillemets'`).
-- Planned from the sources read in 0.17.0 (see [../CHANGELOG.md](../CHANGELOG.md) when each ships): French `:` gets U+00A0 and `;` `!` `?` U+202F after a letter or digit (Lacroux, OQLF), a new rule `space.high-punctuation`; `currencySpace` in `uk` and `pl` (CLDR 48.2.3); the decimal comma in `de-CH` and `fr-CH` (Chancellery Rz. 514, ch. 4); the pack field `truncations` for Italian (`da di fa sta va po be mo pie que`, Treccani) and Maltese (`ta ma`, Wiktionary); `×` between bare numbers in the dot-decimal languages (NIST SP 811 § 10.5.4). All in 0.18.0.
+- Still planned from the sources read in 0.17.0: `×` between bare numbers in the dot-decimal languages (NIST SP 811 § 10.5.4); not built in 0.18.0. The French space before `: ; ! ?`, `currencySpace` in `uk` and `pl`, the decimal marks of `de-CH` and `fr-CH`, and the pack field `truncations` shipped in 0.18.0 (see [../CHANGELOG.md](../CHANGELOG.md)).
 - Gaps found against Practical Typography and OQLF (2026-10-20, probed in the engine; both sources were read as fetch-tool summaries, check them first):
   - `ellipsis` (P2): a no-break space on a side with no text (`... and so`).
   - Out of scope, by design: repeated `!!` or `?!` and one exclamation mark per three pages (a lint, not a substitution), superscript ordinals (Butterick says not to, and the engine already leaves `1st` alone).
@@ -35,24 +35,15 @@ Every pack has `reviewed: false`: bg cs da el es et fi ga hr hu it lt lv mt nl p
 - Read in 0.17.0 (2026-10-23): the Swiss Federal Chancellery Schreibweisungen (the PDF text extracts with PDFKit) and French instructions, Lacroux's Orthotypographie (Deux-points, Espace, Points de suspension; the Point-virgule entry was not found), Pravopys 2019 §§ 161, 164 and 167 (on the slovnyk.ua mirror, `summary`: the official mon.gov.ua PDF refuses a fetch and its Wayback copy has no readable text layer; compare the mirror with it when a reader can), CLDR 48.2.3 for six locales, PWN Poradnia on `%`, Treccani on the Italian apostrophe (`summary`, quotations not yet spot-checked), NIST SP 811 § 10.5.4.
 - Unread, to read next: the Guide du typographe romand (fr-CH high punctuation; typoguide.ch is a summary only, read it before fr-CH follows fr, the Chancellery's French instructions being silent); a Maltese grammar for the truncation list (Wiktionary only); the Swiss DTL (Directives de technique législative); Imprimerie nationale Lexique, Duden, Chicago, Bringhurst, and a guide that prefers `−` (`symbol.minus`: NIST and the SI brochure do not prescribe U+2212); a guide for `×` between bare numbers in comma-decimal languages (NIST prefers the half-high dot there); PWN or another guide on `zł` spacing; the Treccani pages themselves, to check the fetch-tool quotations.
 
-### Inch marks and quotations: the cases left
-
-Found in the review of the inch-mark fix (2026-10-21). It is a limit, listed in [limits.md](limits.md):
-
-- **An inch mark inside a quotation** (`He said "a 5" hole" ok`) closes the quotation at the inch mark, leaving the real closer lone (`«a 5» hole»`). Same on main. A closer after a digit followed by a letter or space and another `"` later is the ambiguous case; research what other tools do before choosing.
-
 ### Language gaps found while writing the packs
 
 Each is a limit of the pack format or an unverified choice, not a crash:
 
 - **Sentence dash unverified** for nl: the pack uses the spaced em dash; usage there often prefers a spaced en dash (hr, hu, ro, sk and sv were settled in 0.4.0 from their dialogue sources).
-- **Italian and Maltese truncation apostrophe** (`po'`, `va'`, `da'`, `di'`) inside straight single quotes closes the quotation early. The pack format has no field for trailing apostrophes.
 - **Dialogue dash for Greek and Latvian.** The Triantafyllidis dictionary says a dash marks a change of speaker in Greek, but the character and spacing were not confirmed; no Latvian source was found. Read one before setting `dialogueDash`.
 - **The dash before the words of the narrator** in Spanish is attached inside (`—¿Esperamos? —preguntó—.`), and Finnish, Danish, Slovenian and Swedish use a comma there, not a dash; the engine sets a spaced dash wherever one is typed.
 - **Spanish and Greek paired dash** (`—inciso—`, attached inside) cannot be expressed: `sentenceDash` is one symmetric spaced dash.
-- **Abbreviations without a full stop** (Estonian `nr`, `lk`; Finnish `klo`, `nro`) are not matched; the abbreviation rule needs the stop.
 - **Per-level quote shapes** (Latvian and Lithuanian use single quotes at a level) are one pair per level in the pack.
-- **Dotted time ranges** (`9.00-18.30`, Latvian and others) are read as numbers, not as a time range.
 - **Swedish level 3** restarts oddly, because Swedish defines no third level.
 - **Three levels of straight quotes** are ambiguous and not stable on a second pass (inherent, all languages).
 - **`rock 'n' roll`** is handled only in the packs that list the elision `n`.
@@ -75,7 +66,6 @@ Shipped in 0.10.0 on the website (`/font-checker/`): a font file or an installed
 Done in 0.10.0: a sign or code before the amount is bound, the groups of a hand-grouped amount are bound (so `space.number` and `number.group` agree), and the signs and codes are one table (`src/core/currency.ts`). Still open:
 
 - **Placement and spacing per locale** (`€49.99` in en, `49,99 €` in de, fr and uk, `49,99 zł` in pl) is not applied: the engine never moves a symbol, which is right, but only `€` has a pack field (`currencySpace`) that says whether a space belongs between amount and symbol. A field per sign, or a general one, needs a source per language.
-- **`currencySpace` in `uk` and `pl`**: CLDR 48.2.3 sets a no-break space between the amount and the sign (`49 ₴`, `49 zł`); the engine leaves `49€` alone there. Planned for 0.18.0, from CLDR alone (PWN on `zł` and a Ukrainian guide were not found), with `percentSpace` off in both (CLDR none; PWN `50%` traditional, `38,4 %` allowed since 2020). `fr-CH` and `de-CH` already set the space, confirmed by the Chancellery.
 - **Swiss apostrophe grouping** (`CHF 1'000`): not doing. The Federal Chancellery rejects it in both languages (Schreibweisungen Rz. 512, French instructions ch. 4 note 4); the packs group with a no-break space above four digits. Everyday Swiss usage still writes it, so it stays unread as a number group.
 - **A three-letter code that is not money** (`PIN 1234`) is bound as if it were: the rule reads the shape, not the meaning (a limit, in [limits.md](limits.md)).
 
@@ -86,7 +76,6 @@ The pack exists but is thin, because the Irish edition of the Interinstitutional
 - **Quotes:** `‘…’` then `“…”` (the Publications Office table) against `“…”` first (Wikipedia). Settle it from the Irish ISG or Foras na Gaeilge / An Gúm, or from a native reader.
 - **Sentence dash and ranges:** not read; the pack defaults to the spaced em dash.
 - **Short words and abbreviations:** none (`orphans`, `abbreviations` empty). Candidates to source: `a`, `i`, `is`, `ar`, `le`, `go`, `de`, `do`; abbreviations such as `m.sh.`, `srl.`, `lch.` (Foras na Gaeilge's lists).
-- **Initial mutations:** pinned by goldens since 0.18.0.
 - **Review:** `reviewed: false`; get an Irish reader to check the page.
 
 ### Short words, conjunctions and the end of the line: what is left
