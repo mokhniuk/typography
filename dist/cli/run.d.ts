@@ -9,6 +9,9 @@ export type Io = {
     out(text: string): void;
     err(text: string): void;
 };
-/** One line per rule: id, category (blank for a rule without one), description, and a note on a rule that is off unless enabled. */
+/**
+ * One line per rule: id, category (blank for a rule without one), description, the languages of each
+ * pack field it names (`Rule.packFields`), and a note on a rule that is off unless enabled.
+ */
 export declare function formatRules(rules: readonly Rule[]): string;
 export declare function run(argv: string[], io: Io): Promise<number>;

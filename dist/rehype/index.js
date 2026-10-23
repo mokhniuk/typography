@@ -1,37 +1,44 @@
-import { LANGS, typesetBlock, } from '../core/index.js';
+import { PACKS, resolvePack, } from '../core/index.js';
+import { typesetBlock } from '../core/typography.js';
 import { BLOCK, RAW_BLOCK, RAW_INLINE } from '../shared/elements.js';
 /** Stands between the text nodes of a run while they are typeset together. */
 const SEP = '￼';
 const isElement = (node) => node.type === 'element';
 const isText = (node) => node.type === 'text' && typeof node.value === 'string';
-/** Pack codes by their lower-case form: a language tag is matched without regard to case. */
-const BY_TAG = new Map(LANGS.map((lang) => [lang.toLowerCase(), lang]));
+/** The packs by their lower-case code: a language tag is matched without regard to case. */
+const BY_TAG = new Map(PACKS.map((pack) => [pack.code.toLowerCase(), pack]));
 /**
  * The pack of a language tag: the longest run of its leading subtags that is a pack code, so
- * `de-CH` and `de-ch-1996` are `de-CH`, `de-AT` is `de` and `uk-UA` is `uk`.
+ * `de-CH` and `de-ch-1996` are `de-CH`, `de-AT` is `de` and `uk-UA` is `uk`. At each length the
+ * code of `base` (the pack of the `lang` option) is tried first, so a pack of one's own keeps
+ * winning inside `lang="<its code>"`.
  */
-function packOf(tag) {
+function packOf(tag, base) {
+    const own = base.code.toLowerCase();
     const subtags = tag.toLowerCase().split('-');
     for (let n = subtags.length; n > 0; n--) {
-        const lang = BY_TAG.get(subtags.slice(0, n).join('-'));
-        if (lang)
-            return lang;
+        const code = subtags.slice(0, n).join('-');
+        if (code === own)
+            return base;
+        const pack = BY_TAG.get(code);
+        if (pack)
+            return pack;
     }
     return undefined;
 }
 /** The setting an element declares, if its language is one of ours (see `packOf`). The quote style stays the option's. */
-function declared(element, quoteStyle) {
+function declared(element, base) {
     const raw = element.properties?.lang ?? element.properties?.xmlLang;
     if (typeof raw !== 'string')
         return null;
-    const lang = packOf(raw);
+    const lang = packOf(raw, base.lang);
     if (!lang)
         return null;
-    return { lang, quoteStyle };
+    return { lang, quoteStyle: base.quoteStyle };
 }
 const off = (element) => element.properties?.dataTypography === 'off' || element.properties?.['data-typography'] === 'off';
 export function typesetHast(tree, options = {}) {
-    const base = { lang: options.lang ?? 'en', quoteStyle: options.quoteStyle };
+    const base = { lang: resolvePack(options.lang), quoteStyle: options.quoteStyle };
     let run = [];
     const flush = ({ lang, quoteStyle }) => {
         const entries = run;
@@ -60,7 +67,7 @@ export function typesetHast(tree, options = {}) {
             }
             else if (isElement(child)) {
                 const tag = child.tagName.toLowerCase();
-                const inner = declared(child, options.quoteStyle) ?? current;
+                const inner = declared(child, base) ?? current;
                 if (off(child) || RAW_BLOCK.has(tag)) {
                     flush(current);
                 }

@@ -1,3 +1,4 @@
+import { isPack } from './lang/pack.js';
 import { LANGS } from './profiles.js';
 import { selectRules } from './rules.js';
 const KEYS = [
@@ -37,7 +38,7 @@ export function checkConfig(value) {
         }
     }
     const { lang, register, quoteStyle, disable, enable, rules, avoid, nbsp, hangAmount } = config;
-    if (lang !== undefined)
+    if (lang !== undefined && !isPack(lang))
         oneOf('lang', lang, LANGS);
     if (register !== undefined)
         oneOf('register', register, ['display', 'literary']);

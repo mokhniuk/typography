@@ -1,4 +1,4 @@
-import { ELISIONS_EN } from './en.js';
+import { ELISIONS_EN } from './elisions.js';
 export const uk = {
     code: 'uk',
     name: 'Ukrainian (українська)',
@@ -27,3 +27,4 @@ export const uk = {
     ],
     notes: 'The literary register keeps the display quotes; the dialogue dash (an em dash and a no-break space) is set in both registers. Digits are grouped with a no-break space (number.group), as the Interinstitutional Style Guide sets for all languages; the decimal mark is a comma. Dialogue: a paragraph of direct speech opens with тире (Український правопис § 125, the 1993 rules as published on pravopys.net; the 2019 edition could not be read).',
 };
+export default uk;

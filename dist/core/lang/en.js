@@ -1,21 +1,4 @@
-/**
- * Words that start with an apostrophe for dropped letters ('em, 'til, 'cause), and 'n' as in rock 'n'
- * roll. Before the packs this list was read for every language; the other packs list it too so that
- * their output stays what it was. A language that does not use these words should drop it, which is
- * an output change.
- */
-export const ELISIONS_EN = [
-    'em',
-    'til',
-    'till',
-    'cause',
-    'bout',
-    'round',
-    'tis',
-    'twas',
-    'cos',
-    'n',
-];
+import { ELISIONS_EN } from './elisions.js';
 export const en = {
     code: 'en',
     name: 'English',
@@ -39,6 +22,8 @@ export const en = {
     sentenceDashLiterary: '–',
     elisions: ELISIONS_EN,
     numbers: { group: ',', decimal: '.' },
+    // `symbol.degree` reads a bare 20 C as a temperature (its label list is English).
+    bareTemperature: true,
     reviewed: false,
     sources: [
         'https://commission.europa.eu/system/files/2023-11/styleguide_english_dgt_en.pdf',
@@ -46,3 +31,4 @@ export const en = {
     ],
     notes: "Display register uses “…” with ‘…’ inside, as CLDR gives English; British quotes (‘…’ with “…” inside) are the literary register; quoteStyle: 'guillemets' sets the former house style, «…» with „…“ inside. Digits of a number of five or more are grouped with a comma (opt-in rule number.group): the EU English Style Guide sets a hard space in running text and allows a comma for web writing, promotional material and press releases, which is what this engine is for. The separator is the pack field numbers.group (a no-break space is the EU form).",
 };
+export default en;

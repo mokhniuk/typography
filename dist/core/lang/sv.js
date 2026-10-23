@@ -21,3 +21,4 @@ export const sv = {
     ],
     notes: 'Quotes: ”…” with ’…’ inside (EU Publications Office table; Frågelådan, Institutet för språk och folkminnen, says an inner quotation takes single marks). The same mark opens and closes, so a quotation is read by where each mark stands, not by pairing. The alternative »…» (same mark both sides) is not implemented. Numbers: a no-break space groups thousands and the decimal mark is a comma (Commission web-writing guide, which names no Swedish rule beyond "all other languages"). Not implemented, not verified: % and currency spacing, abbreviations, one-letter words, the sentence dash; the Interinstitutional Style Guide chapters and Svenska skrivregler could not be read. Dialogue and the sentence dash: a tankstreck on a new line opens each turn, common in news and fiction (Isof Frågelådan, "Kan man markera anföring med tankstreck?"); the tankstreck is the en dash.',
 };
+export default sv;

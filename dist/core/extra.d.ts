@@ -1,8 +1,8 @@
-import type { Lang } from './types.js';
 /**
  * Removes a space before , . ; : ! ? ). Not at a line start, not before an ellipsis, a decimal
  * (` .5`), a file extension (` .gitignore`), `!=` or `??`, not a spaced time or ratio (`10 : 30`),
- * not an emoticon (` :)`, ` ;-)`), and not before `: ; ! ?` in French.
+ * not an emoticon (` :)`, ` ;-)`), and not before `: ; ! ?` when `keepHigh` (a language that sets a
+ * space there, French: the pack's `spaceBeforeHigh`).
  *
  * Was `text.replace(/(?<=[^\s(\[{“"«‘„])[ \t]+([,.;:!?)])/gu, …)`: a lookbehind opening the pattern is
  * tried at every position (16 to 20 ms per MB). The pair "space, mark" is found first, the run of
@@ -11,7 +11,7 @@ import type { Lang } from './types.js';
  * the engine tried the lookbehind at each of its spaces, and it refuses all but the first (a space
  * stands before). A match it leaves alone is consumed whole, as `replace` does.
  */
-export declare function beforePunctuation(text: string, lang: Lang): string;
+export declare function beforePunctuation(text: string, keepHigh?: boolean): string;
 /** Adds a space after a comma that a letter follows directly (`a,b`). Digits (`1,5`) are left alone. */
 export declare const afterComma: (text: string) => string;
 /**
@@ -47,7 +47,7 @@ export declare const plusMinus: (text: string) => string;
 export declare const fractions: (text: string) => string;
 /**
  * A number and C or F, with or without the degree sign and space (20C is not read, 20 C, 20 °C,
- * 20°C and 20° C are; a bare 20 C only in English), becomes the number, a no-break space and °C or °F. A bare `20 C` is only read
+ * 20°C and 20° C are; a bare 20 C only with `bare`, the pack's `bareTemperature`: English), becomes the number, a no-break space and °C or °F. A bare `20 C` is only read
  * when the word before the number is not a label or a single letter. Not 20 Celsius, 20 F1, 5 C.E.
  *
  * The original pattern opened with `(?<![\p{L}\p{N}])`, tried at every position, and the same pattern
@@ -58,6 +58,6 @@ export declare const fractions: (text: string) => string;
  * them in turn. What stands before is read by hand (scan.ts). A match that is found but left alone
  * (a label, another language) is skipped whole, as `replace` does.
  */
-export declare function degrees(text: string, lang?: Lang): string;
+export declare function degrees(text: string, bare?: boolean): string;
 /** `=>` is ⇒. Not `=>>`, `==>`, `=>=` or `<=>`. */
 export declare const implies: (text: string) => string;

@@ -1,4 +1,4 @@
-import { type ModeOptions } from '../core/index.js';
+import type { ModeOptions } from '../core/typography.js';
 /**
  * Typesets the text of an HTML string and leaves everything else exactly as it was:
  * tags, attributes, comments, and the content of `<pre>`, `<code>`, `<script>`,

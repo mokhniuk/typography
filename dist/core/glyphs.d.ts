@@ -9,19 +9,20 @@
  * without a change here. `src/core/glyphs.test.ts` fails if a rule has no entry, and proves that a
  * rule given its own characters to avoid changes nothing.
  */
+import type { LangPack } from './lang/pack.js';
 import type { Lang } from './types.js';
 /**
  * The characters each rule can insert, by rule id. Without `lang` it is every language's marks at
- * once (what the docs show); with one, only that language's.
+ * once (what the docs show); with one (a code or a pack), only that language's.
  */
-export declare function ruleGlyphs(lang?: Lang): Readonly<Record<string, string>>;
+export declare function ruleGlyphs(lang?: Lang | LangPack): Readonly<Record<string, string>>;
 /**
  * Every character any rule can insert (`lang`: in that language only), the no-break space included.
  * The font checker lists these; the `avoid` option takes the ones a font cannot draw.
  */
-export declare const insertedCharacters: (lang?: Lang) => string;
+export declare const insertedCharacters: (lang?: Lang | LangPack) => string;
 /**
  * The same without the no-break space, which is the marks a font draws. Measuring a space against a
  * fallback font says nothing (both are blank), so the font-aware pass only ever tests these.
  */
-export declare const insertedGlyphs: (lang?: Lang) => string;
+export declare const insertedGlyphs: (lang?: Lang | LangPack) => string;

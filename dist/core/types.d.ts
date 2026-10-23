@@ -1,12 +1,13 @@
 import type { Lang } from './lang/index.js';
+import type { LangPack } from './lang/pack.js';
 /** A no-break space. */
 export declare const NBSP = "\u00A0";
 /** The language codes; derived from the packs in `lang/index.ts`, never listed by hand. */
 export type { Lang };
 /**
  * The setting a text is for. `display` is the default: marketing and event pages,
- * set in the PROFILES (profiles.ts). `literary` is book-like text, whose conventions
- * differ by language and which only some languages have a profile for (LITERARY);
+ * set by the pack's `quotes`. `literary` is book-like text, whose conventions
+ * differ by language and which only some packs have marks for (`literary`);
  * the rest keep their display rules.
  */
 export type Register = 'display' | 'literary';
@@ -19,7 +20,10 @@ export type Register = 'display' | 'literary';
 export type QuoteStyle = 'language' | 'us' | 'guillemets';
 /** What a rule needs to know besides the text. */
 export type Context = {
+    /** The language code: `pack.code`. */
     lang: Lang;
+    /** The language pack the text is set in; a rule reads its fields (`dialogueDash`, `numbers`, ...). */
+    pack: LangPack;
     register: Register;
     quoteStyle: QuoteStyle;
     /** Whether the text opens its paragraph. Only then can its first dash be a dialogue dash. */

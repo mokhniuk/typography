@@ -1,4 +1,4 @@
-import type { Lang } from './types.js';
+import type { LangPack } from './lang/pack.js';
 /** A run of digits is grouped only when it has at least this many (so 2026 and 9999 stay whole). */
 export declare const GROUP_MIN_DIGITS = 5;
 /**
@@ -8,4 +8,4 @@ export declare const GROUP_MIN_DIGITS = 5;
  */
 export declare function groupDigits(run: string, separator: string): string;
 /** Groups the digits of every integer of five or more digits in threes from the right, with the separator of the pack. */
-export declare function groupNumbers(text: string, lang: Lang): string;
+export declare function groupNumbers(text: string, pack: LangPack): string;

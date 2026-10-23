@@ -1,6 +1,6 @@
 import { parseArgs } from 'node:util';
 import pkg from '../../package.json' with { type: 'json' };
-import { checkConfig, LANGS, REGISTERS, RULES, typographic, } from '../core/index.js';
+import { checkConfig, LANGS, PACKS, REGISTERS, RULES, typographic, } from '../core/index.js';
 import { typesetHtml } from '../html/index.js';
 import { typesetMarkdown } from '../markdown/index.js';
 import { typesetText } from '../text/index.js';
@@ -40,12 +40,29 @@ Options
 With several files, use --write or --check. Exit status: 0 ok, 1 a file would
 change (--check), 2 a usage or read error.`;
 const VERSION = pkg.version;
-/** One line per rule: id, category (blank for a rule without one), description, and a note on a rule that is off unless enabled. */
+/** Short English names of the packs that set `field` (an empty list sets nothing): `German and French`. */
+function languagesWith(field) {
+    const list = [];
+    for (const pack of PACKS) {
+        const value = pack[field];
+        if (Array.isArray(value) ? !value.length : !value)
+            continue;
+        const short = pack.name.split(' (')[0] ?? pack.name;
+        list.push(list.includes(short) ? pack.name : short);
+    }
+    return list.length > 1
+        ? `${list.slice(0, -1).join(', ')} and ${list.at(-1)}`
+        : (list[0] ?? 'none');
+}
+/**
+ * One line per rule: id, category (blank for a rule without one), description, the languages of each
+ * pack field it names (`Rule.packFields`), and a note on a rule that is off unless enabled.
+ */
 export function formatRules(rules) {
     const width = Math.max(...rules.map((r) => r.id.length));
     const categoryWidth = Math.max(0, ...rules.map((r) => r.category?.length ?? 0));
     return rules
-        .map((r) => `${r.id.padEnd(width)}  ${(r.category ?? '').padEnd(categoryWidth)}  ${r.about}${r.defaultOn === false ? ` (off by default; --enable ${r.id})` : ''}`)
+        .map((r) => `${r.id.padEnd(width)}  ${(r.category ?? '').padEnd(categoryWidth)}  ${r.about}${(r.packFields ?? []).map((field) => ` [${field}: ${languagesWith(field)}]`).join('')}${r.defaultOn === false ? ` (off by default; --enable ${r.id})` : ''}`)
         .join('\n');
 }
 function formatOf(path, given) {
@@ -85,9 +102,10 @@ export async function run(argv, io) {
     catch (error) {
         return usage(io, error instanceof Error ? error.message : String(error));
     }
+    // `--lang` is a code; a module config may give a pack.
     const lang = (values.lang ?? config.lang ?? 'en');
     const register = (values.register ?? config.register ?? 'display');
-    if (!LANGS.includes(lang))
+    if (typeof lang === 'string' && !LANGS.includes(lang))
         return usage(io, `unknown language "${values.lang}" (${LANGS.join(', ')})`);
     if (!REGISTERS.includes(register))
         return usage(io, `unknown register "${values.register}"`);

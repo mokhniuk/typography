@@ -38,3 +38,4 @@ export const cs = {
         'Not implemented, not verified: the EU Interinstitutional Style Guide could not be read (its pages are scripted and gave no text), so none of its Czech rules were used; no abbreviation list (no list was read). ' +
         'Dialogue: quotes are the main form, but a pomlčka at the start of a line may open direct speech (Internetová jazyková příručka, "Pomlčka" and "Uvozovky").',
 };
+export default cs;

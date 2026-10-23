@@ -1,4 +1,4 @@
-import { type Lang } from './types.js';
+import type { LangPack } from './lang/pack.js';
 export declare const collapse: (text: string) => string;
 /**
  * Titles stay with the name: Prof. Dr. Oksana. Written as `(?<![\p{L}\p{N}])` + TITLE, with the
@@ -46,7 +46,7 @@ export declare const section: (text: string) => string;
  */
 export declare const operator: (text: string) => string;
 /** One-letter words a language must not strand at the end of a line. */
-export declare const orphans: (text: string, lang: Lang) => string;
+export declare const orphans: (text: string, pack: LangPack) => string;
 /**
  * A short word (two or three letters) travels with the word after it: `to~the shop`. On by default
  * since 0.14.0 (it was opt-in, for titles): the sources read say such a word MAY stay at a line end in
@@ -55,19 +55,19 @@ export declare const orphans: (text: string, lang: Lang) => string;
  * Never more than two words in a row: a short word that follows one this rule has just bound stays
  * free, so a chain cannot grow into a whole line.
  */
-export declare function shortWords(text: string, lang: Lang): string;
+export declare function shortWords(text: string, pack: LangPack): string;
 /**
  * Whether `abbreviations` can change `text` in `lang`: a cheap test for the rule table. `bind` and
  * `page` patterns need a full stop; `together` ones need it only if every entry has one (read from
  * the pack, not assumed), otherwise the rule always runs. No pattern at all: it never changes anything.
  */
-export declare const mayAbbreviate: (text: string, lang: Lang) => boolean;
+export declare const mayAbbreviate: (text: string, pack: LangPack) => boolean;
 /** The parts of an abbreviation stay together, and a short one stays with what it introduces. */
-export declare const abbreviations: (text: string, lang: Lang) => string;
+export declare const abbreviations: (text: string, pack: LangPack) => string;
 /**
  * A percent sign (in a language with `percentSpace`: German, French) or a euro sign after the number
  * (with `currencySpace`) stands apart from its number by a no-break space: 5 %, 49 €.
  */
-export declare const unitSymbol: (text: string, lang: Lang) => string;
+export declare const unitSymbol: (text: string, pack: LangPack) => string;
 /** Was `/\u0020+(?=→)/g` (quadratic on a long run of spaces, see `association`) and `/←\u0020+/g`. */
 export declare const arrowSpace: (text: string) => string;

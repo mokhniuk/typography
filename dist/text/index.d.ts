@@ -1,4 +1,4 @@
-import { type ModeOptions } from '../core/index.js';
+import type { ModeOptions } from '../core/typography.js';
 /**
  * Typesets plain text a paragraph at a time. Paragraphs are separated by blank
  * lines, and each opens a block (so a Ukrainian dialogue dash is read at the start

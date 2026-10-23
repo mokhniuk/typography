@@ -1,11 +1,12 @@
-import type { Change, Lang, QuoteStyle, Register, Rule } from '../core/index.js';
+import type { Change, Lang, LangPack, QuoteStyle, Register, Rule } from '../core/index.js';
 /**
  * What `Typeset` falls back to; set for everything under a `TypographyRoot`. `disable`, `enable`,
  * `rules` and `onChange` are compared by identity when a text is typeset again, so pass a constant
  * (module level or `useMemo`/`useCallback`), not an array or function written inline in the render.
  */
 export type TypographySetting = {
-    lang: Lang;
+    /** A language code or a pack. */
+    lang: Lang | LangPack;
     register: Register;
     /** `language` (the default) or `us`; see `QuoteStyle`. */
     quoteStyle?: QuoteStyle | undefined;

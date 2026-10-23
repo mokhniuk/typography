@@ -1,3 +1,4 @@
+import type { LangPack } from './lang/pack.js';
 import type { Context } from './types.js';
 /**
  * Why a reader would want a rule, as opposed to its id, which names the mechanism:
@@ -37,6 +38,12 @@ export type Rule = {
      */
     when?: (text: string, context: Context) => boolean;
     apply: (text: string, context: Context) => string;
+    /**
+     * The pack fields whose languages the rule acts in (`space.percent`: `percentSpace` and
+     * `currencySpace`). A note for readers: `docs/rules.md` and `typo --rules` list the languages that
+     * set each one. It does not change what the rule does, and this file never reads the packs.
+     */
+    packFields?: readonly (keyof LangPack)[];
 };
 /**
  * The rules, in the order they run.

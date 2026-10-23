@@ -27,3 +27,4 @@ export const bg = {
         "Not implemented, not verified: one-letter prepositions (в, с, к, у, о) are not kept off the end of a line, because the ISG states no such rule and the Institute for Bulgarian Language rules were not read; the sentence dash is the engine's default em dash, which matches the spaced em dash of ISG 10.1.8; the dialogue dash is set from the Institute page above.",
     ].join(' '),
 };
+export default bg;

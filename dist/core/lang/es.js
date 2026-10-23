@@ -38,3 +38,4 @@ export const es = {
         'The abbreviation lists are only those the ISG itself gives as examples of a non-split abbreviation (10.4 and the fixed-space list in 4.2.3); the ordinals n.º and D.ª are not covered.',
     ].join(' '),
 };
+export default es;

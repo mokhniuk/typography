@@ -5,6 +5,7 @@ export { insertedCharacters, insertedGlyphs, ruleGlyphs } from './glyphs.js';
 export { hangPieces, splitHangs } from './hang.js';
 export { PACK, PACKS } from './lang/index.js';
 export { LANGS, REGISTERS } from './profiles.js';
+export { explain, resolvePack, typesetBlock, typographic } from './resolve.js';
 export { addRule, DEFAULT_RULES, RULE_CATEGORIES, RULE_IDS, RULES, selectRules, without, } from './rules.js';
 export { NBSP } from './types.js';
-export { explain, keepAvoided, typesetBlock, typographic, } from './typography.js';
+export { keepAvoided, } from './typography.js';

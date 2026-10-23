@@ -5,6 +5,7 @@ export { insertedCharacters, insertedGlyphs, ruleGlyphs } from './glyphs.js';
 export { type HangPiece, hangPieces, splitHangs, type TextPart } from './hang.js';
 export { type LangPack, type Level, PACK, PACKS } from './lang/index.js';
 export { LANGS, REGISTERS } from './profiles.js';
+export { explain, resolvePack, typesetBlock, typographic } from './resolve.js';
 export { addRule, DEFAULT_RULES, RULE_CATEGORIES, RULE_IDS, RULES, type Rule, type RuleCategory, type RulePosition, selectRules, without, } from './rules.js';
 export { type Context, type Lang, NBSP, type QuoteStyle, type Register } from './types.js';
-export { type Change, explain, keepAvoided, type ModeOptions, type TypographicOptions, typesetBlock, typographic, } from './typography.js';
+export { type Change, keepAvoided, type ModeOptions, type TypographicOptions, } from './typography.js';

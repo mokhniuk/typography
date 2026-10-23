@@ -31,3 +31,4 @@ export const da = {
         'Not implemented, not verified: one-letter words (the ISG gives no list), the dash rules of Retskrivningsordbogen (Dansk Sprognævn was not read), % before a currency (the ISG writes EUR after a figure, 10.2, with an ordinary space).',
     ].join(' '),
 };
+export default da;

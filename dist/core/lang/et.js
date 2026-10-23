@@ -25,3 +25,4 @@ export const et = {
         'Not implemented, not verified: abbreviations. The ISG sets a fixed space after nr and lk (4.2.3: "nr• ELT L•", "lk• ELT C•") but these are written without a full stop, and the engine binds an abbreviation only when its name is followed by a full stop; the other abbreviations of annex A3 (s.o, k.a, v.a, n-ö, et al.) are written without a space inside. No orphans: the ISG gives no list of one-letter words to keep off the end of a line. No elisions read. The ISG shows € only as the code EUR, so the pack sets percentSpace and not currencySpace (49€ stays 49€).',
     ].join(' '),
 };
+export default et;

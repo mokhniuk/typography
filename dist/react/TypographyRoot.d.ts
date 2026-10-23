@@ -1,5 +1,5 @@
 import { type ReactNode, type RefObject } from 'react';
-import type { Change, Lang, QuoteStyle, Register, Rule, TypographyConfig } from '../core/index.js';
+import type { Change, Lang, LangPack, QuoteStyle, Register, Rule, TypographyConfig } from '../core/index.js';
 /**
  * Sends the hanging pass inline, to run on the parent of this element as the page is
  * parsed (see `hangScript`). Put it last inside the element that holds the text. On the
@@ -18,7 +18,7 @@ export declare function useHangingPunctuation(root: RefObject<HTMLElement | null
  * language of its own, and a mark no rule inserts in the language in use costs nothing to avoid.
  * Pass `lang` to measure one language's marks only.
  */
-export declare function useMissingGlyphs(root: RefObject<HTMLElement | null>, on: boolean, lang?: Lang): string;
+export declare function useMissingGlyphs(root: RefObject<HTMLElement | null>, on: boolean, lang?: Lang | LangPack): string;
 /**
  * Wraps a page so its text is typeset: sets the language and register every
  * `Typeset` under it falls back to, and hangs opening punctuation wherever a line
@@ -34,7 +34,8 @@ export declare function TypographyRoot({ children, config, lang, register, quote
     children: ReactNode;
     /** A project's config (see `TypographyConfig`); a prop given here beats it. Pass a constant. `nbsp` is not read. */
     config?: TypographyConfig | undefined;
-    lang?: Lang | undefined;
+    /** A language code or a pack (pass a constant). */
+    lang?: Lang | LangPack | undefined;
     register?: Register | undefined;
     /** `language` (the default) or `us`: “…” and ‘…’ in any language. */
     quoteStyle?: QuoteStyle | undefined;

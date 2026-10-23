@@ -14,7 +14,7 @@
  *
  * The rules `typographic` applies, and what it deliberately leaves alone:
  *
- *  - Quotation, by language and by level (see PROFILES): «…» with „…“ inside it
+ *  - Quotation, by language and by level (see `quotes` on the pack): «…» with „…“ inside it
  *    for English and Ukrainian, »…« with ›…‹ inside for German, „…” with «…» for
  *    Polish, and so on. Source quotes may be curly,
  *    German-low, straight, or already «…».
@@ -104,16 +104,25 @@ function changesOf(rule, runs) {
     }
     return out;
 }
+/** Thrown where a pack-only function is given a language code (or nothing) instead of a pack. */
+function notAPack() {
+    throw new Error('lang is a language pack here: import one from @mokhniuk/typography/lang/<code>');
+}
 /**
- * Applies the house rules (see the header) to a plain string. Running it again on
- * its own output changes nothing, in every language (German reads its own »…« and
- * ›…‹ by where each mark stands, see `turnedPairs` on the pack and quotes.ts).
+ * Applies the house rules (see the header) to a plain string, in the language of `pack`. Running it
+ * again on its own output changes nothing, in every language (German reads its own »…« and ›…‹ by
+ * where each mark stands, see `turnedPairs` on the pack and quotes.ts).
+ *
+ * This is the engine's own entry, which takes a pack and never loads one: it imports nothing from
+ * `lang/index.ts`. The public `typographic` (resolve.ts) also takes a language code and resolves it.
  */
-export function typographic(text, lang = 'en', { register = 'display', quoteStyle = 'language', blockStart = true, disable, enable, rules: custom, onChange, avoid, } = {}) {
+export function typographic(text, pack, { register = 'display', quoteStyle = 'language', blockStart = true, disable, enable, rules: custom, onChange, avoid, } = {}) {
+    if (typeof pack !== 'object' || pack === null)
+        notAPack();
     const rules = disable?.length || enable?.length || custom
         ? selectRules({ rules: custom, disable, enable })
         : DEFAULT_RULES;
-    const context = { lang, register, quoteStyle, blockStart };
+    const context = { lang: pack.code, pack, register, quoteStyle, blockStart };
     const avoided = avoid ? new Set([...avoid]) : null;
     const [shielded, restore] = shield(text);
     let out = shielded;
@@ -138,9 +147,9 @@ export function typographic(text, lang = 'en', { register = 'display', quoteStyl
     return restore(out);
 }
 /** The typeset text and every change that was made to it, with the rule that made it. */
-export function explain(text, lang = 'en', options = {}) {
+export function explain(text, pack, options = {}) {
     const changes = [];
-    const output = typographic(text, lang, { ...options, onChange: (c) => changes.push(c) });
+    const output = typographic(text, pack, { ...options, onChange: (c) => changes.push(c) });
     return { output, changes };
 }
 /**

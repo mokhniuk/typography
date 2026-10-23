@@ -36,3 +36,4 @@ export const sk = {
         'One-letter words at line end (v, k, s, u, z, o, a, i, both cases) are bound to the next word as an editorial convention, not a verified rule: a typography article (tvorim.net, 2008) and a Slovak wikibook style guide name the words, and a design studio page (grafeon.sk) states the class without letters; the Slovak authority pages (jazykovaporadna.sme.sk, the Pravidlá PDF) could not be read. Two-letter words are not bound. ' +
         'Dialogue and the sentence dash: dashes are the newer alternative to quotes for direct speech, spaced, with one before the attribution (Pravidlá slovenského pravopisu, 3rd ed., 2000, úvodzovky and pomlčka 10).',
 };
+export default sk;

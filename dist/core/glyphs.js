@@ -48,7 +48,12 @@ const FIXED = {
 };
 /** Every character of `text`, each once, in the order they first appear. */
 const unique = (text) => [...new Set([...text])].join('');
-const packsOf = (lang) => lang ? PACKS.filter((pack) => pack.code === lang) : PACKS;
+/** The packs `lang` names: a pack is itself, a code is the pack of that code, nothing is every pack. */
+const packsOf = (lang) => typeof lang === 'object'
+    ? [lang]
+    : lang
+        ? PACKS.filter((pack) => pack.code === lang)
+        : PACKS;
 /** The quote marks of a language (both registers), or of every language. */
 function quoteMarks(lang) {
     const marks = packsOf(lang).flatMap((pack) => [...pack.quotes, ...(pack.literary ?? []), ...(pack.turnedPairs ?? [])].flat());
@@ -67,7 +72,7 @@ const separators = (lang) => unique(packsOf(lang)
     .join(''));
 /**
  * The characters each rule can insert, by rule id. Without `lang` it is every language's marks at
- * once (what the docs show); with one, only that language's.
+ * once (what the docs show); with one (a code or a pack), only that language's.
  */
 export function ruleGlyphs(lang) {
     return {

@@ -32,3 +32,4 @@ export const lv = {
         'Numbers: ISG 6.5 gives a comma for decimals and a fixed space between groups of three; the engine groups from five digits, as it does in every language.',
     ].join(' '),
 };
+export default lv;

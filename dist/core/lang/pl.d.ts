@@ -21,3 +21,4 @@ export declare const pl: {
     readonly sources: readonly ["https://sjp.pwn.pl/poradnia/haslo/Pauza-dialogowa-a-myslnik;18816.html", "https://sjp.pwn.pl/poradnia/haslo/Sieroty-na-koncu-wiersza;18684.html", "https://style-guide.europa.eu/en/content/-/isg/topic?identifier=6.5-punctuation-in-figures"];
     readonly notes: 'One-letter conjunctions and prepositions are bound to the next word. Digits are grouped with a no-break space (number.group), as the Interinstitutional Style Guide sets for all languages; the decimal mark is a comma. Dialogue: a line of dialogue opens with the same dash as a break in the sentence, pauza or półpauza, spaced (PWN Poradnia, A. Wolański, "Pauza dialogowa a myślnik"); the engine uses the em dash it uses for a break.';
 };
+export default pl;

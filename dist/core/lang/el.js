@@ -32,3 +32,4 @@ export const el = {
         'Not implemented, not verified: the double long dash of 10.1.8 is written attached to the text it encloses (—inciso—) and spaced from the text outside, and a single long dash for an abrupt change takes no space after it, but the engine sets a spaced dash on both sides; one-letter words (the ISG gives no list); the final nu rule (10.4); dates and the ordinal rules of 10.8; the Institute of Modern Greek Studies (Triantafyllidis Foundation) was not read, so no rule rests on it.',
     ].join(' '),
 };
+export default el;

@@ -1,4 +1,3 @@
-import { PACK } from './lang/index.js';
 // Pairs found in source text are first swapped for these placeholders, then
 // given the marks of their level, so a text can mix any source styles.
 const OPEN = '\uE000';
@@ -325,13 +324,14 @@ export function quotesFor(pack) {
         });
     };
 }
-const setters = new Map();
-/** Sets the quotation marks of the language, register and nesting level; source quotes may be of any style. */
-export function quotes(text, lang, register, quoteStyle = 'language') {
-    let set = setters.get(lang);
+/** Keyed by the pack, so a pack (built in or not) compiles its setter once. */
+const setters = new WeakMap();
+/** Sets the quotation marks of the pack's language, register and nesting level; source quotes may be of any style. */
+export function quotes(text, pack, register, quoteStyle = 'language') {
+    let set = setters.get(pack);
     if (!set) {
-        set = quotesFor(PACK[lang]);
-        setters.set(lang, set);
+        set = quotesFor(pack);
+        setters.set(pack, set);
     }
     return set(text, register, quoteStyle);
 }

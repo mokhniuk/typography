@@ -14,7 +14,7 @@
  *
  * The rules `typographic` applies, and what it deliberately leaves alone:
  *
- *  - Quotation, by language and by level (see PROFILES): «…» with „…“ inside it
+ *  - Quotation, by language and by level (see `quotes` on the pack): «…» with „…“ inside it
  *    for English and Ukrainian, »…« with ›…‹ inside for German, „…” with «…» for
  *    Polish, and so on. Source quotes may be curly,
  *    German-low, straight, or already «…».
@@ -50,8 +50,9 @@
  * end (see `hangPieces` and `hangPunctuation` in ../dom).
  */
 import type { TypographyConfig } from './config.js';
+import type { LangPack } from './lang/pack.js';
 import { type Rule } from './rules.js';
-import type { Lang, QuoteStyle, Register } from './types.js';
+import type { QuoteStyle, Register } from './types.js';
 export type Change = {
     /** The id of the rule that made it. */
     rule: string;
@@ -93,13 +94,16 @@ export type TypographicOptions = {
  */
 export declare function keepAvoided(before: string, after: string, avoided: ReadonlySet<string>): string;
 /**
- * Applies the house rules (see the header) to a plain string. Running it again on
- * its own output changes nothing, in every language (German reads its own »…« and
- * ›…‹ by where each mark stands, see `turnedPairs` on the pack and quotes.ts).
+ * Applies the house rules (see the header) to a plain string, in the language of `pack`. Running it
+ * again on its own output changes nothing, in every language (German reads its own »…« and ›…‹ by
+ * where each mark stands, see `turnedPairs` on the pack and quotes.ts).
+ *
+ * This is the engine's own entry, which takes a pack and never loads one: it imports nothing from
+ * `lang/index.ts`. The public `typographic` (resolve.ts) also takes a language code and resolves it.
  */
-export declare function typographic(text: string, lang?: Lang, { register, quoteStyle, blockStart, disable, enable, rules: custom, onChange, avoid, }?: TypographicOptions): string;
+export declare function typographic(text: string, pack: LangPack, { register, quoteStyle, blockStart, disable, enable, rules: custom, onChange, avoid, }?: TypographicOptions): string;
 /** The typeset text and every change that was made to it, with the rule that made it. */
-export declare function explain(text: string, lang?: Lang, options?: Omit<TypographicOptions, 'onChange'>): {
+export declare function explain(text: string, pack: LangPack, options?: Omit<TypographicOptions, 'onChange'>): {
     output: string;
     changes: Change[];
 };
@@ -112,12 +116,16 @@ export type ModeOptions = TypographyConfig & {
     /** Called with each change made to the text. A block a mode cannot map back is not reported. */
     onChange?: ((change: Change) => void) | undefined;
 };
+/** `ModeOptions` with the language resolved to its pack: what the pack-only mode bodies take. */
+export type PackModeOptions = Omit<ModeOptions, 'lang'> & {
+    lang: LangPack;
+};
 /**
  * Typesets one block of text for a mode. Its changes are held back until `keep()`,
  * so a block the mode throws away (it cannot map the result back onto its markup)
  * reports nothing. Every option goes on to `typographic` as it is, so a new one needs no change here.
  */
-export declare function typesetBlock(joined: string, options: ModeOptions): {
+export declare function typesetBlock(joined: string, options: PackModeOptions): {
     text: string;
     keep: () => void;
 };

@@ -1,6 +1,4 @@
 import { CURRENCY_CODES, CURRENCY_SIGNS, CURRENCY_WORDS, EURO, PERCENT } from './currency.js';
-import { PACK } from './lang/index.js';
-import { ABBREVIATIONS, ORPHANS, SHORT_WORDS } from './profiles.js';
 import { before, isLetter, isLetterOrNumber, replaceBehind } from './scan.js';
 import { NBSP } from './types.js';
 /** `(?<![\p{L}\p{N}])` before `index`: no letter or number stands directly before it. */
@@ -188,8 +186,8 @@ function forward(pattern) {
     return made;
 }
 /** One-letter words a language must not strand at the end of a line. */
-export const orphans = (text, lang) => {
-    const pattern = ORPHANS[lang];
+export const orphans = (text, pack) => {
+    const pattern = pack.orphans;
     if (!pattern)
         return text;
     const fast = forward(pattern);
@@ -206,19 +204,20 @@ const capitalised = (word) => word.charAt(0).toUpperCase() + word.slice(1);
  * bracket, the Spanish opening marks. `to~“the”`, `the~’90s`, `of~(two)`.
  */
 const OPENS_WORD = '«»„“”‚‘’‹›"\'(\\[¿¡';
-const shortWordPatterns = new Map();
-function shortWordPattern(lang) {
-    const cached = shortWordPatterns.get(lang);
-    if (cached !== undefined)
+/** Keyed by the pack's list, so a pack (built in or not) compiles its pattern once. */
+const shortWordPatterns = new WeakMap();
+function shortWordPattern(pack) {
+    const list = pack.shortWords;
+    if (!list?.length)
+        return null;
+    const cached = shortWordPatterns.get(list);
+    if (cached)
         return cached;
-    const list = SHORT_WORDS[lang];
-    const made = list?.length
-        ? new RegExp(`(?:${list
-            .flatMap((word) => [word, capitalised(word)])
-            .map(escapeRegex)
-            .join('|')})(?![\\p{L}\\p{N}])[ ]+(?=[\\p{L}\\p{N}${OPENS_WORD}])`, 'gu')
-        : null;
-    shortWordPatterns.set(lang, made);
+    const made = new RegExp(`(?:${list
+        .flatMap((word) => [word, capitalised(word)])
+        .map(escapeRegex)
+        .join('|')})(?![\\p{L}\\p{N}])[ ]+(?=[\\p{L}\\p{N}${OPENS_WORD}])`, 'gu');
+    shortWordPatterns.set(list, made);
     return made;
 }
 /**
@@ -229,8 +228,8 @@ function shortWordPattern(lang) {
  * Never more than two words in a row: a short word that follows one this rule has just bound stays
  * free, so a chain cannot grow into a whole line.
  */
-export function shortWords(text, lang) {
-    const pattern = shortWordPattern(lang);
+export function shortWords(text, pack) {
+    const pattern = shortWordPattern(pack);
     if (!pattern)
         return text;
     pattern.lastIndex = 0;
@@ -252,16 +251,16 @@ export function shortWords(text, lang) {
     pattern.lastIndex = 0;
     return from === 0 ? text : out + text.slice(from);
 }
-/**
- * The three abbreviation patterns of a language, each as the forward regex that stays once the
- * leading `(?<![\p{L}\p{N}])` is taken off (it is checked by hand, see scan.ts).
- */
-const abbreviationPatterns = new Map();
-function patternsFor(lang) {
-    const cached = abbreviationPatterns.get(lang);
+/** Keyed by the pack's lists, so a pack (built in or not) compiles its patterns once. */
+const abbreviationPatterns = new WeakMap();
+const NO_ABBREVIATIONS = { together: null, bind: null, page: null };
+function patternsFor(pack) {
+    const list = pack.abbreviations;
+    if (!list)
+        return NO_ABBREVIATIONS;
+    const cached = abbreviationPatterns.get(list);
     if (cached)
         return cached;
-    const list = ABBREVIATIONS[lang] ?? {};
     const names = (words) => words?.length ? words.map(escapeRegex).join('|') : null;
     const together = list.together?.length
         ? new RegExp(`(?:${list.together.map((a) => escapeRegex(a).replace(/ /g, '[ ]+')).join('|')})(?![\\p{L}])`, 'gu')
@@ -273,7 +272,7 @@ function patternsFor(lang) {
         bind: bind ? new RegExp(`(?:${bind})\\.[ ]+(?=[\\p{L}\\p{N}])`, 'gu') : null,
         page: page ? new RegExp(`(?:${page})\\.[ ]+(?=\\d)`, 'gu') : null,
     };
-    abbreviationPatterns.set(lang, made);
+    abbreviationPatterns.set(list, made);
     return made;
 }
 /**
@@ -281,18 +280,18 @@ function patternsFor(lang) {
  * `page` patterns need a full stop; `together` ones need it only if every entry has one (read from
  * the pack, not assumed), otherwise the rule always runs. No pattern at all: it never changes anything.
  */
-export const mayAbbreviate = (text, lang) => {
-    const { together, bind, page } = patternsFor(lang);
+export const mayAbbreviate = (text, pack) => {
+    const { together, bind, page } = patternsFor(pack);
     if (!together && !bind && !page)
         return false;
-    const list = ABBREVIATIONS[lang] ?? {};
+    const list = pack.abbreviations ?? {};
     return !together || (list.together ?? []).every((a) => a.includes('.'))
         ? text.includes('.')
         : true;
 };
 /** The parts of an abbreviation stay together, and a short one stays with what it introduces. */
-export const abbreviations = (text, lang) => {
-    const { together, bind, page } = patternsFor(lang);
+export const abbreviations = (text, pack) => {
+    const { together, bind, page } = patternsFor(pack);
     let out = text;
     if (together)
         out = replaceBehind(out, together, freeBefore, (m) => m[0].replace(/[ ]+/g, NBSP));
@@ -309,8 +308,7 @@ export const abbreviations = (text, lang) => {
 const BOTH_MARKS = new RegExp(`[${PERCENT}${EURO}]`, 'g');
 const PERCENT_ONLY = new RegExp(PERCENT, 'g');
 const EURO_ONLY = new RegExp(EURO, 'g');
-const unitMarks = (lang) => {
-    const { percentSpace, currencySpace } = PACK[lang];
+const unitMarks = ({ percentSpace, currencySpace }) => {
     if (percentSpace)
         return currencySpace ? BOTH_MARKS : PERCENT_ONLY;
     return currencySpace ? EURO_ONLY : undefined;
@@ -319,8 +317,8 @@ const unitMarks = (lang) => {
  * A percent sign (in a language with `percentSpace`: German, French) or a euro sign after the number
  * (with `currencySpace`) stands apart from its number by a no-break space: 5 %, 49 €.
  */
-export const unitSymbol = (text, lang) => {
-    const marks = unitMarks(lang);
+export const unitSymbol = (text, pack) => {
+    const marks = unitMarks(pack);
     return marks
         ? // Was `(?<=\d)(?=[%€])`, tried at every position: the mark is found first, a digit before it read here.
             text.replace(marks, (mark, offset, whole) => {

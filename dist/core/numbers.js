@@ -1,4 +1,3 @@
-import { PACK } from './lang/index.js';
 /** A run of digits is grouped only when it has at least this many (so 2026 and 9999 stay whole). */
 export const GROUP_MIN_DIGITS = 5;
 const DIGITS = /\d+/g;
@@ -69,8 +68,8 @@ export function groupDigits(run, separator) {
     return out;
 }
 /** Groups the digits of every integer of five or more digits in threes from the right, with the separator of the pack. */
-export function groupNumbers(text, lang) {
-    const format = PACK[lang].numbers;
+export function groupNumbers(text, pack) {
+    const format = pack.numbers;
     if (!format)
         return text;
     return text.replace(DIGITS, (run, offset, whole) => groupable(whole, offset, offset + run.length, format.decimal)

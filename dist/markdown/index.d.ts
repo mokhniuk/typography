@@ -1,4 +1,4 @@
-import { type ModeOptions } from '../core/index.js';
+import type { ModeOptions } from '../core/typography.js';
 /**
  * Typesets the prose of a Markdown document and leaves its structure and code as
  * they were. Untouched: fenced and indented code, inline code, front matter, raw

@@ -1,6 +1,6 @@
 {
   "name": "@mokhniuk/typography",
-  "version": "0.16.1",
+  "version": "0.17.0",
   "type": "module",
   "description": "Typography for running text: quotation by language and register, dashes, non-breaking spaces, measured hanging punctuation.",
   "homepage": "https://typography.mokhni.uk",
@@ -54,6 +54,118 @@
     "./react": {
       "types": "./dist/react/index.d.ts",
       "default": "./dist/react/index.js"
+    },
+    "./lite": {
+      "types": "./dist/lite/index.d.ts",
+      "default": "./dist/lite/index.js"
+    },
+    "./lang/bg": {
+      "types": "./dist/core/lang/bg.d.ts",
+      "default": "./dist/core/lang/bg.js"
+    },
+    "./lang/cs": {
+      "types": "./dist/core/lang/cs.d.ts",
+      "default": "./dist/core/lang/cs.js"
+    },
+    "./lang/da": {
+      "types": "./dist/core/lang/da.d.ts",
+      "default": "./dist/core/lang/da.js"
+    },
+    "./lang/de": {
+      "types": "./dist/core/lang/de.d.ts",
+      "default": "./dist/core/lang/de.js"
+    },
+    "./lang/de-ch": {
+      "types": "./dist/core/lang/de-ch.d.ts",
+      "default": "./dist/core/lang/de-ch.js"
+    },
+    "./lang/el": {
+      "types": "./dist/core/lang/el.d.ts",
+      "default": "./dist/core/lang/el.js"
+    },
+    "./lang/en": {
+      "types": "./dist/core/lang/en.d.ts",
+      "default": "./dist/core/lang/en.js"
+    },
+    "./lang/es": {
+      "types": "./dist/core/lang/es.d.ts",
+      "default": "./dist/core/lang/es.js"
+    },
+    "./lang/et": {
+      "types": "./dist/core/lang/et.d.ts",
+      "default": "./dist/core/lang/et.js"
+    },
+    "./lang/fi": {
+      "types": "./dist/core/lang/fi.d.ts",
+      "default": "./dist/core/lang/fi.js"
+    },
+    "./lang/fr": {
+      "types": "./dist/core/lang/fr.d.ts",
+      "default": "./dist/core/lang/fr.js"
+    },
+    "./lang/fr-ch": {
+      "types": "./dist/core/lang/fr-ch.d.ts",
+      "default": "./dist/core/lang/fr-ch.js"
+    },
+    "./lang/ga": {
+      "types": "./dist/core/lang/ga.d.ts",
+      "default": "./dist/core/lang/ga.js"
+    },
+    "./lang/hr": {
+      "types": "./dist/core/lang/hr.d.ts",
+      "default": "./dist/core/lang/hr.js"
+    },
+    "./lang/hu": {
+      "types": "./dist/core/lang/hu.d.ts",
+      "default": "./dist/core/lang/hu.js"
+    },
+    "./lang/it": {
+      "types": "./dist/core/lang/it.d.ts",
+      "default": "./dist/core/lang/it.js"
+    },
+    "./lang/lt": {
+      "types": "./dist/core/lang/lt.d.ts",
+      "default": "./dist/core/lang/lt.js"
+    },
+    "./lang/lv": {
+      "types": "./dist/core/lang/lv.d.ts",
+      "default": "./dist/core/lang/lv.js"
+    },
+    "./lang/mt": {
+      "types": "./dist/core/lang/mt.d.ts",
+      "default": "./dist/core/lang/mt.js"
+    },
+    "./lang/nl": {
+      "types": "./dist/core/lang/nl.d.ts",
+      "default": "./dist/core/lang/nl.js"
+    },
+    "./lang/pl": {
+      "types": "./dist/core/lang/pl.d.ts",
+      "default": "./dist/core/lang/pl.js"
+    },
+    "./lang/pt": {
+      "types": "./dist/core/lang/pt.d.ts",
+      "default": "./dist/core/lang/pt.js"
+    },
+    "./lang/ro": {
+      "types": "./dist/core/lang/ro.d.ts",
+      "default": "./dist/core/lang/ro.js"
+    },
+    "./lang/sk": {
+      "types": "./dist/core/lang/sk.d.ts",
+      "default": "./dist/core/lang/sk.js"
+    },
+    "./lang/sl": {
+      "types": "./dist/core/lang/sl.d.ts",
+      "default": "./dist/core/lang/sl.js"
+    },
+    "./lang/sv": {
+      "types": "./dist/core/lang/sv.d.ts",
+      "default": "./dist/core/lang/sv.js"
+    },
+    "./lang/uk": {
+      "types": "./dist/core/lang/uk.d.ts",
+      "default": "./dist/core/lang/uk.js"
     },
     "./package.json": "./package.json"
   },

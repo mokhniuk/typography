@@ -31,3 +31,4 @@ export const mt = {
         'Not implemented, not verified: one-letter words to keep off the end of a line (none sourced), the dash conventions of the language (not read), longer abbreviation lists, the national rules of the Kunsill Nazzjonali tal-Ilsien Malti. No other typography tool read covers Maltese.',
     ].join(' '),
 };
+export default mt;

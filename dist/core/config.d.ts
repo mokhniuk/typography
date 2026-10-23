@@ -1,3 +1,4 @@
+import { type LangPack } from './lang/pack.js';
 import { type Rule } from './rules.js';
 import type { Lang, QuoteStyle, Register } from './types.js';
 /**
@@ -9,8 +10,13 @@ import type { Lang, QuoteStyle, Register } from './types.js';
  * A new option goes here, and then reaches `ModeOptions` and every mode's type from it.
  */
 export type TypographyConfig = {
-    /** Language of the text; `en` unless given. */
-    lang?: Lang | undefined;
+    /**
+     * Language of the text: a code (`'uk'`) or a pack (the `uk` export of
+     * `@mokhniuk/typography/lang/uk`); `en` unless given. A pack may come from JSON too (an object
+     * with `code`, `name` and `quotes` pairs), but its `orphans` RegExp, or any other field JSON
+     * cannot hold, needs a module.
+     */
+    lang?: Lang | LangPack | undefined;
     /** `display` (the default) or `literary`. */
     register?: Register | undefined;
     /** `language` (the default), `us` (“…” and ‘…’ in any language) or `guillemets` (« », „ “, ‚ ‘ in any language: the house style). */
