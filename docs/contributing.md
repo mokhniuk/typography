@@ -58,7 +58,7 @@ A language is one object, a pack, and no code names a language: rules read the p
 
 1. Create `src/core/lang/<code>.ts` exporting the pack (`as const satisfies LangPack`, the type is in `src/core/lang/pack.ts`).
 2. Add it to `PACKS` in `src/core/lang/index.ts`: one import, one list entry. `Lang`, `LANGS`, `PROFILES` and the other tables in `profiles.ts`, the command line, the rehype plugin and the playground all follow from the list.
-3. Create `src/core/lang/<code>.test.ts`: call `wellFormed(pack, '<code>.test.ts')` from `pack-checks.ts` and add golden tests for what the pack sets. Golden tests for a language live in that file, not in `typography.test.ts`.
+3. Create `src/core/lang/<code>.test.ts`: call `wellFormed(pack, '<code>.test.ts')` from `pack-checks.test-utils.ts` and add golden tests for what the pack sets. Golden tests for a language live in that file, not in `typography.test.ts`.
 4. Run `bun run docs:languages` and commit `docs/languages/<code>.md` and `index.md`; `src/lang-docs.test.ts` fails if a page differs from its pack. Never edit them by hand.
 5. If a rule acts on the new language, add an examples row to `scripts/gen-rules-doc.ts` and run `bun run docs:rules`.
 6. Add a long example in the language to `LONG` in `apps/playground/examples.ts` (the playground's "Long example"; `tsc` fails while it is missing, and `apps/playground/examples.test.ts` checks that it gives the rules something to do).
