@@ -9,7 +9,7 @@
  * Node version (.github/workflows/release.yml).
  */
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { delimiter, dirname, join } from 'node:path';
 
@@ -66,7 +66,7 @@ try {
 
   const project = join(work, 'project');
   step('install the tarball and react', () => {
-    sh('mkdir', ['-p', project], { cwd: work });
+    mkdirSync(project);
     writeFileSync(
       join(project, 'package.json'),
       '{ "name": "smoke", "private": true, "type": "module" }\n',
