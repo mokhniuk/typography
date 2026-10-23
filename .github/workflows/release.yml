@@ -87,7 +87,10 @@ jobs:
           git push --atomic origin "$commit:refs/heads/release" "refs/tags/$version"
           echo "created=true" >> "$GITHUB_OUTPUT"
       # Only when the tag was just created, so a version reaches npm once. Trusted publishing: npm
-      # takes the workflow's OIDC token (id-token: write), no secret; `prepack` builds dist/ first.
+      # takes the workflow's OIDC token (id-token: write), no secret; it needs npm 11.5.1 or later,
+      # which Node 24 ships. `prepack` builds dist/ first. If this step fails after the tag was
+      # pushed, a re-run sees `created=false` and skips it: publish by hand with `npm publish` from
+      # a checkout of the tag (the release commit already holds the built package).
       - name: Publish to npm
         if: steps.tag.outputs.created == 'true'
         run: npm publish --provenance --access public

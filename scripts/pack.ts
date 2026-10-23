@@ -4,12 +4,16 @@
  * benchmark's dependency table both read it from here, so they cannot disagree.
  */
 export function packedFiles(root: string): string[] {
-  return Bun.spawnSync({
+  const pack = Bun.spawnSync({
     cmd: [process.execPath, 'pm', 'pack', '--dry-run'],
     cwd: root,
     stdout: 'pipe',
-  })
-    .stdout.toString()
+    stderr: 'pipe',
+  });
+  if (pack.exitCode !== 0)
+    throw new Error(`bun pm pack failed (exit ${pack.exitCode}): ${pack.stderr.toString().trim()}`);
+  return pack.stdout
+    .toString()
     .split('\n')
     .map((line) => /^packed \S+ (.+)$/.exec(line.trim())?.[1])
     .filter((path): path is string => !!path);

@@ -7,8 +7,9 @@
  * tree is also what npm publishes. The commit sits on the `release` branch, whose parent is the
  * previous release, and is made with git plumbing: the working tree and the current branch are not
  * touched (`dist/` is rebuilt, and git ignores it). The one change to the pack: the tree's package.json
- * has no `prepack`, since npm runs it when it installs a git dependency, and the tree has nothing to
- * build from.
+ * has no `scripts`. npm prepares a git dependency (a full install of its dev dependencies, then the
+ * scripts) when the manifest has `build`, `prepack`, `prepare` or an install script, and the tree has
+ * nothing to build from.
  *
  *     bun scripts/release-commit.ts [parent]     prints the new commit's hash
  *
@@ -37,8 +38,10 @@ try {
   for (const required of ['dist/index.js', 'dist/index.d.ts', 'LICENSE'])
     if (!existsSync(join(tree, required))) throw new Error(`the pack has no ${required}`);
   const manifest = JSON.parse(readFileSync(join(tree, 'package.json'), 'utf8'));
-  delete manifest.scripts?.prepack;
+  delete manifest.scripts;
   writeFileSync(join(tree, 'package.json'), `${JSON.stringify(manifest, null, 2)}\n`);
+  if ('scripts' in JSON.parse(readFileSync(join(tree, 'package.json'), 'utf8')))
+    throw new Error("the release tree's package.json still has scripts");
 
   // A separate index, so the repository's own index and working tree stay as they are; `-f`, so the
   // repository's exclude file and the user's global ignore list cannot drop a file the pack holds.

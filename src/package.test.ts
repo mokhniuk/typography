@@ -70,7 +70,12 @@ test('every entry point and the command line resolve inside the pack', () => {
   }
 });
 
-test('no shipped file names Bun test APIs', () => {
-  for (const path of packed)
-    expect(readFileSync(join(ROOT, path), 'utf8').includes('bun:test'), path).toBe(false);
+test('no shipped code needs Bun', () => {
+  for (const path of packed) {
+    const text = readFileSync(join(ROOT, path), 'utf8');
+    expect(text.includes('bun:test'), path).toBe(false);
+    // The prose files (CHANGELOG, README) may name Bun's APIs; the build may not use them.
+    if (path.startsWith('dist/'))
+      expect(/bun:|import\.meta\.dir|\bBun\./.test(text), path).toBe(false);
+  }
 });
