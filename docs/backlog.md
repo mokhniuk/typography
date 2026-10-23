@@ -86,7 +86,7 @@ The pack exists but is thin, because the Irish edition of the Interinstitutional
 - **Quotes:** `‘…’` then `“…”` (the Publications Office table) against `“…”` first (Wikipedia). Settle it from the Irish ISG or Foras na Gaeilge / An Gúm, or from a native reader.
 - **Sentence dash and ranges:** not read; the pack defaults to the spaced em dash.
 - **Short words and abbreviations:** none (`orphans`, `abbreviations` empty). Candidates to source: `a`, `i`, `is`, `ar`, `le`, `go`, `de`, `do`; abbreviations such as `m.sh.`, `srl.`, `lch.` (Foras na Gaeilge's lists).
-- **Initial mutations:** the hyphen and apostrophe forms (`an t-athair`, `na h-oibrithe`, `d'fhág`, `b'fhéidir`) pass through unchanged today and a test pins `d'`, `b'`, `m'`; add goldens for `t-`, `n-` and `h-` prefixes (`an t-uisce`, `i n-Éirinn`, `go h-álainn`) inside and outside quotes, since a hyphen after a single letter must never read as a range or a dash.
+- **Initial mutations:** pinned by goldens since 0.18.0.
 - **Review:** `reviewed: false`; get an Irish reader to check the page.
 
 ### Short words, conjunctions and the end of the line: what is left
