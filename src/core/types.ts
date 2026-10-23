@@ -9,8 +9,8 @@ export type { Lang };
 
 /**
  * The setting a text is for. `display` is the default: marketing and event pages,
- * set in the PROFILES (profiles.ts). `literary` is book-like text, whose conventions
- * differ by language and which only some languages have a profile for (LITERARY);
+ * set by the pack's `quotes`. `literary` is book-like text, whose conventions
+ * differ by language and which only some packs have marks for (`literary`);
  * the rest keep their display rules.
  */
 export type Register = 'display' | 'literary';

@@ -14,7 +14,7 @@
  *
  * The rules `typographic` applies, and what it deliberately leaves alone:
  *
- *  - Quotation, by language and by level (see PROFILES): «…» with „…“ inside it
+ *  - Quotation, by language and by level (see `quotes` on the pack): «…» with „…“ inside it
  *    for English and Ukrainian, »…« with ›…‹ inside for German, „…” with «…» for
  *    Polish, and so on. Source quotes may be curly,
  *    German-low, straight, or already «…».

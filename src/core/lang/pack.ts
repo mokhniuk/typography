@@ -19,9 +19,8 @@ export type NumberFormat = { group: string; decimal: string };
 
 /**
  * Everything the engine knows about one language. A language is "in" the package
- * when it is listed in `PACKS` (lang/index.ts); every table the engine reads
- * (`PROFILES`, `LITERARY`, `ORPHANS`, ...) is derived from the packs, and no rule
- * names a language: it reads a field of the pack.
+ * when it is listed in `PACKS` (lang/index.ts); the engine is handed the pack of the
+ * text (`Context.pack`), and no rule names a language: it reads a field of the pack.
  */
 /** The dash that opens a line of dialogue, and whether the text follows it with no space. */
 export type DialogueDash = { mark: '—' | '–'; attached?: boolean };
