@@ -47,7 +47,8 @@ export function dialogue(text: string, { mark, attached }: DialogueDash): string
 
 const TIME_RANGE = /(\d{1,2}:\d{2})[ \u00A0]*(?:--|[-–])[ \u00A0]*(?=\d{1,2}:\d{2})/g;
 /** Two times written with a full stop (9.00-18.30), the second one read by the lookahead. */
-const DOTTED_TIME_RANGE = /(\d{1,2})\.(\d{2})[  ]*(?:--|[-–])[  ]*(?=(\d{1,2})\.(\d{2}))/g;
+const DOTTED_TIME_RANGE =
+  /(\d{1,2})\.(\d{2})[ \u00A0]*(?:--|[-–])[ \u00A0]*(?=(\d{1,2})\.(\d{2}))/g;
 /** What may not stand before a dotted time: it would be the tail of a longer number, a date or a name. */
 const NOT_BEFORE_TIME = /[\p{L}\p{N}.,:]/u;
 /** What may follow the second time: not more digits (18.300) nor another part (5.10.2026, 9.00.15). */
@@ -69,7 +70,7 @@ function dottedTimeRanges(text: string): string {
     const end = m.index + whole.length;
     const tail = end + h2.length + 1 + m2.length;
     if (
-      (m.index > 0 && NOT_BEFORE_TIME.test(before(text, m.index))) ||
+      NOT_BEFORE_TIME.test(before(text, m.index)) ||
       NOT_AFTER_TIME.test(text.slice(tail, tail + 2)) ||
       Number(h1) > 24 ||
       Number(h2) > 24 ||
