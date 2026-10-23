@@ -6,7 +6,7 @@ import {
   RULES,
   selectRules,
   type TypographyConfig,
-} from '../../src/core';
+} from '../../../src/core';
 import type { RuleState } from './rules-state';
 
 /** The switches of the page that a config carries. */

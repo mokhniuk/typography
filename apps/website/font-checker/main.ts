@@ -21,8 +21,8 @@ import {
   typographic,
 } from '../../../src/core';
 import { glyphStatus, hangPunctuation, markHangs } from '../../../src/dom';
-import { quoteStyleOf } from '../../playground/config-io';
-import { example } from '../../playground/examples';
+import { quoteStyleOf } from '../playground/config-io';
+import { example } from '../playground/examples';
 import { RISKY_LETTERS } from './letters';
 
 type Status = 'own' | 'fallback' | 'none';

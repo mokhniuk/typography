@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'bun:test';
-import { type Change, LANGS, type Register, RULES } from '../../src/core';
-import { typesetHtml } from '../../src/html';
-import { typesetText } from '../../src/text';
+import { type Change, LANGS, type Register, RULES } from '../../../src/core';
+import { typesetHtml } from '../../../src/html';
+import { typesetText } from '../../../src/text';
 import { example, exampleIn, LONG, MODES } from './examples';
 
 const OPT_IN = RULES.filter((rule) => rule.defaultOn === false).map((rule) => rule.id);

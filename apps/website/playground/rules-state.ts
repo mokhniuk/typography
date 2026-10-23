@@ -1,4 +1,4 @@
-import { RULE_CATEGORIES, type Rule, type RuleCategory } from '../../src/core';
+import { RULE_CATEGORIES, type Rule, type RuleCategory } from '../../../src/core';
 
 /**
  * Which rules the playground has switched away from their defaults: `disable` holds rules that are

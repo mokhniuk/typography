@@ -2,6 +2,12 @@
 
 Versions follow semver while the package is below 1.0.0: a **minor** release may change the output of the engine or the API (every entry says whether it can change output you already have), a **patch** release fixes a bug without changing output you rely on. If you depend on exact output, pin a tag and read this file before you move it.
 
+## Unreleased
+
+### Changes
+
+- The standalone playground app (`apps/playground/`, never published) is gone; its modules and tests now live with the page that uses them, `apps/website/playground/`. `bun run playground` and `playground:build` are removed (`bun run website` serves the page), and the test command is `bun test src apps/website resources`. The README screenshots are WebP. No output change.
+
 ## 0.16.0 (2026-10-23)
 
 ### Changes

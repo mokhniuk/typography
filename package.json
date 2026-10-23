@@ -67,10 +67,8 @@
   "scripts": {
     "build": "bun scripts/build.ts",
     "prepack": "bun run build",
-    "test": "bun test src apps/playground apps/website resources",
+    "test": "bun test src apps/website resources",
     "typecheck": "tsc -p tsconfig.json",
-    "playground": "vite --config apps/playground/vite.config.ts",
-    "playground:build": "vite build --config apps/playground/vite.config.ts",
     "docs:rules": "bun scripts/gen-rules-doc.ts",
     "docs:sources": "bun resources/gen-sources.ts",
     "docs:languages": "bun scripts/gen-languages-doc.ts",

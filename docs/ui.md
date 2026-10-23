@@ -1,6 +1,6 @@
 # UI conventions
 
-These apply to every page this project ships: the playground (`apps/playground/`), the comparison page (`apps/bench/comparison.html`) and the website (`apps/website/`). The website is about typography, so its pages are set with the same care the engine takes over text: the build runs every page through `typesetHtml`.
+These apply to every page this project ships: the playground (`apps/website/playground/`), the comparison page (`apps/bench/comparison.html`) and the website (`apps/website/`). The website is about typography, so its pages are set with the same care the engine takes over text: the build runs every page through `typesetHtml`.
 
 ## Markup
 
@@ -56,7 +56,7 @@ The comparison page is published as an Artifact, so it is one self-contained fil
 
 - Hand-written pages: `index.html`, `playground/index.html`, `font-checker/index.html`, `404.html` (the list is `hand` in `build/plugin.ts`). `<!--header-->`, `<!--footer-->` and `<!--examples-->` and `{{version}}`, `{{rules}}`, `{{langs}}` and the like are filled in at build time from `build/` and the engine, so the numbers cannot go stale.
 - Generated pages: the docs are the files listed in `DOC_FILES` in `apps/website/build/content.ts` (`apps/website/content/docs/getting-started.md`, `docs/api.md`, `cli.md`, `rules.md`, `languages.md`, `limits.md`, `practices.md`, `contributing.md` and `CHANGELOG.md`, in that order) plus the generated `docs/languages/*.md`; `README.md`, `ui.md`, `backlog.md` and `ideas.md` are not published; articles are `content/articles/YYYY-MM-DD-slug.md` with `title`, `date` and `summary` front matter. Add a file and the page, the index entry and the links appear. A link written `/docs/api/` in content is a link to a page of the site; one to another repository file goes to GitHub. The list and order of docs pages is `DOC_FILES` in `build/content.ts`.
-- The playground page reuses `apps/playground/main.ts` and its markup; its CSS lives in the website's `style.css` under `[data-page="playground"]`.
+- The playground page is `playground/index.html` with its script and modules beside it (`playground/*.ts`, tested there); its CSS lives in `style.css` under `[data-page="playground"]`.
 - The font checker (`font-checker/`) is its own page and script: load a font file (read with `FontFace`, never uploaded) or name an installed font, pick languages, and get the glyph coverage of every character the rules can insert plus the letters of each language that fonts often lack, the `avoid` config for what is missing, the examples set in the font at two measures with hanging punctuation, and a text preset measured from the font. The measuring itself is the engine's (`src/dom/glyphs.ts`); the letters it asks about are `font-checker/letters.ts`, and `letters.test.ts` fails if a language pack has no line there. `font-checker/page.test.ts` loads the page's script against a stub browser, so a script that throws on load, or asks for an element the markup does not have, fails the suite. Its CSS is under `[data-page="font-checker"]`.
 - Every page is typeset by the engine at build (`build/plugin.ts`, options in `TYPESET` in `build/site.ts`: English with American quotes), and the browser hangs punctuation in `[data-hanging]` text.
 - Every page links relatively (`base: './'`), so the site works at the root of a host or under a path. The one exception is `404.html`: the host serves it for a missing address at any depth, so a relative link there would resolve against that address (`/docs/typo/` loading `/docs/assets/style.css`). Its links are rewritten to start at the site root, prefixed with `BASE` (`build/site.ts`) — `/` unless the environment variable `SITE_BASE` says otherwise. The rewrite is `rootLinks` in `build/plugin.ts`, in a `generateBundle` hook with `order: 'post'`, because Vite's own HTML plugin emits the page in its `generateBundle` and before that there is nothing to fix up.
@@ -68,7 +68,7 @@ The comparison page is published as an Artifact, so it is one self-contained fil
 
 The site ships as a container: `Dockerfile` at the repository root builds it with Bun and serves it
 with nginx (`apps/website/nginx.conf`). The build context is the root, because the site imports the
-engine from `src/`, its long examples from `apps/playground/` and its docs pages from `docs/`.
+engine from `src/` and its docs pages from `docs/`.
 
 ```sh
 docker build -t typography-website .

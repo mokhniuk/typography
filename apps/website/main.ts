@@ -1,6 +1,6 @@
 import { diff, type Lang, PACKS, typographic } from '../../src/core';
 import { hangPunctuation, markHangs } from '../../src/dom';
-import { example } from '../playground/examples';
+import { example } from './playground/examples';
 
 const STORAGE = 'typography-theme';
 

@@ -1,4 +1,4 @@
-import { type Lang, PACK } from '../../src/core';
+import { type Lang, PACK } from '../../../src/core';
 
 export const MODES = ['text', 'html', 'markdown'] as const;
 export type Mode = (typeof MODES)[number];

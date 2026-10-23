@@ -25,9 +25,8 @@ jobs:
       # Builds dist/ once here so a type error shows as a build failure; the pack test and attw's
       # pack below build it again (prepack), three builds in all, on purpose.
       - run: bun run build
-      - run: bun test src apps/playground apps/website resources
+      - run: bun test src apps/website resources
       - run: bun run typecheck
-      - run: bun run playground:build
       - run: bun run website:build
       # ESM only, on purpose: the profile leaves out CommonJS `require` and node10 resolution, and
       # fails on any other problem with the types or the entry points of the pack.

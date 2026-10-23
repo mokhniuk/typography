@@ -27,7 +27,7 @@ The group separator in `125,000`, the dropped space before the comma, and the `�
 It also puts no-break spaces where a line should not break (after one-letter words, inside ranges, before units), nests quotations in the marks each language expects, and can hang opening punctuation in the margin. English gets `“…”` with `‘…’` inside, as above; `quoteStyle: 'us'` gives the same marks in any language, `quoteStyle: 'guillemets'` gives this project's house style `«…»` with `„…“` inside in any language, and the `literary` register gives British `‘…’`.
 
 <!-- Image paths are repository-relative; swap for absolute URLs (the website, once it is hosted) when the package goes on a public registry. -->
-[![The website: the engine running live, with hanging punctuation](docs/media/website-hero.png)](apps/website/)
+[![The website: the engine running live, with hanging punctuation](docs/media/website-hero.webp)](apps/website/)
 
 ## Why this engine
 
@@ -175,9 +175,9 @@ typo -c docs/*.md              # change nothing; exit 1 if any file would change
 
 ## The playground
 
-Paste text, HTML or Markdown; see the result, every change with the rule that made it, and a preview with hanging punctuation. It runs entirely in the browser. `bun run playground` serves it; it also lives on the website (`bun run website`) along with the docs and articles.
+Paste text, HTML or Markdown; see the result, every change with the rule that made it, and a preview with hanging punctuation. It runs entirely in the browser. It is a page of the website: `bun run website` serves it along with the docs and articles.
 
-![The playground: input beside the typeset result, with the changes counted](docs/media/playground.png)
+![The playground: input beside the typeset result, with the changes counted](docs/media/playground.webp)
 
 ## Hanging punctuation without a jump on a prerendered page
 
@@ -208,12 +208,12 @@ Honesty over gloss — before you depend on it, know where it is weak:
 ## Develop
 
 ```sh
-bun test src apps/playground apps/website resources
+bun test src apps/website resources
 bun run typecheck
 bun run docs:rules     # regenerate docs/rules.md
 ```
 
-The package stays self-contained: `src/boundary.test.ts` fails if anything in `src/` or `apps/playground/` imports from outside the package or from anything but `react`. See [docs/contributing.md](docs/contributing.md).
+The package stays self-contained: `src/boundary.test.ts` fails if anything in `src/` or `apps/website/playground/` imports from outside the package or from anything but `react`. See [docs/contributing.md](docs/contributing.md).
 
 ## Licence
 

@@ -1,6 +1,5 @@
 node_modules
 dist
-apps/playground/dist
 apps/website/dist
 .DS_Store
 

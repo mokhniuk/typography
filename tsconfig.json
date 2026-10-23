@@ -20,6 +20,6 @@
     "allowImportingTsExtensions": true,
     "types": ["bun-types", "vite/client"]
   },
-  "include": ["src", "apps/playground", "apps/website", "scripts", "resources"],
+  "include": ["src", "apps/website", "scripts", "resources"],
   "exclude": ["node_modules", "dist"]
 }

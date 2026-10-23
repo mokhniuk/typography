@@ -5,11 +5,11 @@ Everything here runs from the project folder with Bun.
 ## Checks
 
 ```sh
-bun test src apps/playground apps/website resources      # every test; this is the package's `test` script
+bun test src apps/website resources      # every test; this is the package's `test` script
 bun run typecheck            # tsc -p tsconfig.json; tests are typechecked too
 ```
 
-`bun test` does not typecheck; `bun run typecheck` does, and covers `src`, `apps/playground`, `apps/website`, `scripts` and `resources` (the `include` of `tsconfig.json`).
+`bun test` does not typecheck; `bun run typecheck` does, and covers `src`, `apps/website`, `scripts` and `resources` (the `include` of `tsconfig.json`).
 
 Lint and format are Biome, configured in `biome.json`: `bunx biome ci .` checks, and CI (`.github/workflows/release.yml`) runs it before the tests; `bunx biome check --write .` fixes what it can.
 
@@ -33,7 +33,6 @@ bun run docs:languages       # writes docs/languages/*.md from the packs
 | `scripts/gen-languages-doc.ts` | Generates `docs/languages/<code>.md` and `docs/languages/index.md` from the packs |
 | `resources/` | The sources registry (below) and the pages generated from it; not part of the package |
 | `apps/bench/` | The benchmark: a separate project with its own dependencies; sources, cases and `RESULTS.md` tracked, `node_modules` and lockfile not (see below) |
-| `apps/playground/` | The web page (its own `package.json` for `dev`/`build`; uses the root's `vite`) |
 | `apps/website/` | The website: landing, docs, articles, playground; see [ui.md](ui.md#the-website). The docs it publishes are the files listed in `DOC_FILES` in `apps/website/build/content.ts` (`apps/website/content/docs/getting-started.md`, `docs/api.md`, `cli.md`, `rules.md`, `languages.md`, `limits.md`, `practices.md`, `contributing.md` and `CHANGELOG.md`, in that order) plus the generated `docs/languages/*.md`; `README.md`, `ui.md`, `backlog.md` and `ideas.md` are not published |
 | `docs/` | These pages. `rules.md` and `languages/` are generated; the others are written by hand |
 
@@ -61,7 +60,7 @@ A language is one object, a pack, and no code names a language: rules read the p
 3. Create `src/core/lang/<code>.test.ts`: call `wellFormed(pack, '<code>.test.ts')` from `pack-checks.test-utils.ts` and add golden tests for what the pack sets. Golden tests for a language live in that file, not in `typography.test.ts`.
 4. Run `bun run docs:languages` and commit `docs/languages/<code>.md` and `index.md`; `src/lang-docs.test.ts` fails if a page differs from its pack. Never edit them by hand.
 5. If a rule acts on the new language, add an examples row to `scripts/gen-rules-doc.ts` and run `bun run docs:rules`.
-6. Add a long example in the language to `LONG` in `apps/playground/examples.ts` (the playground's "Long example"; `tsc` fails while it is missing, and `apps/playground/examples.test.ts` checks that it gives the rules something to do).
+6. Add a long example in the language to `LONG` in `apps/website/playground/examples.ts` (the playground's "Long example"; `tsc` fails while it is missing, and `apps/website/playground/examples.test.ts` checks that it gives the rules something to do).
 7. Add a line for the language to `RISKY_LETTERS` in `apps/website/font-checker/letters.ts`: the letters of the language that fonts most often lack, or an empty string. `apps/website/font-checker/letters.test.ts` fails while it is missing.
 8. Update the hand-written overview [languages.md](languages.md).
 
@@ -69,7 +68,7 @@ The pack:
 
 | Field | Meaning |
 |---|---|
-| `code`, `name`, `sample` | The code (`Lang` is the union of every pack's code), the name shown in the playground (`German (Deutsch)`), and a sentence for the playground's "Short example" (the benchmark and the corpus also use it). The longer text lives in `apps/playground/examples.ts`. |
+| `code`, `name`, `sample` | The code (`Lang` is the union of every pack's code), the name shown in the playground (`German (Deutsch)`), and a sentence for the playground's "Short example" (the benchmark and the corpus also use it). The longer text lives in `apps/website/playground/examples.ts`. |
 | `quotes` | Quote marks per nesting level, `[open, close][]`; deeper nesting starts over. |
 | `literary` | The same for the literary register, if it differs. |
 | `orphans` | A global regex with one capture group: one-letter words kept with the next word. |
@@ -92,7 +91,7 @@ Abbreviation lists and the like come from a style guide, not from memory; say in
 
 - **Golden tests** sit beside each module (`*.test.ts`).
 - **Property tests** (`src/properties.test.ts`) run on seeded random strings built from characters the rules care about, for every language and register: no letter or digit is lost or added; a second pass changes nothing, on text as it is written; addresses, emails and code spans come back exactly; HTML tags, attributes and `<pre>`/`<code>` are kept byte for byte; Markdown code is kept; the text mode keeps the number of lines; and nothing throws. A failure prints the input, so it can be turned into a golden case.
-- **The boundary test** (`src/boundary.test.ts`) scans `src` and `apps/playground` and fails if a file imports from outside the package (a relative path that leaves it, a monorepo alias, a workspace package) or from anything but `react`, `react/jsx-runtime` and `bun:test`. Test files may also import `node:` modules and the unified/remark/rehype dev dependencies; the command line may import `node:` modules. The playground's `vite.config.ts` is not scanned. `scripts/` and `resources/` are not scanned either, so keep them to imports from `../src` and `node:`.
+- **The boundary test** (`src/boundary.test.ts`) scans `src` and `apps/website/playground` and fails if a file imports from outside the package (a relative path that leaves it, a monorepo alias, a workspace package) or from anything but `react`, `react/jsx-runtime` and `bun:test`. Test files may also import `node:` modules and the unified/remark/rehype dev dependencies; the command line may import `node:` modules. `scripts/` and `resources/` are not scanned either, so keep them to imports from `../src` and `node:`.
 - **The docs tests** (`src/docs.test.ts` for the rules page, `src/lang-docs.test.ts` for the language pages) are described above.
 - **Quote style** (`src/core/quote-style.test.ts`, `src/properties.quotestyle.test.ts`): `quoteStyle: 'us'` and `'guillemets'` goldens, and the properties of `properties.test.ts` run for every language. The generators there are copied, not shared, so the seeded streams of `properties.test.ts` do not move.
 
@@ -110,7 +109,7 @@ bun scripts/stress.ts [srcDir]   # every rule on long runs of one character at 2
 ```
 
 - `bun run compare` extracts `src/` of the base ref into a temp directory with `git archive`, then, for every language, register (`display`, `literary`), `quoteStyle` (`language`, `us`, and `guillemets` when the base engine accepts it), rule set (default; every opt-in rule enabled) and mode (`typographic` with `explain`, text, HTML, Markdown, hast), compares the output and every change record (rule id, `from`, `to`, order), the rule table and a thrown error. It prints the first ten differences with input, mode, language and both results, exits 1 on any difference, and ends with a timing table (best of 3, on a 1 MB paragraph and on 1000 paragraphs of 1 KB). Languages that exist here but not in the base are skipped. Expect `0 differences`.
-- `src/snapshot.test.ts` (part of `bun test src apps/playground apps/website resources`) holds a SHA-256 per language and variant in `src/snapshot.digests.json` and fails on any change. A language without a digest fails with `run: bun run snapshot`. Never run `bun run snapshot` to make a speed change pass: a speed change must pass without it. The same test mutates a temp copy of `src/` to prove that both tools notice a changed regex and a changed rule attribution.
+- `src/snapshot.test.ts` (part of `bun test src apps/website resources`) holds a SHA-256 per language and variant in `src/snapshot.digests.json` and fails on any change. A language without a digest fails with `run: bun run snapshot`. Never run `bun run snapshot` to make a speed change pass: a speed change must pass without it. The same test mutates a temp copy of `src/` to prove that both tools notice a changed regex and a changed rule attribution.
 - What they cannot see: the React hooks and `HangText`, the DOM measuring, the CLI, inputs far outside the corpus (very long runs of one mark, megabyte inputs with changes, lone surrogates, text in scripts the rules do not know), and timing noise on a busy machine. Run the whole suite as well.
 
 ## The benchmark
@@ -133,12 +132,7 @@ bun run features    # the same English inputs through every tool
 
 ## The playground
 
-```sh
-bun run playground           # vite dev server for apps/playground/
-bun run playground:build     # static site in apps/playground/dist
-```
-
-A client-side page: paste text, HTML or Markdown, pick the language, register, quote style (`language` or `us`), the characters to avoid (`avoid`; under each rule switch the characters it can insert are struck through while one of them is avoided) and how a no-break space is written, and see the result, a word-level diff of what changed with what each rule did, a switch for each rule (every rule starts on, the opt-in ones too; "All rules on" goes back to that), and a preview with hanging punctuation at an amount set with a slider that stops at 0, 30%, 50% and 100% of the mark ( through `--hang-amount`); HTML is previewed in a sandboxed frame where no script runs, and the page marks and measures its opening punctuation from outside. "Short example" inserts the pack's `sample`; "Long example" inserts a longer text in the language, in the chosen format, from `apps/playground/examples.ts`. The "Config" panel shows the switches as a config (`TypographyConfig` JSON, for `package.json` or `typo --config`) and applies a pasted one, checked with `checkConfig` (`apps/playground/config-io.ts`). Nothing is sent anywhere. The page imports from `../../src` and is covered by the boundary test. Its markup and CSS follow [ui.md](ui.md).
+A page of the website (`apps/website/playground/`; `bun run website` serves it). A client-side page: paste text, HTML or Markdown, pick the language, register, quote style (`language` or `us`), the characters to avoid (`avoid`; under each rule switch the characters it can insert are struck through while one of them is avoided) and how a no-break space is written, and see the result, a word-level diff of what changed with what each rule did, a switch for each rule (every rule starts on, the opt-in ones too; "All rules on" goes back to that), and a preview with hanging punctuation at an amount set with a slider that stops at 0, 30%, 50% and 100% of the mark ( through `--hang-amount`); HTML is previewed in a sandboxed frame where no script runs, and the page marks and measures its opening punctuation from outside. "Short example" inserts the pack's `sample`; "Long example" inserts a longer text in the language, in the chosen format, from `apps/website/playground/examples.ts`. The "Config" panel shows the switches as a config (`TypographyConfig` JSON, for `package.json` or `typo --config`) and applies a pasted one, checked with `checkConfig` (`apps/website/playground/config-io.ts`). Nothing is sent anywhere. The page imports from `../../../src` and is covered by the boundary test. Its markup and CSS follow [ui.md](ui.md).
 
 ## Build
 
@@ -159,8 +153,8 @@ To release:
 
 1. Move the new entries of `CHANGELOG.md` under a heading `## X.Y.Z (date)`.
 2. Set `version` in `package.json` (`typo --version` reads it).
-3. Run `bun test src apps/playground apps/website resources` (it builds `dist/`), `bun run typecheck`, `bun run docs:rules`, `bun run docs:languages` and, if `src/dom/hang.ts` changed, `bun run gen:script`, and commit with the message `release: X.Y.Z`.
-4. Push or merge to `main`. `.github/workflows/release.yml` runs three jobs: `check` (lint, build, tests, typecheck, the playground and website builds and `@arethetypeswrong/cli --profile esm-only`), `smoke` (`bun scripts/smoke.ts` on Node 20, 22 and 24) and `tag`, which runs on a push to `main` or a run by hand from `main` (`workflow_dispatch`) and, if the tag `vX.Y.Z` (from `version` in `package.json`) does not exist yet, builds the release commit and tags it. The release commit holds only what `bun pm pack` packs (the `files` list in `package.json`: the built `dist/`, `LICENSE`, `README.md`, `CHANGELOG.md`, `package.json`); it sits on the `release` branch, each one the child of the previous release, and is built by `scripts/release-commit.ts` without touching the working tree. The tag goes on that commit, not on `main`, because Bun installs a git dependency as the whole tagged tree and ignores `files`. Do not tag by hand; if you must, run `bun scripts/release-commit.ts <previous release commit>`, tag the commit it prints with a plain `git tag vX.Y.Z <commit>` (not `-a`, see below) and push both: `git push origin <commit>:refs/heads/release refs/tags/vX.Y.Z`.
+3. Run `bun test src apps/website resources` (it builds `dist/`), `bun run typecheck`, `bun run docs:rules`, `bun run docs:languages` and, if `src/dom/hang.ts` changed, `bun run gen:script`, and commit with the message `release: X.Y.Z`.
+4. Push or merge to `main`. `.github/workflows/release.yml` runs three jobs: `check` (lint, build, tests, typecheck, the website build and `@arethetypeswrong/cli --profile esm-only`), `smoke` (`bun scripts/smoke.ts` on Node 20, 22 and 24) and `tag`, which runs on a push to `main` or a run by hand from `main` (`workflow_dispatch`) and, if the tag `vX.Y.Z` (from `version` in `package.json`) does not exist yet, builds the release commit and tags it. The release commit holds only what `bun pm pack` packs (the `files` list in `package.json`: the built `dist/`, `LICENSE`, `README.md`, `CHANGELOG.md`, `package.json`); it sits on the `release` branch, each one the child of the previous release, and is built by `scripts/release-commit.ts` without touching the working tree. The tag goes on that commit, not on `main`, because Bun installs a git dependency as the whole tagged tree and ignores `files`. Do not tag by hand; if you must, run `bun scripts/release-commit.ts <previous release commit>`, tag the commit it prints with a plain `git tag vX.Y.Z <commit>` (not `-a`, see below) and push both: `git push origin <commit>:refs/heads/release refs/tags/vX.Y.Z`.
 5. After the tag, the same job publishes to npm when the tag exists and `npm view @mokhniuk/typography@X.Y.Z` finds no such version, so a version reaches npm once and a run for a version npm already has does nothing (nor does one whose tag holds a private package, 0.15.0 and older). It checks out the tag and runs `npm publish --access public` there: the release commit holds the built `dist/` and a `package.json` with no `scripts`, so nothing is rebuilt and an npm install and a git install give the same files. Auth is trusted publishing (the workflow's OIDC token, no secret stored; npm 11.5.1 or later, which Node 24 ships) unless the repository secret `NPM_TOKEN` is set, which is then used too (npm tries OIDC first and falls back to the token). There is no `--provenance`: npm makes none for a private repository and the flag would fail the publish; the package gets provenance once the repository is public (trusted publishing adds it by itself). If the publish fails after the tag was pushed, recover by (a) re-running the workflow (Actions, "Run workflow" on `main`, or "Re-run jobs"): the tag exists and the version is not on npm, so it publishes; or (b) if trusted publishing is what failed, putting a granular npm access token with publish rights in the `NPM_TOKEN` secret and re-running the same way. A local `npm publish` needs such a token too (trusted publishing works only in CI); run it from a checkout of the tag, not of `main`.
 
 Before the first publish (npmjs.com, which nothing here can check):

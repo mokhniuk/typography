@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
-import { checkConfig, RULES } from '../../src/core';
-import { typesetText } from '../../src/text';
+import { checkConfig, RULES } from '../../../src/core';
+import { typesetText } from '../../../src/text';
 import { configText, fromConfig, quoteStyleOf, type Switches } from './config-io';
 
 const switches: Switches = {

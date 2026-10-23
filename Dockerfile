@@ -1,8 +1,8 @@
 # The website (apps/website) as a container: the engine builds the site, nginx serves it.
 #
 # This is the only deployable in the repository, which is why the file sits at the root: the build
-# context must be the root, because the site imports the engine from `src/` and its long examples
-# from `apps/playground/`, and the docs pages are the repository's own Markdown.
+# context must be the root, because the site imports the engine from `src/` and the docs pages are the
+# repository's own Markdown.
 #
 #   docker build -t typography-website .
 #   docker run --rm -p 8080:80 typography-website

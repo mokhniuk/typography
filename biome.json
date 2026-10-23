@@ -3,7 +3,6 @@
   "files": {
     "includes": [
       "src/**",
-      "apps/playground/**",
       "apps/website/**",
       "scripts/**",
       "resources/**",
