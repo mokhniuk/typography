@@ -57,7 +57,9 @@ function endsReference(text: string, index: number): boolean {
  */
 function notPunctuation(text: string, index: number, mark: string, start: number): boolean {
   const next = codePointAt(text, index + 1);
-  if (isLetterOrNumber(next) || next === '=' || next === '⇒') return true;
+  // U+E003 stands for a web address, an email or a code span set aside (zones.ts): a mark glued to
+  // one (`voir:https://…`) is part of what it starts, as before a letter.
+  if (isLetterOrNumber(next) || next === '=' || next === '⇒' || next === '') return true;
   if ((mark === ':' || mark === ';') && AFTER_COLON.includes(next)) return true;
   if (mark === ';' && endsReference(text, index)) return true;
   if (mark === '!' && next === '[') return true;
