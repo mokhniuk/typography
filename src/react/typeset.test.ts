@@ -18,7 +18,7 @@ const root: TypographySetting = { lang: 'en', register: 'display' };
 
 describe('typesetFor', () => {
   test('sets the text in the language and register of the setting', () => {
-    expect(typesetFor('"x"', root, true)).toBe('«x»');
+    expect(typesetFor('"x"', root, true)).toBe('“x”');
     expect(typesetFor('"x"', { ...root, lang: 'de' }, true)).toBe('»x«');
     expect(typesetFor('"x"', { ...root, register: 'literary' }, true)).toBe('‘x’');
   });
@@ -41,18 +41,18 @@ describe('typesetFor', () => {
     expect(typesetFor('"x"', { lang: 'de', register: 'literary', quoteStyle: 'us' }, true)).toBe(
       '“x”',
     );
-    expect(typesetFor('"x"', { ...root, quoteStyle: 'language' }, true)).toBe('«x»');
+    expect(typesetFor('"x"', { ...root, quoteStyle: 'language' }, true)).toBe('“x”');
   });
 });
 
 describe('typesetFor passes the remaining options on', () => {
   test('disable switches a rule off', () => {
-    expect(typesetFor('"x" 1-2', { ...root, disable: ['dash.range'] }, true)).toBe('«x» 1-2');
+    expect(typesetFor('"x" 1-2', { ...root, disable: ['dash.range'] }, true)).toBe('“x” 1-2');
   });
 
   test('avoid keeps the text as typed where a rule would insert a character the font lacks', () => {
-    expect(typesetFor('"x"... ok', { ...root, avoid: '«»' }, true)).toBe('"x"… ok');
-    expect(typesetFor('"x"... ok', { ...root, avoid: '…' }, true)).toBe('«x»... ok');
+    expect(typesetFor('"x"... ok', { ...root, avoid: '“”' }, true)).toBe('"x"… ok');
+    expect(typesetFor('"x"... ok', { ...root, avoid: '…' }, true)).toBe('“x”... ok');
   });
 
   test('onChange sees every change', () => {

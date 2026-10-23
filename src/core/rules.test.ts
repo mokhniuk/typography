@@ -149,15 +149,15 @@ describe('typographic with a custom list', () => {
   const list = addRule(addRule(RULES, shout, { last: true }), bang, { last: true });
 
   test('the built-in rules still run, and an opt-in rule stays off by default', () => {
-    expect(typographic('"x" - y', 'en', { rules: list })).toBe('«x» — y!');
+    expect(typographic('"x" - y', 'en', { rules: list })).toBe('“x” — y!');
   });
 
   test('enable switches an opt-in rule on, in list order', () => {
-    expect(typographic('"x" - y', 'en', { rules: list, enable: ['extra.shout'] })).toBe('«X» — Y!');
+    expect(typographic('"x" - y', 'en', { rules: list, enable: ['extra.shout'] })).toBe('“X” — Y!');
   });
 
   test('disable is checked against the list given', () => {
-    expect(typographic('"x"', 'en', { rules: list, disable: ['extra.bang'] })).toBe('«x»');
+    expect(typographic('"x"', 'en', { rules: list, disable: ['extra.bang'] })).toBe('“x”');
     expect(() => typographic('x', 'en', { rules: [bang], disable: ['quote'] })).toThrow(/Unknown/);
   });
 

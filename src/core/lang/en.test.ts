@@ -10,8 +10,17 @@ const t = (text: string, options?: Parameters<typeof typographic>[2]) =>
 wellFormed(en, 'en.test.ts');
 
 describe('English', () => {
-  test('display quotes are guillemets with „…“ inside', () => {
-    expect(t('“x ‘y’ z”')).toBe('«x „y“ z»');
+  test('display quotes are “…” with ‘…’ inside, from any source style', () => {
+    expect(t('He said "we\'re here" and left.')).toBe('He said “we’re here” and~left.');
+    expect(t('"x \'y\' z"')).toBe('“x ‘y’ z”');
+    expect(t('«x „y“ z»')).toBe('“x ‘y’ z”');
+  });
+
+  test("quoteStyle: 'guillemets' is the house style: «…», „…“ inside, ‚…‘ third", () => {
+    const g = { quoteStyle: 'guillemets' } as const;
+    expect(t('“x ‘y’ z”', g)).toBe('«x „y“ z»');
+    expect(t('"1 \'2 "3" 2\' 1"', g)).toBe('«1 „2 ‚3‘ 2“ 1»');
+    expect(t('“x ‘y’ z”', { ...g, register: 'literary' })).toBe('«x „y“ z»');
   });
 
   test('the literary register is British: ‘outer “inner” outer’', () => {

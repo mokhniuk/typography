@@ -7,7 +7,7 @@ const h = (html: string, options?: HtmlOptions) =>
 
 describe('typesetHtml', () => {
   test('typesets the text of a block', () => {
-    expect(h('<p>He said "hi" - and left.</p>')).toBe('<p>He said «hi»~— and~left.</p>');
+    expect(h('<p>He said "hi" - and left.</p>')).toBe('<p>He said “hi”~— and~left.</p>');
   });
 
   test('an operator between two words is bound, written as &amp; or as a raw &', () => {
@@ -21,7 +21,7 @@ describe('typesetHtml', () => {
 
   test('a quotation pairs across an inline element', () => {
     expect(h('<p>"See <a href="/x?a=1-2">Name</a> speak"</p>')).toBe(
-      '<p>«See <a href="/x?a=1-2">Name</a> speak»</p>',
+      '<p>“See <a href="/x?a=1-2">Name</a> speak”</p>',
     );
   });
 
@@ -52,7 +52,7 @@ describe('typesetHtml', () => {
     expect(h('<a href="https://x.y/1-2" title="a - b">x - y</a>')).toBe(
       '<a href="https://x.y/1-2" title="a - b">x~— y</a>',
     );
-    expect(h('<!-- "x" - y --><p>"z"</p>')).toBe('<!-- "x" - y --><p>«z»</p>');
+    expect(h('<!-- "x" - y --><p>"z"</p>')).toBe('<!-- "x" - y --><p>“z”</p>');
   });
 
   test('an unclosed code element keeps the rest of the document as it was', () => {
@@ -61,17 +61,17 @@ describe('typesetHtml', () => {
 
   test('reads entities as the characters they stand for, and keeps the others', () => {
     expect(h('<p>&quot;x&quot; &mdash; &copy; 2026 AT&amp;T 5 &lt; 6</p>')).toBe(
-      '<p>«x»~— ©~2026~AT&amp;T 5 &lt; 6</p>',
+      '<p>“x”~— ©~2026~AT&amp;T 5 &lt; 6</p>',
     );
   });
 
   test('a block that needs no change comes back byte for byte', () => {
-    const html = '<div>\n  <p>Plain text &amp; «more».</p>\n  <p>«Done»</p>\n</div>';
+    const html = '<div>\n  <p>Plain text &amp; “more”.</p>\n  <p>“Done”</p>\n</div>';
     expect(typesetHtml(html)).toBe(html);
   });
 
   test('keeps the line breaks and indentation inside a block that changes', () => {
-    expect(h('<p>\n    “a\n    b” - c\n  </p>')).toBe('<p>\n    «a\n    b»~— c\n  </p>');
+    expect(h('<p>\n    “a\n    b” - c\n  </p>')).toBe('<p>\n    “a\n    b”~— c\n  </p>');
   });
 
   test('uses the language and register it is given', () => {
@@ -86,7 +86,7 @@ describe('typesetHtml', () => {
   });
 
   test('a line break ends the block; an arrow keeps its no-break space inside a link', () => {
-    expect(typesetHtml('<p>a<br>"b" - c</p>', { nbsp: 'char' })).toBe('<p>a<br>«b» — c</p>');
+    expect(typesetHtml('<p>a<br>"b" - c</p>', { nbsp: 'char' })).toBe('<p>a<br>“b” — c</p>');
     expect(h('<a href="/x">Read more -></a>')).toBe('<a href="/x">Read more~→</a>');
   });
 
@@ -113,7 +113,7 @@ describe('typesetHtml', () => {
       disable: ['dash.range'],
       onChange: (c) => seen.push(c.rule),
     });
-    expect(out.replaceAll('&nbsp;', '~')).toBe('<p>«x»~— 1-2</p>');
+    expect(out.replaceAll('&nbsp;', '~')).toBe('<p>“x”~— 1-2</p>');
     expect(seen).toEqual(['quote', 'quote', 'dash.sentence']);
   });
 

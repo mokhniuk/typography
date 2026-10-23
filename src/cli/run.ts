@@ -39,8 +39,9 @@ Usage
 Options
   -l, --lang <${LANGS.join('|')}>   language of the text (default en)
   -r, --register <${REGISTERS.join('|')}>   display (default) or literary
-      --quotes <language|us>      language (default): the quote marks of the language;
-                                  us: “…” and ‘…’ in any language and register
+      --quotes <language|us|guillemets>   language (default): the quote marks of the
+                                  language; us: “…” and ‘…’ in any language and register;
+                                  guillemets: «…», „…“ and ‚…‘ in any language and register
   -f, --format <text|html|markdown>   how to read the input; by default from the
                                       file extension (.html, .md), else text
   -d, --disable <rules>           switch rules off: ids or groups, comma separated
@@ -117,8 +118,8 @@ export async function run(argv: string[], io: Io): Promise<number> {
   if (!LANGS.includes(lang))
     return usage(io, `unknown language "${values.lang}" (${LANGS.join(', ')})`);
   if (!REGISTERS.includes(register)) return usage(io, `unknown register "${values.register}"`);
-  if (values.quotes && values.quotes !== 'language' && values.quotes !== 'us') {
-    return usage(io, `--quotes is "language" or "us", not "${values.quotes}"`);
+  if (values.quotes && !['language', 'us', 'guillemets'].includes(values.quotes)) {
+    return usage(io, `--quotes is "language", "us" or "guillemets", not "${values.quotes}"`);
   }
   const quoteStyle = (values.quotes ?? config.quoteStyle ?? 'language') as QuoteStyle;
   if (values.nbsp && values.nbsp !== 'entity' && values.nbsp !== 'char') {

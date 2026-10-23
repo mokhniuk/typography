@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'bun:test';
 import { checkConfig, RULES } from '../../src/core';
 import { typesetText } from '../../src/text';
-import { configText, fromConfig, type Switches } from './config-io';
+import { configText, fromConfig, quoteStyleOf, type Switches } from './config-io';
 
 const switches: Switches = {
   lang: 'de',
@@ -61,6 +61,20 @@ describe('playground config: export, and import back', () => {
     expect(back).toEqual({ ...switches, disable: runOrder(switches.disable) });
     expect(configText(back)).toBe(configText(switches));
     expect(fromConfig(configText(defaults))).toEqual(defaults);
+  });
+
+  test('the guillemets quote style goes out and comes back', () => {
+    const house: Switches = { ...defaults, quoteStyle: 'guillemets' };
+    expect(JSON.parse(configText(house)).quoteStyle).toBe('guillemets');
+    expect(fromConfig(configText(house))).toEqual(house);
+  });
+
+  test('a saved or selected quote style is read as one of the three, else the language', () => {
+    expect(quoteStyleOf('us')).toBe('us');
+    expect(quoteStyleOf('guillemets')).toBe('guillemets');
+    expect(quoteStyleOf('language')).toBe('language');
+    expect(quoteStyleOf('uk')).toBe('language');
+    expect(quoteStyleOf(undefined)).toBe('language');
   });
 
   test('a field left out goes back to its default; a whole package.json is read by its key', () => {

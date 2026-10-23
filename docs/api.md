@@ -23,7 +23,7 @@ These are the options the functions below take. Which function takes which is in
 |---|---|---|---|
 | `lang` | `Lang` | `'en'` | Language of the text. `Lang` is the union of the 27 pack codes (the 24 EU languages, `uk`, `de-CH` and `fr-CH`), derived from the packs in `src/core/lang/`; `LANGS` lists them. See [languages.md](languages.md). |
 | `register` | `Register` | `'display'` | `'display'` (marketing and interface text) or `'literary'` (book-like text). `literary` has its own rules for English (British quotes, spaced en dash); every other language keeps its display rules. The dialogue dash is the same in both registers. |
-| `quoteStyle` | `QuoteStyle` | `'language'` | `'language'` is the language's own quote marks (its literary ones in the literary register). `'us'` is `“…”` with `‘…’` inside for any language, and takes precedence over both the language table and the literary register. The rehype plugin does not read `lang="en-US"` as US quotes: a page's `<html lang="en-US">` must not change its output, so set the option. |
+| `quoteStyle` | `QuoteStyle` | `'language'` | `'language'` is the language's own quote marks (its literary ones in the literary register). `'us'` is `“…”` with `‘…’` inside for any language; `'guillemets'` is this package's house style, `«…»` with `„…“` inside and `‚…‘` third, for any language. Both take precedence over the language table and the literary register. The rehype plugin does not read `lang="en-US"` as US quotes: a page's `<html lang="en-US">` must not change its output, so set the option. |
 | `enable` | `readonly string[]` | none | Rules to switch on that are off by default (`Rule.defaultOn: false`): ids or groups, checked like `disable`. Enabling a rule that is already on does nothing; a rule named in both `enable` and `disable` throws. Ten built-in rules are off by default (`space.before-punctuation`, `space.after-comma`, `punctuation.double`, `space.trailing`, `symbol.plusminus`, `symbol.fraction`, `symbol.degree`, `symbol.implies`, `number.group`, `phone.bind`); see [rules.md](rules.md) and [limits.md](limits.md#opt-in-rules). |
 | `rules` | `readonly Rule[]` | `RULES` | The list of rules to run, in order, instead of the built-in one; build it with `addRule`. `disable` and `enable` are checked against this list, not the built-in one. A rule with `defaultOn: false` in it runs only when named in `enable`. |
 | `disable` | `readonly string[]` | none | Rules to switch off: ids (`'dash.range'`) or groups (`'space'`, or `'space.*'`). A name that matches no rule throws an `Error` that lists the rule ids, so a typo cannot pass for "everything stays on". See [rules.md](rules.md). |
@@ -44,7 +44,7 @@ out of the text:
 
 ```ts
 typographic('He said "wait..." - 1/2 of it', 'en', { avoid: '…½' });
-// He said «wait...»~— 1/2~of it   (~ is a no-break space; the quotes and the dash are set, the ellipsis and the fraction are not)
+// He said “wait...”~— 1/2~of it   (~ is a no-break space; the quotes and the dash are set, the ellipsis and the fraction are not)
 ```
 
 - One change at a time. A rule that would bring in an avoided character leaves *that* stretch as it
@@ -158,7 +158,7 @@ Applies the [rules](rules.md) to one plain string. Web addresses, emails and `` 
 import { typographic } from '@mokhniuk/typography';
 
 typographic('He said "we\'re here" - and left.', 'en');
-// He said «we’re here»~— and left.   (~ is a no-break space)
+// He said “we’re here”~— and left.   (~ is a no-break space)
 typographic('He said "we\'re here"', 'en', { register: 'literary' });
 // He said ‘we’re here’
 typographic('21-26 - x', 'en', { disable: ['dash.range'] });
@@ -170,8 +170,8 @@ typographic('21-26 - x', 'en', { disable: ['dash.range'] });
 
 ```ts
 explain('He said "hi"... 21-26');
-// { output: 'He said «hi»… 21–26',
-//   changes: [{ rule: 'quote', from: '"', to: '«' }, { rule: 'quote', from: '"', to: '»' },
+// { output: 'He said “hi”… 21–26',
+//   changes: [{ rule: 'quote', from: '"', to: '“' }, { rule: 'quote', from: '"', to: '”' },
 //             { rule: 'ellipsis', from: '...', to: '…' }, { rule: 'dash.range', from: '-', to: '–' }] }
 ```
 
@@ -208,7 +208,7 @@ Every mode takes the whole config: `nbsp` is read by the HTML mode only, `hangAm
 | `PACKS`, `PACK`, `LangPack` | The language packs (`src/core/lang/`), as a list and by code, and their type. See [contributing.md](contributing.md#adding-a-language). |
 | `REGISTERS: readonly Register[]` | `display`, `literary`. |
 | `NBSP` | The no-break space character, U+00A0. |
-| `ruleGlyphs(lang?)` | What each rule can insert, by rule id: `{ quote: '«»„“‚‘’”‹›', ellipsis: '…', … }`. With a language it is that language's marks (its quote levels, its dash, its digit separator), without one it is every language's at once. Read by [`avoid`](#avoid), by the rules page and by the font checker; `src/core/glyphs.test.ts` fails if a rule has no entry, and proves that a rule given its own characters to avoid changes nothing. |
+| `ruleGlyphs(lang?)` | What each rule can insert, by rule id: `{ quote: '“”‘’«»„‚›‹', ellipsis: '…', … }`. With a language it is that language's marks (its quote levels, its dash, its digit separator), without one it is every language's at once. Read by [`avoid`](#avoid), by the rules page and by the font checker; `src/core/glyphs.test.ts` fails if a rule has no entry, and proves that a rule given its own characters to avoid changes nothing. |
 | `insertedCharacters(lang?)`, `insertedGlyphs(lang?)` | The same as one string: every character any rule can insert, and the same without the no-break space (the marks a font draws, which is what can be measured). |
 | `CURRENCY_CODES`, `CURRENCY_SIGNS`, `CURRENCY_WORDS` | The money the engine knows, in one table (`src/core/currency.ts`): ISO 4217 codes (`EUR`, `USD`, `UAH`, …), the signs that are not letters (`€$£₴¥₺`) and the ones written with letters after the amount (`zł`, `Kč`, `Ft`, `lei`, `лв`, `kr`, `грн`). `space.number` and `space.percent` read it, so a sign is named in one place. The engine never moves, adds or removes a currency sign. |
 | `keepAvoided(before, after, avoided)` | What [`avoid`](#avoid) does to one rule's output: `after`, with every change that brought in a character of the `avoided` set undone. Exported for a custom pipeline; `typographic` calls it itself. |

@@ -13,7 +13,7 @@ The package is `@mokhniuk/typography`. Website, docs and playground: [typography
 
 ```diff
 - Ada said: "The sign read 'Closed' again" - and laughed... We're used to it by now.
-+ Ada said: «The sign read „Closed“ again» — and laughed… We’re used to it by now.
++ Ada said: “The sign read ‘Closed’ again” — and laughed… We’re used to it by now.
 
 - The workshop runs 21-26 September, 10:00-12:00, for 125000 people , and the screens are 1920x1080.
 + The workshop runs 21–26 September, 10:00–12:00, for 125,000 people, and the screens are 1920×1080.
@@ -24,14 +24,14 @@ The package is `@mokhniuk/typography`. Website, docs and playground: [typography
 
 The group separator in `125,000`, the dropped space before the comma, and the `°`, `±` and `½` come from opt-in rules: `enable: ['number.group', 'space.before-punctuation', 'symbol.degree', 'symbol.plusminus', 'symbol.fraction']`. Everything else above is the default.
 
-It also puts no-break spaces where a line should not break (after one-letter words, inside ranges, before units), nests quotations in the marks each language expects, and can hang opening punctuation in the margin. The `«…»` above is this project's default for English; `quoteStyle: 'us'` gives `“…”` in any language, and the `literary` register gives British `‘…’`.
+It also puts no-break spaces where a line should not break (after one-letter words, inside ranges, before units), nests quotations in the marks each language expects, and can hang opening punctuation in the margin. English gets `“…”` with `‘…’` inside, as above; `quoteStyle: 'us'` gives the same marks in any language, `quoteStyle: 'guillemets'` gives this project's house style `«…»` with `„…“` inside in any language, and the `literary` register gives British `‘…’`.
 
 <!-- Image paths are repository-relative; swap for absolute URLs (the website, once it is hosted) when the package goes on a public registry. -->
 [![The website: the engine running live, with hanging punctuation](docs/media/website-hero.png)](apps/website/)
 
 ## Why this engine
 
-Measured, not promised: every claim below comes from [a published benchmark](apps/bench/RESULTS.md) that runs this package and six others over the same style-neutral checks — every case, check and output is in the file, so any check can be contested. **Read it with care: the cases were written by this package's author.** They test what is right (a German quotation is „…“ or »…«; an ISO date is not a range), not one tool's house style — this package's own English `«…»` default is reported as a failure there too.
+Measured, not promised: every claim below comes from [a published benchmark](apps/bench/RESULTS.md) that runs this package and six others over the same style-neutral checks — every case, check and output is in the file, so any check can be contested. **Read it with care: the cases were written by this package's author.** They test what is right (a German quotation is „…“ or »…«; an ISO date is not a range), not one tool's house style — this package's former English `«…»` default (now `quoteStyle: 'guillemets'`) was reported as a failure there too.
 
 Passed / scored; `–` means the tool has no such feature or language, and is not held against it. Each tool scores against its own denominator. The table shows eight of the groups; the total row counts all sixteen (every group but Registers).
 
@@ -89,16 +89,17 @@ Replace `vX.Y.Z` with a version from [CHANGELOG.md](CHANGELOG.md). From 0.13.1 a
 import { explain, typographic } from '@mokhniuk/typography';
 
 typographic('He said "we\'re here" - and left.', 'en');
-// He said «we’re here»~— and left.     (~ is a no-break space)
+// He said “we’re here”~— and left.     (~ is a no-break space)
 
 typographic('He said "we\'re here"', 'en', { register: 'literary' });
 // He said ‘we’re here’
 
 typographic('He said "hi"', 'de', { quoteStyle: 'us' }); // “hi” in any language
+typographic('He said "hi"', 'en', { quoteStyle: 'guillemets' }); // «hi», the house style
 
 explain('He said "hi"... 21-26');
-// { output: 'He said «hi»… 21–26',
-//   changes: [{ rule: 'quote', from: '"', to: '«' }, …] }
+// { output: 'He said “hi”… 21–26',
+//   changes: [{ rule: 'quote', from: '"', to: '“' }, …] }
 ```
 
 A project writes its options once and spreads them into every call; an option given to a call replaces the config's:
