@@ -163,4 +163,27 @@ if (!only) {
     );
   }
 }
+// The quote rule in German, whose pack sets turned pairs (»…« and ›…‹, `turnedPairs`): the runs above
+// are read in English, where those marks pair as «…». A turned pair was matched with a regex that opened
+// with a lookbehind (tried at every position) until 0.16.1.
+const quote = mod.RULES.find((rule) => rule.id === 'quote');
+if (quote && (!only || only === 'quote')) {
+  for (const [name, unit] of [
+    ['de »', '»'],
+    ['de »a', '»a'],
+    ['de a»b« ', 'a»b« '],
+    ['de (»b« ', '(»b« '],
+    ['de › ‹ ', '› ‹ '],
+  ] as const) {
+    const ms = sizes.map((n) => {
+      const text = unit.repeat(Math.ceil(n / unit.length));
+      return time(() => quote.apply(text, { ...context, lang: 'de' }));
+    });
+    const r1 = (ms[1] ?? 0) / Math.max(ms[0] ?? 0, 0.05);
+    const r2 = (ms[2] ?? 0) / Math.max(ms[1] ?? 0, 0.05);
+    rows.push(
+      `${'quote (de)'.padEnd(26)} ${name.padEnd(10)} ${ms.map((m) => m.toFixed(1).padStart(8)).join('')}  x${r1.toFixed(1)} x${r2.toFixed(1)}${Math.max(r1, r2) > 2.5 && (ms[2] ?? 0) > 5 ? '  <-- SLOW' : ''}`,
+    );
+  }
+}
 console.log(rows.join('\n'));
