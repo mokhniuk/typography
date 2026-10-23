@@ -70,18 +70,27 @@ The tools that beat it on speed (tipograph, smartypants) score far below it on t
 - **`explain`** — every change comes with the rule that made it and the before/after, so nothing is a mystery.
 - **Hanging punctuation** — opening marks hang in the margin at any width, no line-break measuring, with an inline script so prerendered pages do not jump ([more below](#hanging-punctuation-without-a-jump-on-a-prerendered-page)).
 - **A font without the glyph** — `avoid` names the characters a font cannot draw and the rules keep the text as it was typed instead of inserting them; in a browser `TypographyRoot` measures the page's own font and fills that list in, and the website's font checker writes it for a font file ([docs/api.md](docs/api.md#avoid)).
-- **Zero dependencies** — nothing in the package imports anything outside it; `react` is an optional peer for the `./react` entry only.
+- **Zero dependencies** — nothing in the package imports anything outside it; `react` is an optional peer for the `./react` entry only. Compiled ESM with declarations, so Node and plain tooling work.
 - **Safe by construction** — code, tags, URLs and protected spans are never touched; an unknown rule name throws instead of silently passing.
 
 ## Install
 
-Not on a public registry yet (it will be, at 1.0). Until then, depend on a release tag over SSH — the repository is private, so the machine needs access:
+From npm, with any package manager (from 0.16.0):
+
+```sh
+npm install @mokhniuk/typography
+pnpm add @mokhniuk/typography
+bun add @mokhniuk/typography
+yarn add @mokhniuk/typography
+```
+
+A release tag also installs, over SSH (the repository is private, so the machine needs access); the tag's commit holds the built package:
 
 ```sh
 bun add git+ssh://git@github.com/mokhniuk/typography.git#vX.Y.Z
 ```
 
-Replace `vX.Y.Z` with a version from [CHANGELOG.md](CHANGELOG.md). From 0.13.1 a tag holds the engine only (`src/` without tests, the readme, the changelog: about 70 files, 0.34 MB); earlier tags bring the whole repository. It ships TypeScript sources with no build step, so it needs Bun or a TypeScript-aware bundler. Tag handling in Bun, local linking and bundler notes: [docs/contributing.md](docs/contributing.md#using-it-from-another-project).
+Replace `vX.Y.Z` with a version from [CHANGELOG.md](CHANGELOG.md). The package is compiled ESM with `.d.ts` declarations and has no dependencies (`react` is an optional peer, for the `./react` entry only). The `typo` command runs on Node 20.10 or later and on Bun. Versions are semver below 1.0.0: a minor release may change output. Tag handling in Bun, local linking and bundler notes: [docs/contributing.md](docs/contributing.md#using-it-from-another-project).
 
 ## Use
 
@@ -126,7 +135,7 @@ typesetMarkdown(md, { ...site, lang: 'de' });
 | `@mokhniuk/typography/rehype` | A unified/rehype pipeline, or any hast tree | default `rehypeTypography`, `typesetHast` |
 | `@mokhniuk/typography/dom` | Hanging punctuation in the browser, no framework | `hangPunctuation`, `hangScript`, `markHangs`, `hangStyle`; glyph checks `supports`, `glyphStatus`, `missingGlyphs`, `missingIn`, `fontOf` |
 | `@mokhniuk/typography/react` | React pages | `Typeset`, `TypographyRoot`, `HangText`, `HangScript`, `useHangingPunctuation`, `useMissingGlyphs`, `TypographyContext` |
-| `typo` (bin) | The command line; needs Bun | see [docs/cli.md](docs/cli.md) |
+| `typo` (bin) | The command line; Node 20.10 or later, or Bun | see [docs/cli.md](docs/cli.md) |
 
 Every mode takes the same options (`lang`, `register`, `quoteStyle`, `disable`, `enable`, `rules`, `avoid`, `onChange`; `nbsp` for HTML output and `hangAmount` for hanging marks); signatures and the full option table are in [docs/api.md](docs/api.md).
 
@@ -208,4 +217,4 @@ The package stays self-contained: `src/boundary.test.ts` fails if anything in `s
 
 ## Licence
 
-No licence is granted yet; the package is private. A licence will be chosen before it is published.
+MIT, see [LICENSE](LICENSE).
