@@ -4,7 +4,7 @@ Install the package, typeset a string, then pick the mode that matches where you
 
 ## Install
 
-The package is `@mokhniuk/typography`, version {{version}}, the first on npm. It is compiled ESM with TypeScript declarations, so Node and plain tooling work.
+The package is `@mokhniuk/typography`. Version {{version}}, on npm since 0.16.0. It is compiled ESM with TypeScript declarations, so Node and plain tooling work.
 
 ```sh
 npm install @mokhniuk/typography
