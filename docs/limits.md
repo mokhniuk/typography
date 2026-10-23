@@ -88,19 +88,19 @@ Ten rules are off until named in `enable` (`number.group` is described in the ru
 
 ## Speed
 
-Since 0.2.0 the package is faster than typograf on English text in one piece, and about 3 to 4 times slower than tipograph and smartypants, which do much less (smartypants only quotes, dashes and ellipses; neither has abbreviations or ranges). The benchmark (`apps/bench/RESULTS.md`, generated on the author's machine) reports, for English text in one piece, text mode, the median of several runs (the 0.14.0 run, with the short-word rule on):
+Since 0.2.0 the package is faster than typograf on English text in one piece, and about 3 to 4 times slower than tipograph and smartypants, which do much less (smartypants only quotes, dashes and ellipses; neither has abbreviations or ranges). The benchmark (`apps/bench/RESULTS.md`, generated on the author's machine) reports, for English text in one piece, text mode, the median of several runs (the 0.15.0 run):
 
 | Tool | 10 KB | 100 KB | 1000 KB |
 |---|---|---|---|
-| this package | 1 ms | 8 ms | 74 ms |
-| typograf | 1 ms | 11 ms | 115 ms |
-| typopo | 38 ms | 2084 ms | not run (the file estimates about 208 s; the 0.12.0 run measured 99 s) |
-| richtypo | 4866 ms | not run (the file estimates about 484 s, extrapolating a quadratic) | not run |
-| tipograph | 0 ms | 2 ms | 23 ms |
-| smartypants | 0 ms | 2 ms | 19 ms |
-| retext-smartypants | 6 ms | 49 ms | 2062 ms |
+| this package | 0 ms | 5 ms | 49 ms |
+| typograf | 1 ms | 8 ms | 71 ms |
+| typopo | 27 ms | 1407 ms | 121877 ms |
+| richtypo | 3189 ms | not run (the file estimates about 317 s, extrapolating a quadratic) | not run |
+| tipograph | 0 ms | 2 ms | 15 ms |
+| smartypants | 0 ms | 1 ms | 12 ms |
+| retext-smartypants | 5 ms | 35 ms | 1416 ms |
 
-Every figure here is from one run of the benchmark, so only the ratios between the tools mean anything: the 0.12.0 run on a quieter machine put this package at 30 ms and typograf at 58 at 1 MB, with every other tool about half of what it shows above, and since 0.14.0 the short-word rule runs by default and costs about 8 ms per MB of English (17% of the rule time in the profile). That is about 1.5 times faster than typograf at 1 MB; 0.2.0 took it from 0.32 s (the output is identical: a differential run against the engine as it was before the speed work, over 2.5 million combinations, finds no difference). The cost is linear in the text. What made the old engine slow was a regular expression that opens with a lookbehind, which the engine tries at every position; the rules now find a literal first and read the character before it (`src/core/scan.ts`), and a rule is skipped when a cheap test (`Rule.when`) shows its trigger is absent. The quote rule is about 10 ms per MB of ordinary prose (the 0.10.0 run, see [backlog.md](backlog.md)), 60 to 100 ms on text full of unpaired marks.
+Every figure here is from one run of the benchmark, so only the ratios between the tools mean anything: the 0.14.0 run, on a busier machine, put this package at 74 ms and typograf at 115 at 1 MB, and the 0.12.0 run put them at 30 and 58, and since 0.14.0 the short-word rule runs by default and costs about 8 ms per MB of English (17% of the rule time in the profile). That is about 1.45 times faster than typograf at 1 MB (49 against 71 ms in this run); 0.2.0 took it from 0.32 s (the output is identical: a differential run against the engine as it was before the speed work, over 2.5 million combinations, finds no difference). The cost is linear in the text. What made the old engine slow was a regular expression that opens with a lookbehind, which the engine tries at every position; the rules now find a literal first and read the character before it (`src/core/scan.ts`), and a rule is skipped when a cheap test (`Rule.when`) shows its trigger is absent. The quote rule is about 10 ms per MB of ordinary prose (the 0.10.0 run, see [backlog.md](backlog.md)), 60 to 100 ms on text full of unpaired marks.
 
 Since 0.2.1 no known input makes a rule superlinear: a run of one opening mark (`“` repeated 40,000 times) took a minute and now takes about 7 ms, and text full of dialogue or unpaired marks costs about 45 to 70 ms per MB (it was 180 to 200). Every rule is linear on a long run of one character (spaces, digits, `x`, `-`, `--`, `.`, `+-`, `1x`, `!`, `)`), and the opt-in `space.before-punctuation`, `punctuation.double` and `symbol.degree` no longer open with a lookbehind (about 1, 2 and 5 ms per MB when switched on, from 40, 40 and 200). `bun scripts/stress.ts` times each rule at 20,000, 40,000 and 80,000 characters of each such run and flags a doubling that costs more than 2.5 times; `src/core/linear.test.ts` holds the loose version of that as a test. The zone scan that sets code spans, addresses and emails aside before the rules run is outside the rules, and until 0.12.0 it cost 300 ms per MB on text with lone backticks and no line break (a regex flag it did not need); no benchmark text has a backtick, which is why the table above never showed it. The scan is timed as a row of its own by `scripts/stress.ts` and the profile since then. Outside the rules, the two inputs the benchmark's probes found quadratic in 0.13.1 (`bun run probes`) are linear since 0.15.0: a long run of spaces inside one line in the text mode (40,000 spaces took about 1.3 s, now about 2 ms) and many `<` that never close in the HTML mode (8,000 took about 0.8 s, now under 1 ms); `scripts/stress.ts` times both modes as rows of their own.
 
@@ -110,7 +110,7 @@ On a JavaScriptCore engine (Bun) a lookbehind with `\p{L}` or `\p{N}` does not s
 
 These are repeated at the top of `apps/bench/RESULTS.md`.
 
-- The style-neutral cases (252: 250 are scored for this package, plus 2 register cases) were written by the author of this package. They check what is right (a German quotation is `„…“` or `»…«`; an ISO date is not a range), not one tool's house style, but a tool's default that differs from them is reported as a failure (this package's own house `«…»` for English was, until 0.15.0 made `“…”` the English default). Read the cases in `apps/bench/RESULTS.md` and contest them.
+- The style-neutral cases (252: 250 are scored for this package, plus 2 register cases) were written by the author of this package. They check what is right (a German quotation is `„…“` or `»…«`; an ISO date is not a range), not one tool's house style, but a tool's default that differs from them is reported as a failure. This package's default run passes every check (250/250) since 0.15.0, when English became `“…”`; its house style `«…»` is `quoteStyle: 'guillemets'`, which the checks would count as a failure for English. Read the cases in `apps/bench/RESULTS.md` and contest them.
 - They cover what typography tools claim to do, not everything a typographer cares about.
 - Most cases are English: 96 of the 252 cases are English, 11 Ukrainian, 10 German, 8 Polish, 7 French and 6 each for the other twenty languages (a quote, a nested quote, a dash, a range, a sample and a stability check). None is Swiss (`de-CH`, `fr-CH`). The 6 cases per new language come from the same style guides as its pack, so they do not test it independently.
 - typograf was run with its default rules and the locales it ships that this package also covers. The only typographic rule it has off by default for these languages (`common/nbsp/afterNumber`) is also run, as a separate column. The other default-off rules insert a final newline, strip or escape HTML, wrap paragraphs, or are for a language this package does not cover.
