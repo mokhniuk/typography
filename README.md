@@ -90,7 +90,7 @@ A release tag also installs, over SSH (the repository is private, so the machine
 bun add git+ssh://git@github.com/mokhniuk/typography.git#vX.Y.Z
 ```
 
-Replace `vX.Y.Z` with a version from [CHANGELOG.md](CHANGELOG.md). The package is compiled ESM with `.d.ts` declarations and has no dependencies (`react` is an optional peer, for the `./react` entry only). The `typo` command runs on Node 20 or later and on Bun. Versions are semver below 1.0.0: a minor release may change output. Tag handling in Bun, local linking and bundler notes: [docs/contributing.md](docs/contributing.md#using-it-from-another-project).
+Replace `vX.Y.Z` with a version from [CHANGELOG.md](CHANGELOG.md). The package is compiled ESM with `.d.ts` declarations and has no dependencies (`react` is an optional peer, for the `./react` entry only). The `typo` command runs on Node 20.10 or later and on Bun. Versions are semver below 1.0.0: a minor release may change output. Tag handling in Bun, local linking and bundler notes: [docs/contributing.md](docs/contributing.md#using-it-from-another-project).
 
 ## Use
 
@@ -135,7 +135,7 @@ typesetMarkdown(md, { ...site, lang: 'de' });
 | `@mokhniuk/typography/rehype` | A unified/rehype pipeline, or any hast tree | default `rehypeTypography`, `typesetHast` |
 | `@mokhniuk/typography/dom` | Hanging punctuation in the browser, no framework | `hangPunctuation`, `hangScript`, `markHangs`, `hangStyle`; glyph checks `supports`, `glyphStatus`, `missingGlyphs`, `missingIn`, `fontOf` |
 | `@mokhniuk/typography/react` | React pages | `Typeset`, `TypographyRoot`, `HangText`, `HangScript`, `useHangingPunctuation`, `useMissingGlyphs`, `TypographyContext` |
-| `typo` (bin) | The command line; Node 20 or later, or Bun | see [docs/cli.md](docs/cli.md) |
+| `typo` (bin) | The command line; Node 20.10 or later, or Bun | see [docs/cli.md](docs/cli.md) |
 
 Every mode takes the same options (`lang`, `register`, `quoteStyle`, `disable`, `enable`, `rules`, `avoid`, `onChange`; `nbsp` for HTML output and `hangAmount` for hanging marks); signatures and the full option table are in [docs/api.md](docs/api.md).
 

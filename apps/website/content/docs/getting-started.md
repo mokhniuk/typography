@@ -16,7 +16,7 @@ npm install @mokhniuk/typography
 bun add git+ssh://git@github.com/mokhniuk/typography.git#v{{version}}
 ```
 
-The core has no dependencies; `react` 18 or later is an optional peer, needed only by the React entry. The `typo` command runs on Node 20 or later, or Bun. Below 1.0.0 the package follows semver, so a minor release may change output.
+The core has no dependencies; `react` 18 or later is an optional peer, needed only by the React entry. The `typo` command runs on Node 20.10 or later, or Bun. Below 1.0.0 the package follows semver, so a minor release may change output.
 
 ## Typeset a string
 

@@ -11,7 +11,7 @@ Every entry point in `package.json` `exports`, plus the `typo` command (see [cli
 | `./rehype` | `src/rehype/index.ts` | default `rehypeTypography`, `typesetHast`, `RehypeOptions` |
 | `./dom` | `src/dom/index.ts` | `hangPunctuation`, `hangScript`, `markHangs`, `hangStyle`, and the glyph measuring: `supports`, `glyphStatus`, `missingGlyphs`, `missingIn`, `fontOf` |
 | `./react` | `src/react/index.ts` | `Typeset`, `TypographyRoot`, `HangText`, `HangScript`, `useHangingPunctuation`, `useMissingGlyphs`, `TypographyContext`, `TypographySetting` |
-| bin `typo` | `src/cli/main.ts` | the command line; Node 20 or later, or Bun |
+| bin `typo` | `src/cli/main.ts` | the command line; Node 20.10 or later, or Bun |
 
 The main entry is not only plain text: it carries the whole engine (`typographic`, `explain`, `RULES`, `splitHangs`, ...) and the plain-text mode. It does not export the HTML, Markdown, rehype, DOM or React modules; import those from their own entry.
 

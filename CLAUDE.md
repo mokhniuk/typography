@@ -7,7 +7,7 @@ Bun project; the package ships compiled ESM with declarations (`bun run build`).
 ## Commands
 
 - `bun test src apps/playground apps/website resources`: all tests. `bun run typecheck`: `tsc`, covers src, apps/playground, scripts, resources.
-- `bun run build`: compile to `dist/` (`tsc -p tsconfig.build.json`); what ships, with `exports` and the `typo` bin pointing into it.
+- `bun run build`: `scripts/build.ts` empties `dist/` and compiles ESM and declarations into it (`tsc -p tsconfig.build.json`, then `.ts` specifiers in the `.d.ts` files to `.js`); what ships. `prepack` runs it, so `bun pm pack` and `bun test` (via `src/package.test.ts`) write `dist/` (ignored by git). `bun scripts/smoke.ts [node]` installs the pack and runs it under Node.
 - `bun run docs:rules`: regenerate `docs/rules.md` (generated, never edit by hand; `src/docs.test.ts` fails if stale).
 - `bun run docs:languages`: regenerate `docs/languages/*.md` from the language packs (generated; `src/lang-docs.test.ts` fails if stale).
 - `bun run gen:script`: regenerate `src/dom/script.ts` (generated) after changing `src/dom/hang.ts`.
