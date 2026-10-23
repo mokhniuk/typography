@@ -32,8 +32,94 @@ const UNIT = '\uFFFC';
 /** Stands for an entity that is kept as it was. */
 const ENTITY = '\uE004';
 
-const TOKEN_SOURCE =
-  '<!--[\\s\\S]*?-->|<![^>]*>|<\\?[\\s\\S]*?\\?>|<(\\/?)([A-Za-z][^\\s/>]*)((?:"[^"]*"|\'[^\']*\'|[^\'">])*)>';
+/** A token: a comment, a doctype or processing instruction (no `name`), or a tag. */
+interface Token {
+  index: number;
+  raw: string;
+  closing: string;
+  name: string;
+  rest: string;
+}
+
+/**
+ * The tokens of `seen`, one at a time from `from`: what the pattern
+ * `<!--[\s\S]*?-->|<![^>]*>|<\?[\s\S]*?\?>|<(\/?)([A-Za-z][^\s/>]*)((?:"[^"]*"|'[^']*'|[^'">])*)>`
+ * finds, written out by hand. The pattern's attribute part read from each `<` to the end of its
+ * attributes, and on `<a <a <a ... ">` it read up to the lone quote and failed from every `<`
+ * (quadratic). Where that part ends from a given position does not depend on the `<` it started
+ * from, so it is worked out once per position and remembered.
+ */
+function tokenizer(seen: string): (from: number) => Token | null {
+  // ends[i]: unknown (-2), no `>` reachable (-1), or the `>` the attribute part reaches from i.
+  const ends = new Int32Array(seen.length + 1).fill(-2);
+  const path: number[] = [];
+  /** The `>` that closes attributes read from `start`, or -1: quoted values may hold `>` and `<`, a lone quote fails. */
+  const attributesEnd = (start: number): number => {
+    let j = start;
+    let found = -1;
+    for (;;) {
+      const known = ends[j] ?? -1;
+      if (known !== -2) {
+        found = known;
+        break;
+      }
+      const c = seen[j];
+      if (c === undefined) break;
+      if (c === '>') {
+        found = j;
+        break;
+      }
+      path.push(j);
+      if (c === '"' || c === "'") {
+        const close = seen.indexOf(c, j + 1);
+        if (close < 0) break;
+        j = close + 1;
+      } else j++;
+    }
+    for (const at of path) ends[at] = found;
+    ends[j] = found;
+    path.length = 0;
+    return found;
+  };
+  return (from) => {
+    for (let at = seen.indexOf('<', from); at >= 0; at = seen.indexOf('<', at + 1)) {
+      const next = seen[at + 1];
+      if (next === '!') {
+        const end = seen.startsWith('--', at + 2) ? seen.indexOf('-->', at + 4) : -1;
+        if (end >= 0)
+          return { index: at, raw: seen.slice(at, end + 3), closing: '', name: '', rest: '' };
+        const close = seen.indexOf('>', at + 2);
+        if (close >= 0)
+          return { index: at, raw: seen.slice(at, close + 1), closing: '', name: '', rest: '' };
+        continue;
+      }
+      if (next === '?') {
+        const end = seen.indexOf('?>', at + 2);
+        if (end >= 0)
+          return { index: at, raw: seen.slice(at, end + 2), closing: '', name: '', rest: '' };
+        continue;
+      }
+      const closing = next === '/' ? '/' : '';
+      const nameStart = at + 1 + closing.length;
+      if (!/[A-Za-z]/.test(seen[nameStart] ?? '')) continue;
+      let nameEnd = nameStart + 1;
+      while (nameEnd < seen.length && !/[\s/>]/.test(seen[nameEnd] ?? '')) nameEnd++;
+      // The pattern gives the name back one character at a time until the attributes can close.
+      for (let e = nameEnd; e > nameStart; e--) {
+        const close = attributesEnd(e);
+        if (close >= 0)
+          return {
+            index: at,
+            raw: seen.slice(at, close + 1),
+            closing,
+            name: seen.slice(nameStart, e),
+            rest: seen.slice(e, close),
+          };
+      }
+    }
+    return null;
+  };
+}
 
 const NAMED: Record<string, string> = {
   quot: '"',
@@ -155,7 +241,6 @@ function setRun(run: Piece[], options: ModeOptions, nbsp: 'entity' | 'char'): st
 }
 
 export function typesetHtml(html: string, options: HtmlOptions = {}): string {
-  const token = new RegExp(TOKEN_SOURCE, 'g');
   let out = '';
   let run: Piece[] = [];
   const flush = () => {
@@ -167,10 +252,11 @@ export function typesetHtml(html: string, options: HtmlOptions = {}): string {
   // the end of the input from each such `<` (quadratic on `<a <a <a ...`): it is shown the input only
   // up to the last `>`, and what follows is text. Positions are the same in both strings.
   const seen = html.slice(0, html.lastIndexOf('>') + 1);
-  for (let m = token.exec(seen); m; m = token.exec(seen)) {
+  const next = tokenizer(seen);
+  for (let m = next(0); m; m = next(pos)) {
     if (m.index > pos) run.push({ text: html.slice(pos, m.index) });
-    pos = m.index + m[0].length;
-    const [raw, closing, name = '', rest = ''] = m;
+    pos = m.index + m.raw.length;
+    const { raw, closing, name, rest } = m;
     if (!name) {
       // A comment, a doctype or a processing instruction.
       if (raw.startsWith('<!--')) {
@@ -189,7 +275,6 @@ export function typesetHtml(html: string, options: HtmlOptions = {}): string {
       const stop = end ? pos + end.index + end[0].length : html.length;
       const chunk = html.slice(m.index, stop);
       pos = stop;
-      token.lastIndex = stop;
       if (RAW_BLOCK.has(tag)) {
         flush();
         out += chunk;

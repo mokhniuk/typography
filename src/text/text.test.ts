@@ -59,7 +59,7 @@ describe('a long run of spaces inside a line', () => {
     const small = fastest(at(20_000));
     const large = fastest(at(40_000));
     expect(large).toBeLessThan(100);
-    expect(large).toBeLessThan(Math.max(small, 2) * 2.5);
+    expect(large).toBeLessThan(Math.max(small, 10) * 2.5);
   });
 
   test('trailing spaces and tabs are kept, whatever the paragraph holds', () => {

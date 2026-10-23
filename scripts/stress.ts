@@ -142,17 +142,23 @@ for (const rule of [SHIELD, TEXT_MODE, ...mod.RULES]) {
       );
   }
 }
-// A mode around the rules: many `<` that never close (the HTML tokenizer read to the end from each).
+// A mode around the rules: many `<` that never close (the HTML tokenizer read to the end from each),
+// and the same before a lone quote and a `>` (it read up to the quote from each).
 if (!only) {
   const html = (await import(`${dir}/html/index.ts`)) as typeof import('../src/html/index');
-  const ms = sizes.map((n) => {
-    const text = '<a '.repeat(Math.ceil(n / 3));
-    return time(() => html.typesetHtml(text));
-  });
-  const r1 = (ms[1] ?? 0) / Math.max(ms[0] ?? 0, 0.05);
-  const r2 = (ms[2] ?? 0) / Math.max(ms[1] ?? 0, 0.05);
-  rows.push(
-    `${'typesetHtml (mode)'.padEnd(26)} ${'<a '.padEnd(10)} ${ms.map((m) => m.toFixed(1).padStart(8)).join('')}  x${r1.toFixed(1)} x${r2.toFixed(1)}${Math.max(r1, r2) > 2.5 && (ms[2] ?? 0) > 5 ? '  <-- SLOW' : ''}`,
-  );
+  for (const [name, tail] of [
+    ['<a ', ''],
+    ['<a ..">', '">'],
+  ] as const) {
+    const ms = sizes.map((n) => {
+      const text = '<a '.repeat(Math.ceil(n / 3)) + tail;
+      return time(() => html.typesetHtml(text));
+    });
+    const r1 = (ms[1] ?? 0) / Math.max(ms[0] ?? 0, 0.05);
+    const r2 = (ms[2] ?? 0) / Math.max(ms[1] ?? 0, 0.05);
+    rows.push(
+      `${'typesetHtml (mode)'.padEnd(26)} ${name.padEnd(10)} ${ms.map((m) => m.toFixed(1).padStart(8)).join('')}  x${r1.toFixed(1)} x${r2.toFixed(1)}${Math.max(r1, r2) > 2.5 && (ms[2] ?? 0) > 5 ? '  <-- SLOW' : ''}`,
+    );
+  }
 }
 console.log(rows.join('\n'));
