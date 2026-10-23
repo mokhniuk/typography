@@ -278,13 +278,23 @@ export function shortWords(text: string, pack: LangPack): string {
 }
 
 /**
- * The three abbreviation patterns of a language, each as the forward regex that stays once the
+ * The four abbreviation patterns of a language, each as the forward regex that stays once the
  * leading `(?<![\p{L}\p{N}])` is taken off (it is checked by hand, see scan.ts).
  */
-type AbbreviationPatterns = { together: RegExp | null; bind: RegExp | null; page: RegExp | null };
+type AbbreviationPatterns = {
+  together: RegExp | null;
+  bind: RegExp | null;
+  page: RegExp | null;
+  bare: RegExp | null;
+};
 /** Keyed by the pack's lists, so a pack (built in or not) compiles its patterns once. */
 const abbreviationPatterns = new WeakMap<Abbreviations, AbbreviationPatterns>();
-const NO_ABBREVIATIONS: AbbreviationPatterns = { together: null, bind: null, page: null };
+const NO_ABBREVIATIONS: AbbreviationPatterns = {
+  together: null,
+  bind: null,
+  page: null,
+  bare: null,
+};
 
 function patternsFor(pack: LangPack): AbbreviationPatterns {
   const list = pack.abbreviations;
@@ -301,36 +311,44 @@ function patternsFor(pack: LangPack): AbbreviationPatterns {
     : null;
   const bind = names(list.bind);
   const page = names(list.page);
+  const bare = names(list.bare);
   const made = {
     together,
     bind: bind ? new RegExp(`(?:${bind})\\.[ ]+(?=[\\p{L}\\p{N}])`, 'gu') : null,
     page: page ? new RegExp(`(?:${page})\\.[ ]+(?=\\d)`, 'gu') : null,
+    // No full stop: the spaces after the name end it; the letter or digit before it is read by hand.
+    bare: bare ? new RegExp(`(?:${bare})[ ]+(?=\\d)`, 'gu') : null,
   };
   abbreviationPatterns.set(list, made);
   return made;
 }
 
+const DIGIT = /\d/;
+
 /**
  * Whether `abbreviations` can change `text` in `lang`: a cheap test for the rule table. `bind` and
  * `page` patterns need a full stop; `together` ones need it only if every entry has one (read from
- * the pack, not assumed), otherwise the rule always runs. No pattern at all: it never changes anything.
+ * the pack, not assumed), otherwise the rule always runs; `bare` ones need a digit. No pattern at
+ * all: it never changes anything.
  */
 export const mayAbbreviate = (text: string, pack: LangPack): boolean => {
-  const { together, bind, page } = patternsFor(pack);
-  if (!together && !bind && !page) return false;
-  const list: Abbreviations = pack.abbreviations ?? {};
-  return !together || (list.together ?? []).every((a) => a.includes('.'))
-    ? text.includes('.')
-    : true;
+  const { together, bind, page, bare } = patternsFor(pack);
+  if (together && !(pack.abbreviations?.together ?? []).every((a) => a.includes('.'))) return true;
+  if ((together || bind || page) && text.includes('.')) return true;
+  return bare !== null && DIGIT.test(text);
 };
 
-/** The parts of an abbreviation stay together, and a short one stays with what it introduces. */
+/**
+ * The parts of an abbreviation stay together, and a short one stays with what it introduces: with a
+ * full stop (Nr. 5, ul. Marszałkowska, S. 12), or without one before a number (klo 17, nr 5).
+ */
 export const abbreviations = (text: string, pack: LangPack): string => {
-  const { together, bind, page } = patternsFor(pack);
+  const { together, bind, page, bare } = patternsFor(pack);
   let out = text;
   if (together) out = replaceBehind(out, together, freeBefore, (m) => m[0].replace(/[ ]+/g, NBSP));
   if (bind) out = replaceBehind(out, bind, freeBefore, (m) => m[0].replace(/[ ]+$/, NBSP));
   if (page) out = replaceBehind(out, page, freeBefore, (m) => m[0].replace(/[ ]+$/, NBSP));
+  if (bare) out = replaceBehind(out, bare, freeBefore, (m) => m[0].replace(/[ ]+$/, NBSP));
   return out;
 };
 

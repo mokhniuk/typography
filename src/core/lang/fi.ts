@@ -13,9 +13,11 @@ export const fi = {
   ],
   sameMarkQuotes: true,
   // ISG 10.7.1: p. (puhelin) and v. (vuonna) before a number, mrd. before the noun; 4.2.3 and 10.7.1: s. before a number.
+  // ISG 10.7.1 lists klo and nro without a period; 4.2.3 sets a fixed space after nro.
   abbreviations: {
     bind: ['p', 'v', 'mrd'],
     page: ['s'],
+    bare: ['klo', 'nro'],
   },
   // ISG 6.4 and 10.4.8: a spaced short dash for a break in the sentence (the long dash is the list dash).
   sentenceDash: '–',
@@ -38,7 +40,7 @@ export const fi = {
     'Quotes: ”…” (ISG 10.4.5 "kokolainausmerkit"; the ISG shows ”…” for all levels in 4.2.3 and uses ’…’ only for the definitions of legal acts, 3.6). The inner level ’…’ is from Kotus, not from the ISG. The same mark opens and closes, so a quotation is read by where each mark stands, not by pairing. The alternative »…» (also used in Finnish) is not implemented, and the ISG and Kotus say nothing about a third level.',
     'Dash: the ISG 6.4 table spaces a short dash (Alt 0150) and 10.4.8 keeps the long dash for list dashes only, so a break in the sentence is a spaced en dash; 4.2.3 notes that the long list dash of EU texts departs from the Finnish standard language, which uses the shorter dash.',
     'Numbers: a comma and a "ohuke" (thin fixed space) between groups of three (ISG 6.5, 10.2.1); the pack uses the ordinary no-break space.',
-    'Abbreviations: only those the ISG lists in 10.7.1 as examples and that end with a period (p., s., v., mrd.). The ISG also lists hra, klo, nro, rva, tsto, which have no period; the pack contract can only bind an abbreviation written with a period, so "klo 17" and "nro 5" are not kept together (the ISG uses a fixed space after nro and s. in 4.2.3).',
+    'Abbreviations: those the ISG lists in 10.7.1 as examples and that end with a period (p., s., v., mrd.), and two it lists without a period that come before a number, klo and nro (the bare list: "klo 17" and "nro 5" are kept together; the ISG uses a fixed space after nro and s. in 4.2.3). The ISG also lists hra, rva, tsto without a period; they come before a name or stand alone, so they are not bound. A bare abbreviation is matched in lower case only (Klo at the start of a sentence is left alone).',
     'Not implemented, not verified: one-letter words (the ISG gives no list), the hyphen rules of 10.4.7, the colon before case endings (p:ssa), dates (1.4.–30.4.), and Kotus guidance beyond the two pages named in the sources.',
   ].join(' '),
 } as const satisfies LangPack;

@@ -631,7 +631,7 @@ In languages whose pack sets percentSpace: a no-break space between a number and
 
 Languages with `percentSpace`: German, French, German (Switzerland), French (Switzerland), Czech, Spanish, Italian, Portuguese, Irish, Maltese, Bulgarian, Croatian, Slovenian, Lithuanian, Latvian, Estonian, Danish, Finnish and Greek.
 
-Languages with `currencySpace`: German, French, German (Switzerland), French (Switzerland), Czech, Spanish, Italian, Bulgarian, Croatian, Slovenian, Danish, Finnish and Greek.
+Languages with `currencySpace`: Ukrainian, German, Polish, French, German (Switzerland), French (Switzerland), Czech, Spanish, Italian, Bulgarian, Croatian, Slovenian, Danish, Finnish and Greek.
 
 Category: `data`.
 

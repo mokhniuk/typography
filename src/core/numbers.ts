@@ -41,10 +41,11 @@ function groupable(text: string, start: number, end: number, decimal: string): b
   // Before a space and a three-digit group (a number grouped by hand), or a closing bracket and a digit.
   if (SPACE.test(next) && /^\d{3}(?!\d)/.test(text.slice(end + 1))) return false;
   if (next === ')' && /^\s?\d/.test(text.slice(end + 1))) return false;
-  // Before a separator and digits: the decimal mark leaves a fraction to leave alone; any other
-  // separator (1234,000 in English, a version number) means the number is written for another language.
+  // Before a separator and digits: a decimal mark of the pack (`decimal` lists them) leaves a fraction to
+  // leave alone; any other separator (1234,000 in English, a version number) means the number is
+  // written for another language.
   if (SEPARATOR.test(next) && digit.test(after)) {
-    if (next !== decimal) return false;
+    if (!decimal.includes(next)) return false;
     if (/^[.,]\d+[.,]\d/.test(text.slice(end))) return false;
   }
   return true;

@@ -29,6 +29,13 @@ describe('Ukrainian', () => {
     expect(t('вул. Хрещатик, м. Київ')).toBe('вул.~Хрещатик, м.~Київ');
   });
 
+  test('€ after the number stands apart by a no-break space (CLDR 48 uk: "#,##0.00 ¤"); % does not (CLDR: "#,##0%")', () => {
+    expect(t('Ціна 49€')).toBe('Ціна 49~€');
+    expect(t('Ціна 49 €')).toBe('Ціна 49~€');
+    expect(t('Знижка 5%')).toBe('Знижка 5%');
+    expect(t('€49')).toBe('€49');
+  });
+
   test('short words stay with the next word, by default and when enabled', () => {
     expect(t('Ласкаво просимо до міста', { enable: ['space.short-word'] })).toBe(
       'Ласкаво просимо до~міста',

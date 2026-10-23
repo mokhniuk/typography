@@ -6,15 +6,22 @@ export type Level = readonly [open: string, close: string];
  * read by a native speaker: add to them only from a style guide.
  *  - `together`: the parts of one abbreviation (z. B.);
  *  - `bind`: an abbreviation that stays with the word or number after it (Nr. 5, ul. Marszałkowska);
- *  - `page`: one that stays with a number only (S. 12).
+ *  - `page`: one that stays with a number only (S. 12);
+ *  - `bare`: one written without a full stop that stays with the number after it (klo 17, nr 5).
  */
 export type Abbreviations = {
   together?: readonly string[];
   bind?: readonly string[];
   page?: readonly string[];
+  /** Written without a full stop (klo, nro, nr, lk): bound to a number after it, never to a word. */
+  bare?: readonly string[];
 };
 
-/** How a language writes numbers: the group separator (1 000 000) and the decimal mark. */
+/**
+ * How a language writes numbers: the group separator (1 000 000) and the decimal marks it accepts,
+ * the language's own first (`,`); a second one is read as a decimal mark too, never a separator
+ * (`,.` in Switzerland: 4,16 and the franc amount Fr. 327.65).
+ */
 export type NumberFormat = { group: string; decimal: string };
 
 /**

@@ -249,7 +249,7 @@ describe('formatRules', () => {
     const lines = formatRules(RULES).split('\n');
     const percent = lines.find((line) => line.startsWith('space.percent ')) ?? '';
     expect(percent).toMatch(
-      / \[percentSpace: German, French, .* and Greek\] \[currencySpace: German, /,
+      / \[percentSpace: German, French, .* and Greek\] \[currencySpace: Ukrainian, German, Polish, /,
     );
     expect(lines.find((line) => line.startsWith('space.short-word '))).toContain(
       '[shortWords: English, Ukrainian, Polish, Czech and Slovak]',

@@ -75,7 +75,7 @@ The pack:
 | `literary` | The same for the literary register, if it differs. |
 | `orphans` | A global regex with one capture group: one-letter words kept with the next word. |
 | `shortWords` | Two- and three-letter words kept with the next word, for the rule `space.short-word` (on by default). Lower case, each once; the rule matches the capitalised form too. Editorial by nature (no guide read lists them), so say so in `notes`. |
-| `abbreviations` | `{ together, bind, page }`, short lists, only from a style guide. |
+| `abbreviations` | `{ together, bind, page, bare }`, short lists, only from a style guide (`bare`: written without a full stop, bound to a number: `klo 17`). |
 | `sentenceDash`, `sentenceDashLiterary` | The spaced dash of a break in the sentence, when it is not an em dash. |
 | `percentSpace` | A no-break space between a number and a `%` typed against it (`5%` becomes `5~%`). |
 | `currencySpace` | A no-break space between a number and a `€` typed after it (`49€` becomes `49~€`); `€49` is never touched. Set it apart from `percentSpace`: a style guide may space `%` and write `€30` or only the code `EUR`. |
@@ -86,7 +86,7 @@ The pack:
 | `elisions` | Words that start with an apostrophe for dropped letters (`'em`, `'til`); `n` reads rock 'n' roll. The five packs other than English list English's, because the list was read for every language before packs existed; dropping it is an output change. |
 | `openers` | Characters that may stand before an opening quote mark, besides a space and a bracket (Spanish `¿¡`). |
 | `sameMarkQuotes` | The language opens and closes with the same mark (Swedish `”…”`). Carried and documented only: the engine does not act on it yet. |
-| `numbers` | `{ group, decimal }`. |
+| `numbers` | `{ group, decimal }`; `decimal` lists the accepted decimal marks, the language's own first (`,.` in de-CH and fr-CH: a point is the franc decimal there, never a separator). |
 | `reviewed`, `sources`, `notes` | Whether a native speaker has read the pack; the style guides it came from; what a reader should know. A pack that is `reviewed` must cite `sources`. |
 
 Abbreviation lists and the like come from a style guide, not from memory; say in `sources` which, and keep `reviewed: false` until a native reader has seen the pack.

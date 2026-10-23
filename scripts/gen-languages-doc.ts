@@ -125,7 +125,7 @@ export function renderPack(pack: LangPack): string {
     `- A bare temperature without the degree sign (\`20 C\`) read as one (\`symbol.degree\`, opt-in): ${pack.bareTemperature ? 'yes' : 'no'}.`,
   );
   const lists = pack.abbreviations;
-  if (lists && (lists.together || lists.bind || lists.page)) {
+  if (lists && (lists.together || lists.bind || lists.page || lists.bare)) {
     out.push(
       '',
       '### Abbreviations',
@@ -137,6 +137,9 @@ export function renderPack(pack: LangPack): string {
         : []),
       ...(lists.bind ? [`| stay with what follows | ${lists.bind.map(code).join(' ')} |`] : []),
       ...(lists.page ? [`| stay with a number | ${lists.page.map(code).join(' ')} |`] : []),
+      ...(lists.bare
+        ? [`| no full stop, stay with a number | ${lists.bare.map(code).join(' ')} |`]
+        : []),
     );
   } else {
     out.push('- Abbreviations: no list.');
@@ -145,7 +148,11 @@ export function renderPack(pack: LangPack): string {
   out.push('', '## Numbers', '');
   out.push(
     pack.numbers
-      ? `Groups of three are separated by ${code(pack.numbers.group)}, the decimal mark is ${code(pack.numbers.decimal)}.`
+      ? `Groups of three are separated by ${code(pack.numbers.group)}, the decimal mark is ${code(pack.numbers.decimal.charAt(0))}${
+          pack.numbers.decimal.length > 1
+            ? ` (also ${[...pack.numbers.decimal.slice(1)].map(code).join(', ')} in amounts)`
+            : ''
+        }.`
       : 'No number format yet.',
   );
 

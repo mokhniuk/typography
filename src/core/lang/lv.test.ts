@@ -69,6 +69,7 @@ describe('Latvian spaces and dashes', () => {
 
   test('ISG 10.1.7, 10.5: a range of numbers takes an unspaced en dash', () => {
     expect(t('Biroja darba laiks: 9:00-18:30')).toBe('Biroja darba laiks: 9:00–18:30');
+    expect(t('Biroja darba laiks: 9.00-18.30')).toBe('Biroja darba laiks: 9.00–18.30');
     expect(t('2001-2002. gads')).toBe('2001–2002. gads');
   });
 

@@ -20,11 +20,20 @@ describe('French (Switzerland)', () => {
     expect(t("l'homme et l'atelier d'été")).toBe('l’homme et l’atelier d’été');
   });
 
-  test('number.group (opt-in) groups digits with a no-break space; the decimal mark is a point', () => {
+  test('number.group (opt-in) groups digits with a no-break space; the decimal mark is a comma (Instructions ch. 4)', () => {
     const on = { enable: ['number.group'] };
     expect(t('1234567')).toBe('1234567');
     expect(t('1234567', on)).toBe('1~234~567');
+    expect(t('55000 et 1700', on)).toBe('55~000~et 1700');
+    expect(t('1234567,50', on)).toBe('1~234~567,50');
+  });
+
+  test('a point is read as a decimal mark too (a franc amount), never as a thousands separator', () => {
+    const on = { enable: ['number.group'] };
+    // Swiss federal texts never group with a point or comma (Schreibweisungen Rz. 512), so a point
+    // after digits can only be the franc decimal of an amount (Rz. 514, 543).
     expect(t('CHF 1234567.50', on)).toBe('CHF~1~234~567.50');
+    expect(t('Fr. 1234567.50', on)).toBe('Fr. 1~234~567.50');
   });
 
   test('% and € stand apart from the number, as in French', () => {

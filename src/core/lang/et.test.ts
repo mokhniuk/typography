@@ -69,7 +69,7 @@ describe('Estonian spaces and dashes', () => {
   });
 
   test('a range of numbers takes an unspaced en dash (ISG A3 lk 2–5)', () => {
-    expect(t('lk 2-5')).toBe('lk 2–5');
+    expect(t('lk 2-5')).toBe('lk~2–5');
   });
 });
 
@@ -82,7 +82,7 @@ describe('Estonian numbers (ISG 6.5)', () => {
     expect(t('Elanikke 1234567, summa 12345,67 EUR', { enable: ['number.group'] })).toBe(
       'Elanikke 1~234~567, summa 12~345,67~EUR',
     );
-    expect(t('aastal 1961, lk 2064', { enable: ['number.group'] })).toBe('aastal 1961, lk 2064');
+    expect(t('aastal 1961, lk 2064', { enable: ['number.group'] })).toBe('aastal 1961, lk~2064');
   });
 });
 

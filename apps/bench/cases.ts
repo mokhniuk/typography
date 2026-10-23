@@ -330,6 +330,46 @@ add({
   expect: 'a (no-break) space before % and €',
   pass: matches(new RegExp(`5[ ${NBSP}${NNBSP}]%.*49[ ${NBSP}${NNBSP}]€`)),
 });
+add({
+  id: 'currency-uk',
+  group: 'Symbols',
+  lang: 'uk',
+  input: 'Ціна 49€',
+  expect: 'a no-break space before € after the number (CLDR uk)',
+  pass: matches(new RegExp(`49[${NBSP}${NNBSP}]€`)),
+});
+add({
+  id: 'currency-pl',
+  group: 'Symbols',
+  lang: 'pl',
+  input: 'Cena 49€',
+  expect: 'a no-break space before € after the number (CLDR pl)',
+  pass: matches(new RegExp(`49[${NBSP}${NNBSP}]€`)),
+});
+add({
+  id: 'abbr-bare-fi',
+  group: 'Spacing',
+  lang: 'fi',
+  input: 'Kokous alkaa klo 17',
+  expect: 'klo, written without a full stop, stays with the hour (ISG 10.7.1)',
+  pass: has(`klo${NBSP}17`),
+});
+add({
+  id: 'abbr-bare-et',
+  group: 'Spacing',
+  lang: 'et',
+  input: 'otsus nr 5, vt lk 12',
+  expect: 'nr and lk, written without a full stop, stay with the number (ISG 4.2.3)',
+  pass: has(`nr${NBSP}5`, `lk${NBSP}12`),
+});
+add({
+  id: 'dash-range-time-dotted',
+  group: 'Dashes',
+  lang: 'lv',
+  input: 'Biroja darba laiks: 9.00-18.30',
+  expect: 'a time range written with full stops uses an en dash (ISG 10.1.7)',
+  pass: has('9.00–18.30'),
+});
 
 // Protected text
 add({
