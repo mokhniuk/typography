@@ -5,7 +5,10 @@ export declare const fr: {
     readonly quotes: readonly [readonly ["« ", " »"], readonly ["“", "”"]];
     readonly percentSpace: true;
     readonly currencySpace: true;
-    readonly spaceBeforeHigh: true;
+    readonly highPunctuation: {
+        readonly colon: " ";
+        readonly others: ' ';
+    };
     readonly elisions: readonly ["em", "til", "till", "cause", "bout", "round", "tis", "twas", "cos", "n"];
     readonly numbers: {
         readonly group: " ";

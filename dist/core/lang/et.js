@@ -7,6 +7,8 @@ export const et = {
     quotes: [['„', '“']],
     // ISG 10.1.7: the dash of ELT texts is the en dash (U+2013); the ISG examples (10.7) set it with spaces.
     sentenceDash: '–',
+    // ISG 4.2.3: a fixed space after nr and lk, written without a full stop ("nr• ELT L•", "lk• ELT C•").
+    abbreviations: { bare: ['nr', 'lk'] },
     // ISG 6.4: a fixed space between the figure and %.
     percentSpace: true,
     currencySpace: false,
@@ -22,7 +24,7 @@ export const et = {
         'Dash: ISG 10.1.7 names the en dash (U+2013) as the dash of ELT texts and does not give the spacing; its examples in 10.7 (tähtaeg – ajavahemik) set it with a space on each side, as the engine does.',
         'Numbers: ISG 6.5 gives a comma for decimals and a space between groups of three digits for numbers of five digits or more, counted from the right; 4.2.3 says the space is a no-break one and that codes, postal codes and years (1961. aastal, lk 2064) are not grouped; the engine groups from five digits, which is the same threshold.',
         'Known engine gap, not a pack field: the omission mark [---] that the ISG writes in quotations (5.10, 10.1.6) is rewritten by the dash rules to [ – -] in every language; et.test.ts holds a test marked failing for it.',
-        'Not implemented, not verified: abbreviations. The ISG sets a fixed space after nr and lk (4.2.3: "nr• ELT L•", "lk• ELT C•") but these are written without a full stop, and the engine binds an abbreviation only when its name is followed by a full stop; the other abbreviations of annex A3 (s.o, k.a, v.a, n-ö, et al.) are written without a space inside. No orphans: the ISG gives no list of one-letter words to keep off the end of a line. No elisions read. The ISG shows € only as the code EUR, so the pack sets percentSpace and not currencySpace (49€ stays 49€).',
+        'Abbreviations: the ISG sets a fixed space after nr and lk (4.2.3: "nr• ELT L•", "lk• ELT C•"), written without a full stop; the pack binds them to a number after them (the bare list: nr 5, lk 12; matched in lower case only). The ISG examples bind them to a publication name too (nr ELT L); that is not done, a bare abbreviation stays with a number only. The other abbreviations of annex A3 (s.o, k.a, v.a, n-ö, et al.) are written without a space inside. Not implemented, not verified: no orphans: the ISG gives no list of one-letter words to keep off the end of a line. No elisions read. The ISG shows € only as the code EUR, so the pack sets percentSpace and not currencySpace (49€ stays 49€).',
     ].join(' '),
 };
 export default et;

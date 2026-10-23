@@ -59,10 +59,14 @@ export declare function shortWords(text: string, pack: LangPack): string;
 /**
  * Whether `abbreviations` can change `text` in `lang`: a cheap test for the rule table. `bind` and
  * `page` patterns need a full stop; `together` ones need it only if every entry has one (read from
- * the pack, not assumed), otherwise the rule always runs. No pattern at all: it never changes anything.
+ * the pack, not assumed), otherwise the rule always runs; `bare` ones need a digit. No pattern at
+ * all: it never changes anything.
  */
 export declare const mayAbbreviate: (text: string, pack: LangPack) => boolean;
-/** The parts of an abbreviation stay together, and a short one stays with what it introduces. */
+/**
+ * The parts of an abbreviation stay together, and a short one stays with what it introduces: with a
+ * full stop (Nr. 5, ul. Marszałkowska, S. 12), or without one before a number (klo 17, nr 5).
+ */
 export declare const abbreviations: (text: string, pack: LangPack) => string;
 /**
  * A percent sign (in a language with `percentSpace`: German, French) or a euro sign after the number

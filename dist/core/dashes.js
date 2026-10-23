@@ -1,3 +1,4 @@
+import { before } from './scan.js';
 import { NBSP } from './types.js';
 /**
  * Whether `a`-`b` is a range of numbers rather than an identifier, a partial date
@@ -43,6 +44,45 @@ export function dialogue(text, { mark, attached }) {
     return text.replace(DIALOGUE, attached ? mark : `${mark}${NBSP}`);
 }
 const TIME_RANGE = /(\d{1,2}:\d{2})[ \u00A0]*(?:--|[-–])[ \u00A0]*(?=\d{1,2}:\d{2})/g;
+/** Two times written with a full stop (9.00-18.30), the second one read by the lookahead. */
+const DOTTED_TIME_RANGE = /(\d{1,2})\.(\d{2})[ \u00A0]*(?:--|[-–])[ \u00A0]*(?=(\d{1,2})\.(\d{2}))/g;
+/** What may not stand before a dotted time: the tail of a longer number, a date, a name or a chain (8.00-9.00-10.00). */
+const NOT_BEFORE_TIME = /[\p{L}\p{N}.,:\-–]/u;
+/** What may follow the second time: not more digits (18.300), another part (5.10.2026, 9.00.15) or a chain. */
+const NOT_AFTER_TIME = /^(?:\d|[.,:\-–]\d)/;
+/** A time of day: minutes up to 59, hours up to 23, and 24.00 (the end of a day) but no later. */
+const isTime = (hours, minutes) => Number(minutes) <= 59 && (Number(hours) < 24 || (Number(hours) === 24 && Number(minutes) === 0));
+/**
+ * A range of two times written with a full stop: 9.00-18.30 (ISG 10.1.7, Latvian and Finnish practice).
+ * A full stop between digits is as often a decimal mark, so both sides must read as a time of day:
+ * two-digit minutes up to 59 (1.5-2.5 is no time), hours up to 23 or 24.00, the second time later
+ * than the first, not inside a longer number, a date or a chain. A decimal pair with time-like digits
+ * (1.50-2.50) is read as a time too: the en dash is right for it either way. The colon form
+ * (TIME_RANGE) keeps its looser reading. The character before the first time is read here, not by a
+ * lookbehind tried at every position.
+ */
+function dottedTimeRanges(text) {
+    DOTTED_TIME_RANGE.lastIndex = 0;
+    let out = '';
+    let from = 0;
+    for (let m = DOTTED_TIME_RANGE.exec(text); m; m = DOTTED_TIME_RANGE.exec(text)) {
+        const [whole, h1 = '', m1 = '', h2 = '', m2 = ''] = m;
+        const end = m.index + whole.length;
+        const tail = end + h2.length + 1 + m2.length;
+        if (NOT_BEFORE_TIME.test(before(text, m.index)) ||
+            NOT_AFTER_TIME.test(text.slice(tail, tail + 2)) ||
+            !isTime(h1, m1) ||
+            !isTime(h2, m2) ||
+            Number(h1) * 60 + Number(m1) >= Number(h2) * 60 + Number(m2)) {
+            DOTTED_TIME_RANGE.lastIndex = m.index + 1;
+            continue;
+        }
+        out += `${text.slice(from, m.index)}${h1}.${m1}–`;
+        from = end;
+    }
+    DOTTED_TIME_RANGE.lastIndex = 0;
+    return from === 0 ? text : out + text.slice(from);
+}
 /**
  * The range between two numbers, found from the LAST digit of the first one: the original pattern was
  * `(?<![\d:–-])(\d+)([ \u00A0]*(?:--|[-–])[ \u00A0]*)(\d+)(?![\d:–-])`, whose lookbehind is tried at every
@@ -86,8 +126,8 @@ function numberRanges(text) {
 }
 /** A hyphen, double hyphen or en dash between two numbers is a range: an unspaced en dash. */
 export function dashRange(text) {
-    // A time span: 10:00-12:00 and 10:00 – 12:00 are ranges.
-    return numberRanges(text.replace(TIME_RANGE, '$1–'));
+    // A time span: 10:00-12:00, 10:00 – 12:00 and 9.00-18.30 are ranges.
+    return numberRanges(dottedTimeRanges(text.replace(TIME_RANGE, '$1–')));
 }
 const DASH_CHAR = /[-–—]/g;
 const isGap = (code) => code === 0x20 || code === 0xa0;

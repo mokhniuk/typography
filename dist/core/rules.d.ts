@@ -66,6 +66,10 @@ export type Rule = {
  *  - the punctuation-space rules (`space.before-punctuation`, `space.after-comma`,
  *    `punctuation.double`) go immediately after `ellipsis`: a ... is already … when they run, and
  *    they run before any rule that binds a space.
+ *  - `space.high-punctuation` closes that group: after `space.before-punctuation` (which removes
+ *    spaces before marks and keeps these) and `punctuation.double` (a run of marks is final), and
+ *    before `space.collapse` and every rule that binds a space (a no-break space set later cannot
+ *    be taken for the typed space it replaces).
  *  - `symbol.degree` goes after `space.number` (and `space.percent`): the number rules bind the
  *    degree sign's space first, and this rule only tidies what is left.
  *  - `space.trailing` is the last rule, so nothing runs after it and it cannot be undone by one.

@@ -37,6 +37,7 @@ export declare const PACKS: readonly [{
         readonly bind: readonly ["м", "вул", "просп", "пров", "пл", "обл", "ім", "див", "рис", "табл"];
         readonly page: readonly ["с", "ст", "ч"];
     };
+    readonly currencySpace: true;
     readonly dialogueDash: {
         readonly mark: '—';
     };
@@ -46,8 +47,8 @@ export declare const PACKS: readonly [{
         readonly decimal: ',';
     };
     readonly reviewed: false;
-    readonly sources: readonly ["https://www.pravopys.net/sections/125/", "https://style-guide.europa.eu/en/content/-/isg/topic?identifier=6.5-punctuation-in-figures"];
-    readonly notes: 'The literary register keeps the display quotes; the dialogue dash (an em dash and a no-break space) is set in both registers. Digits are grouped with a no-break space (number.group), as the Interinstitutional Style Guide sets for all languages; the decimal mark is a comma. Dialogue: a paragraph of direct speech opens with тире (Український правопис § 125, the 1993 rules as published on pravopys.net; the 2019 edition could not be read).';
+    readonly sources: readonly ["https://www.pravopys.net/sections/125/", "https://slovnyk.ua/pravopys.php?prav_par=167 (Український правопис 2019, § 164 «Лапки», § 167 «Розділові знаки для оформлення прямої мови та цитат», as published on slovnyk.ua; not compared with the official PDF)", "https://raw.githubusercontent.com/unicode-org/cldr-json/main/cldr-json/cldr-numbers-full/main/uk/numbers.json (CLDR 48, cldr-numbers-full 48.2.3: currency pattern \"#,##0.00 ¤\" with U+00A0, percent pattern \"#,##0%\")", "https://style-guide.europa.eu/en/content/-/isg/topic?identifier=6.5-punctuation-in-figures"];
+    readonly notes: 'The literary register keeps the display quotes; the dialogue dash (an em dash and a no-break space) is set in both registers. Digits are grouped with a no-break space (number.group), as the Interinstitutional Style Guide sets for all languages; the decimal mark is a comma. Dialogue: a paragraph of direct speech opens with тире (Український правопис § 125, the 1993 rules as published on pravopys.net); the 2019 edition says the same in § 167, read on slovnyk.ua, a section-by-section copy, because the official PDF on mon.gov.ua could not be fetched (the copy was not compared with the PDF). Quotes: § 164 of the 2019 edition recommends «…» outside and “…” inside and lists „…“ as a further form; the pack keeps „…“ inside (CLDR). Currency: a no-break space between a number and € after it (49 €), from CLDR 48 (uk currency pattern "#,##0.00 ¤"); no national guide on it was read, and the Pravopys 2019 sections read say nothing on currency or %. No space is set before %: the CLDR uk percent pattern is "#,##0%".';
 }, {
     readonly code: 'de';
     readonly name: 'German (Deutsch)';
@@ -87,12 +88,13 @@ export declare const PACKS: readonly [{
         readonly group: ' ';
         readonly decimal: ',';
     };
+    readonly currencySpace: true;
     readonly dialogueDash: {
         readonly mark: '—';
     };
     readonly reviewed: false;
-    readonly sources: readonly ["https://sjp.pwn.pl/poradnia/haslo/Pauza-dialogowa-a-myslnik;18816.html", "https://sjp.pwn.pl/poradnia/haslo/Sieroty-na-koncu-wiersza;18684.html", "https://style-guide.europa.eu/en/content/-/isg/topic?identifier=6.5-punctuation-in-figures"];
-    readonly notes: 'One-letter conjunctions and prepositions are bound to the next word. Digits are grouped with a no-break space (number.group), as the Interinstitutional Style Guide sets for all languages; the decimal mark is a comma. Dialogue: a line of dialogue opens with the same dash as a break in the sentence, pauza or półpauza, spaced (PWN Poradnia, A. Wolański, "Pauza dialogowa a myślnik"); the engine uses the em dash it uses for a break.';
+    readonly sources: readonly ["https://sjp.pwn.pl/poradnia/haslo/Pauza-dialogowa-a-myslnik;18816.html", "https://sjp.pwn.pl/poradnia/haslo/Sieroty-na-koncu-wiersza;18684.html", "https://style-guide.europa.eu/en/content/-/isg/topic?identifier=6.5-punctuation-in-figures", "https://sjp.pwn.pl/poradnia/haslo/Jeszcze-raz-o-spacji-lub-jej-braku-po-znaku;21530.html (PWN Poradnia, A. Wolański: \"Jeszcze raz o spacji lub jej braku po znaku %\", 26.11.2021; also \"Odstępy lub ich brak w oznaczeniach jednostek miar\", 7.03.2022, and \"procent, proc., %\", 26.01.2023)", "https://raw.githubusercontent.com/unicode-org/cldr-json/main/cldr-json/cldr-numbers-full/main/pl/numbers.json (CLDR 48, cldr-numbers-full 48.2.3: currency pattern \"#,##0.00 ¤\" with U+00A0, percent pattern \"#,##0%\")"];
+    readonly notes: 'One-letter conjunctions and prepositions are bound to the next word. Digits are grouped with a no-break space (number.group), as the Interinstitutional Style Guide sets for all languages; the decimal mark is a comma. Dialogue: a line of dialogue opens with the same dash as a break in the sentence, pauza or półpauza, spaced (PWN Poradnia, A. Wolański, "Pauza dialogowa a myślnik"); the engine uses the em dash it uses for a break. Percent: no space is set before % (PWN Poradnia, A. Wolański, 2023: "50% (nie: 50 %)", the Polish tradition); since the 2020 regulation on legal units of measure PWN also accepts 38,4 % (2021), so 50% stays 50% and a typed 38,4 % is left as typed. Currency: a no-break space between a number and € after it (49 €), from CLDR 48 (pl currency pattern "#,##0.00 ¤"); the PWN answer on zł was not read.';
 }, {
     readonly code: 'fr';
     readonly name: 'French (français)';
@@ -100,7 +102,10 @@ export declare const PACKS: readonly [{
     readonly quotes: readonly [readonly ["« ", " »"], readonly ["“", "”"]];
     readonly percentSpace: true;
     readonly currencySpace: true;
-    readonly spaceBeforeHigh: true;
+    readonly highPunctuation: {
+        readonly colon: " ";
+        readonly others: ' ';
+    };
     readonly elisions: readonly ["em", "til", "till", "cause", "bout", "round", "tis", "twas", "cos", "n"];
     readonly numbers: {
         readonly group: " ";
@@ -129,11 +134,11 @@ export declare const PACKS: readonly [{
     readonly elisions: readonly ["em", "til", "till", "cause", "bout", "round", "tis", "twas", "cos", "n"];
     readonly numbers: {
         readonly group: " ";
-        readonly decimal: '.';
+        readonly decimal: ',.';
     };
     readonly reviewed: false;
-    readonly sources: readonly ["https://www.bk.admin.ch/bk/de/home/dokumentation/sprachen/hilfsmittel-textredaktion/schreibweisungen.html", "https://style-guide.europa.eu/en/content/-/isg/topic?identifier=6.5-punctuation-in-figures"];
-    readonly notes: 'Swiss German quotes: `«outer ‹inner› outer»`, without spaces inside, as the Swiss Federal Chancellery Schreibweisungen set them. CLDR gives `„…“` and `‚…‘` for de-CH, so the choice stays disputed (resources/sources.md). Germany’s turned `»…«` is not read here. The abbreviation lists, the spaced en dash and the no-break space before % and € are German’s (the de pack), not checked against a Swiss guide. Digits are grouped with a no-break space (number.group): the Schreibweisungen (Rz. 512) group digits in threes with a Festabstand (no-break space). Everyday Swiss usage often writes the apostrophe (1’000’000); it is not used here (the separator is the pack field numbers.group). The decimal mark is a point (Rz. 514, 543 for francs). The Schreibweisungen page was not readable when this was written: the passage numbers (Rz. 512, 514, 543) come from its index and the PDF text, and the pack stays reviewed: false.';
+    readonly sources: readonly ["https://www.bk.admin.ch/dam/de/sd-web/YVHazXZRkqKn/schreibweisungen.pdf (Schweizerische Bundeskanzlei, Schreibweisungen, 2nd ed. 2013, corrected 2015, read in full as PDF text: Rz. 202-206 Anführungszeichen, 251 Festabstand, 512-514 Zahlen, 539-543 Geldbeträge, 554-555 Prozent)", "https://raw.githubusercontent.com/unicode-org/cldr-json/main/cldr-json/cldr-numbers-full/main/de-CH/numbers.json (CLDR 48, cldr-numbers-full 48.2.3: currency pattern \"¤ #,##0.00\" with U+00A0, the sign first; percent pattern \"#,##0%\", no space)", "https://style-guide.europa.eu/en/content/-/isg/topic?identifier=6.5-punctuation-in-figures"];
+    readonly notes: string;
 }, {
     readonly code: 'fr-CH';
     readonly name: 'French (Switzerland)';
@@ -144,11 +149,11 @@ export declare const PACKS: readonly [{
     readonly elisions: readonly ["em", "til", "till", "cause", "bout", "round", "tis", "twas", "cos", "n"];
     readonly numbers: {
         readonly group: " ";
-        readonly decimal: '.';
+        readonly decimal: ',.';
     };
     readonly reviewed: false;
-    readonly sources: readonly ["https://www.bk.admin.ch/bk/de/home/dokumentation/sprachen/hilfsmittel-textredaktion/schreibweisungen.html", "https://vitrinelinguistique.oqlf.gouv.qc.ca/23371/la-ponctuation/tiret/le-tiret-dans-les-dialogues", "https://style-guide.europa.eu/en/content/-/isg/topic?identifier=6.5-punctuation-in-figures"];
-    readonly notes: 'Swiss French quotes: `«outer ‹inner› outer»`, without the no-break space inside that the fr pack sets, as the former ch pack set them from the Swiss Federal Chancellery Schreibweisungen (the German edition; no French Swiss guide was read). CLDR has the same marks for fr-CH. No space is set before `; ! ?` and `:`: the pack field that keeps that space (spaceBeforeHigh) is set by the fr pack only (this pack copies the fr fields it takes one by one, and not that one), and whether Swiss French sets one is unverified. Dialogue is quoted here (no dialogueDash), unlike the fr pack: the OQLF source on dialogue dashes is cited with the fr sources, but no dialogue dash is set, and either choice is unverified for Switzerland. The no-break space before % and € is French’s (the fr pack), not checked against a Swiss guide. Digits are grouped with a no-break space (number.group) and the decimal mark is a point, as the Schreibweisungen set for federal texts (Rz. 512, 514, 543 for francs); those passages were read in the German edition, from its index and the PDF text, not on the page itself, and the pack stays reviewed: false. Everyday Swiss usage often writes the apostrophe (1’000’000); it is not used here.';
+    readonly sources: readonly ["https://www.bk.admin.ch/dam/fr/sd-web/t4P98Y1Vnyz-/objekt_55266.pdf (Chancellerie fédérale, Instructions sur la présentation des textes officiels en français, May 2016, read in full as PDF text: ch. 2 unités monétaires, ch. 4 nombres and note 4, ch. 5 espaces insécables)", "https://www.bk.admin.ch/dam/de/sd-web/YVHazXZRkqKn/schreibweisungen.pdf (Schweizerische Bundeskanzlei, Schreibweisungen, the German edition, 2013/2015: Rz. 202-203 quotation marks)", "https://raw.githubusercontent.com/unicode-org/cldr-json/main/cldr-json/cldr-numbers-full/main/fr-CH/numbers.json (CLDR 48, cldr-numbers-full 48.2.3: currency pattern \"#,##0.00 ¤\" with U+00A0; percent pattern \"#,##0%\", no space)", "https://vitrinelinguistique.oqlf.gouv.qc.ca/23371/la-ponctuation/tiret/le-tiret-dans-les-dialogues", "https://style-guide.europa.eu/en/content/-/isg/topic?identifier=6.5-punctuation-in-figures"];
+    readonly notes: string;
 }, {
     readonly code: 'cs';
     readonly name: 'Czech (čeština)';
@@ -289,8 +294,9 @@ export declare const PACKS: readonly [{
     readonly dialogueDash: {
         readonly mark: '—';
     };
+    readonly truncations: readonly ["da", "di", "fa", "sta", "va", "po", "be", "mo", "pie", "que"];
     readonly reviewed: false;
-    readonly sources: readonly ["https://www.treccani.it/magazine/lingua_italiana/articoli/scritto_e_parlato/punteggiatura9.html", "https://publications.europa.eu/resource/cellar/01ed788a-d266-11ec-a95f-01aa75ed71a1.0021.01/DOC_1 (Manuale interistituzionale di convenzioni redazionali, PDF of 19 April 2022: 4.2.3 livelli di virgolette, apostrofo and spazi fissi, 6.4 spaziatura dei segni d’interpunzione, 6.5 interpunzione nelle cifre, 10.1.7 virgolette, 10.1.10 lineetta, allegato A3 abbreviazioni)", "https://op.europa.eu/en/web/eu-vocabularies/formex/physical-specifications/character-encoding/use-of-quotation-marks-in-the-different-languages (Publications Office, quotation marks per language: it «…» “…” ‘…’)", "https://www.treccani.it/enciclopedia/virgolette_(Enciclopedia-dell'Italiano)/ (Enciclopedia dell’italiano: virgolette basse, alte, singole; the usual order is bassa for the first quotation and alta for those inside)", "https://www.treccani.it/enciclopedia/apostrofo_(Enciclopedia-dell'Italiano)/ (Enciclopedia dell’italiano: apostrofo for elision l’amica, truncation po’, dropped digits of a year ’48)", "https://en.wikipedia.org/wiki/Quotation_mark (cross-check only: Italian «…» “…”)"];
+    readonly sources: readonly ["https://www.treccani.it/magazine/lingua_italiana/articoli/scritto_e_parlato/punteggiatura9.html", "https://publications.europa.eu/resource/cellar/01ed788a-d266-11ec-a95f-01aa75ed71a1.0021.01/DOC_1 (Manuale interistituzionale di convenzioni redazionali, PDF of 19 April 2022: 4.2.3 livelli di virgolette, apostrofo and spazi fissi, 6.4 spaziatura dei segni d’interpunzione, 6.5 interpunzione nelle cifre, 10.1.7 virgolette, 10.1.10 lineetta, allegato A3 abbreviazioni)", "https://op.europa.eu/en/web/eu-vocabularies/formex/physical-specifications/character-encoding/use-of-quotation-marks-in-the-different-languages (Publications Office, quotation marks per language: it «…» “…” ‘…’)", "https://www.treccani.it/enciclopedia/virgolette_(Enciclopedia-dell'Italiano)/ (Enciclopedia dell’italiano: virgolette basse, alte, singole; the usual order is bassa for the first quotation and alta for those inside)", "https://www.treccani.it/enciclopedia/apostrofo_(Enciclopedia-dell'Italiano)/ (Enciclopedia dell’italiano: apostrofo for elision l’amica, truncation po’, dropped digits of a year ’48; the imperatives da’ di’ fa’ sta’ va’ and pie’ be’ mo’ que’ of the truncations field; read as a fetch summary)", "https://www.treccani.it/enciclopedia/troncamento_(Enciclopedia-dell'Italiano)/ (Enciclopedia dell’italiano: troncamento, mo’ and pie’ as truncated forms; read as a fetch summary)", "https://en.wikipedia.org/wiki/Quotation_mark (cross-check only: Italian «…» “…”)"];
     readonly notes: string;
 }, {
     readonly code: 'pt';
@@ -335,6 +341,7 @@ export declare const PACKS: readonly [{
     readonly quotes: readonly [readonly ["“", "”"], readonly ["‘", "’"]];
     readonly abbreviations: {
         readonly page: readonly ["p", "pp"];
+        readonly bare: readonly ["Nru"];
     };
     readonly percentSpace: true;
     readonly currencySpace: false;
@@ -342,8 +349,9 @@ export declare const PACKS: readonly [{
         readonly group: " ";
         readonly decimal: '.';
     };
+    readonly truncations: readonly ["ta", "ma"];
     readonly reviewed: false;
-    readonly sources: readonly ["https://publications.europa.eu/resource/cellar/01ed788a-d266-11ec-a95f-01aa75ed71a1.0015.01/DOC_1 (Il-Gwida tal-Istil Interistituzzjonali, PDF of 19 April 2022: 4.2.3 virgoletti, apostrofu and spazji fissi, 5.10 kwotazzjonijiet, 6.4 sinjali tal-punteġġatura u l-ispazji, 6.5 punteġġatura fiċ-ċifri, 7 euro)", "https://op.europa.eu/en/web/eu-vocabularies/formex/physical-specifications/character-encoding/use-of-quotation-marks-in-the-different-languages (Publications Office, quotation marks per language: mt “…” ‘…’ “…”)", "https://en.wikipedia.org/wiki/Quotation_mark (cross-check only: Maltese “…” ‘…’)"];
+    readonly sources: readonly ["https://publications.europa.eu/resource/cellar/01ed788a-d266-11ec-a95f-01aa75ed71a1.0015.01/DOC_1 (Il-Gwida tal-Istil Interistituzzjonali, PDF of 19 April 2022: 4.2.3 virgoletti, apostrofu and spazji fissi, 5.10 kwotazzjonijiet, 6.4 sinjali tal-punteġġatura u l-ispazji, 6.5 punteġġatura fiċ-ċifri, 7 euro)", "https://op.europa.eu/en/web/eu-vocabularies/formex/physical-specifications/character-encoding/use-of-quotation-marks-in-the-different-languages (Publications Office, quotation marks per language: mt “…” ‘…’ “…”)", "https://en.wikipedia.org/wiki/Quotation_mark (cross-check only: Maltese “…” ‘…’)", "https://en.wiktionary.org/wiki/ta%27 and https://en.wiktionary.org/wiki/ma%27 (Wiktionary, Maltese entries ta' and ma': prepositions with a final apostrophe, the truncations field; a community dictionary, low authority, read as a fetch summary)"];
     readonly notes: string;
 }, {
     readonly code: 'bg';
@@ -456,6 +464,9 @@ export declare const PACKS: readonly [{
     readonly sample: 'Ta ütles "me oleme siin" - ja läks... Seminar kestab 21-26 septembrini, 10:00-12:00, 5% rohkem. Loe edasi ->';
     readonly quotes: readonly [readonly ["„", "“"]];
     readonly sentenceDash: '–';
+    readonly abbreviations: {
+        readonly bare: readonly ["nr", "lk"];
+    };
     readonly percentSpace: true;
     readonly currencySpace: false;
     readonly numbers: {
@@ -496,6 +507,7 @@ export declare const PACKS: readonly [{
     readonly abbreviations: {
         readonly bind: readonly ["p", "v", "mrd"];
         readonly page: readonly ["s"];
+        readonly bare: readonly ["klo", "nro"];
     };
     readonly sentenceDash: '–';
     readonly percentSpace: true;

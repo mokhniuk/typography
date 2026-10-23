@@ -1,5 +1,6 @@
 import { dashRange, dashSentence, dialogue } from './dashes.js';
 import { afterComma, beforePunctuation, degrees, doubleMarks, fractions, implies, plusMinus, trailingSpace, } from './extra.js';
+import { highPunctuation } from './high-punctuation.js';
 import { apostrophe, arrows, ellipsis, legal, minus, multiply } from './marks.js';
 import { groupNumbers } from './numbers.js';
 import { bindPhones } from './phone.js';
@@ -14,6 +15,8 @@ import { abbreviations, arrowSpace, association, collapse, copyright, initials, 
  * - `data`: numbers with what they measure: groups of digits, ranges, units, currencies, dates.
  */
 export const RULE_CATEGORIES = ['tradition', 'symbols', 'math', 'data'];
+/** One of the high punctuation marks (no `g` flag: `test` keeps no state). */
+const HIGH_MARK = /[:;!?]/;
 const has = (needle) => (text) => text.includes(needle);
 const hasAny = (...needles) => (text) => needles.some((needle) => text.includes(needle));
 /**
@@ -37,6 +40,10 @@ const hasAny = (...needles) => (text) => needles.some((needle) => text.includes(
  *  - the punctuation-space rules (`space.before-punctuation`, `space.after-comma`,
  *    `punctuation.double`) go immediately after `ellipsis`: a ... is already … when they run, and
  *    they run before any rule that binds a space.
+ *  - `space.high-punctuation` closes that group: after `space.before-punctuation` (which removes
+ *    spaces before marks and keeps these) and `punctuation.double` (a run of marks is final), and
+ *    before `space.collapse` and every rule that binds a space (a no-break space set later cannot
+ *    be taken for the typed space it replaces).
  *  - `symbol.degree` goes after `space.number` (and `space.percent`): the number rules bind the
  *    degree sign's space first, and this rule only tidies what is left.
  *  - `space.trailing` is the last rule, so nothing runs after it and it cannot be undone by one.
@@ -70,7 +77,8 @@ export const RULES = [
         about: 'Removes a space before , . ; : ! ? ) (French keeps the space before : ; ! ?)',
         defaultOn: false,
         when: hasAny(' ', '\t'),
-        apply: (text, { pack }) => beforePunctuation(text, !!pack.spaceBeforeHigh),
+        packFields: ['highPunctuation'],
+        apply: (text, { pack }) => beforePunctuation(text, pack.highPunctuation),
     },
     {
         id: 'space.after-comma',
@@ -87,6 +95,14 @@ export const RULES = [
         defaultOn: false,
         when: hasAny('!!', '??'),
         apply: doubleMarks,
+    },
+    {
+        id: 'space.high-punctuation',
+        category: 'tradition',
+        about: 'In languages whose pack sets highPunctuation: the space before : and before ; ! ? after a letter or digit (French: a no-break space before :, a narrow one before ; ! ?), a typed space replaced; not in a time (10:30), between two marks (?!) or at a line start',
+        packFields: ['highPunctuation'],
+        when: (text, { pack }) => !!pack.highPunctuation && HIGH_MARK.test(text),
+        apply: (text, { pack }) => pack.highPunctuation ? highPunctuation(text, pack.highPunctuation) : text,
     },
     { id: 'arrow', category: 'symbols', about: '-> and <- become → and ←', apply: arrows },
     {
@@ -211,7 +227,7 @@ export const RULES = [
     {
         id: 'space.percent',
         category: 'data',
-        about: 'In languages whose pack sets percentSpace: a no-break space between a number and % (5 %); where the pack also sets currencySpace, before € after the number too (49 €)',
+        about: 'In languages whose pack sets percentSpace: a no-break space between a number and % (5 %). In languages whose pack sets currencySpace: before € after a number (49 €). The two fields are independent',
         packFields: ['percentSpace', 'currencySpace'],
         when: (text, { pack }) => (!!pack.percentSpace && text.includes('%')) || (!!pack.currencySpace && text.includes('€')),
         apply: (text, { pack }) => unitSymbol(text, pack),

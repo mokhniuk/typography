@@ -5,14 +5,21 @@ export type Level = readonly [open: string, close: string];
  * read by a native speaker: add to them only from a style guide.
  *  - `together`: the parts of one abbreviation (z. B.);
  *  - `bind`: an abbreviation that stays with the word or number after it (Nr. 5, ul. Marszałkowska);
- *  - `page`: one that stays with a number only (S. 12).
+ *  - `page`: one that stays with a number only (S. 12);
+ *  - `bare`: one written without a full stop that stays with the number after it (klo 17, nr 5).
  */
 export type Abbreviations = {
     together?: readonly string[];
     bind?: readonly string[];
     page?: readonly string[];
+    /** Written without a full stop (klo, nro, nr, lk): bound to a number after it, never to a word. */
+    bare?: readonly string[];
 };
-/** How a language writes numbers: the group separator (1 000 000) and the decimal mark. */
+/**
+ * How a language writes numbers: the group separator (1 000 000) and the decimal marks it accepts,
+ * the language's own first (`,`); a second one is read as a decimal mark too, never a separator
+ * (`,.` in Switzerland: 4,16 and the franc amount Fr. 327.65).
+ */
 export type NumberFormat = {
     group: string;
     decimal: string;
@@ -76,6 +83,12 @@ export type LangPack = {
      * The entry `n` also reads rock 'n' roll. Either case of the first letter matches.
      */
     elisions?: readonly string[];
+    /**
+     * Words that end in an apostrophe for dropped letters (Italian `po`, Maltese `ta`), written lower
+     * case without it. After one of them, a ' or ’ followed by a space, punctuation or the end is an
+     * apostrophe (po’), never a quotation mark. Either case of the first letter matches.
+     */
+    truncations?: readonly string[];
     /** Characters besides a space and a bracket that may stand before an opening quote mark (Spanish ¿ ¡). */
     openers?: string;
     /**
@@ -86,10 +99,15 @@ export type LangPack = {
     sameMarkQuotes?: boolean;
     numbers?: NumberFormat;
     /**
-     * The language keeps a space before `: ; ! ?` (French): `space.before-punctuation` leaves it there,
-     * since the space is correct in the language, not a fault.
+     * The space the language sets before high punctuation (French): `colon` before `:`, `others` before
+     * `; ! ?` (French: U+00A0 and U+202F). `space.high-punctuation` sets it where a letter or digit stands
+     * before the mark, replacing a typed space; the opt-in `space.before-punctuation` keeps a space typed
+     * before a mark that has one here, since the space is correct in the language, not a fault.
      */
-    spaceBeforeHigh?: boolean;
+    highPunctuation?: {
+        colon?: string;
+        others?: string;
+    };
     /**
      * A bare temperature with no degree sign (`20 C`) is read as one by `symbol.degree`, after a word
      * that is not a label (English; the label list is English). Without it, only a number with the

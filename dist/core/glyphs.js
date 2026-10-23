@@ -70,6 +70,10 @@ function dashes(lang) {
 const separators = (lang) => unique(packsOf(lang)
     .map((pack) => pack.numbers?.group ?? '')
     .join(''));
+/** The spaces `space.high-punctuation` sets before : and before ; ! ?. */
+const highSpaces = (lang) => unique(packsOf(lang)
+    .map((pack) => `${pack.highPunctuation?.colon ?? ''}${pack.highPunctuation?.others ?? ''}`)
+    .join(''));
 /**
  * The characters each rule can insert, by rule id. Without `lang` it is every language's marks at
  * once (what the docs show); with one (a code or a pack), only that language's.
@@ -81,6 +85,7 @@ export function ruleGlyphs(lang) {
         'dash.dialogue': dashes(lang),
         'dash.sentence': dashes(lang),
         'number.group': separators(lang),
+        'space.high-punctuation': highSpaces(lang),
     };
 }
 /**

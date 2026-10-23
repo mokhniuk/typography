@@ -7,6 +7,7 @@ export declare const fi: {
     readonly abbreviations: {
         readonly bind: readonly ["p", "v", "mrd"];
         readonly page: readonly ["s"];
+        readonly bare: readonly ["klo", "nro"];
     };
     readonly sentenceDash: '–';
     readonly percentSpace: true;

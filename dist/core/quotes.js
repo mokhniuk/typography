@@ -10,8 +10,9 @@ const ANY_RAW = new RegExp(`[${RAW}]`, 'g');
 /**
  * Marks the straight pair `"…"`. A straight " cannot open a quotation straight after a digit: there it
  * is an inch mark (2" pipe), so two inch marks in one text do not pair. Closing after a digit is still
- * allowed ("call 911"). Found by a scan from one mark to the next, not by a regex: an opener with no
- * closer (an inch mark) would make a regex read on to the end of the text each time.
+ * allowed ("call 911"), unless a later " closes the quotation instead (`laterCloser`: "a 5" hole").
+ * Found by a scan from one mark to the next, not by a regex: an opener with no closer (an inch mark)
+ * would make a regex read on to the end of the text each time.
  */
 const OPENS_HERE = /[\s([]/;
 const STRAIGHT = Symbol('straight');
@@ -24,7 +25,7 @@ function pairStraight(text) {
             continue;
         }
         ANY_RAW.lastIndex = at + 1;
-        const end = ANY_RAW.exec(text)?.index ?? -1;
+        let end = ANY_RAW.exec(text)?.index ?? -1;
         if (end === -1)
             break;
         if (text[end] !== '"') {
@@ -33,17 +34,61 @@ function pairStraight(text) {
         }
         // The next " stands where a quotation opens (a space or a bracket before it, a word after it):
         // it is an opener of its own, so the one at `at` has no partner and is read by where it stands.
-        if (OPENS_HERE.test(text[end - 1]) &&
-            end + 1 < text.length &&
-            NON_SPACE.test(text[end + 1])) {
+        if (opensHere(text, end)) {
             at = end;
             continue;
         }
+        if (mayBeInch(text, at, end))
+            end = laterCloser(text, end);
         out += text.slice(last, at) + setPair(text.slice(at + 1, end), text[at - 1], text[end + 1]);
         last = end + 1;
         at = text.indexOf('"', last);
     }
     return last === 0 ? text : out + text.slice(last);
+}
+/** The " at `at` stands where a quotation opens: a space or a bracket before it, a non-space after it. */
+const opensHere = (text, at) => OPENS_HERE.test(text[at - 1]) &&
+    at + 1 < text.length &&
+    NON_SPACE.test(text[at + 1]);
+// An inch mark is read only inside a quotation opened at the start, after a space, a bracket, an opener
+// or ¿ ¡ (not one glued to a word, as in a URL: q="1"&r), and only where a space on the same line or
+// punctuation follows it (a 5" hole, a 2", 3" pipe), not a letter, a digit or a line break.
+const INCH_OPENER_AFTER = /[\s([\uE000¿¡]/;
+const INCH_FOLLOWED_BY = /[ \t\u00A0\u202F,.;:!?)\]]/;
+/** The " at `end`, the next mark after the opener at `at`, may be an inch mark (a 5" hole) inside it. */
+const mayBeInch = (text, at, end) => {
+    if (!DIGIT.test(codePointBefore(text, end) ?? ''))
+        return false;
+    const before = charBefore(text, at);
+    return ((before === undefined || INCH_OPENER_AFTER.test(before)) &&
+        INCH_FOLLOWED_BY.test(text[end + 1] ?? ''));
+};
+// The next quote mark, or a paragraph break (a line break, blanks, a line break).
+const NEXT_MARK_OR_BREAK = new RegExp(`[${RAW}]|\\n[^\\S\\n]*\\n`, 'g');
+// What a closer stands after: a letter, closing punctuation, a closed quotation or an apostrophe.
+const CLOSES_AFTER = /[\p{L}.,;:!?\u2026)\]\uE001\uE002'\u2019]/u;
+const LETTER_OR_DIGIT = /[\p{L}\p{N}]/u;
+/**
+ * The straight " at `inch` stands after a digit inside an open quotation. Read on to the next mark that
+ * is not another inch mark: when it is a " in the same paragraph that stands where a quotation closes
+ * (after a letter or closing punctuation, past any tags), that " closes the quotation and `inch` is an
+ * inch mark (a 5" hole); otherwise `inch` closes it, as a quotation that ends in a digit does (call
+ * 911"). The marks read past are inch marks inside the quotation, so the caller goes on after the
+ * closer and nothing is read twice.
+ */
+function laterCloser(text, inch) {
+    NEXT_MARK_OR_BREAK.lastIndex = inch + 1;
+    for (let m = NEXT_MARK_OR_BREAK.exec(text); m; m = NEXT_MARK_OR_BREAK.exec(text)) {
+        const at = m.index;
+        if (m[0] !== '"')
+            return inch;
+        if (DIGIT.test(codePointBefore(text, at) ?? ''))
+            continue;
+        // Glued to a letter or digit after it, it opens the next quotation ("1","2"), so it is not the closer.
+        const closes = CLOSES_AFTER.test(charBefore(text, at) ?? '') && !LETTER_OR_DIGIT.test(text[at + 1] ?? '');
+        return closes ? at : inch;
+    }
+    return inch;
 }
 const PAIRS = [
     new RegExp(`„(${BODY})[“”]`, 'g'),
@@ -223,6 +268,35 @@ function elisionOf(words) {
     }
     return { source: alternatives.join('|'), groups: alternatives.length };
 }
+// Words that end in an apostrophe for dropped letters (Italian po', va', Maltese ta'), listed in
+// `truncations` on the pack: after one of them (a whole word), a ' or ’ followed by a space, punctuation
+// or the end is an apostrophe, never a closer ('dammi un po' di pane', 'un po''), when a later ' can close
+// the quotation instead (`laterSingleCloser`); with none, it closes as before ('da', 'non so che fa').
+// The mark is put back as typed, and the `apostrophe` rule sets it, as it does outside a quotation; its
+// group, the last of the regex, tells the replacer that a truncation matched.
+const truncationOf = (words) => words.length
+    ? `(?<=(?:^|[^\\p{L}\\p{N}])(?:${words.map(caseless).join('|')}))(['’])(?![\\p{L}\\p{N}])`
+    : '';
+// The next ' or ’, or a paragraph break.
+const NEXT_SINGLE_OR_BREAK = /['’]|\n[^\S\n]*\n/g;
+const LETTER = /\p{L}/u;
+/**
+ * Whether the next ' or ’ after `at` in the same paragraph, past apostrophes inside a word (dell’amico),
+ * can close a quotation: no letter or digit follows it. The search stops at that mark, so each
+ * truncation reads only up to the next one.
+ */
+function laterSingleCloser(text, at) {
+    NEXT_SINGLE_OR_BREAK.lastIndex = at + 1;
+    for (let m = NEXT_SINGLE_OR_BREAK.exec(text); m; m = NEXT_SINGLE_OR_BREAK.exec(text)) {
+        if (m[0].length > 1)
+            return false;
+        const i = m.index;
+        if (LETTER.test(text[i - 1] ?? '') && LETTER.test(text[i + 1] ?? ''))
+            continue;
+        return !LETTER_OR_DIGIT.test(text[i + 1] ?? '');
+    }
+    return false;
+}
 const charClass = (chars) => new RegExp(`[${chars.replace(/[\\\]^-]/g, '\\$&')}]`);
 function setupOf(pack) {
     // What may stand before an opening mark: the start, a space, a bracket, another opening mark, and the
@@ -238,15 +312,17 @@ function setupOf(pack) {
             (pair === SINGLE_GUILLEMETS && turnedMarks.some((mark) => mark === '‹' || mark === '›')))),
     ];
     const elision = elisionOf(pack.elisions ?? []);
+    const truncation = truncationOf(pack.truncations ?? []);
     const made = {
         pairs,
         single: new RegExp(`(${before})'([^']+)'(?=[\\s).,;:!?\\]${CLOSE}]|$)`, 'g'),
         openerBefore,
         // Inside a word, or a leading apostrophe on a year (the ’90s: two digits). A straight ' there may open
         // a quoted number ('12'), a curly ’ cannot, so only the straight one is told apart by what follows.
-        // The last alternatives are an apostrophe for dropped letters, rock 'n' roll and 'til: it is set curly
-        // here, since the `apostrophe` rule only turns a straight ' after a letter or before a digit.
-        apostrophe: new RegExp(`(?<=\\p{L})['’](?=\\p{L})|(?<=^|[\\s([])’(?=\\d{2}s?(?![\\d\\p{L}]))|(?<=^|[\\s([])'(?=\\d{2}s?(?![\\d'’\\p{L}]))${elision.source ? `|${elision.source}` : ''}`, 'yu'),
+        // Then an apostrophe for dropped letters, rock 'n' roll and 'til: it is set curly here, since the
+        // `apostrophe` rule only turns a straight ' after a letter or before a digit. Last, a truncation (po'),
+        // which follows a letter, so it is left to the `apostrophe` rule (its group follows the elisions').
+        apostrophe: new RegExp(`(?<=\\p{L})['’](?=\\p{L})|(?<=^|[\\s([])’(?=\\d{2}s?(?![\\d\\p{L}]))|(?<=^|[\\s([])'(?=\\d{2}s?(?![\\d'’\\p{L}]))${elision.source ? `|${elision.source}` : ''}${truncation ? `|${truncation}` : ''}`, 'yu'),
         elisionGroups: elision.groups,
         relevant: charClass(`${RAW}${LONE}${SPACED}${SPACED_CLOSING}'${turnedMarks.join('')}${OPEN}${CLOSE}${APOSTROPHE}`),
         pairable: charClass(`${RAW}'${turnedMarks.join('')}`),
@@ -277,6 +353,8 @@ export function quotesFor(pack) {
             apostrophe.lastIndex = at;
             const found = apostrophe.exec(text);
             if (!found)
+                return mark;
+            if (found[1 + elisionGroups] !== undefined && !laterSingleCloser(text, at))
                 return mark;
             kept.push(found.slice(1, 1 + elisionGroups).some(Boolean) ? '’' : mark);
             return APOSTROPHE;

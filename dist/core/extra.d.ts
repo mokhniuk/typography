@@ -1,8 +1,13 @@
 /**
+ * The opt-in rules (`defaultOn: false` in rules.ts): each runs only when named in `enable`.
+ * Their guards err towards leaving text alone; the known limits are in docs/limits.md.
+ */
+import type { HighPunctuation } from './high-punctuation.js';
+/**
  * Removes a space before , . ; : ! ? ). Not at a line start, not before an ellipsis, a decimal
  * (` .5`), a file extension (` .gitignore`), `!=` or `??`, not a spaced time or ratio (`10 : 30`),
- * not an emoticon (` :)`, ` ;-)`), and not before `: ; ! ?` when `keepHigh` (a language that sets a
- * space there, French: the pack's `spaceBeforeHigh`).
+ * not an emoticon (` :)`, ` ;-)`), and not before `:` when `high.colon` is set, nor before `; ! ?` when `high.others` is set (a
+ * language that sets a space there, French: the pack's `highPunctuation`).
  *
  * Was `text.replace(/(?<=[^\s(\[{“"«‘„])[ \t]+([,.;:!?)])/gu, …)`: a lookbehind opening the pattern is
  * tried at every position (16 to 20 ms per MB). The pair "space, mark" is found first, the run of
@@ -11,7 +16,7 @@
  * the engine tried the lookbehind at each of its spaces, and it refuses all but the first (a space
  * stands before). A match it leaves alone is consumed whole, as `replace` does.
  */
-export declare function beforePunctuation(text: string, keepHigh?: boolean): string;
+export declare function beforePunctuation(text: string, high?: HighPunctuation): string;
 /** Adds a space after a comma that a letter follows directly (`a,b`). Digits (`1,5`) are left alone. */
 export declare const afterComma: (text: string) => string;
 /**
