@@ -1,14 +1,15 @@
 import { bg } from './bg.ts';
-import { ch } from './ch.ts';
 import { cs } from './cs.ts';
 import { da } from './da.ts';
 import { de } from './de.ts';
+import { deCH } from './de-ch.ts';
 import { el } from './el.ts';
 import { en } from './en.ts';
 import { es } from './es.ts';
 import { et } from './et.ts';
 import { fi } from './fi.ts';
 import { fr } from './fr.ts';
+import { frCH } from './fr-ch.ts';
 import { ga } from './ga.ts';
 import { hr } from './hr.ts';
 import { hu } from './hu.ts';
@@ -38,7 +39,8 @@ export const PACKS = [
   de,
   pl,
   fr,
-  ch,
+  deCH,
+  frCH,
   cs,
   sk,
   nl,

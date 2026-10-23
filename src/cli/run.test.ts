@@ -55,6 +55,18 @@ describe('typo', () => {
     expect(nb(u.out())).toBe('«x»... ok\n');
   });
 
+  test('takes a hyphenated pack code, de-CH or fr-CH, and lists it in the error for ch', async () => {
+    const t = fake({}, '"x" - y\n');
+    expect(await run(['-l', 'de-CH'], t.io)).toBe(0);
+    expect(nb(t.out())).toBe('«x»~– y\n');
+    const u = fake({}, '"x" - y\n');
+    expect(await run(['-l', 'fr-CH'], u.io)).toBe(0);
+    expect(nb(u.out())).toBe('«x»~— y\n');
+    const v = fake({}, 'x\n');
+    expect(await run(['-l', 'ch'], v.io)).toBe(2);
+    expect(v.err()).toContain('unknown language "ch" (en, uk, de, pl, fr, de-CH, fr-CH,');
+  });
+
   test('a Ukrainian dialogue dash is read at the start of every paragraph', async () => {
     const t = fake({}, '- Один\n\n- Два\n');
     await run(['-l', 'uk', '-r', 'literary'], t.io);

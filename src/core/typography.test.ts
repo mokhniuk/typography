@@ -55,7 +55,8 @@ describe('quotes', () => {
     expect(t('“x ‘y’ z”', 'uk')).toBe('«x „y“ z»');
     expect(t('“x ‘y’ z”', 'de')).toBe('»x ›y‹ z«');
     expect(t('“x ‘y’ z”', 'pl')).toBe('„x «y» z”');
-    expect(t('“x ‘y’ z”', 'ch')).toBe('«x ‹y› z»');
+    expect(t('“x ‘y’ z”', 'de-CH')).toBe('«x ‹y› z»');
+    expect(t('“x ‘y’ z”', 'fr-CH')).toBe('«x ‹y› z»');
     expect(t('“x ‘y’ z”', 'fr')).toBe('«~x “y” z~»');
   });
 });
@@ -435,7 +436,7 @@ describe('literary register', () => {
     // Every language whose literary register has no marks of its own (the dialogue dash is the same in both).
     const plain = LANGS.filter((lang) => !LITERARY[lang]);
     // English has a literary profile; the rest of the registry grows without this list.
-    expect(plain).toEqual(expect.arrayContaining(['de', 'pl', 'fr', 'ch', 'uk']));
+    expect(plain).toEqual(expect.arrayContaining(['de', 'pl', 'fr', 'de-CH', 'fr-CH', 'uk']));
     expect(plain).not.toContain('en');
     for (const lang of plain) {
       expect(t(sample, lang, literary)).toBe(t(sample, lang));

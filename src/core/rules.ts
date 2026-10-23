@@ -80,9 +80,16 @@ const hasAny =
   (text: string) =>
     needles.some((needle) => text.includes(needle));
 
-/** Short English names of some packs, joined for a description: `German and French`. */
+/**
+ * Short English names of some packs, joined for a description: `German and French`. A pack whose
+ * short name an earlier one already took keeps its full name: `German, German (Switzerland)`.
+ */
 function names(packs: readonly { name: string }[]): string {
-  const list = packs.map((pack) => pack.name.split(' (')[0] ?? pack.name);
+  const list: string[] = [];
+  for (const pack of packs) {
+    const short = pack.name.split(' (')[0] ?? pack.name;
+    list.push(list.includes(short) ? pack.name : short);
+  }
   return list.length > 1 ? `${list.slice(0, -1).join(', ')} and ${list.at(-1)}` : (list[0] ?? '');
 }
 

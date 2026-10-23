@@ -29,6 +29,7 @@ export const RISKY_LETTERS: Partial<Record<Lang, string>> = {
   pt: 'ãõáâçéêíóôú',
   it: 'àèéìòù',
   nl: 'ëïĳ',
-  ch: 'äöüàèé',
+  'de-CH': 'äöü',
+  'fr-CH': 'àâçéèêëîïôùûü',
   en: '',
 };

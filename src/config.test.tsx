@@ -255,6 +255,8 @@ describe('defineConfig and checkConfig', () => {
     const config: TypographyConfig = { lang: 'de', rules, enable: ['extra.shout'] };
     expect(defineConfig(config)).toBe(config);
     expect(checkConfig({})).toEqual({});
+    expect(checkConfig({ lang: 'de-CH' })).toEqual({ lang: 'de-CH' });
+    expect(checkConfig({ lang: 'fr-CH' })).toEqual({ lang: 'fr-CH' });
   });
 
   test('throws on what it cannot use, saying what', () => {
@@ -264,6 +266,9 @@ describe('defineConfig and checkConfig', () => {
     };
     bad({ language: 'en' }, /unknown key "language"/);
     bad({ lang: 'xx' }, /lang is .*"uk".*not "xx"/);
+    // `ch` was the Swiss pack until 0.15.0; it is now de-CH and fr-CH, and the code is matched as written.
+    bad({ lang: 'ch' }, /lang is .*"de-CH", "fr-CH".*not "ch"/);
+    bad({ lang: 'de-ch' }, /lang is .*not "de-ch"/);
     bad({ register: 'book' }, /register is "display", "literary", not "book"/);
     bad({ quoteStyle: 'uk' }, /quoteStyle is "language", "us", not "uk"/);
     bad({ nbsp: 'raw' }, /nbsp is "entity", "char", not "raw"/);
