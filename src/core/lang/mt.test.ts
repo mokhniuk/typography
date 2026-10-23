@@ -58,6 +58,9 @@ describe('Maltese apostrophe (ISG 4.2.3: the typographic ’; ta’, m’hu, l-)
     expect(t("Qal 'mar ma' Mario' illum.")).toBe('Qal “mar ma’ Mario” illum.');
     expect(t("Qal 'Ta' min hu?' illum.")).toBe('Qal “Ta’ min hu?” illum.');
     expect(t("Qal 'il-ktieb ta'' illum.")).toBe('Qal “il-ktieb ta’” illum.');
+    // A quotation of the word alone: the ' closes it, as before.
+    expect(t("'ma'")).toBe('“ma”');
+    expect(t("Qal 'ta' u mar.")).toBe('Qal “ta” u mar.');
     expect(t('Qal "il-ktieb ta\' Mario" illum.')).toBe('Qal “il-ktieb ta’ Mario” illum.');
   });
 

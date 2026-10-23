@@ -55,6 +55,21 @@ describe('an inch mark inside a quotation', () => {
     same('"5" --" kg', '“5” --” kg');
   });
 
+  test('quoted numbers in a list keep their pairs: a later " before a word or digit opens', () => {
+    same('"1","2","3"', '“1”,“2”,“3”');
+    same('"5";"x"', '“5”;“x”');
+    same('"5":"x"', '“5”:“x”');
+    same('{"a": "5","b": "x"}', '{“a”: “5”,“b”: “x”}');
+  });
+
+  test('an open quotation and many inch marks stay linear', () => {
+    const text = `"${'a 5" b '.repeat(20_000)}`;
+    typographic(text);
+    const t0 = performance.now();
+    typographic(text);
+    expect(performance.now() - t0).toBeLessThan(100);
+  });
+
   test('in HTML the later " closes across a tag', () => {
     expect(typesetHtml('<p>"a 5" <b>hole</b>" ok</p>', { lang: 'en', nbsp: 'char' })).toBe(
       `<p>“a${NBSP}5" <b>hole</b>” ok</p>`,

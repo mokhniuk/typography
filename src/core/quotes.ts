@@ -70,6 +70,7 @@ const mayBeInch = (text: string, at: number, end: number): boolean => {
 const NEXT_MARK_OR_BREAK = new RegExp(`[${RAW}]|\\n[^\\S\\n]*\\n`, 'g');
 // What a closer stands after: a letter, closing punctuation, a closed quotation or an apostrophe.
 const CLOSES_AFTER = /[\p{L}.,;:!?\u2026)\]\uE001\uE002'\u2019]/u;
+const LETTER_OR_DIGIT = /[\p{L}\p{N}]/u;
 /**
  * The straight " at `inch` stands after a digit inside an open quotation. Read on to the next mark that
  * is not another inch mark: when it is a " in the same paragraph that stands where a quotation closes
@@ -84,7 +85,10 @@ function laterCloser(text: string, inch: number): number {
     const at = m.index;
     if (m[0] !== '"') return inch;
     if (DIGIT.test(codePointBefore(text, at) ?? '')) continue;
-    return CLOSES_AFTER.test(charBefore(text, at) ?? '') ? at : inch;
+    // Glued to a letter or digit after it, it opens the next quotation ("1","2"), so it is not the closer.
+    const closes =
+      CLOSES_AFTER.test(charBefore(text, at) ?? '') && !LETTER_OR_DIGIT.test(text[at + 1] ?? '');
+    return closes ? at : inch;
   }
   return inch;
 }
@@ -288,12 +292,32 @@ function elisionOf(words: readonly string[]): { source: string; groups: number }
 }
 // Words that end in an apostrophe for dropped letters (Italian po', va', Maltese ta'), listed in
 // `truncations` on the pack: after one of them (a whole word), a ' or ’ followed by a space, punctuation
-// or the end is an apostrophe, never a closer ('dammi un po' di pane', 'un po''). It holds no group: the
-// mark is put back as typed, and the `apostrophe` rule sets it, as it does outside a quotation.
+// or the end is an apostrophe, never a closer ('dammi un po' di pane', 'un po''), when a later ' can close
+// the quotation instead (`laterSingleCloser`); with none, it closes as before ('da', 'non so che fa').
+// The mark is put back as typed, and the `apostrophe` rule sets it, as it does outside a quotation; its
+// group, the last of the regex, tells the replacer that a truncation matched.
 const truncationOf = (words: readonly string[]): string =>
   words.length
-    ? `(?<=(?:^|[^\\p{L}\\p{N}])(?:${words.map(caseless).join('|')}))['’](?![\\p{L}\\p{N}])`
+    ? `(?<=(?:^|[^\\p{L}\\p{N}])(?:${words.map(caseless).join('|')}))(['’])(?![\\p{L}\\p{N}])`
     : '';
+// The next ' or ’, or a paragraph break.
+const NEXT_SINGLE_OR_BREAK = /['’]|\n[^\S\n]*\n/g;
+const LETTER = /\p{L}/u;
+/**
+ * Whether the next ' or ’ after `at` in the same paragraph, past apostrophes inside a word (dell’amico),
+ * can close a quotation: no letter or digit follows it. The search stops at that mark, so each
+ * truncation reads only up to the next one.
+ */
+function laterSingleCloser(text: string, at: number): boolean {
+  NEXT_SINGLE_OR_BREAK.lastIndex = at + 1;
+  for (let m = NEXT_SINGLE_OR_BREAK.exec(text); m; m = NEXT_SINGLE_OR_BREAK.exec(text)) {
+    if (m[0].length > 1) return false;
+    const i = m.index;
+    if (LETTER.test(text[i - 1] ?? '') && LETTER.test(text[i + 1] ?? '')) continue;
+    return !LETTER_OR_DIGIT.test(text[i + 1] ?? '');
+  }
+  return false;
+}
 
 /** What is read from a language's pack, built once per language. */
 type Setup = {
@@ -348,7 +372,7 @@ function setupOf(pack: LangPack): Setup {
     // a quoted number ('12'), a curly ’ cannot, so only the straight one is told apart by what follows.
     // Then an apostrophe for dropped letters, rock 'n' roll and 'til: it is set curly here, since the
     // `apostrophe` rule only turns a straight ' after a letter or before a digit. Last, a truncation (po'),
-    // which follows a letter, so it is left to the `apostrophe` rule.
+    // which follows a letter, so it is left to the `apostrophe` rule (its group follows the elisions').
     apostrophe: new RegExp(
       `(?<=\\p{L})['’](?=\\p{L})|(?<=^|[\\s([])’(?=\\d{2}s?(?![\\d\\p{L}]))|(?<=^|[\\s([])'(?=\\d{2}s?(?![\\d'’\\p{L}]))${elision.source ? `|${elision.source}` : ''}${truncation ? `|${truncation}` : ''}`,
       'yu',
@@ -390,6 +414,7 @@ export function quotesFor(
       apostrophe.lastIndex = at;
       const found = apostrophe.exec(text);
       if (!found) return mark;
+      if (found[1 + elisionGroups] !== undefined && !laterSingleCloser(text, at)) return mark;
       kept.push(found.slice(1, 1 + elisionGroups).some(Boolean) ? '’' : mark);
       return APOSTROPHE;
     });
