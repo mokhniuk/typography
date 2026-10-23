@@ -24,7 +24,7 @@ These apply to every page this project ships: the playground (`apps/website/play
 | Corners | `--radius-sm`, `--radius-md`, `--radius-lg`, `--radius-pill` |
 | Spacing | `--space-1` … `--space-6` (the website adds `--space-7`, `--space-8`) |
 | Type size | `--size-xs`, `--size-sm`, `--size-md`, `--size-lg`, `--size-xl` (the website adds `--size-2xl`, `--size-3xl`, `--size-display`, fluid with `clamp()`) |
-| Fonts | `--font-ui`, `--font-text` (reading text; a serif in the playground, the same sans as the UI on the website), `--font-mono` |
+| Fonts | `--font-ui`, `--font-text` (reading text; the same sans as the UI on the website, playground included; a serif on the comparison page), `--font-mono` |
 | Measure | `--measure` (reading line length), `--control-height`, `--container` (page width) |
 | Rhythm | `--baseline` (the website: the 8px vertical grid; `--baseline-line`, `--baseline-half` colour its overlay rows) |
 | Controls | `--select-arrow`: the drawn arrow of a `select` (`appearance: none`), an SVG data URI in `--color-muted`, set again for the dark theme because a data URI cannot read a variable |

@@ -45,7 +45,7 @@ engine is a string-to-string function and cannot see a font, so `avoid` names th
 out of the text:
 
 ```ts
-typographic('He said "wait..." - 1/2 of it', 'en', { avoid: '…½' });
+typographic('He said "wait..." - 1/2 of it', 'en', { enable: ['symbol.fraction'], avoid: '…½' });
 // He said “wait...”~— 1/2~of it   (~ is a no-break space; the quotes and the dash are set, the ellipsis and the fraction are not)
 ```
 
@@ -162,7 +162,7 @@ Applies the [rules](rules.md) to one plain string. Web addresses, emails and `` 
 import { typographic } from '@mokhniuk/typography';
 
 typographic('He said "we\'re here" - and left.', 'en');
-// He said “we’re here”~— and left.   (~ is a no-break space)
+// He said “we’re here”~— and~left.   (~ is a no-break space)
 typographic('He said "we\'re here"', 'en', { register: 'literary' });
 // He said ‘we’re here’
 typographic('21-26 - x', 'en', { disable: ['dash.range'] });

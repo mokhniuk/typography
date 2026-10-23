@@ -9,7 +9,7 @@ Priorities: **P0** blocks the audience, **P1** closes a gap other tools do not h
 | | typography-engine | best other | Source |
 |---|---|---|---|
 | Benchmark checks passed (default / literary register) | 260 / 260, 260 / 260 | typograf 135 / 236 | `apps/bench/RESULTS.md` |
-| 1 MB of English, text mode | 38 ms (0.16.1 run, short-word rule on; the 0.17.0 run, on a machine busy with a virtual machine, gave 72 against typograf's 111, the same 1.5 ratio; 49 in the 0.15.0 run, 74 in the 0.14.0 run against 115) | typograf 58 ms, tipograph 11 ms, smartypants 10 ms | `cd apps/bench && bun run bench` (the ratios are what count) |
+| 1 MB of English, text mode | 38 ms (0.16.1 run, short-word rule on; the 0.18.0 run, on a machine busy with a virtual machine, gave 74 against typograf's 117, about the same ratio; 49 in the 0.15.0 run, 74 in the 0.14.0 run against 115) | typograf 58 ms, tipograph 11 ms, smartypants 10 ms | `cd apps/bench && bun run bench` (the ratios are what count) |
 | Target languages covered (27) | 27 | typograf 21 of 27, tipograph 11 | [languages/index.md](languages/index.md) |
 
 The 27 target languages are the 24 official languages of the EU, Ukrainian, and German and French as written in Switzerland (`de-CH`, `fr-CH`); US English is not a pack but the option `quoteStyle: 'us'`. The 8 default-run misses of the 0.14.0 run were the house `«…»` for English, which the checks count as a failure; since 0.15.0 English defaults to `“…”` and the house style is `quoteStyle: 'guillemets'`, and the default run passes every check: 260/260 (the 0.18.0 run). The cases were written by this package's author; read the caveats in [limits.md](limits.md). The cases for the twenty new languages come from the same style guides as the packs, so they are not an independent test.
@@ -49,7 +49,7 @@ Each is a limit of the pack format or an unverified choice, not a crash:
 - **`rock 'n' roll`** is handled only in the packs that list the elision `n`.
 - **`number.group`** treats `de-CH` and `fr-CH` as no-break-space grouped (Swiss Federal Chancellery); five-digit amounts after a capital word are skipped; the ZIP-code guard is English, German, Italian and French in shape.
 - **`symbol.degree`** knows an English label list only (`Type C`, `Vitamin C`).
-- **`space.short-word`** lists are editorial in all five packs, and twenty-one languages have none (see the item below); on by default since 0.14.0.
+- **`space.short-word`** lists are editorial in all five packs, and twenty-two languages have none (see the item below); on by default since 0.14.0.
 - The opt-in rules' own limits are in [limits.md](limits.md#opt-in-rules).
 
 ### Font checker: what is left
@@ -82,7 +82,7 @@ The pack exists but is thin, because the Irish edition of the Interinstitutional
 
 Shipped in 0.14.0: `space.short-word` is on by default (the sources allow either in body text and require binding in titles; display text is this engine's register), with `disable` for the body-text convention. Shipped in 0.13.0: `rock ’n’ roll` is bound on both sides of the `’n’` (`space.operator`, which already bound `&`, `+` and `=`), and `space.short-word` binds a short word to a word that opens with a quotation mark, an apostrophe or a bracket (`the~’90s`). Shipped in 0.10.0: the opt-in rule `space.short-word` and the pack field `shortWords`, with editorial lists for cs, en, pl, sk and uk, for titles and headings — the read sources (PWN Poradnia, ÚJČ) say such a word may stay at a line end in body text and must travel with what it belongs to in a title. `space.orphan` (one-letter words), `space.number`, `space.title`, `space.initial` and `space.abbreviation` were there already. Still open:
 
-- **The word lists are editorial.** No style guide read gives a list of two- and three-letter words for any language. Find one per language, or have a native reader settle each list; five packs have one, the other twenty-one have none.
+- **The word lists are editorial.** No style guide read gives a list of two- and three-letter words for any language. Find one per language, or have a native reader settle each list; five packs have one, the other twenty-two have none.
 - **The rule does not know a title from body text.** It is switched on where titles are set. A rule that binds in a heading only would need the markup, so it belongs in the HTML, Markdown and rehype modes, not in the string engine.
 - **The last words of a paragraph (widows and runts)** are decided: not a string rule, CSS `text-wrap: pretty` on the page (written down in [limits.md](limits.md)).
 - **How to bind, not only what:** a no-break space is a character and travels with the text (copy, search, screen readers read it as a space), a `<span style="white-space: nowrap">` is markup and stays on the page. The HTML, rehype and React modes could offer `bind: 'nbsp' | 'nowrap'` (the text mode and the CLI on plain text have only the character). Research what the two do to search, copy, hyphenation and `text-wrap: pretty` before choosing a default; the string engine keeps the no-break space.
@@ -112,7 +112,7 @@ The `notes` and `sources` of each language pack are 56 of the 68 KB of the raw p
 
 ### A larger real-text benchmark
 
-English has 96 cases and each other language six. Add a real-text corpus per language (a few paragraphs with a hand-made expected output, written by a native reader) and score the other tools on it. Keep each case a statement of what is right, not of what one tool produces.
+English has 97 of the 262 cases, and most other languages six (Ukrainian, French, German, Polish, Latvian, Estonian and Finnish a few more; the Swiss packs none). Add a real-text corpus per language (a few paragraphs with a hand-made expected output, written by a native reader) and score the other tools on it. Keep each case a statement of what is right, not of what one tool produces.
 
 ## Not doing
 

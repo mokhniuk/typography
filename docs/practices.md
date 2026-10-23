@@ -9,7 +9,7 @@ A no-break space keeps two words on one line. Bind a pair when a line that ends 
 - **A one-letter word and the word after it** (`space.orphan`). A line should not end on a lone `a`, `i` or `в`.
 
   ```text
-  (en)  before  A cat and I      after  A~cat and I
+  (en)  before  A cat and I      after  A~cat and~I   (the second ~ is space.short-word's)
   (uk)  before  Він і я в домі   after  Він і~я в~домі
   ```
 
@@ -23,7 +23,7 @@ A no-break space keeps two words on one line. Bind a pair when a line that ends 
   (pl)  before  Zapraszamy do Gdańska       after  Zapraszamy do~Gdańska
   ```
 
-  Why it is on everywhere, and when to turn it off. The sources read say two things: in a title or heading such a word must travel with what it belongs to, and in body text it may stay at the end of a line (Wolański in the PWN Poradnia for Polish, the ÚJČ advice service for Czech; [space.short-word](../resources/sources.md#spaceshort-word)). "May" is a permission, not a recommendation, so either default is within the sources. This engine sets display text (web pages, headings, short copy), where a line that ends on `to` is the stumble readers notice, and typograf and typopo bind these words by default too, so the rule runs unless you switch it off: `disable: ['space.short-word']` (or `--disable space.short-word`) for long body text in a narrow column, or where a native reader prefers the body-text convention. What it does not do: it never binds more than two words in a row, so a chain cannot grow into a whole line (`in the house` becomes `in~the house`); it binds only the words a pack lists, and five packs have a list (`cs en pl sk uk`), this package's own enumeration, not read from a guide; the other 21 languages bind one-letter words only. The next word may open with a quotation mark, an apostrophe or a bracket (`the~’90s`).
+  Why it is on everywhere, and when to turn it off. The sources read say two things: in a title or heading such a word must travel with what it belongs to, and in body text it may stay at the end of a line (Wolański in the PWN Poradnia for Polish, the ÚJČ advice service for Czech; [space.short-word](../resources/sources.md#spaceshort-word)). "May" is a permission, not a recommendation, so either default is within the sources. This engine sets display text (web pages, headings, short copy), where a line that ends on `to` is the stumble readers notice, and typograf and typopo bind these words by default too, so the rule runs unless you switch it off: `disable: ['space.short-word']` (or `--disable space.short-word`) for long body text in a narrow column, or where a native reader prefers the body-text convention. What it does not do: it never binds more than two words in a row, so a chain cannot grow into a whole line (`in the house` becomes `in~the house`); it binds only the words a pack lists, and five packs have a list (`cs en pl sk uk`), this package's own enumeration, not read from a guide; the other 22 languages have no list (nor one for one-letter words), so nothing is bound there. The next word may open with a quotation mark, an apostrophe or a bracket (`the~’90s`).
 
 - **An amount of money and its sign or code** (`space.number`). A figure must not be parted from the money it counts, on either side, and a number written in groups must not break inside itself.
 
@@ -47,7 +47,7 @@ A no-break space keeps two words on one line. Bind a pair when a line that ends 
 
   ```text
   (en)  before  On 21 September, 15 people paid 5 %.
-        after   On 21~September, 15~people paid 5~%.
+        after   On~21~September, 15~people paid 5~%.
   (de)  before  5% and 49€      after  5~% and 49~€
   ```
 
@@ -57,7 +57,7 @@ A no-break space keeps two words on one line. Bind a pair when a line that ends 
 
   ```text
   (en)  before  Prof. Dr. Oksana opens.   after  Prof.~Dr.~Oksana opens.
-  (en)  before  Written by K. Słoboda.    after  Written by K.~Słoboda.
+  (en)  before  Written by K. Słoboda.    after  Written by~K.~Słoboda.
   (en)  before  See Fig. 2, p. 14.         after  See Fig.~2, p.~14.
   ```
 
@@ -107,4 +107,4 @@ All three are general knowledge here: no source in the registry covers them.
 
 ## A no-break space is a character
 
-The engine writes U+00A0 into the text. It travels with the text: it is copied out, found by search in some tools and not in others, and screen readers read it as a space. It also stays where the text goes, which suits plain text, Markdown and email. A `<span style="white-space: nowrap">` is markup instead: it stays on the page, and copying gives ordinary spaces. Which is better for search, copy, hyphenation and `text-wrap: pretty` has not been researched; the string engine keeps the no-break space, and the backlog holds the question. Nothing here promises a `nowrap` mode.
+The engine writes U+00A0 into the text (and, before `; ! ?` in French, the narrow U+202F). It travels with the text: it is copied out, found by search in some tools and not in others, and screen readers read it as a space. It also stays where the text goes, which suits plain text, Markdown and email. A `<span style="white-space: nowrap">` is markup instead: it stays on the page, and copying gives ordinary spaces. Which is better for search, copy, hyphenation and `text-wrap: pretty` has not been researched; the string engine keeps the no-break space, and the backlog holds the question. Nothing here promises a `nowrap` mode.

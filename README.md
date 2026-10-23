@@ -99,7 +99,7 @@ Replace `vX.Y.Z` with a version from [CHANGELOG.md](CHANGELOG.md). The package i
 import { explain, typographic } from '@mokhniuk/typography';
 
 typographic('He said "we\'re here" - and left.', 'en');
-// He said “we’re here”~— and left.     (~ is a no-break space)
+// He said “we’re here”~— and~left.     (~ is a no-break space)
 
 typographic('He said "we\'re here"', 'en', { register: 'literary' });
 // He said ‘we’re here’
@@ -129,13 +129,15 @@ typesetMarkdown(md, { ...site, lang: 'de' });
 
 | Entry | Use it for | Exports |
 |---|---|---|
-| `@mokhniuk/typography` | The whole engine and the plain-text mode | everything in `src/core` (`typographic`, `explain`, `typesetBlock`, `defineConfig`, `RULES`, `RULE_IDS`, `DEFAULT_RULES`, `LANGS`, `REGISTERS`, `NBSP`, `splitHangs`, `diff`, `ruleGlyphs`, `insertedCharacters`, `insertedGlyphs`, `keepAvoided`, `CURRENCY_CODES`, `CURRENCY_SIGNS`, `CURRENCY_WORDS` and their types) plus `typesetText` |
+| `@mokhniuk/typography` | The whole engine and the plain-text mode | everything in `src/core` (`typographic`, `explain`, `typesetBlock`, `defineConfig`, `RULES`, `RULE_IDS`, `DEFAULT_RULES`, `LANGS`, `PACKS`, `resolvePack`, `checkConfig`, `addRule`, `selectRules`, `REGISTERS`, `NBSP`, `splitHangs`, `diff`, `ruleGlyphs`, `insertedCharacters`, `insertedGlyphs`, `keepAvoided`, `CURRENCY_CODES`, `CURRENCY_SIGNS`, `CURRENCY_WORDS` and their types) plus `typesetText` |
 | `@mokhniuk/typography/text` | Plain text a paragraph at a time | `typesetText` |
 | `@mokhniuk/typography/html` | An HTML string | `typesetHtml` |
 | `@mokhniuk/typography/markdown` | A Markdown document | `typesetMarkdown` |
 | `@mokhniuk/typography/rehype` | A unified/rehype pipeline, or any hast tree | default `rehypeTypography`, `typesetHast` |
 | `@mokhniuk/typography/dom` | Hanging punctuation in the browser, no framework | `hangPunctuation`, `hangScript`, `markHangs`, `hangStyle`; glyph checks `supports`, `glyphStatus`, `missingGlyphs`, `missingIn`, `fontOf` |
 | `@mokhniuk/typography/react` | React pages | `Typeset`, `TypographyRoot`, `HangText`, `HangScript`, `useHangingPunctuation`, `useMissingGlyphs`, `TypographyContext` |
+| `@mokhniuk/typography/lite` | One language: the engine and the text, HTML and Markdown modes with no pack; `lang` is a pack | `typographic`, `explain`, `typesetText`, `typesetHtml`, `typesetMarkdown`, the rule table and its helpers ([docs/api.md](docs/api.md#lite)) |
+| `@mokhniuk/typography/lang/<code>` | One language pack, the code in lower case (`./lang/uk`, `./lang/de-ch`; 27 entries) | the pack under its name (`uk`, `deCH`) and as the default export |
 | `typo` (bin) | The command line; Node 20.10 or later, or Bun | see [docs/cli.md](docs/cli.md) |
 
 Every mode takes the same options (`lang`, `register`, `quoteStyle`, `disable`, `enable`, `rules`, `avoid`, `onChange`; `nbsp` for HTML output and `hangAmount` for hanging marks); signatures and the full option table are in [docs/api.md](docs/api.md).
@@ -199,7 +201,7 @@ Honesty over gloss — before you depend on it, know where it is weak:
 - No language has been read by a native speaker. The packs follow published style guides; the review status per language is in [docs/languages.md](docs/languages.md).
 - The abbreviation lists are short, and some language conventions were not checked. Known limits: [docs/limits.md](docs/limits.md).
 - Every rule has a decision record with its sources in [resources/sources.md](resources/sources.md) — including the decisions that are still unchecked.
-- Some input cannot be read with certainty (an inch mark inside a quotation, a `5" hole`): such cases are listed as limits, not guessed at.
+- Some input cannot be read with certainty (a stray quote mark in unbalanced text, such as `He said "born 1985". Then she left"`): such cases are listed as limits, not guessed at.
 
 ## Documentation
 
