@@ -74,6 +74,12 @@ export type LangPack = {
    * The entry `n` also reads rock 'n' roll. Either case of the first letter matches.
    */
   elisions?: readonly string[];
+  /**
+   * Words that end in an apostrophe for dropped letters (Italian `po`, Maltese `ta`), written lower
+   * case without it. After one of them, a ' or ’ followed by a space, punctuation or the end is an
+   * apostrophe (po’), never a quotation mark. Either case of the first letter matches.
+   */
+  truncations?: readonly string[];
   /** Characters besides a space and a bracket that may stand before an opening quote mark (Spanish ¿ ¡). */
   openers?: string;
   /**

@@ -15,6 +15,8 @@ A quotation nested deeper than the levels listed starts over from the first.
 
 An opening mark may also follow `¿` `¡`.
 
+Words that end in an apostrophe, which stays an apostrophe and never closes a quotation: none.
+
 ## Dashes
 
 | What | Setting |

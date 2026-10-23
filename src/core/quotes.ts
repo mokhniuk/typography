@@ -255,9 +255,20 @@ const caseless = (word: string) => {
   const [first = ''] = word;
   return `${first.toLowerCase() === first.toUpperCase() ? escapeRegex(first) : `[${first.toUpperCase()}${first.toLowerCase()}]`}${escapeRegex(word.slice(first.length))}`;
 };
-function elisionOf(words: readonly string[]): { source: string; groups: number } {
+// Words that end in an apostrophe for dropped letters (Italian po', va', Maltese ta'), listed in
+// `truncations` on the pack: after one of them (a whole word), a ' or ’ followed by a space, punctuation
+// or the end is an apostrophe, set curly, never a closer ('dammi un po' di pane', 'un po'').
+function elisionOf(
+  words: readonly string[],
+  truncations: readonly string[],
+): { source: string; groups: number } {
   const plain = words.filter((word) => word !== 'n');
   const alternatives: string[] = [];
+  if (truncations.length) {
+    alternatives.push(
+      `(?<=(?:^|[^\\p{L}\\p{N}])(?:${truncations.map(caseless).join('|')}))(['’])(?![\\p{L}\\p{N}])`,
+    );
+  }
   if (plain.length) {
     alternatives.push(`${EDGE}(')(?=(?:${plain.map(caseless).join('|')})(?![\\p{L}'’]))`);
   }
@@ -277,7 +288,7 @@ type Setup = {
   /** What may stand before an opening mark: a space, a bracket, an OPEN and the pack's `openers` (the start of the text is checked apart). */
   openerBefore: RegExp;
   /**
-   * A mark that stands for an apostrophe: inside a word, on a year, or an elision. Sticky: every
+   * A mark that stands for an apostrophe: inside a word, on a year, an elision or a truncation. Sticky: every
    * alternative matches the one character ' or ’ and nothing after it, so it is tried only where
    * `APOSTROPHE_MARK` finds one, and the `\p{L}` lookbehinds are not run at every character of the text.
    */
@@ -313,15 +324,15 @@ function setupOf(pack: LangPack): Setup {
         ),
     ),
   ];
-  const elision = elisionOf(pack.elisions ?? []);
+  const elision = elisionOf(pack.elisions ?? [], pack.truncations ?? []);
   const made: Setup = {
     pairs,
     single: new RegExp(`(${before})'([^']+)'(?=[\\s).,;:!?\\]${CLOSE}]|$)`, 'g'),
     openerBefore,
     // Inside a word, or a leading apostrophe on a year (the ’90s: two digits). A straight ' there may open
     // a quoted number ('12'), a curly ’ cannot, so only the straight one is told apart by what follows.
-    // The last alternatives are an apostrophe for dropped letters, rock 'n' roll and 'til: it is set curly
-    // here, since the `apostrophe` rule only turns a straight ' after a letter or before a digit.
+    // The last alternatives are an apostrophe for dropped letters, rock 'n' roll, 'til and po': it is set
+    // curly here, since the `apostrophe` rule only turns a straight ' after a letter or before a digit.
     apostrophe: new RegExp(
       `(?<=\\p{L})['’](?=\\p{L})|(?<=^|[\\s([])’(?=\\d{2}s?(?![\\d\\p{L}]))|(?<=^|[\\s([])'(?=\\d{2}s?(?![\\d'’\\p{L}]))${elision.source ? `|${elision.source}` : ''}`,
       'yu',

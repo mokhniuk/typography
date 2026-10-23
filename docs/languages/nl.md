@@ -15,6 +15,8 @@ A quotation nested deeper than the levels listed starts over from the first.
 
 An apostrophe before a dropped-letter word is not a quotation mark: `'s`, `'m`, `'t`.
 
+Words that end in an apostrophe, which stays an apostrophe and never closes a quotation: none.
+
 ## Dashes
 
 | What | Setting |

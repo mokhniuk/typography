@@ -15,6 +15,8 @@ A quotation nested deeper than the levels listed starts over from the first.
 
 Read by where each mark stands, not only by shape: `»…«` (turned the other way round from the usual guillemets).
 
+Words that end in an apostrophe, which stays an apostrophe and never closes a quotation: none.
+
 ## Dashes
 
 | What | Setting |

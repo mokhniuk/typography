@@ -53,6 +53,14 @@ describe('Maltese apostrophe (ISG 4.2.3: the typographic ’; ta’, m’hu, l-)
     expect(t("Qal 'm'hu hemm' illum.")).toBe('Qal “m’hu hemm” illum.');
   });
 
+  test("ta' and ma' (Wiktionary) end in an apostrophe inside a quotation in straight single marks", () => {
+    expect(t("'il-ktieb ta' Mario'")).toBe('“il-ktieb ta’ Mario”');
+    expect(t("Qal 'mar ma' Mario' illum.")).toBe('Qal “mar ma’ Mario” illum.');
+    expect(t("Qal 'Ta' min hu?' illum.")).toBe('Qal “Ta’ min hu?” illum.');
+    expect(t("Qal 'il-ktieb ta'' illum.")).toBe('Qal “il-ktieb ta’” illum.');
+    expect(t('Qal "il-ktieb ta\' Mario" illum.')).toBe('Qal “il-ktieb ta’ Mario” illum.');
+  });
+
   test('ċ ġ ħ ż and għ are kept, with the hyphenated article', () => {
     expect(t('"Il-ħobż taċ-ċikkulata, iż-żmien u l-għajn."')).toBe(
       '“Il-ħobż taċ-ċikkulata, iż-żmien u l-għajn.”',
