@@ -664,6 +664,7 @@ export const SNAPSHOT_VARIANTS = [
   'display',
   'literary',
   'us',
+  'guillemets',
   'optin',
   'text',
   'html',
@@ -698,6 +699,7 @@ export function snapshotDigests(
     display: hash(records({ register: 'display' })),
     literary: hash(records({ register: 'literary' })),
     us: hash(records({ quoteStyle: 'us' })),
+    guillemets: hash(records({ quoteStyle: 'guillemets' })),
     optin: hash(records({ enable: all })),
     text: hash(
       viaMode((s, i, ch) =>

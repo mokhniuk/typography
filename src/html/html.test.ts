@@ -6,6 +6,16 @@ const h = (html: string, options?: HtmlOptions) =>
   typesetHtml(html, options).replaceAll('&nbsp;', '~');
 
 describe('typesetHtml', () => {
+  test('text outside any tag is typeset: before the first tag, after the last, and in a document with no tag', () => {
+    expect(h('He said "hi" - ok <p>x</p>', { lang: 'en' })).toBe('He said “hi”~— ok <p>x</p>');
+    expect(h('<p>x</p> and then "more" - done', { lang: 'en' })).toBe(
+      '<p>x</p> and~then “more”~— done',
+    );
+    expect(h('"quoted" - plain', { lang: 'en' })).toBe('“quoted”~— plain');
+    // A lone opener at the very end has nothing to open: it is left as it was.
+    expect(h('<p>x</p> "', { lang: 'en' })).toBe('<p>x</p> "');
+  });
+
   test('typesets the text of a block', () => {
     expect(h('<p>He said "hi" - and left.</p>')).toBe('<p>He said “hi”~— and~left.</p>');
   });
