@@ -119,6 +119,30 @@ console.log(entries.length + ' entries; ' + text + '; ' + html);
     const out = sh(typo, ['-l', 'uk'], { cwd: project, env, input: 'Він сказав "привіт"\n' });
     if (!out.includes('«привіт»')) throw new Error(`printed ${JSON.stringify(out)}`);
   });
+  // A --config file is read relative to the cwd: JSON on every Node, TypeScript where Node strips types.
+  writeFileSync(join(project, 'typography.config.json'), '{ "lang": "uk" }\n');
+  step('typo --config typography.config.json sets «привіт»', () => {
+    const out = sh(typo, ['--config', 'typography.config.json'], {
+      cwd: project,
+      env,
+      input: '"привіт"\n',
+    });
+    if (!out.includes('«привіт»')) throw new Error(`printed ${JSON.stringify(out)}`);
+  });
+  const [major = 0, minor = 0] = nodeVersion.replace(/^v/, '').split('.').map(Number);
+  if (major > 22 || (major === 22 && minor >= 18)) {
+    writeFileSync(join(project, 'typography.config.ts'), "export default { lang: 'uk' };\n");
+    step('typo --config typography.config.ts sets «привіт»', () => {
+      const out = sh(typo, ['--config', 'typography.config.ts'], {
+        cwd: project,
+        env,
+        input: '"привіт"\n',
+      });
+      if (!out.includes('«привіт»')) throw new Error(`printed ${JSON.stringify(out)}`);
+    });
+  } else {
+    console.log(`smoke: skipped: a .ts config needs Node 22.18 or later (this is ${nodeVersion})`);
+  }
   console.log('smoke: all passed');
 } catch (error) {
   if (!(error instanceof SmokeFailure)) console.error(`smoke: FAIL ${(error as Error).message}`);
