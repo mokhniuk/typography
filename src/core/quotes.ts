@@ -13,7 +13,7 @@ const ANY_RAW = new RegExp(`[${RAW}]`, 'g');
 /**
  * Marks the straight pair `"…"`. A straight " cannot open a quotation straight after a digit: there it
  * is an inch mark (2" pipe), so two inch marks in one text do not pair. Closing after a digit is still
- * allowed ("call 911"). Found by a scan from one mark to the next, not by a regex: an opener with no
+ * allowed ("call 911"), unless a later " closes the quotation (`laterCloser`: "a 5" hole"). Found by a scan from one mark to the next, not by a regex: an opener with no
  * closer (an inch mark) would make a regex read on to the end of the text each time.
  */
 const OPENS_HERE = /[\s([]/;
@@ -27,7 +27,7 @@ function pairStraight(text: string): string {
       continue;
     }
     ANY_RAW.lastIndex = at + 1;
-    const end = ANY_RAW.exec(text)?.index ?? -1;
+    let end = ANY_RAW.exec(text)?.index ?? -1;
     if (end === -1) break;
     if (text[end] !== '"') {
       at = text.indexOf('"', end);
@@ -35,19 +35,41 @@ function pairStraight(text: string): string {
     }
     // The next " stands where a quotation opens (a space or a bracket before it, a word after it):
     // it is an opener of its own, so the one at `at` has no partner and is read by where it stands.
-    if (
-      OPENS_HERE.test(text[end - 1] as string) &&
-      end + 1 < text.length &&
-      NON_SPACE.test(text[end + 1] as string)
-    ) {
+    if (opensHere(text, end)) {
       at = end;
       continue;
     }
+    // A " after a digit is an inch mark (a 5" hole) when a later " can close the quotation instead.
+    if (DIGIT.test(codePointBefore(text, end) ?? '')) end = laterCloser(text, end);
     out += text.slice(last, at) + setPair(text.slice(at + 1, end), text[at - 1], text[end + 1]);
     last = end + 1;
     at = text.indexOf('"', last);
   }
   return last === 0 ? text : out + text.slice(last);
+}
+/** The " at `at` stands where a quotation opens: a space or a bracket before it, a non-space after it. */
+const opensHere = (text: string, at: number): boolean =>
+  OPENS_HERE.test(text[at - 1] as string) &&
+  at + 1 < text.length &&
+  NON_SPACE.test(text[at + 1] as string);
+// The next quote mark, or a paragraph break (a line break, blanks, a line break).
+const NEXT_MARK_OR_BREAK = new RegExp(`[${RAW}]|\\n[^\\S\\n]*\\n`, 'g');
+/**
+ * The straight " at `inch` stands after a digit inside an open quotation. Read on to the next mark that
+ * is not another inch mark: when it is a " in the same paragraph glued to what stands before it (not a
+ * space or a bracket, so it neither opens a quotation nor stands alone), that " closes the quotation and
+ * `inch` is an inch mark (a 5" hole); otherwise `inch` closes it, as a quotation that ends in a digit
+ * does (call 911"). The marks read past are inch marks inside
+ * the quotation, so the caller goes on after the closer and nothing is read twice.
+ */
+function laterCloser(text: string, inch: number): number {
+  NEXT_MARK_OR_BREAK.lastIndex = inch + 1;
+  for (let m = NEXT_MARK_OR_BREAK.exec(text); m; m = NEXT_MARK_OR_BREAK.exec(text)) {
+    const at = m.index;
+    if (m[0] !== '"' || OPENS_HERE.test(text[at - 1] as string)) return inch;
+    if (!DIGIT.test(codePointBefore(text, at) ?? '')) return at;
+  }
+  return inch;
 }
 const PAIRS: readonly (RegExp | typeof STRAIGHT | Turned)[] = [
   new RegExp(`„(${BODY})[“”]`, 'g'),
