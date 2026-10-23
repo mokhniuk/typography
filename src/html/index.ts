@@ -81,6 +81,7 @@ function tokenizer(seen: string): (from: number) => Token | null {
     path.length = 0;
     return found;
   };
+  let run = { low: 0, end: 0, best: -1 };
   return (from) => {
     for (let at = seen.indexOf('<', from); at >= 0; at = seen.indexOf('<', at + 1)) {
       const next = seen[at + 1];
@@ -102,19 +103,30 @@ function tokenizer(seen: string): (from: number) => Token | null {
       const closing = next === '/' ? '/' : '';
       const nameStart = at + 1 + closing.length;
       if (!/[A-Za-z]/.test(seen[nameStart] ?? '')) continue;
-      let nameEnd = nameStart + 1;
-      while (nameEnd < seen.length && !/[\s/>]/.test(seen[nameEnd] ?? '')) nameEnd++;
-      // The pattern gives the name back one character at a time until the attributes can close.
-      for (let e = nameEnd; e > nameStart; e--) {
-        const close = attributesEnd(e);
-        if (close >= 0)
-          return {
-            index: at,
-            raw: seen.slice(at, close + 1),
-            closing,
-            name: seen.slice(nameStart, e),
-            rest: seen.slice(e, close),
-          };
+      // Every `<` inside one run of name characters (`<a<a<a...`) has the same name end and gives
+      // the name back towards the same attribute ends, so the run is read once: its end, and the
+      // last place in it from which the attributes close (the pattern gives the name back one
+      // character at a time until they do).
+      if (!(nameStart >= run.low && nameStart < run.end)) {
+        let end = nameStart + 1;
+        while (end < seen.length && !/[\s/>]/.test(seen[end] ?? '')) end++;
+        let best = -1;
+        for (let e = end; e > nameStart; e--)
+          if (attributesEnd(e) >= 0) {
+            best = e;
+            break;
+          }
+        run = { low: nameStart, end, best };
+      }
+      if (run.best > nameStart) {
+        const close = attributesEnd(run.best);
+        return {
+          index: at,
+          raw: seen.slice(at, close + 1),
+          closing,
+          name: seen.slice(nameStart, run.best),
+          rest: seen.slice(run.best, close),
+        };
       }
     }
     return null;

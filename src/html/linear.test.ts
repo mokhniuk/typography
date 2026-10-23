@@ -33,3 +33,9 @@ test('unclosed tags before a lone quote and a `>` are read once', () => {
   expect(best(`${'<a '.repeat(8000)}">`)).toBeLessThan(50);
   expect(best(`${'<a '.repeat(8000)}'>`)).toBeLessThan(50);
 });
+
+// A run of `<a<a<a...` with no space is one tag name read from every `<` in it (`[^\s/>]*`), and the
+// attributes after it failed at a lone quote (1 s at 8 000 repeats, 4.3 s at 16 000).
+test('a run of `<a<a...` before a lone quote and a `>` is read once', () => {
+  expect(best(`${'<a'.repeat(8000)} x">`)).toBeLessThan(50);
+});

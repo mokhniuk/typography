@@ -143,15 +143,17 @@ for (const rule of [SHIELD, TEXT_MODE, ...mod.RULES]) {
   }
 }
 // A mode around the rules: many `<` that never close (the HTML tokenizer read to the end from each),
-// and the same before a lone quote and a `>` (it read up to the quote from each).
+// the same before a lone quote and a `>` (it read up to the quote from each), and a run of `<a<a`
+// with no space before one (the tag name was read to the end of the run from each).
 if (!only) {
   const html = (await import(`${dir}/html/index.ts`)) as typeof import('../src/html/index');
-  for (const [name, tail] of [
-    ['<a ', ''],
-    ['<a ..">', '">'],
+  for (const [name, unit, tail] of [
+    ['<a ', '<a ', ''],
+    ['<a ..">', '<a ', '">'],
+    ['<a<a.. x">', '<a', ' x">'],
   ] as const) {
     const ms = sizes.map((n) => {
-      const text = '<a '.repeat(Math.ceil(n / 3)) + tail;
+      const text = unit.repeat(Math.ceil(n / unit.length)) + tail;
       return time(() => html.typesetHtml(text));
     });
     const r1 = (ms[1] ?? 0) / Math.max(ms[0] ?? 0, 0.05);
