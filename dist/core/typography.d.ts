@@ -61,7 +61,7 @@ export type Change = {
 export type TypographicOptions = {
     /** What the text is for; `display` unless a page says it is book-like text. */
     register?: Register | undefined;
-    /** `language` (the default): the language's quote marks. `us`: “…” and ‘…’ in any language and register. */
+    /** `language` (the default): the language's quote marks. `us`: “…” and ‘…’ in any language and register. `guillemets`: « », „ “, ‚ ‘ in any language and register (the house style). */
     quoteStyle?: QuoteStyle | undefined;
     /** Whether `text` opens its paragraph. Only then can its first dash be a dialogue dash. */
     blockStart?: boolean | undefined;

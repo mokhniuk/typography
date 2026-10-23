@@ -55,12 +55,29 @@ const PAIRS = [
     SINGLE_GUILLEMETS,
     STRAIGHT,
 ];
-// A language may set pairs turned the other way round (German »…« and ›…‹, `turnedPairs` on its pack).
-// Read as «…», the « that ends one quotation and the » that opens the next would pair (»a« und »b«),
-// and so would ‹ › between two inner ones, so those pairs are matched only where the opening mark
-// stands where a quotation opens and the closing one where it closes, and a text written «a» und «b»
-// is read by where each mark stands, like any mark with no partner.
-const turned = (open, close, before) => new RegExp(`(?<=${before})${open}(?=\\S)(${BODY})(?<=\\S)${close}`, 'g');
+/** `set` is a parameter for the equality test (quotes.turned.test.ts) only; quotes.ts passes none. */
+export function turnedPair(open, close, openerBefore, set = setPair) {
+    const closerByHand = RAW.includes(close);
+    const pattern = new RegExp(`${open}(?=\\S)(${BODY})${closerByHand ? '' : '(?<=\\S)'}${close}`, 'g');
+    return (text) => {
+        let out = '';
+        let from = 0;
+        pattern.lastIndex = 0;
+        for (let m = pattern.exec(text); m; m = pattern.exec(text)) {
+            const at = m.index;
+            const end = at + m[0].length;
+            if ((at > 0 && !openerBefore.test(text[at - 1])) ||
+                (closerByHand && !NON_SPACE.test(text[end - 2]))) {
+                pattern.lastIndex = at + 1;
+                continue;
+            }
+            out += text.slice(from, at) + set(m[1], text[at - 1], text[end]);
+            from = end;
+        }
+        pattern.lastIndex = 0;
+        return from === 0 ? text : out + text.slice(from);
+    };
+}
 /** Marks that are never an apostrophe; ’ is left out because it ends a possessive (dogs’). */
 const LONE = '"„“”‚«»‹›‘';
 const SPACED = '«‹';
@@ -213,10 +230,11 @@ function setupOf(pack) {
     // pack's `openers` (Spanish ¿ ¡).
     const extra = (pack.openers ?? '').replace(/[\\\]^-]/g, '\\$&');
     const before = `^|[\\s(\\[${OPEN}${extra}]`;
+    const openerBefore = new RegExp(`[\\s(\\[${OPEN}${extra}]`);
     const turnedPairs = pack.turnedPairs ?? [];
     const turnedMarks = turnedPairs.flat();
     const pairs = [
-        ...turnedPairs.map(([open, close]) => turned(open, close, before)),
+        ...turnedPairs.map(([open, close]) => turnedPair(open, close, openerBefore)),
         ...PAIRS.filter((pair) => !((pair === GUILLEMETS && turnedMarks.some((mark) => mark === '«' || mark === '»')) ||
             (pair === SINGLE_GUILLEMETS && turnedMarks.some((mark) => mark === '‹' || mark === '›')))),
     ];
@@ -224,7 +242,7 @@ function setupOf(pack) {
     const made = {
         pairs,
         single: new RegExp(`(${before})'([^']+)'(?=[\\s).,;:!?\\]${CLOSE}]|$)`, 'g'),
-        openerBefore: new RegExp(`[\\s(\\[${OPEN}${extra}]`),
+        openerBefore,
         // Inside a word, or a leading apostrophe on a year (the ’90s: two digits). A straight ' there may open
         // a quoted number ('12'), a curly ’ cannot, so only the straight one is told apart by what follows.
         // The last alternatives are an apostrophe for dropped letters, rock 'n' roll and 'til: it is set curly
@@ -271,7 +289,9 @@ export function quotesFor(pack) {
                 out =
                     pair === STRAIGHT
                         ? pairStraight(out)
-                        : out.replace(pair, (match, inner, offset, whole) => setPair(inner, whole[offset - 1], whole[offset + match.length]));
+                        : typeof pair === 'function'
+                            ? pair(out)
+                            : out.replace(pair, (match, inner, offset, whole) => setPair(inner, whole[offset - 1], whole[offset + match.length]));
             }
             out = out.replace(single, (match, lead, inner, offset, whole) => lead + setPair(inner, lead || undefined, whole[offset + match.length]));
             changed = out !== before && pairable.test(out);

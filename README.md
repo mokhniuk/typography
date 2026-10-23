@@ -4,12 +4,13 @@ The package is `@mokhniuk/typography`. Website, docs and playground: [typography
 
 **Real quotation marks, dashes and spaces, in 27 languages.** A typography engine for running text: plain strings in, typeset strings out, nothing marked up in the source. Tags, links and code are left alone.
 
+[![npm](https://img.shields.io/npm/v/@mokhniuk/typography)](https://www.npmjs.com/package/@mokhniuk/typography)
 [![CI](https://github.com/mokhniuk/typography/actions/workflows/release.yml/badge.svg)](https://github.com/mokhniuk/typography/actions/workflows/release.yml)
 ![33 rules](https://img.shields.io/badge/rules-33-4c72b0)
 ![27 languages](https://img.shields.io/badge/languages-27-4c72b0)
 ![Zero dependencies](https://img.shields.io/badge/dependencies-0-2ca02c)
 ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6)
-![1 MB in 49 ms](https://img.shields.io/badge/1%20MB%20of%20text-49%20ms-2ca02c)
+![1 MB in 38 ms](https://img.shields.io/badge/1%20MB%20of%20text-38%20ms-2ca02c)
 
 ```diff
 - Ada said: "The sign read 'Closed' again" - and laughed... We're used to it by now.
@@ -26,8 +27,7 @@ The group separator in `125,000`, the dropped space before the comma, and the `�
 
 It also puts no-break spaces where a line should not break (after one-letter words, inside ranges, before units), nests quotations in the marks each language expects, and can hang opening punctuation in the margin. English gets `“…”` with `‘…’` inside, as above; `quoteStyle: 'us'` gives the same marks in any language, `quoteStyle: 'guillemets'` gives this project's house style `«…»` with `„…“` inside in any language, and the `literary` register gives British `‘…’`.
 
-<!-- Image paths are repository-relative; swap for absolute URLs (the website, once it is hosted) when the package goes on a public registry. -->
-[![The website: the engine running live, with hanging punctuation](docs/media/website-hero.png)](apps/website/)
+[![The website: the engine running live, with hanging punctuation](https://raw.githubusercontent.com/mokhniuk/typography/main/docs/media/website-hero-light.webp)](https://typography.mokhni.uk)
 
 ## Why this engine
 
@@ -47,19 +47,19 @@ Passed / scored; `–` means the tool has no such feature or language, and is no
 | Safety | **33/33** | **33/33** | 28/29 | 11/12 | 9/10 | 17/19 | 7/9 |
 | **Total, all 16 groups** | **250/250** | **250/250** | 132/226 | 85/111 | 69/102 | 126/162 | 53/89 |
 
-Speed, English text in one piece, the median of several runs (typograf is the closest tool in scope; the 0.15.0 run):
+Speed, English text in one piece, the median of several runs (typograf is the closest tool in scope; the 0.16.1 run):
 
 | Tool | 10 KB | 100 KB | 1 MB |
 |---|---|---|---|
-| **typography-engine** | **0 ms** | **5 ms** | **49 ms** |
-| typograf | 1 ms | 8 ms | 71 ms |
-| tipograph | 0 ms | 2 ms | 15 ms |
-| smartypants | 0 ms | 1 ms | 12 ms |
-| retext-smartypants | 5 ms | 35 ms | 1416 ms |
-| typopo | 27 ms | 1407 ms | 121877 ms |
-| richtypo | 3189 ms | not run (~317 s) | not run (~31690 s) |
+| **typography-engine** | **0 ms** | **4 ms** | **38 ms** |
+| typograf | 1 ms | 6 ms | 58 ms |
+| tipograph | 0 ms | 1 ms | 11 ms |
+| smartypants | 0 ms | 1 ms | 10 ms |
+| retext-smartypants | 4 ms | 27 ms | 577 ms |
+| typopo | 21 ms | 1089 ms | 98742 ms |
+| richtypo | 2499 ms | not run (~249 s) | not run (~24835 s) |
 
-The tools that beat it on speed (tipograph, smartypants) score far below it on the checks; typograf, the closest in scope, is about 1.45× slower on large text, and typopo and richtypo slow down quadratically.
+The tools that beat it on speed (tipograph, smartypants) score far below it on the checks; typograf, the closest in scope, is about 1.5× slower on large text, and typopo and richtypo slow down quadratically.
 
 ## What is in the box
 
@@ -75,7 +75,7 @@ The tools that beat it on speed (tipograph, smartypants) score far below it on t
 
 ## Install
 
-From npm, with any package manager (from 0.16.0):
+From npm, with any package manager:
 
 ```sh
 npm install @mokhniuk/typography
@@ -84,13 +84,13 @@ bun add @mokhniuk/typography
 yarn add @mokhniuk/typography
 ```
 
-A release tag also installs, over SSH (the repository is private, so the machine needs access); the tag's commit holds the built package:
+Every release tag also installs, over SSH (the repository is private, so the machine needs access). The tag's commit holds the built package:
 
 ```sh
 bun add git+ssh://git@github.com/mokhniuk/typography.git#vX.Y.Z
 ```
 
-Replace `vX.Y.Z` with a version from [CHANGELOG.md](CHANGELOG.md). The package is compiled ESM with `.d.ts` declarations and has no dependencies (`react` is an optional peer, for the `./react` entry only). The `typo` command runs on Node 20.10 or later and on Bun. Versions are semver below 1.0.0: a minor release may change output. Tag handling in Bun, local linking and bundler notes: [docs/contributing.md](docs/contributing.md#using-it-from-another-project).
+Replace `vX.Y.Z` with a version from [CHANGELOG.md](CHANGELOG.md). The package is compiled ESM with `.d.ts` declarations and has no dependencies (`react` is an optional peer, for the `./react` entry only). The `typo` command runs on Node 20.10 or later and on Bun. Versions follow semver, and a minor release may change output. Tag handling in Bun, local linking and bundler notes: [docs/contributing.md](docs/contributing.md#using-it-from-another-project).
 
 ## Use
 
@@ -175,9 +175,9 @@ typo -c docs/*.md              # change nothing; exit 1 if any file would change
 
 ## The playground
 
-Paste text, HTML or Markdown; see the result, every change with the rule that made it, and a preview with hanging punctuation. It runs entirely in the browser. `bun run playground` serves it; it also lives on the website (`bun run website`) along with the docs and articles.
+Paste text, HTML or Markdown; see the result, every change with the rule that made it, and a preview with hanging punctuation. It runs entirely in the browser. It is a page of the website: `bun run website` serves it along with the docs and articles.
 
-![The playground: input beside the typeset result, with the changes counted](docs/media/playground.png)
+![The playground: input beside the typeset result, with the changes counted](https://raw.githubusercontent.com/mokhniuk/typography/main/docs/media/playground.webp)
 
 ## Hanging punctuation without a jump on a prerendered page
 
@@ -208,12 +208,12 @@ Honesty over gloss — before you depend on it, know where it is weak:
 ## Develop
 
 ```sh
-bun test src apps/playground apps/website resources
+bun test src apps/website resources
 bun run typecheck
 bun run docs:rules     # regenerate docs/rules.md
 ```
 
-The package stays self-contained: `src/boundary.test.ts` fails if anything in `src/` or `apps/playground/` imports from outside the package or from anything but `react`. See [docs/contributing.md](docs/contributing.md).
+The package stays self-contained: `src/boundary.test.ts` fails if anything in `src/` or `apps/website/playground/` imports from outside the package or from anything but `react`. See [docs/contributing.md](docs/contributing.md).
 
 ## Licence
 

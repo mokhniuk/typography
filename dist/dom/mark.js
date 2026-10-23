@@ -1,4 +1,4 @@
-import { hangPieces } from '../core/index.js';
+import { hangPieces } from '../core/hang.js';
 /** A mark's width before it is measured, in em per character: close for quotes and brackets in most text faces. */
 export const ROUGH_EM = 0.4;
 const PULL = 'calc(var(--hang-w) * var(--hang-amount, 1) * -1)';

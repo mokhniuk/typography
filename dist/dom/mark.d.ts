@@ -1,4 +1,4 @@
-import { type HangPiece } from '../core/index.js';
+import { type HangPiece } from '../core/hang.js';
 /** A mark's width before it is measured, in em per character: close for quotes and brackets in most text faces. */
 export declare const ROUGH_EM = 0.4;
 /**

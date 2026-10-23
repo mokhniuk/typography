@@ -13,7 +13,7 @@ export type TypographyConfig = {
     lang?: Lang | undefined;
     /** `display` (the default) or `literary`. */
     register?: Register | undefined;
-    /** `language` (the default) or `us`. */
+    /** `language` (the default), `us` (“…” and ‘…’ in any language) or `guillemets` (« », „ “, ‚ ‘ in any language: the house style). */
     quoteStyle?: QuoteStyle | undefined;
     /** Rules to switch off: ids or groups. An unknown name throws. */
     disable?: readonly string[] | undefined;
