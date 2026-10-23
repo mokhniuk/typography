@@ -94,7 +94,7 @@ const TOOLS: [string, string[]][] = [
   ['retext-smartypants', ['retext-smartypants', 'unified', 'retext-english', 'retext-stringify']],
 ];
 
-/** This package installs from a git tag whose commit holds what `bun pm pack` packs (scripts/release-commit.ts). */
+/** This package installs from npm or from a git tag whose commit holds what `bun pm pack` packs (scripts/release-commit.ts). */
 function enginePackage(): { files: number; bytes: number } {
   const listed = packedFiles(REPO);
   const bytes = listed.reduce((sum, file) => sum + statSync(join(REPO, file)).size, 0);
@@ -104,10 +104,12 @@ function enginePackage(): { files: number; bytes: number } {
 export async function depsSection(): Promise<string[]> {
   const own = readPkg(REPO);
   const e = enginePackage();
+  const date = await published(own.name, own.version);
+  const ownPublished = date === '?' ? 'not published yet' : date;
   const rows = [
     '| Tool | Packages installed | Install footprint | Licence | Types | Format | Version published |',
     '|---|---|---|---|---|---|---|',
-    `| typography-engine | 1 (react is an optional peer) | ${kb(e.bytes)} (${e.files} files) | ${own.license ?? 'none'} | TypeScript sources | ESM, TypeScript (needs Bun or a bundler) | git tag only |`,
+    `| typography-engine | 1 (react is an optional peer) | ${kb(e.bytes)} (${e.files} files) | ${own.license ?? 'none'} | yes | ESM | ${ownPublished} (${own.version}) |`,
   ];
   for (const [tool, roots] of TOOLS) {
     const dirs = closure(roots);
