@@ -5,9 +5,10 @@
  * `dist/` is emptied first, so a file whose source is gone cannot ship. `tsc` rewrites the relative
  * `.ts`/`.tsx` specifiers of the emitted JavaScript to `.js` (`rewriteRelativeImportExtensions`) but
  * leaves them as they are in the declarations; they are rewritten here, so a `.d.ts` names the file
- * that sits next to it in the pack, which any TypeScript version resolves.
+ * that sits next to it in the pack, which any TypeScript version resolves. The command line,
+ * `dist/cli/main.js`, is made executable, so the release tree and the tarball carry it as 0755.
  */
-import { readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { chmodSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const root = join(import.meta.dir, '..');
@@ -30,3 +31,5 @@ for (const entry of readdirSync(dist, { recursive: true, withFileTypes: true }))
   const fixed = text.replace(SPECIFIER, '$1$2$3.js$2');
   if (fixed !== text) writeFileSync(path, fixed);
 }
+
+chmodSync(join(dist, 'cli', 'main.js'), 0o755);

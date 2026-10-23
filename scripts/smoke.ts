@@ -76,8 +76,14 @@ try {
     });
   });
 
-  const entries = Object.keys(pkg.exports).map((key) => pkg.name + key.slice(1));
+  // The code entry points (a `types` and a `default` each); `./package.json` is read on its own.
+  const entries = Object.entries(pkg.exports)
+    .filter(([, target]) => typeof target === 'object')
+    .map(([key]) => pkg.name + key.slice(1));
   const probe = `
+import { createRequire } from 'node:module';
+const manifest = createRequire(import.meta.url)(${JSON.stringify(`${pkg.name}/package.json`)});
+if (manifest.version !== ${JSON.stringify(pkg.version)}) throw new Error('package.json gave ' + manifest.version);
 const entries = ${JSON.stringify(entries)};
 for (const entry of entries) {
   const mod = await import(entry);

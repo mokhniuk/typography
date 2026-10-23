@@ -54,13 +54,15 @@ test('every entry point and the command line resolve inside the pack', () => {
   const pkg = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')) as {
     main: string;
     types: string;
-    exports: Record<string, { types: string; default: string }>;
+    exports: Record<string, string | { types: string; default: string }>;
     bin: Record<string, string>;
   };
   const targets = [
     pkg.main,
     pkg.types,
-    ...Object.values(pkg.exports).flatMap((e) => [e.types, e.default]),
+    ...Object.values(pkg.exports).flatMap((e) =>
+      typeof e === 'string' ? [e] : [e.types, e.default],
+    ),
     ...Object.values(pkg.bin),
   ];
   expect(Object.keys(pkg.exports).length).toBeGreaterThan(0);

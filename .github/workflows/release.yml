@@ -5,6 +5,9 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  # A re-run by hand (Actions, "Run workflow" on main): tags if the tag is missing and publishes if
+  # the version is not on npm, so a failed publish is recovered without a new commit.
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -19,6 +22,8 @@ jobs:
           bun-version: 1.3.11
       - run: bun install --frozen-lockfile
       - run: bunx biome ci .
+      # Builds dist/ once here so a type error shows as a build failure; the pack test and attw's
+      # pack below build it again (prepack), three builds in all, on purpose.
       - run: bun run build
       - run: bun test src apps/playground apps/website resources
       - run: bun run typecheck
@@ -48,7 +53,8 @@ jobs:
 
   tag:
     needs: [check, smoke]
-    if: github.event_name == 'push'
+    # On main only: a push, or a run by hand (workflow_dispatch) from main. Pull requests stop at smoke.
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -62,18 +68,16 @@ jobs:
         with:
           node-version: 24
           registry-url: https://registry.npmjs.org
-      # The build (`prepack`, run by `bun pm pack` and `npm publish`) needs the dev dependencies.
+      # The build (`prepack`, run by `bun pm pack` in scripts/release-commit.ts) needs the dev dependencies.
       - run: bun install --frozen-lockfile
       # The tag points at a commit on the `release` branch that holds only the packed package
       # (scripts/release-commit.ts): Bun installs a git dependency as the whole tagged tree and
       # ignores the `files` list, so tagging a commit of main would ship the whole repository.
       - name: Tag the version in package.json
-        id: tag
         run: |
           version="v$(jq -r .version package.json)"
           if git ls-remote --exit-code --tags origin "refs/tags/$version" >/dev/null; then
             echo "$version already tagged"
-            echo "created=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           git config user.name "github-actions[bot]"
@@ -85,12 +89,44 @@ jobs:
           git tag "$version" "$commit"
           # atomic: a rejected branch update (the tip moved since the fetch) must not leave a tag on an orphan commit
           git push --atomic origin "$commit:refs/heads/release" "refs/tags/$version"
-          echo "created=true" >> "$GITHUB_OUTPUT"
-      # Only when the tag was just created, so a version reaches npm once. Trusted publishing: npm
-      # takes the workflow's OIDC token (id-token: write), no secret; it needs npm 11.5.1 or later,
-      # which Node 24 ships. `prepack` builds dist/ first. If this step fails after the tag was
-      # pushed, a re-run sees `created=false` and skips it: publish by hand with `npm publish` from
-      # a checkout of the tag (the release commit already holds the built package).
+      # Gated on the registry, not on this run having made the tag: it publishes when the tag exists
+      # and the version is not on npm yet, so a re-run after a failed publish publishes, and a run
+      # for a version npm already has does nothing (npm also refuses to publish a version twice).
+      # It publishes the release commit itself (the tag): its package.json has no `scripts`, so
+      # nothing is rebuilt, and the npm tarball holds the same files as the git tree.
+      # Auth: with the repository secret NPM_TOKEN set (a granular token with publish rights), npm
+      # uses it; without it, trusted publishing (npm takes the workflow's OIDC token, id-token: write;
+      # npm 11.5.1 or later, which Node 24 ships). npm tries OIDC first and falls back to the token.
+      # setup-node's .npmrc reads NODE_AUTH_TOKEN; it is set only when the secret is non-empty, else
+      # setup-node's placeholder stays, which OIDC replaces. No `--provenance`: npm makes no
+      # provenance for a private repository and the flag would fail the publish; trusted publishing
+      # adds provenance by itself once the repository is public.
       - name: Publish to npm
-        if: steps.tag.outputs.created == 'true'
-        run: npm publish --provenance --access public
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          name="$(jq -r .name package.json)"
+          version="$(jq -r .version package.json)"
+          if ! git ls-remote --exit-code --tags origin "refs/tags/v$version" >/dev/null; then
+            echo "v$version is not tagged; nothing to publish"
+            exit 1
+          fi
+          if out="$(npm view "$name@$version" version 2>&1)"; then
+            echo "$name@$version is already on npm"
+            exit 0
+          fi
+          if ! grep -q E404 <<<"$out"; then
+            echo "$out"
+            echo "npm view failed for a reason other than a missing version; not publishing"
+            exit 1
+          fi
+          git fetch --quiet origin "refs/tags/v$version:refs/tags/v$version"
+          git checkout --quiet --detach "v$version"
+          git clean -ffdxq
+          # A tag from before the npm release (0.15.0 and older) holds a private package.
+          if [ "$(jq -r '.private // false' package.json)" = true ]; then
+            echo "v$version is a private package; not publishing"
+            exit 0
+          fi
+          if [ -n "$NPM_TOKEN" ]; then export NODE_AUTH_TOKEN="$NPM_TOKEN"; fi
+          npm publish --access public
