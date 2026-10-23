@@ -7,6 +7,7 @@ Versions follow semver while the package is below 1.0.0: a **minor** release may
 ### Fixes
 
 - HTML mode: many `<` that never close no longer cost the square of the input. `'<a '.repeat(8000)` (24 KB) took about 800 ms and 4 000 repeats about 200 ms; both now take under 1 ms. The tag pattern read to the end of the input from every `<` that had no `>` after it; it is now shown the input only up to the last `>` (every token ends at one), and what follows is text. `src/html/linear.test.ts` holds a loose budget and `scripts/stress.ts` times the input. No output change.
+- The text mode cost the square of the input on a long run of spaces inside one line: `'a' + ' '.repeat(40000) + 'b'` took about 1.3 s (10,000 spaces 90 ms, 20,000 350 ms), while `typesetBlock` on the same string took 2 ms. The trailing-space trim `/[ \t]+$/` in `setParagraph` (`src/text/index.ts`) was tried from every space of the run, and each try read on to the end. It is a backward scan from the end of the line now, and 40,000 spaces take about 2 ms. `scripts/stress.ts` times the text mode as a row of its own, and `src/text/text.test.ts` holds a loose budget. The same characters are kept and trimmed (the differential run against the engine as it was reports 0 differences). No output change.
 
 ### Tooling and docs
 
