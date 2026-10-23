@@ -109,9 +109,9 @@ No quadratic input is known outside the rules since 0.15.0 (the two the probes f
 
 `phone.bind` (opt-in) only keeps an international number whole; it never reformats one and leaves local numbers alone (a limit, in [limits.md](limits.md#opt-in-rules)). Each language writes its numbers in its own groups (`+49 30 1234567`, `+33 1 23 45 67 89`, `+380 44 123 45 67`) and some bind a local number too. Read a national numbering plan or style guide per language before binding or grouping anything beyond what is typed.
 
-### Load only the languages used
+### One language in the rehype plugin, React and the config check
 
-Every entry point carries all 27 language packs: 59.6 KB of the 88.9 KB minified bundle of `/text` (16.4 of 26.6 KB brotli), while `/dom` holds only the hanging-punctuation code (7.6 KB minified, 2.4 KB brotli) and carries no pack (it imports `core/hang.ts` directly since 0.16.1). A way to load only the languages used (a pack registry the caller fills, or one entry per language) would bring a one-language bundle near typograf's 15 KB brotli. Numbers from `bun run size` (2026-10-23).
+Since 0.17.0 `/lite` with `/lang/<code>` ships one language (10.8 KB brotli for one call in English or Ukrainian, against 26.6 KB for `/text`), but only for the text, HTML and Markdown modes. The rehype plugin maps an element's `lang` attribute to a pack by code, React resolves a code from its context, and `checkConfig` lists the codes: all three still load the 27 packs. A lite rehype plugin that takes the packs it may meet, a lite React entry, and a `checkConfig` that takes a pack only would close it. Wait for a user who needs one of them.
 
 ### A larger real-text benchmark
 

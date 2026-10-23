@@ -38,3 +38,5 @@ export const sl = {
     'Not implemented, not verified: one-letter prepositions and conjunctions (k, s, v, z, o, a, i, u) are not kept off the end of a line, because the ISG states no such rule and Slovenski pravopis was not read; the period placement relative to a closing quotation mark (10.1.6) is a punctuation-in-quotes rule the engine does not have.',
   ].join(' '),
 } as const satisfies LangPack;
+
+export default sl;

@@ -11,9 +11,11 @@ Every entry point in `package.json` `exports`, plus the `typo` command (see [cli
 | `./rehype` | `src/rehype/index.ts` | default `rehypeTypography`, `typesetHast`, `RehypeOptions` |
 | `./dom` | `src/dom/index.ts` | `hangPunctuation`, `hangScript`, `markHangs`, `hangStyle`, and the glyph measuring: `supports`, `glyphStatus`, `missingGlyphs`, `missingIn`, `fontOf` |
 | `./react` | `src/react/index.ts` | `Typeset`, `TypographyRoot`, `HangText`, `HangScript`, `useHangingPunctuation`, `useMissingGlyphs`, `TypographyContext`, `TypographySetting` |
+| `./lite` | `src/lite/index.ts` | the engine and the text, HTML and Markdown modes without a language pack: `lang` is a pack, never a code. See [`./lite`](#lite) |
+| `./lang/<code>` | `src/core/lang/<code>.ts` | one language pack, under its name (`uk`, `deCH`, `frCH`, ...) and as the default export; 27 entries, the code in lower case (`./lang/de-ch`). See [`./lang/<code>`](#langcode) |
 | bin `typo` | `src/cli/main.ts` | the command line; Node 20.10 or later, or Bun |
 
-The main entry is not only plain text: it carries the whole engine (`typographic`, `explain`, `RULES`, `splitHangs`, ...) and the plain-text mode. It does not export the HTML, Markdown, rehype, DOM or React modules; import those from their own entry.
+The main entry is not only plain text: it carries the whole engine (`typographic`, `explain`, `RULES`, `splitHangs`, ...) and the plain-text mode. It does not export the HTML, Markdown, rehype, DOM or React modules; import those from their own entry. Every entry but `./lite`, `./lang/<code>` and `./dom` carries all 27 language packs; see [Loading only the languages used](#loading-only-the-languages-used).
 
 ## Options
 
@@ -21,7 +23,7 @@ These are the options the functions below take. Which function takes which is in
 
 | Option | Type | Default | Meaning |
 |---|---|---|---|
-| `lang` | `Lang` | `'en'` | Language of the text. `Lang` is the union of the 27 pack codes (the 24 EU languages, `uk`, `de-CH` and `fr-CH`), derived from the packs in `src/core/lang/`; `LANGS` lists them. See [languages.md](languages.md). The code must match exactly (`de-CH`, not `de-ch`): `checkConfig` and the CLI throw otherwise; only the rehype plugin reads a `lang` attribute case-insensitively. |
+| `lang` | `Lang \| LangPack` | `'en'` | Language of the text: a code or a pack. `Lang` is the union of the 27 pack codes (the 24 EU languages, `uk`, `de-CH` and `fr-CH`), derived from the packs in `src/core/lang/`; `LANGS` lists them. See [languages.md](languages.md). The code must match exactly (`de-CH`, not `de-ch`): every function throws an `Error` that lists the codes otherwise; only the rehype plugin reads a `lang` attribute case-insensitively. A pack (`import { uk } from '@mokhniuk/typography/lang/uk'`, or one of your own, typed `LangPack`) is used as it is; `./lite` takes a pack only. The command line's `--lang` and the playground take a code. |
 | `register` | `Register` | `'display'` | `'display'` (marketing and interface text) or `'literary'` (book-like text). `literary` has its own rules for English (British quotes, spaced en dash); every other language keeps its display rules. The dialogue dash is the same in both registers. |
 | `quoteStyle` | `QuoteStyle` | `'language'` | `'language'` is the language's own quote marks (its literary ones in the literary register). `'us'` is `“…”` with `‘…’` inside for any language; `'guillemets'` is this package's house style, `«…»` with `„…“` inside and `‚…‘` third, for any language. Both take precedence over the language table and the literary register. The rehype plugin does not read `lang="en-US"` as US quotes: a page's `<html lang="en-US">` must not change its output, so set the option. |
 | `enable` | `readonly string[]` | none | Rules to switch on that are off by default (`Rule.defaultOn: false`): ids or groups, checked like `disable`. Enabling a rule that is already on does nothing; a rule named in both `enable` and `disable` throws. Ten built-in rules are off by default (`space.before-punctuation`, `space.after-comma`, `punctuation.double`, `space.trailing`, `symbol.plusminus`, `symbol.fraction`, `symbol.degree`, `symbol.implies`, `number.group`, `phone.bind`); see [rules.md](rules.md) and [limits.md](limits.md#opt-in-rules). |
@@ -81,7 +83,7 @@ A project's typography in one object, `TypographyConfig`: the options above unde
 
 ```ts
 type TypographyConfig = {
-  lang?: Lang;
+  lang?: Lang | LangPack;    // a pack only from a module, not JSON
   register?: Register;
   quoteStyle?: QuoteStyle;
   disable?: readonly string[];
@@ -139,6 +141,8 @@ A change is a stretch that one rule replaced, found by a word-level diff of the 
 
 ### `typographic(text, lang = 'en', options = {}): string`
 
+`lang` is a code or a pack (see [Options](#options)), here and in `explain`.
+
 ```ts
 type TypographicOptions = {
   register?: Register;     // default 'display'
@@ -183,6 +187,10 @@ explain('He said "hi"... 21-26');
 
 The building block of the modes. Typesets one block with `ModeOptions` and holds its changes back until `keep()` is called, so a block a mode throws away reports nothing. Use it to write a mode of your own.
 
+### `resolvePack(lang?): LangPack`
+
+The pack of `lang`: a pack is returned as it is, a code is looked up, nothing is English, and anything else throws the `Error` that lists the codes. Every function of the full entries calls it on its `lang`; a mode of your own built on `./lite` does not need it.
+
 ### `ModeOptions`
 
 ```ts
@@ -205,14 +213,14 @@ Every mode takes the whole config: `nbsp` is read by the HTML mode only, `hangAm
 | `DEFAULT_RULES: readonly Rule[]` | The rules that run when nothing is switched on or off: every rule in `RULES` that is not `defaultOn: false`, in order. |
 | `RULE_CATEGORIES`, `RuleCategory` | `['tradition', 'symbols', 'math', 'data']` and its union type. `tradition`: quotes, the apostrophe, dashes, the ellipsis, punctuation and the spaces of prose; `symbols`: arrows, ©, ®, ™; `math`: minus, ×, ±, fractions, ⇒; `data`: digit groups, ranges, units, percentages and currencies, dates. A label for lists (`typo --rules`, [rules.md](rules.md), the playground): it does not change what a rule does, and `disable` and `enable` take ids and groups of ids, not categories. |
 | `LANGS: readonly Lang[]` | Every language that has a pack (27): the 24 EU languages, `uk`, `de-CH` and `fr-CH`. |
-| `PACKS`, `PACK`, `LangPack` | The language packs (`src/core/lang/`), as a list and by code, and their type. See [contributing.md](contributing.md#adding-a-language). |
+| `PACKS`, `PACK`, `LangPack` | The language packs (`src/core/lang/`), as a list and by code, and their type. Each pack is also its own entry, [`./lang/<code>`](#langcode). See [contributing.md](contributing.md#adding-a-language). |
 | `REGISTERS: readonly Register[]` | `display`, `literary`. |
 | `NBSP` | The no-break space character, U+00A0. |
 | `ruleGlyphs(lang?)` | What each rule can insert, by rule id: `{ quote: '“”‘’«»„‚›‹', ellipsis: '…', … }`. With a language it is that language's marks (its quote levels, its dash, its digit separator), without one it is every language's at once. Read by [`avoid`](#avoid), by the rules page and by the font checker; `src/core/glyphs.test.ts` fails if a rule has no entry, and proves that a rule given its own characters to avoid changes nothing. |
 | `insertedCharacters(lang?)`, `insertedGlyphs(lang?)` | The same as one string: every character any rule can insert, and the same without the no-break space (the marks a font draws, which is what can be measured). |
 | `CURRENCY_CODES`, `CURRENCY_SIGNS`, `CURRENCY_WORDS` | The money the engine knows, in one table (`src/core/currency.ts`): ISO 4217 codes (`EUR`, `USD`, `UAH`, …), the signs that are not letters (`€$£₴¥₺`) and the ones written with letters after the amount (`zł`, `Kč`, `Ft`, `lei`, `лв`, `kr`, `грн`). `space.number` and `space.percent` read it, so a sign is named in one place. The engine never moves, adds or removes a currency sign. |
 | `keepAvoided(before, after, avoided)` | What [`avoid`](#avoid) does to one rule's output: `after`, with every change that brought in a character of the `avoided` set undone. Exported for a custom pipeline; `typographic` calls it itself. |
-| `Context` | `{ lang, register, quoteStyle, blockStart }`, what a rule is given besides the text. |
+| `Context` | `{ lang, pack, register, quoteStyle, blockStart }`, what a rule is given besides the text. `pack` is the language pack, which a rule reads for anything that depends on the language; `lang` holds the pack's `code` (any string for a custom pack). A test that builds a `Context` by hand must give `pack`. |
 | `Lang`, `Register`, `QuoteStyle` | The unions above; `Lang` is derived from the packs. |
 | `splitHangs`, `TextPart`, `hangPieces`, `HangPiece` | See [Hanging punctuation](#hanging-punctuation). |
 
@@ -329,6 +337,50 @@ Placement: put it as an inline `<script>` as the last child of the element that 
 
 (The script body is the real function source; the elision is only for this page.)
 
+## `./lite`
+
+The engine and the text, HTML and Markdown modes without a language pack. Every call takes the pack itself, so a page that sets one language ships one:
+
+```ts
+import { typesetText } from '@mokhniuk/typography/lite';
+import { uk } from '@mokhniuk/typography/lang/uk';
+
+typesetText('Він сказав "привіт"', { lang: uk });   // Він сказав «привіт»
+```
+
+It exports `typographic(text, pack, options?)`, `explain(text, pack, options?)`, `typesetBlock(joined, options)`, `typesetText`, `typesetHtml` and `typesetMarkdown` (`options` is `LiteOptions`: `ModeOptions` with `lang` a `LangPack`, required), `keepAvoided`, `RULES`, `DEFAULT_RULES`, `RULE_IDS`, `RULE_CATEGORIES`, `addRule`, `selectRules`, `without`, `diff`, `splitHangs`, `hangPieces`, `NBSP`, and the types `Change`, `TypographicOptions`, `PackModeOptions`, `LiteOptions`, `Rule`, `RuleCategory`, `RulePosition`, `Context`, `QuoteStyle`, `Register`, `LangPack`, `Level`, `Abbreviations`, `NumberFormat`, `DialogueDash`, `DiffRun`, `TextPart`, `HangPiece`. Its output and change records are those of the full entries given the same pack (`src/lite/lite.test.ts` checks every pack, both registers, the three quote styles and the opt-in rules).
+
+A language code where a pack belongs throws `lang is a language pack here: import one from @mokhniuk/typography/lang/<code>`. Not in `./lite`, because they need the table of every pack: `checkConfig` and `defineConfig`, `LANGS`, `PACKS`, `resolvePack`, the glyph lists (`ruleGlyphs`, `insertedCharacters`, `insertedGlyphs`), the rehype plugin and React. A config object still spreads in: `typesetHtml(html, { ...site, lang: uk })`.
+
+No module of `./lite` imports the pack table, directly or through another module (`lite.test.ts` walks the import graph), so the saving does not depend on a bundler's tree-shaking: unbundled ESM on Node or from a CDN loads one pack too.
+
+**Pass a constant pack.** The engine keeps what it compiles for a pack (its quote setters, its short-word and abbreviation patterns) in a `WeakMap` keyed by the pack object, so a pack spread inline on every call (`{ lang: { ...uk, shortWords: [] } }`) compiles them again each time. Make a custom pack once, at module level.
+
+## `./lang/<code>`
+
+One entry per pack, the code in lower case: `./lang/en`, `./lang/uk`, `./lang/de`, `./lang/de-ch`, `./lang/fr-ch`, ... (27; `LANGS` lists the codes). Each exports the pack under its name (`en`, `uk`, `de`, `deCH`, `frCH`, ...) and as its default export, for a dynamic `import()`:
+
+```ts
+const { default: pack } = await import(`@mokhniuk/typography/lang/${code}`);
+```
+
+A pack is a plain object (`LangPack`, documented in `src/core/lang/pack.ts` and in [languages.md](languages.md)); it loads no other language, except `de-ch`, which builds on `de`, and `fr-ch` on `fr`. It works with every entry: `typographic(text, uk)` on the main entry gives what `typographic(text, 'uk')` gives.
+
+## Loading only the languages used
+
+Every full entry carries all 27 packs, because it resolves a code at run time. `./lite` with the packs a page uses carries only those. Bundled for the browser (`Bun.build`, minified), brotli quality 11, from [apps/bench/RESULTS.md](../apps/bench/RESULTS.md#bundle-size):
+
+| Bundle | Minified | brotli |
+|---|---|---|
+| `./text` (`typesetText`, every pack) | 89.6 KB | 26.6 KB |
+| `./lite`, the whole entry, no pack | 37.5 KB | 13.2 KB |
+| `typesetText` from `./lite`, no pack | 28.7 KB | 10.2 KB |
+| `typesetText` from `./lite` + `./lang/en` | 30.5 KB | 10.8 KB |
+| `typesetText` from `./lite` + `./lang/uk` | 30.6 KB | 10.8 KB |
+| the 27 packs alone | 59.7 KB | 16.4 KB |
+
+A pack adds 0.5 to 1.5 KB of brotli on top of the engine (English and Ukrainian 0.6 KB, Lithuanian, the largest, 1.5 KB). For several languages, import each pack you need; for a language picked at run time, `import()` its `./lang/<code>` entry.
+
 ## Hanging punctuation
 
 ### `splitHangs(text, atStart = true): TextPart[]`
@@ -372,7 +424,7 @@ Wraps a page so its text is typeset: it sets the language and register every `Ty
 |---|---|---|
 | `children` | `ReactNode` | required |
 | `config` | `TypographyConfig` | none; pass a constant. Its `nbsp` is not read. |
-| `lang` | `Lang` | inherited |
+| `lang` | `Lang \| LangPack` | inherited |
 | `register` | `Register` | inherited |
 | `quoteStyle` | `QuoteStyle` | inherited |
 | `disable`, `enable` | `readonly string[]` | inherited; pass a constant, not an inline array |
@@ -392,7 +444,7 @@ A plain string, typeset in the language and register of the surrounding root (or
 | `text` | `string` | required |
 | `atStart` | `boolean` | `true`; set `false` for a string that continues a paragraph after an element. Also passed as `blockStart`. |
 | `config` | `TypographyConfig` | none; its values beat the root's, its own props beat it. Pass a constant. |
-| `lang`, `register`, `quoteStyle` | `Lang`, `Register`, `QuoteStyle` | from `TypographyRoot` |
+| `lang`, `register`, `quoteStyle` | `Lang \| LangPack`, `Register`, `QuoteStyle` | from `TypographyRoot` |
 | `disable`, `enable`, `rules`, `onChange`, `avoid` | as on `TypographyRoot` | from `TypographyRoot`; pass constants |
 
 ```tsx
@@ -428,7 +480,7 @@ a page that wires the context itself.
 
 ```ts
 type TypographySetting = {
-  lang: Lang;
+  lang: Lang | LangPack;
   register: Register;
   quoteStyle?: QuoteStyle;
   disable?: readonly string[];

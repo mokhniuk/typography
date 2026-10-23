@@ -273,6 +273,12 @@ describe('defineConfig and checkConfig', () => {
     // `ch` was the Swiss pack until this release; it is now de-CH and fr-CH, and the code is matched as written.
     bad({ lang: 'ch' }, /lang is .*"de-CH", "fr-CH".*not "ch"/);
     bad({ lang: 'de-ch' }, /lang is .*not "de-ch"/);
+    // A pack needs a name and at least one level of quotes, each a pair of strings: an empty list
+    // from a JSON config would drop every quotation mark.
+    bad({ lang: { code: 'xx', quotes: [] } }, /lang is /);
+    bad({ lang: { code: 'xx', name: 'X', quotes: [] } }, /lang is /);
+    bad({ lang: { code: 'xx', name: 'X', quotes: [['«']] } }, /lang is /);
+    bad({ lang: { code: 'xx', quotes: [['«', '»']] } }, /lang is /);
     bad({ register: 'book' }, /register is "display", "literary", not "book"/);
     bad({ quoteStyle: 'uk' }, /quoteStyle is "language", "us", "guillemets", not "uk"/);
     bad({ nbsp: 'raw' }, /nbsp is "entity", "char", not "raw"/);

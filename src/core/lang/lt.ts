@@ -38,3 +38,5 @@ export const lt = {
     'Numbers: ISG 6.5 and 4.2.3 give a comma for decimals and a space between groups of three; 10.1.5 says the space is a fixed one; the ISG groups from four digits in the table of budget data (1 326,1) but the engine groups from five digits, as it does in every language.',
   ].join(' '),
 } as const satisfies LangPack;
+
+export default lt;

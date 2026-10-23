@@ -123,5 +123,5 @@ Where the time goes in this package, and what to do about it, is in [backlog.md]
 ## Distribution
 
 - The package ships compiled ESM with `.d.ts` declarations, has no dependencies, and is MIT-licensed (see the README). The command line needs Node 20.10 or later, or Bun.
-- Every entry point except `/dom` (which holds only the hanging-punctuation code, 2.4 KB brotli) carries all 27 language packs (16 of the 26 KB brotli of one call), so a one-language page pays for the other 26; the backlog has the item "Load only the languages used".
+- Every full entry point except `/dom` (which holds only the hanging-punctuation code, 2.4 KB brotli) carries all 27 language packs (16 of the 26.6 KB brotli of one call), since it resolves a language code at run time. A one-language page uses `/lite` with its pack from `/lang/<code>` instead (10.8 KB brotli for one call in English or Ukrainian; see [api.md](api.md#loading-only-the-languages-used)). `/lite` has no rehype plugin, no React components and no `checkConfig`: those need the table of every pack, and still carry it.
 - There is no CommonJS build: the package is ESM only.

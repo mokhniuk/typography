@@ -34,3 +34,5 @@ export const ga = {
     'Not implemented, not verified: one-letter words to keep off the end of a line (none sourced), abbreviation lists (none read), the dot-above letters of the old orthography and the fada need no rule (they are letters; tests pin that they are kept), the Irish dash conventions (not read), and everything in the Irish edition of the ISG. The task brief says typograf covers Irish; this pack was not compared with it.',
   ].join(' '),
 } as const satisfies LangPack;
+
+export default ga;

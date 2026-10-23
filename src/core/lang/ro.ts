@@ -23,3 +23,5 @@ export const ro = {
   notes:
     'Quotes: „…” with «…» inside, the third level „…” again (EU Publications Office table). The Academy (Îndreptar, DOOM) text could not be read, so the national authority is not cited. Numbers: a no-break space groups thousands and the decimal mark is a comma (Commission web-writing guide). Not implemented, not verified: % and currency spacing, abbreviations, one-letter words, the sentence dash. Dialogue and the sentence dash: the linia de dialog opens each turn and a spaced linie de pauză sets off the words of the author (Îndreptarul ortografic, 5th ed., §§ 275–281, on dexonline); a dash together with quotation marks is called wrong. The examples show the en dash.',
 } as const satisfies LangPack;
+
+export default ro;

@@ -35,3 +35,5 @@ export const hr = {
     'Not implemented, not verified: one-letter prepositions and conjunctions (k, s, u, o, i, a) are not kept off the end of a line, because the ISG states no such rule and the Hrvatski pravopis was not read; the sentence dash is the engine\'s default em dash, while ISG 10.1.10 only sets em dash for vertical lists and en dash (no spaces) for ranges, and gives no rule for a dash in a sentence; dates and ordinals ("13. rujna 1959.", "članak 3.") are listed in 10.1.12 as fixed spaces, but the engine has no field for them.',
   ].join(' '),
 } as const satisfies LangPack;
+
+export default hr;

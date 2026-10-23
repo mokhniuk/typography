@@ -41,3 +41,5 @@ export const it = {
     'Not implemented, not verified: the ISG gives half a fixed space between digit groups (a thin space), set here as a no-break space; no source read gives a list of one-letter words (a, e, i, o) to keep off the end of a line, so there are no orphans; the lineetta of 10.1.10 is the em dash, which is the default; the abbreviation lists are only a part of annex A3, chosen for a number or a second part that follows them.',
   ].join(' '),
 } as const satisfies LangPack;
+
+export default it;

@@ -291,7 +291,7 @@ export const RULES: readonly Rule[] = [
     id: 'space.percent',
     category: 'data',
     about:
-      'In a language that sets it (percentSpace): a no-break space between a number and % (5 %); with currencySpace, also before € after the number (49 €)',
+      'In languages whose pack sets percentSpace: a no-break space between a number and % (5 %); where the pack also sets currencySpace, before € after the number too (49 €)',
     packFields: ['percentSpace', 'currencySpace'],
     when: (text, { pack }) =>
       (!!pack.percentSpace && text.includes('%')) || (!!pack.currencySpace && text.includes('€')),
@@ -338,7 +338,7 @@ export const RULES: readonly Rule[] = [
     id: 'space.short-word',
     category: 'tradition',
     about:
-      'In a language with a list (shortWords): a short word of two or three letters stays with the word after it (to~the shop); never more than two words in a row',
+      'In languages whose pack lists shortWords: a short word of two or three letters stays with the word after it (to~the shop); never more than two words in a row',
     packFields: ['shortWords'],
     when: (_text, { pack }) => !!pack.shortWords?.length,
     apply: (text, { pack }) => shortWords(text, pack),

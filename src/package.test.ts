@@ -2,6 +2,7 @@ import { expect, test } from 'bun:test';
 import { readdirSync, readFileSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
 import { packedFiles } from '../scripts/pack.ts';
+import { PACKS } from './core/lang/index.ts';
 
 /**
  * What a consumer installs is what `bun pm pack` packs (the `files` list in package.json): the build
@@ -70,6 +71,33 @@ test('every entry point and the command line resolve inside the pack', () => {
     expect(target, 'every target is a string').toBeString();
     expect(shipped.has(target.replace(/^\.\//, '')), target).toBe(true);
   }
+});
+
+test('one entry per language pack, `./lang/<code>`, and the pack-free `./lite`', async () => {
+  const pkg = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')) as {
+    exports: Record<string, string | { types: string; default: string }>;
+  };
+  // No `./lang/*` pattern: it would expose lang/index (every pack) and lang/pack.
+  const files = PACKS.map((pack) => pack.code.toLowerCase());
+  const langKeys = Object.keys(pkg.exports).filter((key) => key.startsWith('./lang/'));
+  expect(langKeys.sort()).toEqual(files.map((file) => `./lang/${file}`).sort());
+  for (const file of files) {
+    expect(pkg.exports[`./lang/${file}`]).toEqual({
+      types: `./dist/core/lang/${file}.d.ts`,
+      default: `./dist/core/lang/${file}.js`,
+    });
+  }
+  // Each built pack gives the pack as its default export and under its own name.
+  for (const pack of PACKS) {
+    const file = join(ROOT, 'dist', 'core', 'lang', `${pack.code.toLowerCase()}.js`);
+    const mod = (await import(file)) as { default: { code: string } };
+    expect(mod.default.code).toBe(pack.code);
+    expect(Object.values(mod)).toContain(mod.default);
+  }
+  expect(pkg.exports['./lite']).toEqual({
+    types: './dist/lite/index.d.ts',
+    default: './dist/lite/index.js',
+  });
 });
 
 test('no shipped code needs Bun', () => {
