@@ -49,7 +49,7 @@ function pairStraight(text: string): string {
   }
   return last === 0 ? text : out + text.slice(last);
 }
-const PAIRS: readonly (RegExp | typeof STRAIGHT)[] = [
+const PAIRS: readonly (RegExp | typeof STRAIGHT | Turned)[] = [
   new RegExp(`„(${BODY})[“”]`, 'g'),
   new RegExp(`“(${BODY})”`, 'g'),
   new RegExp(`‚(${BODY})[‘’]`, 'g'),
@@ -63,8 +63,52 @@ const PAIRS: readonly (RegExp | typeof STRAIGHT)[] = [
 // and so would ‹ › between two inner ones, so those pairs are matched only where the opening mark
 // stands where a quotation opens and the closing one where it closes, and a text written «a» und «b»
 // is read by where each mark stands, like any mark with no partner.
-const turned = (open: string, close: string, before: string) =>
-  new RegExp(`(?<=${before})${open}(?=\\S)(${BODY})(?<=\\S)${close}`, 'g');
+//
+// Was `text.replace(new RegExp(`(?<=${before})${open}(?=\\S)(${BODY})(?<=\\S)${close}`, 'g'), …)` with
+// `before` = `^|[\\s(\\[OPEN openers]`. A lookbehind anywhere in a pattern keeps JavaScriptCore from
+// skipping ahead to the pattern's first character (the one at the start is also tried at every
+// position): German prose cost three times English in the quote rule, » or not. The pattern now opens
+// with the mark and holds no lookbehind; both are read by hand. Before the mark: the start of the text,
+// or one UTF-16 unit that `openerBefore` takes (the same class, read the way the lookbehind read it,
+// without the `u` flag). Before the closer: a non-space. That second read is exact because `BODY` stops
+// at the first mark of `RAW` and the closer is one of them, so the match from a given opener is the only
+// one there could be (a closer of another kind keeps its lookbehind in the pattern). A match either read
+// refuses is not consumed: the search goes on one unit after its opening mark, as the engine did after a
+// failed lookbehind.
+type Turned = (text: string) => string;
+/** `set` is a parameter for the equality test (quotes.turned.test.ts) only; quotes.ts passes none. */
+export function turnedPair(
+  open: string,
+  close: string,
+  openerBefore: RegExp,
+  set: typeof setPair = setPair,
+): Turned {
+  const closerByHand = RAW.includes(close);
+  const pattern = new RegExp(
+    `${open}(?=\\S)(${BODY})${closerByHand ? '' : '(?<=\\S)'}${close}`,
+    'g',
+  );
+  return (text) => {
+    let out = '';
+    let from = 0;
+    pattern.lastIndex = 0;
+    for (let m = pattern.exec(text); m; m = pattern.exec(text)) {
+      const at = m.index;
+      const end = at + m[0].length;
+      if (
+        (at > 0 && !openerBefore.test(text[at - 1] as string)) ||
+        (closerByHand && !NON_SPACE.test(text[end - 2] as string))
+      ) {
+        pattern.lastIndex = at + 1;
+        continue;
+      }
+      out += text.slice(from, at) + set(m[1] as string, text[at - 1], text[end]);
+      from = end;
+    }
+    pattern.lastIndex = 0;
+    return from === 0 ? text : out + text.slice(from);
+  };
+}
 /** Marks that are never an apostrophe; ’ is left out because it ends a possessive (dogs’). */
 const LONE = '"„“”‚«»‹›‘';
 const SPACED = '«‹';
@@ -206,7 +250,7 @@ function elisionOf(words: readonly string[]): { source: string; groups: number }
 
 /** What is read from a language's pack, built once per language. */
 type Setup = {
-  pairs: readonly (RegExp | typeof STRAIGHT)[];
+  pairs: readonly (RegExp | typeof STRAIGHT | Turned)[];
   single: RegExp;
   /** What may stand before an opening mark: a space, a bracket, an OPEN and the pack's `openers` (the start of the text is checked apart). */
   openerBefore: RegExp;
@@ -234,10 +278,11 @@ function setupOf(pack: LangPack): Setup {
   // pack's `openers` (Spanish ¿ ¡).
   const extra = (pack.openers ?? '').replace(/[\\\]^-]/g, '\\$&');
   const before = `^|[\\s(\\[${OPEN}${extra}]`;
+  const openerBefore = new RegExp(`[\\s(\\[${OPEN}${extra}]`);
   const turnedPairs = pack.turnedPairs ?? [];
   const turnedMarks = turnedPairs.flat();
   const pairs = [
-    ...turnedPairs.map(([open, close]) => turned(open, close, before)),
+    ...turnedPairs.map(([open, close]) => turnedPair(open, close, openerBefore)),
     ...PAIRS.filter(
       (pair) =>
         !(
@@ -250,7 +295,7 @@ function setupOf(pack: LangPack): Setup {
   const made: Setup = {
     pairs,
     single: new RegExp(`(${before})'([^']+)'(?=[\\s).,;:!?\\]${CLOSE}]|$)`, 'g'),
-    openerBefore: new RegExp(`[\\s(\\[${OPEN}${extra}]`),
+    openerBefore,
     // Inside a word, or a leading apostrophe on a year (the ’90s: two digits). A straight ' there may open
     // a quoted number ('12'), a curly ’ cannot, so only the straight one is told apart by what follows.
     // The last alternatives are an apostrophe for dropped letters, rock 'n' roll and 'til: it is set curly
@@ -306,9 +351,11 @@ export function quotesFor(
         out =
           pair === STRAIGHT
             ? pairStraight(out)
-            : out.replace(pair, (match: string, inner: string, offset: number, whole: string) =>
-                setPair(inner, whole[offset - 1], whole[offset + match.length]),
-              );
+            : typeof pair === 'function'
+              ? pair(out)
+              : out.replace(pair, (match: string, inner: string, offset: number, whole: string) =>
+                  setPair(inner, whole[offset - 1], whole[offset + match.length]),
+                );
       }
       out = out.replace(
         single,

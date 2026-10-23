@@ -1,19 +1,29 @@
 /**
  * Where this package spends its time: each rule on its own over 100 KB and 1 MB of
- * English, its share of the total, and one text with and without paragraph breaks.
- * `bun apps/bench/profile.ts`. Timings vary between runs by up to 2x on a busy machine.
+ * text, its share of the total, and one text with and without paragraph breaks.
+ * `bun apps/bench/profile.ts [lang]` (`bun run profile -- de`; default `en`): the rules run with
+ * that language, and a third text is that language's prose, as in the "Speed by input" rows of
+ * RESULTS.md (`longText(bytes, 1, lang)`). Timings vary between runs by up to 2x on a busy machine.
  */
 import { RULES } from '../../src/core/rules';
 import { shield } from '../../src/core/zones';
 import { typesetText } from '../../src/text';
 import { typographic } from '../../src/core';
+import { LANGS } from '../../src/core/profiles';
+import type { Lang } from '../../src/core/types';
 import { longText } from '../../scripts/corpus';
+
+const lang = (process.argv[2] ?? 'en') as Lang;
+if (!LANGS.includes(lang)) {
+  console.error(`unknown language "${lang}"; one of: ${LANGS.join(', ')}`);
+  process.exit(1);
+}
 
 const PARA =
   'He said "we\'re here" - and left... The lab runs 21-26 September, 10:00-12:00, Prof. Dr. K. Smith opens it (c) 2026. ' +
   'It is 5 km from a quiet stone house in the old town, and the "memory walk" starts there at 9:30 - bring a coat. ';
 const rep = (n: number, sep = '') => (PARA + sep).repeat(Math.ceil(n / PARA.length));
-const ctx = { lang: 'en', register: 'display', quoteStyle: 'language', blockStart: true } as const;
+const ctx = { lang, register: 'display', quoteStyle: 'language', blockStart: true } as const;
 
 // The zone scan (code spans, addresses, emails set aside before the rules run) is timed as a row of its
 // own, and the second text is the fuzz corpus the differential check uses: prose has no backtick or
@@ -21,6 +31,7 @@ const ctx = { lang: 'en', register: 'display', quoteStyle: 'language', blockStar
 const texts: [string, (size: number) => string][] = [
   ['prose, one paragraph', rep],
   ['corpus (scripts/corpus.ts)', (size) => longText(size)],
+  [`${lang} prose (longText(size, 1, '${lang}'))`, (size) => longText(size, 1, lang)],
 ];
 for (const [label, make] of texts) for (const size of [100_000, 1_000_000]) {
   const text = make(size);
@@ -46,7 +57,7 @@ for (const [label, make] of texts) for (const size of [100_000, 1_000_000]) {
     total += best;
     out = next;
   }
-  console.log(`\n== per rule, ${size / 1000} KB ${label} (sum ${total.toFixed(0)} ms)`);
+  console.log(`\n== per rule (${lang}), ${size / 1000} KB ${label} (sum ${total.toFixed(0)} ms)`);
   for (const [id, ms] of rows.sort((a, b) => b[1] - a[1]).slice(0, 8)) console.log(`  ${id.padEnd(22)} ${ms.toFixed(1)} ms  ${((ms / total) * 100).toFixed(0)}%`);
 }
 
@@ -54,6 +65,6 @@ for (const [label, make] of texts) for (const size of [100_000, 1_000_000]) {
 const one = rep(1_000_000);
 const paras = rep(1_000_000, '\n\n').replace(/ \n\n/g, '\n\n');
 const time = (f: () => unknown) => { let b = Infinity; for (let i = 0; i < 3; i++) { const t = performance.now(); f(); b = Math.min(b, performance.now() - t); } return b; };
-console.log('\n1 MB as one paragraph      :', time(() => typesetText(one)).toFixed(0), 'ms');
-console.log('1 MB as ~0.4 KB paragraphs :', time(() => typesetText(paras)).toFixed(0), 'ms');
-console.log('typographic() direct       :', time(() => typographic(one)).toFixed(0), 'ms');
+console.log('\n1 MB as one paragraph      :', time(() => typesetText(one, { lang })).toFixed(0), 'ms');
+console.log('1 MB as ~0.4 KB paragraphs :', time(() => typesetText(paras, { lang })).toFixed(0), 'ms');
+console.log('typographic() direct       :', time(() => typographic(one, lang)).toFixed(0), 'ms');
