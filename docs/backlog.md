@@ -102,6 +102,14 @@ No quadratic input is known outside the rules since 0.15.0 (the two the probes f
 
 Since 0.17.0 `/lite` with `/lang/<code>` ships one language (11.7 to 12.2 KB brotli for one call in English or Ukrainian, against 30.0 KB for `/text`), but only for the text, HTML and Markdown modes. The rehype plugin maps an element's `lang` attribute to a pack by code, React resolves a code from its context, and `checkConfig` lists the codes: all three still load the 27 packs. A lite rehype plugin that takes the packs it may meet, a lite React entry, and a `checkConfig` that takes a pack only would close it. Wait for a user who needs one of them.
 
+### French space after a closing guillemet, bracket or inline tag
+
+`space.high-punctuation` sets the French space only after a letter or digit, so a mark that follows a closer keeps whatever was typed: `« non » : c’est clair`, `(voir) : rien` and `<strong>Attention</strong> :` keep a breakable plain space before the mark. French sets the same no-break space there (before `:`) and the narrow one (before `; ! ?`). Extend the rule to a mark after `»`, `)`, `]` and the end of an inline tag, and when a typed space already stands between the closer and the mark, replace it with the pack's space. Read the Lacroux and OQLF passages on a mark after a closing quote before changing anything.
+
+### Pack prose in bundles
+
+The `notes` and `sources` of each language pack are 56 of the 68 KB of the raw packs and ship in every bundle, although the engine never reads them. The cost: `/text` is 30.0 KB brotli, the packs alone 18.9 KB, and `/lite` with one language 12.2 KB against typograf's 15. Move them out of the runtime pack (a separate module that the docs generators read, or strip them in the build) and measure again with `bun run size`. Related to "Load only the languages used" (done in 0.17.0, see the changelog), which this continues.
+
 ### A larger real-text benchmark
 
 English has 96 cases and each other language six. Add a real-text corpus per language (a few paragraphs with a hand-made expected output, written by a native reader) and score the other tools on it. Keep each case a statement of what is right, not of what one tool produces.

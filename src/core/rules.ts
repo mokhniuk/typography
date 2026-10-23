@@ -148,7 +148,7 @@ export const RULES: readonly Rule[] = [
     defaultOn: false,
     when: hasAny(' ', '\t'),
     packFields: ['highPunctuation'],
-    apply: (text, { pack }) => beforePunctuation(text, !!pack.highPunctuation),
+    apply: (text, { pack }) => beforePunctuation(text, pack.highPunctuation),
   },
   {
     id: 'space.after-comma',

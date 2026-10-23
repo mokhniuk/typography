@@ -34,7 +34,9 @@ const isNumber = (codePoint: string): boolean =>
  * What after `:` or `;` makes an emoticon or a path (`:)`, `;-)`, `C:\`, `C:/`), with what a later
  * rule turns those characters into (`(c)` ©, `-5` −5, `--` —), so a second run reads them the same.
  */
-const AFTER_COLON = "-)(/|\\'*–—−©®™";
+const AFTER_COLON = "()/|\\'*–—−©®™";
+/** What a `-` straight after `:` or `;` must be followed by to be a nose (`:-)`, `;-D`): not `--`, which is a dash. */
+const MOUTH = ')(|/DP';
 
 /**
  * Whether a `;` at `index` ends a character reference typed as text (`&nbsp;`, `&#8239;`): the run of
@@ -65,6 +67,12 @@ function notPunctuation(text: string, index: number, mark: string, start: number
   // one (`voir:https://…`) is part of what it starts, as before a letter.
   if (isLetterOrNumber(next) || next === '=' || next === '⇒' || next === '\uE003') return true;
   if ((mark === ':' || mark === ';') && next !== '' && AFTER_COLON.includes(next)) return true;
+  if (
+    (mark === ':' || mark === ';') &&
+    next === '-' &&
+    MOUTH.includes(codePointAt(text, index + 2) || '\0')
+  )
+    return true;
   if (mark === ';' && endsReference(text, index)) return true;
   if (mark === '!' && next === '[') return true;
   if (mark === '?' && next === '.') return true;

@@ -2,6 +2,7 @@
  * The opt-in rules (`defaultOn: false` in rules.ts): each runs only when named in `enable`.
  * Their guards err towards leaving text alone; the known limits are in docs/limits.md.
  */
+import type { HighPunctuation } from './high-punctuation.ts';
 import { before, isLetterOrNumber } from './scan.ts';
 import { NBSP } from './types.ts';
 
@@ -13,8 +14,8 @@ const NOT_BEFORE_SPACES = /[\s([{“"«‘„]/;
 /**
  * Removes a space before , . ; : ! ? ). Not at a line start, not before an ellipsis, a decimal
  * (` .5`), a file extension (` .gitignore`), `!=` or `??`, not a spaced time or ratio (`10 : 30`),
- * not an emoticon (` :)`, ` ;-)`), and not before `: ; ! ?` when `keepHigh` (a language that sets a
- * space there, French: the pack's `highPunctuation`).
+ * not an emoticon (` :)`, ` ;-)`), and not before `:` when `high.colon` is set, nor before `; ! ?` when `high.others` is set (a
+ * language that sets a space there, French: the pack's `highPunctuation`).
  *
  * Was `text.replace(/(?<=[^\s(\[{“"«‘„])[ \t]+([,.;:!?)])/gu, …)`: a lookbehind opening the pattern is
  * tried at every position (16 to 20 ms per MB). The pair "space, mark" is found first, the run of
@@ -23,7 +24,7 @@ const NOT_BEFORE_SPACES = /[\s([{“"«‘„]/;
  * the engine tried the lookbehind at each of its spaces, and it refuses all but the first (a space
  * stands before). A match it leaves alone is consumed whole, as `replace` does.
  */
-export function beforePunctuation(text: string, keepHigh = false): string {
+export function beforePunctuation(text: string, high?: HighPunctuation): string {
   let out = '';
   let from = 0;
   SPACE_THEN_MARK.lastIndex = 0;
@@ -37,7 +38,7 @@ export function beforePunctuation(text: string, keepHigh = false): string {
     if (offset === 0 || NOT_BEFORE_SPACES.test(text.charAt(offset - 1))) continue;
     const mark = text.charAt(m.index + 1);
     const match = text.slice(offset, m.index + 2);
-    if (keepSpace(match, mark, keepHigh, offset, text)) continue;
+    if (keepSpace(match, mark, high, offset, text)) continue;
     out += text.slice(from, offset) + mark;
     from = m.index + 2;
   }
@@ -49,7 +50,7 @@ export function beforePunctuation(text: string, keepHigh = false): string {
 function keepSpace(
   match: string,
   mark: string,
-  keepHigh: boolean,
+  high: HighPunctuation | undefined,
   offset: number,
   whole: string,
 ): boolean {
@@ -73,7 +74,12 @@ function keepSpace(
   }
   if ((mark === '!' || mark === '?') && next === '=') return true;
   if (mark === '?' && (next === '?' || next === '.')) return true;
-  return keepHigh && /[:;!?]/.test(mark);
+  if (!high) return false;
+  return mark === ':'
+    ? !!high.colon
+    : mark === ';' || mark === '!' || mark === '?'
+      ? !!high.others
+      : false;
 }
 
 /** Adds a space after a comma that a letter follows directly (`a,b`). Digits (`1,5`) are left alone. */

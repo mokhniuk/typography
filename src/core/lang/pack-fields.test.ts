@@ -99,6 +99,16 @@ describe('pack fields an opt-in rule reads, through the pack-only typographic', 
     expect(run(text, {}, 'space.before-punctuation')).toBe('Attention: ici! Et là, oui.');
   });
 
+  test('highPunctuation: a space stays only before the mark whose field is set', () => {
+    const run2 = (high: NonNullable<LangPack['highPunctuation']>) =>
+      typographic('ici : ici ! non ?', pack({ highPunctuation: high }), {
+        disable: ['space.high-punctuation'],
+        enable: ['space.before-punctuation'],
+      });
+    expect(run2({ colon: NBSP })).toBe('ici : ici! non?');
+    expect(run2({ others: '\u202F' })).toBe('ici: ici ! non ?');
+  });
+
   test('bareTemperature: a bare 20 C is read as a temperature only with it', () => {
     expect(run('It is 20 C today', { bareTemperature: true }, 'symbol.degree')).toBe(
       'It is 20~°C today',

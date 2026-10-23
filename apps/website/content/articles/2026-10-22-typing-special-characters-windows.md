@@ -61,4 +61,4 @@ The four-digit codes cover the Windows-1252 character set and stop there. The tr
 
 ## Or stop memorising
 
-Codes are for the odd character in a chat message. For anything you publish, software should set the marks: paste your text into the [playground](/playground/) — or run the engine in your build — and straight quotes, hyphens and `(c) 2026` become the right characters for the language, by [33 documented rules](/docs/rules/). Alt + 0151 is good to know; typing it twice per paragraph is not a workflow.
+Codes are for the odd character in a chat message. For anything you publish, software should set the marks: paste your text into the [playground](/playground/) — or run the engine in your build — and straight quotes, hyphens and `(c) 2026` become the right characters for the language, by [34 documented rules](/docs/rules/). Alt + 0151 is good to know; typing it twice per paragraph is not a workflow.

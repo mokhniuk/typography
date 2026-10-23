@@ -19,7 +19,7 @@ Quotation marks come in pairs and nest. A second-level quotation inside a first 
 
 ## The language decides, not the rule
 
-The same rule writes `«…»` for Ukrainian, `»…«` for German and `”…”` for Swedish; gives English a spaced em dash and German a spaced en; puts a no-break space before `%` in French and none in English. In this engine almost no rule names a language (two opt-in rules keep a French and an English special case). Each of the 26 [language packs](/docs/languages/) declares its marks, dashes, orphan words and spacing, and the rules read the pack. Adding a language means writing one pack file and registering it, not touching 33 rules.
+The same rule writes `«…»` for Ukrainian, `»…«` for German and `”…”` for Swedish; gives English a spaced em dash and German a spaced en; puts a no-break space before `%` in French and none in English. In this engine almost no rule names a language (two opt-in rules keep a French and an English special case). Each of the 27 [language packs](/docs/languages/) declares its marks, dashes, orphan words and spacing, and the rules read the pack. Adding a language means writing one pack file and registering it, not touching 34 rules.
 
 ## Most of the text must not change
 

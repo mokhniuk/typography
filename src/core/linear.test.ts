@@ -662,38 +662,38 @@ describe('space.before-punctuation', () => {
   same(
     'beforePunctuation (en)',
     samples,
-    (t) => beforePunctuation(t, false),
+    (t) => beforePunctuation(t),
     (t) => original(t, 'en'),
   );
   same(
     'beforePunctuation (fr)',
     samples,
-    (t) => beforePunctuation(t, true),
+    (t) => beforePunctuation(t, { colon: '\u00A0', others: '\u202F' }),
     (t) => original(t, 'fr'),
     50,
   );
   fasterThanOriginal(
     'beforePunctuation',
-    (t) => beforePunctuation(t, false),
+    (t) => beforePunctuation(t),
     (t) => original(t, 'en'),
   );
   scales(
     'beforePunctuation on spaces then a comma',
-    (t) => beforePunctuation(t, false),
+    (t) => beforePunctuation(t),
     (n) => `a${' '.repeat(n)},`,
   );
   scales(
     'beforePunctuation on spaces then a letter',
-    (t) => beforePunctuation(t, false),
+    (t) => beforePunctuation(t),
     (n) => `a${' '.repeat(n)}x`,
   );
   scales(
     'beforePunctuation on spaces and tabs',
-    (t) => beforePunctuation(t, false),
+    (t) => beforePunctuation(t),
     (n) => `a${' \t'.repeat(n / 2)}!`,
   );
-  scales('beforePunctuation on " ,"', (t) => beforePunctuation(t, false), rep('a ,'));
-  scales('beforePunctuation on " . "', (t) => beforePunctuation(t, false), rep('a . '));
+  scales('beforePunctuation on " ,"', (t) => beforePunctuation(t), rep('a ,'));
+  scales('beforePunctuation on " . "', (t) => beforePunctuation(t), rep('a . '));
 });
 
 describe('punctuation.double', () => {

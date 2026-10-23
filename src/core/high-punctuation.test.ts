@@ -90,6 +90,16 @@ describe('space.high-punctuation (French)', () => {
     expect(fr('a:b, x?y, a;b et Note:3')).toBe('a:b, x?y, a;b et Note:3');
   });
 
+  test('a hyphen after : or ; is a nose only before a mouth; a second hyphen is a dash', () => {
+    for (const text of ['x:--y', 'oui;--non']) {
+      const once = typographic(text, 'fr');
+      expect(typographic(once, 'fr')).toBe(once);
+    }
+    expect(fr('x:--y')).toBe('x~:~— y');
+    expect(fr('oui;--non')).toBe('oui^;~— non');
+    expect(fr(':-) ;-) :-( :-D :-P :-| :-/')).toBe(':-) ;-) :-( :-D :-P :-| :-/');
+  });
+
   test('emoticons and code-like marks are left as they are', () => {
     expect(fr('super:) et bien;-) ou ok:D et :P')).toBe('super:) et bien;-) ou ok:D et :P');
     expect(fr('a!=b et voir![image](x.png) et a?=b')).toBe('a!=b et voir![image](x.png) et a?=b');
