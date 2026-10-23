@@ -163,7 +163,11 @@ export function typesetHtml(html: string, options: HtmlOptions = {}): string {
     run = [];
   };
   let pos = 0;
-  for (let m = token.exec(html); m; m = token.exec(html)) {
+  // Every token ends at a `>`, so a `<` after the last one cannot open a tag. The pattern would read to
+  // the end of the input from each such `<` (quadratic on `<a <a <a ...`): it is shown the input only
+  // up to the last `>`, and what follows is text. Positions are the same in both strings.
+  const seen = html.slice(0, html.lastIndexOf('>') + 1);
+  for (let m = token.exec(seen); m; m = token.exec(seen)) {
     if (m.index > pos) run.push({ text: html.slice(pos, m.index) });
     pos = m.index + m[0].length;
     const [raw, closing, name = '', rest = ''] = m;

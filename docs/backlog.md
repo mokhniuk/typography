@@ -27,7 +27,6 @@ Every pack has `reviewed: false`: bg cs da el es et fi ga hr hu it lt lv mt nl p
 The probes table in `apps/bench/RESULTS.md` (`bun run probes`, 2026-10-22) found two inputs that grow with the square of their length; `scripts/stress.ts` misses both because it times the rules, not the modes around them.
 
 - **A long run of spaces inside a line, text mode.** `a` + 40 000 spaces + `b` takes 1.3 s (10 000: 90 ms, 20 000: 350 ms); `typesetBlock` on the same string takes 2 ms. The cause is `/[ \t]+$/` in `setParagraph` (`src/text/index.ts`), tried from every space. Strip the trailing run with a backward scan instead.
-- **Unclosed `<` repeated, HTML mode.** `<a ` × 4 000 (12 KB) takes 200 ms, × 8 000 takes 800 ms. Most likely the tag token (`TOKEN_SOURCE`, `src/html/index.ts`) scanning to the end for every `<` that never closes; confirm, then fix so a `<` with no `>` is read once.
 
 Add both to `scripts/stress.ts` (or a test in `src/speed.test.ts`) when fixing, so they stay linear.
 
