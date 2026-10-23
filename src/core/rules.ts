@@ -310,7 +310,7 @@ export const RULES: readonly Rule[] = [
     id: 'space.percent',
     category: 'data',
     about:
-      'In languages whose pack sets percentSpace: a no-break space between a number and % (5 %); where the pack also sets currencySpace, before € after the number too (49 €)',
+      'In languages whose pack sets percentSpace: a no-break space between a number and % (5 %). In languages whose pack sets currencySpace: before € after a number (49 €). The two fields are independent',
     packFields: ['percentSpace', 'currencySpace'],
     when: (text, { pack }) =>
       (!!pack.percentSpace && text.includes('%')) || (!!pack.currencySpace && text.includes('€')),

@@ -103,6 +103,16 @@ describe('Maltese numbers (ISG 6.5: a point for decimals, a fixed space between 
   });
 });
 
+describe('Maltese Nru', () => {
+  test('Nru, written without a full stop, keeps the number after it (ISG 4.2.3)', () => {
+    expect(t('Nru 5')).toBe('Nru~5');
+    expect(t('Nru 12')).toBe('Nru~12');
+  });
+  test('only a whole word counts', () => {
+    expect(t('Manru 5')).toBe('Manru 5');
+  });
+});
+
 describe('Maltese idempotence', () => {
   test('a second pass over the golden strings changes nothing', () => {
     for (const input of [
