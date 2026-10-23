@@ -92,6 +92,49 @@ describe('Irish numbers (ISG 6.5, read in the Maltese ISG: a point for decimals,
   });
 });
 
+// Initial mutations: t- (before a vowel, after the article or a masculine noun), n- (eclipsis of a
+// vowel), h- (prothetic h). They are written with a hyphen after one letter. No rule matches that
+// shape (no digits, no spaces), so the text is untouched; the goldens keep it so.
+describe('initial mutations', () => {
+  const words = ['an t-athair', 'i n-Éirinn', 'go h-álainn', 'na h-oibrithe', 'an t-uisce'];
+
+  test('outside a quotation they pass through', () => {
+    for (const s of words) expect(t(s)).toBe(s);
+    expect(t('Tá an t-uisce fuar agus na h-oibrithe tuirseach.')).toBe(
+      'Tá an t-uisce fuar agus na h-oibrithe tuirseach.',
+    );
+  });
+
+  test('inside a quotation only the marks change, the hyphen stays', () => {
+    expect(t('"an t-uisce"')).toBe('‘an t-uisce’');
+    expect(t('Dúirt sé "an t-athair" inné.')).toBe('Dúirt sé ‘an t-athair’ inné.');
+    expect(t('Bhí sé "i n-Éirinn" inné.')).toBe('Bhí sé ‘i n-Éirinn’ inné.');
+    expect(t('Bhí sé "go h-álainn" inné.')).toBe('Bhí sé ‘go h-álainn’ inné.');
+    expect(t('Dúirt sé "na h-oibrithe" inné.')).toBe('Dúirt sé ‘na h-oibrithe’ inné.');
+  });
+
+  test('beside a numeric range only the range becomes an en dash', () => {
+    expect(t('an t-athair 1-2')).toBe('an t-athair 1–2');
+    expect(t('1-2 an t-athair')).toBe('1–2~an t-athair');
+  });
+
+  test('a spaced hyphen is a sentence dash; "t -" is not a mutation', () => {
+    // A mutation is written without spaces, so `an t - athair` is a word, a letter and a word
+    // around a spaced hyphen, and is set as a sentence dash like any other.
+    expect(t('an t - athair')).toBe('an t~— athair');
+  });
+
+  test('the literary register leaves the hyphen alone', () => {
+    for (const s of words) expect(t(s, { register: 'literary' })).toBe(s);
+    expect(t('"an t-uisce"', { register: 'literary' })).toBe('‘an t-uisce’');
+    expect(t('an t-athair 1-2', { register: 'literary' })).toBe('an t-athair 1–2');
+  });
+
+  test('a hyphen after one letter is never a dash or a minus', () => {
+    for (const s of words) expect(t(s, { enable: ['symbol.minus'] })).toBe(s);
+  });
+});
+
 describe('Irish idempotence', () => {
   test('a second pass over the golden strings changes nothing', () => {
     for (const input of [
