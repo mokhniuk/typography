@@ -4,6 +4,10 @@ Versions follow semver while the package is below 1.0.0: a **minor** release may
 
 ## Unreleased
 
+### Changes
+
+- English quotes are `“…”` with `‘…’` inside by default, as CLDR gives English and as every other tool in the benchmark sets them (`He said “we’re here”`). The former default, `«…»` with `„…“` inside and `‚…‘` third, was this package's house style; it is now the quote style `'guillemets'`, which sets those marks in any language and register and takes precedence over both, as `'us'` does: `quoteStyle: 'guillemets'` in `TypographyConfig` and every mode, `--quotes guillemets` on the command line, and a third entry in the playground's and the font checker's quote select. The British literary register (`‘…’` with `“…”` inside) is unchanged. The `quote` decision in the sources registry stays `disputed` only for German, French level two and de-CH. The benchmark should count 250 of 250 checks on the default run (its 8 misses were the English `«…»`); it is re-run with the release. Can change existing output: yes, in English text with quotation marks; set `quoteStyle: 'guillemets'` to keep the old output.
+
 ### Tooling and docs
 
 - The sources under `src/` carry their file extensions in every relative import and re-export (`./run.ts`, `../core/index.ts`; Biome's `useImportExtensions` enforces it for `src/`), so they are valid ESM for Node as well as Bun. `src/cli/run.ts` imports `package.json` with `with { type: 'json' }`, and `typo` starts with `#!/usr/bin/env node`: the command line needs Bun today, because the sources ship as TypeScript, and from the npm release it runs on Node 20 or later as well (a `--config` file in TypeScript then needs Bun, or Node 22.18 or later). The Bun-only test helper `pack-checks.ts` is now `pack-checks.test-utils.ts` and stays out of the pack. No output change.

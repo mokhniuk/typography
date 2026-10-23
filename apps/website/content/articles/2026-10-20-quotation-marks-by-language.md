@@ -15,7 +15,7 @@ The pack for each language lists its marks by nesting level. A few, from the gen
 
 | Language | Quotation | Inside it |
 |---|---|---|
-| English with `quoteStyle: 'us'` | `“…”` | `‘…’` |
+| English | `“…”` | `‘…’` |
 | Ukrainian | `«…»` | `„…“` |
 | Spanish, Italian | `«…»` | `“…”` |
 | German | `»…«` | `›…‹` |
@@ -24,9 +24,9 @@ The pack for each language lists its marks by nesting level. A few, from the gen
 | Czech, Slovak | `„…“` | `‚…‘` |
 | Swedish, Finnish | `”…”` | `’…’` |
 
-English is the one language where the default is a house style rather than the language's own: it sets `«…»` with `„…“` inside, and `quoteStyle: 'us'` gives `“…”` with `‘…’` inside.
+Two options set one style for every language. `quoteStyle: 'us'` gives `“…”` with `‘…’` inside, and `quoteStyle: 'guillemets'` gives this package's house style, `«…»` with `„…“` inside. Until 0.15.0 the house style was the English default.
 
-The table is a summary. The language pages hold the exact marks per level, the sources each pack was written from, and the status: **no pack has been read by a native speaker yet**. They were written from published style guides, and some of those could only be read in part. Where the engine and the Unicode CLDR data disagree (English, German, French, Swiss German), the sources registry marks the decision `disputed` rather than hiding it.
+The table is a summary. The language pages hold the exact marks per level, the sources each pack was written from, and the status: **no pack has been read by a native speaker yet**. They were written from published style guides, and some of those could only be read in part. Where the engine and the Unicode CLDR data disagree (German, French, Swiss German), the sources registry marks the decision `disputed` rather than hiding it.
 
 ## Registers
 

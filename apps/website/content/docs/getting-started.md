@@ -23,7 +23,7 @@ typographic('He said "we\'re here" - and left.', 'en', { quoteStyle: 'us' });
 
 The second argument is the language (`en` when you give none). The output is stable: a second run on it changes nothing, in every language.
 
-English defaults to the package's house guillemets `«…»`. Pass `quoteStyle: 'us'` for `“…”` with `‘…’` inside, in any language. The `literary` register sets book-style marks where a language has them.
+English defaults to `“…”` with `‘…’` inside. Pass `quoteStyle: 'us'` for those marks in any language, or `quoteStyle: 'guillemets'` for the package's house style `«…»` with `„…“` inside, in any language. The `literary` register sets book-style marks where a language has them.
 
 ## See what it changed
 

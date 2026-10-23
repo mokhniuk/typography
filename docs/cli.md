@@ -15,7 +15,7 @@ It typesets text, HTML or Markdown with the same engine as the library functions
 | `--lang` | `-l` | a pack code (the 24 EU languages, `uk`, `ch`) | `en` | Language of the text. |
 | `--register` | `-r` | `display`, `literary` | `display` | Register. |
 | `--format` | `-f` | `text`, `html`, `markdown` (`md` is accepted) | by extension | How to read the input. |
-| `--quotes` | | `language`, `us` | `language` | `language`: the quote marks of the language. `us`: `“…”` and `‘…’` in any language and register. |
+| `--quotes` | | `language`, `us`, `guillemets` | `language` | `language`: the quote marks of the language. `us`: `“…”` and `‘…’` in any language and register. `guillemets`: `«…»`, `„…“` and `‚…‘` in any language and register (the house style). |
 | `--disable` | `-d` | rule ids or groups, comma separated | none | Switch rules off, for example `dash.range,space`. The flag may be given more than once. |
 | `--enable` | `-e` | rule ids or groups, comma separated | none | Switch on rules that are off by default (`--rules` marks them). The flag may be given more than once. A rule named in both `--enable` and `--disable` is a usage error. |
 | `--rules` | | | | List the rules (the config's `rules` when it has them), one per line: id, category (`tradition`, `symbols`, `math` or `data`, see [rules.md](rules.md#categories)) and description, and exit 0. A rule that is off by default is marked `(off by default; --enable <id>)`. |
@@ -66,7 +66,7 @@ Messages go to standard error, prefixed `typo:`. With `--check`, each file that 
 Prints one line per change, in the order the rules ran:
 
 ```
-note.txt: quote: "\"" -> "«"
+note.txt: quote: "\"" -> "“"
 note.txt: dash.range: "-" -> "–"
 ```
 
