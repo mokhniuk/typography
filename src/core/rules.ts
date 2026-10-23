@@ -9,11 +9,10 @@ import {
   plusMinus,
   trailingSpace,
 } from './extra.ts';
-import { PACK, PACKS } from './lang/index.ts';
+import { PACKS } from './lang/index.ts';
 import { apostrophe, arrows, ellipsis, legal, minus, multiply } from './marks.ts';
 import { groupNumbers } from './numbers.ts';
 import { bindPhones } from './phone.ts';
-import { ORPHANS, SENTENCE_DASH, SENTENCE_DASH_LITERARY, SHORT_WORDS } from './profiles.ts';
 import { quotes } from './quotes.ts';
 import {
   abbreviations,
@@ -125,7 +124,7 @@ export const RULES: readonly Rule[] = [
     about: 'Quotation marks by language, register and nesting level, from any source style',
     // Its marks come in pairs, so `avoid` keeps or drops them together (see `avoidWhole`).
     avoidWhole: true,
-    apply: (text, { lang, register, quoteStyle }) => quotes(text, lang, register, quoteStyle),
+    apply: (text, { pack, register, quoteStyle }) => quotes(text, pack, register, quoteStyle),
   },
   {
     id: 'apostrophe',
@@ -147,7 +146,7 @@ export const RULES: readonly Rule[] = [
     about: 'Removes a space before , . ; : ! ? ) (French keeps the space before : ; ! ?)',
     defaultOn: false,
     when: hasAny(' ', '\t'),
-    apply: (text, { lang }) => beforePunctuation(text, lang),
+    apply: (text, { pack }) => beforePunctuation(text, !!pack.spaceBeforeHigh),
   },
   {
     id: 'space.after-comma',
@@ -185,8 +184,8 @@ export const RULES: readonly Rule[] = [
     category: 'tradition',
     about:
       'A paragraph opening with a dash is a line of dialogue, in languages that write dialogue that way: their dash and a no-break space (Ukrainian — Привіт)',
-    apply: (text, { lang, blockStart }) => {
-      const style = PACK[lang].dialogueDash;
+    apply: (text, { pack, blockStart }) => {
+      const style = pack.dialogueDash;
       return style && blockStart ? dialogue(text, style) : text;
     },
   },
@@ -205,7 +204,7 @@ export const RULES: readonly Rule[] = [
     about:
       'Digits of an integer of five or more are grouped in threes with the language separator (1,000,000; 1 000 000)',
     defaultOn: false,
-    apply: (text, { lang }) => groupNumbers(text, lang),
+    apply: (text, { pack }) => groupNumbers(text, pack),
   },
   {
     id: 'dash.range',
@@ -220,11 +219,11 @@ export const RULES: readonly Rule[] = [
     about:
       'A spaced hyphen, dash or double hyphen becomes a spaced dash (em; en in German and literary British English), no-break before it',
     when: hasAny('-', '–', '—'),
-    apply: (text, { lang, register }) =>
+    apply: (text, { pack, register }) =>
       dashSentence(
         text,
-        (register === 'literary' ? SENTENCE_DASH_LITERARY[lang] : undefined) ??
-          SENTENCE_DASH[lang] ??
+        (register === 'literary' ? pack.sentenceDashLiterary : undefined) ??
+          pack.sentenceDash ??
           '—',
       ),
   },
@@ -284,8 +283,8 @@ export const RULES: readonly Rule[] = [
     category: 'tradition',
     about:
       'Parts of an abbreviation stay together (z. B.), and Nr., ul., S. stay with what follows',
-    when: (text, { lang }) => mayAbbreviate(text, lang),
-    apply: (text, { lang }) => abbreviations(text, lang),
+    when: (text, { pack }) => mayAbbreviate(text, pack),
+    apply: (text, { pack }) => abbreviations(text, pack),
   },
   {
     id: 'space.number',
@@ -298,10 +297,9 @@ export const RULES: readonly Rule[] = [
     id: 'space.percent',
     category: 'data',
     about: `${names(PACKS.filter((pack) => 'percentSpace' in pack && pack.percentSpace))}: a no-break space between a number and % (5 %); ${names(PACKS.filter((pack) => 'currencySpace' in pack && pack.currencySpace))}: also before € after the number (49 €)`,
-    when: (text, { lang }) =>
-      (!!PACK[lang].percentSpace && text.includes('%')) ||
-      (!!PACK[lang].currencySpace && text.includes('€')),
-    apply: (text, { lang }) => unitSymbol(text, lang),
+    when: (text, { pack }) =>
+      (!!pack.percentSpace && text.includes('%')) || (!!pack.currencySpace && text.includes('€')),
+    apply: (text, { pack }) => unitSymbol(text, pack),
   },
   {
     id: 'symbol.degree',
@@ -309,7 +307,7 @@ export const RULES: readonly Rule[] = [
     about: '20 C, 20°C and 20 °C become 20 °C, with a no-break space before the unit',
     defaultOn: false,
     when: hasAny('C', 'F'),
-    apply: (text, { lang }) => degrees(text, lang),
+    apply: (text, { pack }) => degrees(text, !!pack.bareTemperature),
   },
   {
     id: 'space.section',
@@ -344,15 +342,15 @@ export const RULES: readonly Rule[] = [
     id: 'space.short-word',
     category: 'tradition',
     about: `${names(PACKS.filter((pack) => 'shortWords' in pack && pack.shortWords?.length))}: a short word of two or three letters stays with the word after it (to~the shop); never more than two words in a row`,
-    when: (_text, { lang }) => SHORT_WORDS[lang] !== undefined,
-    apply: (text, { lang }) => shortWords(text, lang),
+    when: (_text, { pack }) => !!pack.shortWords?.length,
+    apply: (text, { pack }) => shortWords(text, pack),
   },
   {
     id: 'space.orphan',
     category: 'tradition',
     about: 'No-break space after a one-letter word the language must not strand at a line end',
-    when: (_text, { lang }) => ORPHANS[lang] !== undefined,
-    apply: (text, { lang }) => orphans(text, lang),
+    when: (_text, { pack }) => pack.orphans !== undefined,
+    apply: (text, { pack }) => orphans(text, pack),
   },
   {
     id: 'space.arrow',

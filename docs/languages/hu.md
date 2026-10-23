@@ -29,6 +29,8 @@ Read by where each mark stands, not only by shape: `»…«` (turned the other w
 - Short words kept with the next word (`space.short-word`, on by default; the pack's own list): none.
 - A no-break space between a number and %: no.
 - A no-break space between a number and € after it: no.
+- A space kept before `: ; ! ?` (`space.before-punctuation`, opt-in): no.
+- A bare temperature without the degree sign (`20 C`) read as one (`symbol.degree`, opt-in): no.
 - Abbreviations: no list.
 
 ## Numbers

@@ -1,8 +1,7 @@
 import { CURRENCY_CODES, CURRENCY_SIGNS, CURRENCY_WORDS, EURO, PERCENT } from './currency.ts';
-import { PACK } from './lang/index.ts';
-import { ABBREVIATIONS, type Abbreviations, ORPHANS, SHORT_WORDS } from './profiles.ts';
+import type { Abbreviations, LangPack } from './lang/pack.ts';
 import { before, isLetter, isLetterOrNumber, replaceBehind } from './scan.ts';
-import { type Lang, NBSP } from './types.ts';
+import { NBSP } from './types.ts';
 
 /** `(?<![\p{L}\p{N}])` before `index`: no letter or number stands directly before it. */
 const freeBefore = (text: string, index: number): boolean => !isLetterOrNumber(before(text, index));
@@ -208,8 +207,8 @@ function forward(pattern: RegExp): RegExp | null {
 }
 
 /** One-letter words a language must not strand at the end of a line. */
-export const orphans = (text: string, lang: Lang): string => {
-  const pattern = ORPHANS[lang];
+export const orphans = (text: string, pack: LangPack): string => {
+  const pattern = pack.orphans;
   if (!pattern) return text;
   const fast = forward(pattern);
   return fast
@@ -228,22 +227,22 @@ const capitalised = (word: string) => word.charAt(0).toUpperCase() + word.slice(
  * bracket, the Spanish opening marks. `to~“the”`, `the~’90s`, `of~(two)`.
  */
 const OPENS_WORD = '«»„“”‚‘’‹›"\'(\\[¿¡';
-const shortWordPatterns = new Map<Lang, RegExp | null>();
+/** Keyed by the pack's list, so a pack (built in or not) compiles its pattern once. */
+const shortWordPatterns = new WeakMap<readonly string[], RegExp>();
 
-function shortWordPattern(lang: Lang): RegExp | null {
-  const cached = shortWordPatterns.get(lang);
-  if (cached !== undefined) return cached;
-  const list = SHORT_WORDS[lang];
-  const made = list?.length
-    ? new RegExp(
-        `(?:${list
-          .flatMap((word) => [word, capitalised(word)])
-          .map(escapeRegex)
-          .join('|')})(?![\\p{L}\\p{N}])[ ]+(?=[\\p{L}\\p{N}${OPENS_WORD}])`,
-        'gu',
-      )
-    : null;
-  shortWordPatterns.set(lang, made);
+function shortWordPattern(pack: LangPack): RegExp | null {
+  const list = pack.shortWords;
+  if (!list?.length) return null;
+  const cached = shortWordPatterns.get(list);
+  if (cached) return cached;
+  const made = new RegExp(
+    `(?:${list
+      .flatMap((word) => [word, capitalised(word)])
+      .map(escapeRegex)
+      .join('|')})(?![\\p{L}\\p{N}])[ ]+(?=[\\p{L}\\p{N}${OPENS_WORD}])`,
+    'gu',
+  );
+  shortWordPatterns.set(list, made);
   return made;
 }
 
@@ -255,8 +254,8 @@ function shortWordPattern(lang: Lang): RegExp | null {
  * Never more than two words in a row: a short word that follows one this rule has just bound stays
  * free, so a chain cannot grow into a whole line.
  */
-export function shortWords(text: string, lang: Lang): string {
-  const pattern = shortWordPattern(lang);
+export function shortWords(text: string, pack: LangPack): string {
+  const pattern = shortWordPattern(pack);
   if (!pattern) return text;
   pattern.lastIndex = 0;
   let out = '';
@@ -282,15 +281,16 @@ export function shortWords(text: string, lang: Lang): string {
  * The three abbreviation patterns of a language, each as the forward regex that stays once the
  * leading `(?<![\p{L}\p{N}])` is taken off (it is checked by hand, see scan.ts).
  */
-const abbreviationPatterns = new Map<
-  Lang,
-  { together: RegExp | null; bind: RegExp | null; page: RegExp | null }
->();
+type AbbreviationPatterns = { together: RegExp | null; bind: RegExp | null; page: RegExp | null };
+/** Keyed by the pack's lists, so a pack (built in or not) compiles its patterns once. */
+const abbreviationPatterns = new WeakMap<Abbreviations, AbbreviationPatterns>();
+const NO_ABBREVIATIONS: AbbreviationPatterns = { together: null, bind: null, page: null };
 
-function patternsFor(lang: Lang) {
-  const cached = abbreviationPatterns.get(lang);
+function patternsFor(pack: LangPack): AbbreviationPatterns {
+  const list = pack.abbreviations;
+  if (!list) return NO_ABBREVIATIONS;
+  const cached = abbreviationPatterns.get(list);
   if (cached) return cached;
-  const list: Abbreviations = ABBREVIATIONS[lang] ?? {};
   const names = (words: readonly string[] | undefined) =>
     words?.length ? words.map(escapeRegex).join('|') : null;
   const together = list.together?.length
@@ -306,7 +306,7 @@ function patternsFor(lang: Lang) {
     bind: bind ? new RegExp(`(?:${bind})\\.[ ]+(?=[\\p{L}\\p{N}])`, 'gu') : null,
     page: page ? new RegExp(`(?:${page})\\.[ ]+(?=\\d)`, 'gu') : null,
   };
-  abbreviationPatterns.set(lang, made);
+  abbreviationPatterns.set(list, made);
   return made;
 }
 
@@ -315,18 +315,18 @@ function patternsFor(lang: Lang) {
  * `page` patterns need a full stop; `together` ones need it only if every entry has one (read from
  * the pack, not assumed), otherwise the rule always runs. No pattern at all: it never changes anything.
  */
-export const mayAbbreviate = (text: string, lang: Lang): boolean => {
-  const { together, bind, page } = patternsFor(lang);
+export const mayAbbreviate = (text: string, pack: LangPack): boolean => {
+  const { together, bind, page } = patternsFor(pack);
   if (!together && !bind && !page) return false;
-  const list: Abbreviations = ABBREVIATIONS[lang] ?? {};
+  const list: Abbreviations = pack.abbreviations ?? {};
   return !together || (list.together ?? []).every((a) => a.includes('.'))
     ? text.includes('.')
     : true;
 };
 
 /** The parts of an abbreviation stay together, and a short one stays with what it introduces. */
-export const abbreviations = (text: string, lang: Lang): string => {
-  const { together, bind, page } = patternsFor(lang);
+export const abbreviations = (text: string, pack: LangPack): string => {
+  const { together, bind, page } = patternsFor(pack);
   let out = text;
   if (together) out = replaceBehind(out, together, freeBefore, (m) => m[0].replace(/[ ]+/g, NBSP));
   if (bind) out = replaceBehind(out, bind, freeBefore, (m) => m[0].replace(/[ ]+$/, NBSP));
@@ -342,8 +342,7 @@ const BOTH_MARKS = new RegExp(`[${PERCENT}${EURO}]`, 'g');
 const PERCENT_ONLY = new RegExp(PERCENT, 'g');
 const EURO_ONLY = new RegExp(EURO, 'g');
 
-const unitMarks = (lang: Lang): RegExp | undefined => {
-  const { percentSpace, currencySpace } = PACK[lang];
+const unitMarks = ({ percentSpace, currencySpace }: LangPack): RegExp | undefined => {
   if (percentSpace) return currencySpace ? BOTH_MARKS : PERCENT_ONLY;
   return currencySpace ? EURO_ONLY : undefined;
 };
@@ -352,8 +351,8 @@ const unitMarks = (lang: Lang): RegExp | undefined => {
  * A percent sign (in a language with `percentSpace`: German, French) or a euro sign after the number
  * (with `currencySpace`) stands apart from its number by a no-break space: 5 %, 49 €.
  */
-export const unitSymbol = (text: string, lang: Lang): string => {
-  const marks = unitMarks(lang);
+export const unitSymbol = (text: string, pack: LangPack): string => {
+  const marks = unitMarks(pack);
   return marks
     ? // Was `(?<=\d)(?=[%€])`, tried at every position: the mark is found first, a digit before it read here.
       text.replace(marks, (mark, offset: number, whole: string) => {

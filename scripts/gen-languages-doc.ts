@@ -121,6 +121,8 @@ export function renderPack(pack: LangPack): string {
     }.`,
     `- A no-break space between a number and %: ${pack.percentSpace ? 'yes' : 'no'}.`,
     `- A no-break space between a number and € after it: ${pack.currencySpace ? 'yes' : 'no'}.`,
+    `- A space kept before \`: ; ! ?\` (\`space.before-punctuation\`, opt-in): ${pack.spaceBeforeHigh ? 'yes' : 'no'}.`,
+    `- A bare temperature without the degree sign (\`20 C\`) read as one (\`symbol.degree\`, opt-in): ${pack.bareTemperature ? 'yes' : 'no'}.`,
   );
   const lists = pack.abbreviations;
   if (lists && (lists.together || lists.bind || lists.page)) {

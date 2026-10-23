@@ -29,6 +29,8 @@ An apostrophe before a dropped-letter word is not a quotation mark: `'em`, `'til
 - Short words kept with the next word (`space.short-word`, on by default; the pack's own list): none.
 - A no-break space between a number and %: yes.
 - A no-break space between a number and € after it: yes.
+- A space kept before `: ; ! ?` (`space.before-punctuation`, opt-in): no.
+- A bare temperature without the degree sign (`20 C`) read as one (`symbol.degree`, opt-in): no.
 - Abbreviations: no list.
 
 ## Numbers
@@ -43,4 +45,4 @@ Groups of three are separated by `~`, the decimal mark is `.`.
 
 ## Notes
 
-Swiss French quotes: `«outer ‹inner› outer»`, without the no-break space inside that the fr pack sets, as the former ch pack set them from the Swiss Federal Chancellery Schreibweisungen (the German edition; no French Swiss guide was read). CLDR has the same marks for fr-CH. No space is set before `; ! ?` and `:`: the rule that spaces them (SPACE_BEFORE_HIGH in src/core/extra.ts) lists `fr` only, and whether Swiss French sets one is unverified. Dialogue is quoted here (no dialogueDash), unlike the fr pack: the OQLF source on dialogue dashes is cited with the fr sources, but no dialogue dash is set, and either choice is unverified for Switzerland. The no-break space before % and € is French’s (the fr pack), not checked against a Swiss guide. Digits are grouped with a no-break space (number.group) and the decimal mark is a point, as the Schreibweisungen set for federal texts (Rz. 512, 514, 543 for francs); those passages were read in the German edition, from its index and the PDF text, not on the page itself, and the pack stays reviewed: false. Everyday Swiss usage often writes the apostrophe (1’000’000); it is not used here.
+Swiss French quotes: `«outer ‹inner› outer»`, without the no-break space inside that the fr pack sets, as the former ch pack set them from the Swiss Federal Chancellery Schreibweisungen (the German edition; no French Swiss guide was read). CLDR has the same marks for fr-CH. No space is set before `; ! ?` and `:`: the pack field that keeps that space (spaceBeforeHigh) is set by the fr pack only (this pack copies the fr fields it takes one by one, and not that one), and whether Swiss French sets one is unverified. Dialogue is quoted here (no dialogueDash), unlike the fr pack: the OQLF source on dialogue dashes is cited with the fr sources, but no dialogue dash is set, and either choice is unverified for Switzerland. The no-break space before % and € is French’s (the fr pack), not checked against a Swiss guide. Digits are grouped with a no-break space (number.group) and the decimal mark is a point, as the Schreibweisungen set for federal texts (Rz. 512, 514, 543 for francs); those passages were read in the German edition, from its index and the PDF text, not on the page itself, and the pack stays reviewed: false. Everyday Swiss usage often writes the apostrophe (1’000’000); it is not used here.

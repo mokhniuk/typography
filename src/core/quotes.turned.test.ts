@@ -38,8 +38,8 @@ describe('turned pairs, as set before the rewrite', () => {
   ];
   for (const [lang, input, expected] of cases) {
     test(`${lang}: ${input}`, () => {
-      expect(quotes(input, lang, 'display')).toBe(expected);
-      expect(quotes(input, lang, 'literary')).toBe(expected);
+      expect(quotes(input, PACK[lang], 'display')).toBe(expected);
+      expect(quotes(input, PACK[lang], 'literary')).toBe(expected);
     });
   }
 
@@ -60,9 +60,11 @@ describe('turned pairs, as set before the rewrite', () => {
   ];
   for (const [lang, expected] of samples) {
     test(`the ${lang} pack sample, and its output again`, () => {
-      expect(quotes(PACK[lang].sample, lang, 'display')).toBe(expected);
-      expect(quotes(expected, lang, 'display')).toBe(expected);
-      expect(quotes(expected.replace('„', '»').replace('”', '«'), lang, 'display')).toBe(expected);
+      expect(quotes(PACK[lang].sample, PACK[lang], 'display')).toBe(expected);
+      expect(quotes(expected, PACK[lang], 'display')).toBe(expected);
+      expect(quotes(expected.replace('„', '»').replace('”', '«'), PACK[lang], 'display')).toBe(
+        expected,
+      );
     });
   }
 });
@@ -188,10 +190,10 @@ describe('a language with turned pairs costs about as much as English', () => {
   // Before the rewrite: German prose 10 ms against English 1.2 ms at 100 KB; the bound is 3x, loose on purpose.
   const pair = (name: string, de: string, en: string) =>
     test(name, () => {
-      quotes(de.slice(0, 2000), 'de', 'display'); // warm the setter and its regexes
-      quotes(en.slice(0, 2000), 'en', 'display');
-      const german = best(() => quotes(de, 'de', 'display'));
-      const english = best(() => quotes(en, 'en', 'display'));
+      quotes(de.slice(0, 2000), PACK.de, 'display'); // warm the setter and its regexes
+      quotes(en.slice(0, 2000), PACK.en, 'display');
+      const german = best(() => quotes(de, PACK.de, 'display'));
+      const english = best(() => quotes(en, PACK.en, 'display'));
       expect(german).toBeLessThan(english * 3);
     }, 30_000);
 

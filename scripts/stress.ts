@@ -17,8 +17,13 @@ const SHIELD = { id: 'shield (zones)', about: '', apply: (text: string) => zones
 const text = (await import(`${dir}/text/index.ts`)) as typeof import('../src/text/index');
 /** The text mode wraps the rules (trim, split, rejoin) and is timed like one: a long run of spaces inside a line cost there. */
 const TEXT_MODE = { id: 'text mode', about: '', apply: (input: string) => text.typesetText(input) };
+/** The packs, for the context the rules read (`pack`); an older checkout's rules ignore it. */
+const langs = (await import(
+  `${dir}/core/lang/index.ts`
+)) as typeof import('../src/core/lang/index');
 const context = {
   lang: 'en',
+  pack: langs.PACK.en,
   register: 'display',
   quoteStyle: 'language',
   blockStart: false,
@@ -177,7 +182,7 @@ if (quote && (!only || only === 'quote')) {
   ] as const) {
     const ms = sizes.map((n) => {
       const text = unit.repeat(Math.ceil(n / unit.length));
-      return time(() => quote.apply(text, { ...context, lang: 'de' }));
+      return time(() => quote.apply(text, { ...context, lang: 'de', pack: langs.PACK.de }));
     });
     const r1 = (ms[1] ?? 0) / Math.max(ms[0] ?? 0, 0.05);
     const r2 = (ms[2] ?? 0) / Math.max(ms[1] ?? 0, 0.05);

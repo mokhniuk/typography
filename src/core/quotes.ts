@@ -1,5 +1,5 @@
-import { type LangPack, type Level, PACK } from './lang/index.ts';
-import type { Lang, QuoteStyle, Register } from './types.ts';
+import type { LangPack, Level } from './lang/pack.ts';
+import type { QuoteStyle, Register } from './types.ts';
 
 // Pairs found in source text are first swapped for these placeholders, then
 // given the marks of their level, so a text can mix any source styles.
@@ -395,19 +395,20 @@ export function quotesFor(
   };
 }
 
-const setters = new Map<Lang, ReturnType<typeof quotesFor>>();
+/** Keyed by the pack, so a pack (built in or not) compiles its setter once. */
+const setters = new WeakMap<LangPack, ReturnType<typeof quotesFor>>();
 
-/** Sets the quotation marks of the language, register and nesting level; source quotes may be of any style. */
+/** Sets the quotation marks of the pack's language, register and nesting level; source quotes may be of any style. */
 export function quotes(
   text: string,
-  lang: Lang,
+  pack: LangPack,
   register: Register,
   quoteStyle: QuoteStyle = 'language',
 ): string {
-  let set = setters.get(lang);
+  let set = setters.get(pack);
   if (!set) {
-    set = quotesFor(PACK[lang]);
-    setters.set(lang, set);
+    set = quotesFor(pack);
+    setters.set(pack, set);
   }
   return set(text, register, quoteStyle);
 }

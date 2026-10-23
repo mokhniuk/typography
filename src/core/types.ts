@@ -1,4 +1,5 @@
 import type { Lang } from './lang/index.ts';
+import type { LangPack } from './lang/pack.ts';
 
 /** A no-break space. */
 export const NBSP = '\u00A0';
@@ -24,7 +25,10 @@ export type QuoteStyle = 'language' | 'us' | 'guillemets';
 
 /** What a rule needs to know besides the text. */
 export type Context = {
+  /** The language code: `pack.code`. */
   lang: Lang;
+  /** The language pack the text is set in; a rule reads its fields (`dialogueDash`, `numbers`, ...). */
+  pack: LangPack;
   register: Register;
   quoteStyle: QuoteStyle;
   /** Whether the text opens its paragraph. Only then can its first dash be a dialogue dash. */

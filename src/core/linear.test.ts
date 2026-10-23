@@ -2,6 +2,7 @@ import { describe, expect, test } from 'bun:test';
 import { corpus, lcg, longText } from '../../scripts/corpus.ts';
 import { dashSentence } from './dashes.ts';
 import { beforePunctuation, degrees, doubleMarks, trailingSpace } from './extra.ts';
+import { PACK } from './lang/index.ts';
 import { groupDigits, groupNumbers } from './numbers.ts';
 import { arrowSpace, association } from './spaces.ts';
 import type { Lang } from './types.ts';
@@ -415,10 +416,10 @@ describe('number.group', () => {
       }
     }
   });
-  scales('groupNumbers on one very long run of digits', (t) => groupNumbers(t, 'en'), rep('1'));
+  scales('groupNumbers on one very long run of digits', (t) => groupNumbers(t, PACK.en), rep('1'));
   scales(
     'groupNumbers on a long run of digits then a hyphen',
-    (t) => groupNumbers(t, 'de'),
+    (t) => groupNumbers(t, PACK.de),
     (n) => `${'9'.repeat(n)}-`,
   );
 });
@@ -521,13 +522,13 @@ describe('symbol.degree', () => {
   same(
     'degrees (en)',
     samples,
-    (t) => degrees(t, 'en'),
+    (t) => degrees(t, true),
     (t) => original(t, 'en'),
   );
   same(
     'degrees (de)',
     samples,
-    (t) => degrees(t, 'de'),
+    (t) => degrees(t, false),
     (t) => original(t, 'de'),
     20,
   );
@@ -545,7 +546,7 @@ describe('symbol.degree', () => {
   );
   scales(
     'degrees on a long run of digits then " X"',
-    (t) => degrees(t, 'en'),
+    (t) => degrees(t, true),
     (n) => `${'9'.repeat(n)} X C`,
   );
   scales(
@@ -661,38 +662,38 @@ describe('space.before-punctuation', () => {
   same(
     'beforePunctuation (en)',
     samples,
-    (t) => beforePunctuation(t, 'en'),
+    (t) => beforePunctuation(t, false),
     (t) => original(t, 'en'),
   );
   same(
     'beforePunctuation (fr)',
     samples,
-    (t) => beforePunctuation(t, 'fr'),
+    (t) => beforePunctuation(t, true),
     (t) => original(t, 'fr'),
     50,
   );
   fasterThanOriginal(
     'beforePunctuation',
-    (t) => beforePunctuation(t, 'en'),
+    (t) => beforePunctuation(t, false),
     (t) => original(t, 'en'),
   );
   scales(
     'beforePunctuation on spaces then a comma',
-    (t) => beforePunctuation(t, 'en'),
+    (t) => beforePunctuation(t, false),
     (n) => `a${' '.repeat(n)},`,
   );
   scales(
     'beforePunctuation on spaces then a letter',
-    (t) => beforePunctuation(t, 'en'),
+    (t) => beforePunctuation(t, false),
     (n) => `a${' '.repeat(n)}x`,
   );
   scales(
     'beforePunctuation on spaces and tabs',
-    (t) => beforePunctuation(t, 'en'),
+    (t) => beforePunctuation(t, false),
     (n) => `a${' \t'.repeat(n / 2)}!`,
   );
-  scales('beforePunctuation on " ,"', (t) => beforePunctuation(t, 'en'), rep('a ,'));
-  scales('beforePunctuation on " . "', (t) => beforePunctuation(t, 'en'), rep('a . '));
+  scales('beforePunctuation on " ,"', (t) => beforePunctuation(t, false), rep('a ,'));
+  scales('beforePunctuation on " . "', (t) => beforePunctuation(t, false), rep('a . '));
 });
 
 describe('punctuation.double', () => {

@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
 import { corpus } from '../../scripts/corpus.ts';
-import { PACKS } from './lang/index.ts';
+import { PACK, PACKS } from './lang/index.ts';
 import { RULES } from './rules.ts';
 import type { Context, Lang, Register } from './types.ts';
 import { typographic } from './typography.ts';
@@ -68,7 +68,13 @@ describe('Rule.when', () => {
       for (const lang of LANGS) {
         for (const register of REGISTERS) {
           for (const blockStart of [true, false]) {
-            const context: Context = { lang, register, quoteStyle: 'language', blockStart };
+            const context: Context = {
+              lang,
+              pack: PACK[lang],
+              register,
+              quoteStyle: 'language',
+              blockStart,
+            };
             for (const text of samples) {
               const out = rule.apply(text, context);
               if (!rule.when?.(text, context)) {
@@ -97,6 +103,7 @@ describe('Rule.when', () => {
     const all = RULES.filter((rule) => rule.defaultOn !== false);
     const context = (lang: Lang): Context => ({
       lang,
+      pack: PACK[lang],
       register: 'display',
       quoteStyle: 'language',
       blockStart: true,

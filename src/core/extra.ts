@@ -3,11 +3,7 @@
  * Their guards err towards leaving text alone; the known limits are in docs/limits.md.
  */
 import { before, isLetterOrNumber } from './scan.ts';
-import type { Lang } from './types.ts';
 import { NBSP } from './types.ts';
-
-/** Languages that set a space before `: ; ! ?` (French): the space is correct there, not a fault. */
-const SPACE_BEFORE_HIGH = new Set<Lang>(['fr']);
 
 /** A space or tab straight before one of the marks `beforePunctuation` pulls back. */
 const SPACE_THEN_MARK = /[ \t][,.;:!?)]/g;
@@ -17,7 +13,8 @@ const NOT_BEFORE_SPACES = /[\s([{“"«‘„]/;
 /**
  * Removes a space before , . ; : ! ? ). Not at a line start, not before an ellipsis, a decimal
  * (` .5`), a file extension (` .gitignore`), `!=` or `??`, not a spaced time or ratio (`10 : 30`),
- * not an emoticon (` :)`, ` ;-)`), and not before `: ; ! ?` in French.
+ * not an emoticon (` :)`, ` ;-)`), and not before `: ; ! ?` when `keepHigh` (a language that sets a
+ * space there, French: the pack's `spaceBeforeHigh`).
  *
  * Was `text.replace(/(?<=[^\s(\[{“"«‘„])[ \t]+([,.;:!?)])/gu, …)`: a lookbehind opening the pattern is
  * tried at every position (16 to 20 ms per MB). The pair "space, mark" is found first, the run of
@@ -26,7 +23,7 @@ const NOT_BEFORE_SPACES = /[\s([{“"«‘„]/;
  * the engine tried the lookbehind at each of its spaces, and it refuses all but the first (a space
  * stands before). A match it leaves alone is consumed whole, as `replace` does.
  */
-export function beforePunctuation(text: string, lang: Lang): string {
+export function beforePunctuation(text: string, keepHigh = false): string {
   let out = '';
   let from = 0;
   SPACE_THEN_MARK.lastIndex = 0;
@@ -40,7 +37,7 @@ export function beforePunctuation(text: string, lang: Lang): string {
     if (offset === 0 || NOT_BEFORE_SPACES.test(text.charAt(offset - 1))) continue;
     const mark = text.charAt(m.index + 1);
     const match = text.slice(offset, m.index + 2);
-    if (keepSpace(match, mark, lang, offset, text)) continue;
+    if (keepSpace(match, mark, keepHigh, offset, text)) continue;
     out += text.slice(from, offset) + mark;
     from = m.index + 2;
   }
@@ -52,7 +49,7 @@ export function beforePunctuation(text: string, lang: Lang): string {
 function keepSpace(
   match: string,
   mark: string,
-  lang: Lang,
+  keepHigh: boolean,
   offset: number,
   whole: string,
 ): boolean {
@@ -76,7 +73,7 @@ function keepSpace(
   }
   if ((mark === '!' || mark === '?') && next === '=') return true;
   if (mark === '?' && (next === '?' || next === '.')) return true;
-  return SPACE_BEFORE_HIGH.has(lang) && /[:;!?]/.test(mark);
+  return keepHigh && /[:;!?]/.test(mark);
 }
 
 /** Adds a space after a comma that a letter follows directly (`a,b`). Digits (`1,5`) are left alone. */
@@ -218,7 +215,7 @@ function afterLabel(text: string, at: number): boolean {
 
 /**
  * A number and C or F, with or without the degree sign and space (20C is not read, 20 C, 20 °C,
- * 20°C and 20° C are; a bare 20 C only in English), becomes the number, a no-break space and °C or °F. A bare `20 C` is only read
+ * 20°C and 20° C are; a bare 20 C only with `bare`, the pack's `bareTemperature`: English), becomes the number, a no-break space and °C or °F. A bare `20 C` is only read
  * when the word before the number is not a label or a single letter. Not 20 Celsius, 20 F1, 5 C.E.
  *
  * The original pattern opened with `(?<![\p{L}\p{N}])`, tried at every position, and the same pattern
@@ -229,7 +226,7 @@ function afterLabel(text: string, at: number): boolean {
  * them in turn. What stands before is read by hand (scan.ts). A match that is found but left alone
  * (a label, another language) is skipped whole, as `replace` does.
  */
-export function degrees(text: string, lang: Lang = 'en'): string {
+export function degrees(text: string, bare = true): string {
   let out = '';
   let from = 0;
   const attempt = (at: number): RegExpExecArray | null => {
@@ -246,8 +243,8 @@ export function degrees(text: string, lang: Lang = 'en'): string {
     const start = m.index;
     const end = start + m[0].length;
     DIGITS.lastIndex = end;
-    // The label list is English: another language needs the degree sign to be read as a temperature.
-    if (!m[2] && (lang !== 'en' || afterLabel(text, start))) continue;
+    // The label list is English: a pack without `bareTemperature` needs the degree sign to be read as a temperature.
+    if (!m[2] && (!bare || afterLabel(text, start))) continue;
     out += `${text.slice(from, start)}${m[1] ?? ''}${NBSP}°${m[3] ?? ''}`;
     from = end;
   }

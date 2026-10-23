@@ -2,8 +2,9 @@ import { describe, expect, test } from 'bun:test';
 import { corpus, lcg } from '../../scripts/corpus.ts';
 import { dashRange, dashSentence } from './dashes.ts';
 import { fractions, implies, plusMinus } from './extra.ts';
+import { PACK } from './lang/index.ts';
 import { apostrophe, minus, multiply } from './marks.ts';
-import { ABBREVIATIONS, LANGS, ORPHANS } from './profiles.ts';
+import { LANGS } from './profiles.ts';
 import { abbreviations, arrowSpace, initials, orphans, titles, unitSymbol } from './spaces.ts';
 import { type Lang, NBSP } from './types.ts';
 
@@ -33,11 +34,11 @@ const reference = {
   initials: (text: string) =>
     text.replace(/(?<![\p{L}\p{N}])(\p{Lu})\.[ ]+(?=\p{Lu})/gu, `$1.${NBSP}`),
   orphans: (text: string, lang: Lang) => {
-    const pattern = ORPHANS[lang];
+    const pattern = PACK[lang].orphans;
     return pattern ? text.replace(pattern, `$1${NBSP}`) : text;
   },
   abbreviations: (text: string, lang: Lang) => {
-    const list = ABBREVIATIONS[lang] ?? {};
+    const list = PACK[lang].abbreviations ?? {};
     const escapeRegex = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const names = (words: readonly string[] | undefined) =>
       words?.length ? words.map(escapeRegex).join('|') : null;
@@ -316,14 +317,14 @@ describe('rewritten rules equal their lookbehind originals', () => {
   for (const lang of LANGS) {
     test(`${lang}: orphans, abbreviations and unit symbol`, () => {
       for (const text of samples) {
-        expect(orphans(text, lang)).toBe(reference.orphans(text, lang));
-        expect(abbreviations(text, lang)).toBe(reference.abbreviations(text, lang));
+        expect(orphans(text, PACK[lang])).toBe(reference.orphans(text, lang));
+        expect(abbreviations(text, PACK[lang])).toBe(reference.abbreviations(text, lang));
       }
     });
   }
 
   test('unit symbol in a language with percentSpace', () => {
-    for (const text of samples) expect(unitSymbol(text, 'de')).toBe(reference.unitSymbol(text));
+    for (const text of samples) expect(unitSymbol(text, PACK.de)).toBe(reference.unitSymbol(text));
   });
 
   test('every language has its orphans and abbreviations compared', () => {

@@ -43,6 +43,8 @@ export const en = {
   sentenceDashLiterary: '–',
   elisions: ELISIONS_EN,
   numbers: { group: ',', decimal: '.' },
+  // `symbol.degree` reads a bare 20 C as a temperature (its label list is English).
+  bareTemperature: true,
   reviewed: false,
   sources: [
     'https://commission.europa.eu/system/files/2023-11/styleguide_english_dgt_en.pdf',

@@ -9,6 +9,7 @@ import { RULES } from '../../src/core/rules';
 import { shield } from '../../src/core/zones';
 import { typesetText } from '../../src/text';
 import { typographic } from '../../src/core';
+import { PACK } from '../../src/core/lang';
 import { LANGS } from '../../src/core/profiles';
 import type { Lang } from '../../src/core/types';
 import { longText } from '../../scripts/corpus';
@@ -23,7 +24,13 @@ const PARA =
   'He said "we\'re here" - and left... The lab runs 21-26 September, 10:00-12:00, Prof. Dr. K. Smith opens it (c) 2026. ' +
   'It is 5 km from a quiet stone house in the old town, and the "memory walk" starts there at 9:30 - bring a coat. ';
 const rep = (n: number, sep = '') => (PARA + sep).repeat(Math.ceil(n / PARA.length));
-const ctx = { lang, register: 'display', quoteStyle: 'language', blockStart: true } as const;
+const ctx = {
+  lang,
+  pack: PACK[lang],
+  register: 'display',
+  quoteStyle: 'language',
+  blockStart: true,
+} as const;
 
 // The zone scan (code spans, addresses, emails set aside before the rules run) is timed as a row of its
 // own, and the second text is the fuzz corpus the differential check uses: prose has no backtick or

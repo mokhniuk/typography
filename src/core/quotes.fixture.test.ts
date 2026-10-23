@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
 import { digest } from '../../scripts/gen-quote-fixture.ts';
-import { PACKS } from './lang/index.ts';
+import { PACK, PACKS } from './lang/index.ts';
 import mainFixture from './quotes.fixture.json';
 import loneFixture from './quotes.lone.fixture.json';
 import { quotes } from './quotes.ts';
@@ -17,7 +17,7 @@ for (const [name, fixture] of [
     const codes = PACKS.map((pack) => pack.code);
     const got = digest(
       (text, lang, register, style) =>
-        quotes(text, lang as never, register as never, style as never),
+        quotes(text, PACK[lang as keyof typeof PACK], register as never, style as never),
       codes,
       fixture.inputs,
     );
@@ -64,7 +64,7 @@ describe('quotes on long runs of one mark', () => {
         `x ${mark.repeat(40000)}`,
         mark.repeat(40000),
       ]) {
-        expect(quotes(text, 'en', 'display', 'language').length).toBe(text.length);
+        expect(quotes(text, PACK.en, 'display', 'language').length).toBe(text.length);
       }
       expect(performance.now() - start).toBeLessThan(1500);
     });
@@ -77,7 +77,7 @@ describe('quotes on long runs of glued quotations', () => {
     const text = '5"x"» '.repeat(80000);
     const start = performance.now();
     // The house marks, so that the closing » is already the mark the engine would set.
-    const out = quotes(text, 'en', 'display', 'guillemets');
+    const out = quotes(text, PACK.en, 'display', 'guillemets');
     expect(out === text).toBe(true);
     expect(performance.now() - start).toBeLessThan(1500);
   });

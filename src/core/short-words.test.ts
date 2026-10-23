@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
 import { explain, NBSP, typographic } from './index.ts';
-import { SHORT_WORDS } from './profiles.ts';
+import { PACK } from './lang/index.ts';
 
 /** The rule is off by default, so every case names it; `~` is a no-break space. */
 const on = (text: string, lang: Parameters<typeof typographic>[1] = 'en') =>
@@ -42,7 +42,7 @@ describe('space.short-word', () => {
 
   test('a language without a list is untouched', () => {
     expect(on('Willkommen in Berlin', 'de')).toBe('Willkommen in Berlin');
-    expect(SHORT_WORDS.de).toBeUndefined();
+    expect(PACK.de.shortWords).toBeUndefined();
   });
 
   test('is stable, and explain names the rule', () => {

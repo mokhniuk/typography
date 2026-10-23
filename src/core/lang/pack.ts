@@ -84,6 +84,17 @@ export type LangPack = {
    */
   sameMarkQuotes?: boolean;
   numbers?: NumberFormat;
+  /**
+   * The language keeps a space before `: ; ! ?` (French): `space.before-punctuation` leaves it there,
+   * since the space is correct in the language, not a fault.
+   */
+  spaceBeforeHigh?: boolean;
+  /**
+   * A bare temperature with no degree sign (`20 C`) is read as one by `symbol.degree`, after a word
+   * that is not a label (English; the label list is English). Without it, only a number with the
+   * degree sign is read.
+   */
+  bareTemperature?: boolean;
   /** Whether a native speaker has read the pack. */
   reviewed: boolean;
   /** The style guides the pack was written from. */
@@ -91,3 +102,13 @@ export type LangPack = {
   /** What a reader should know: choices made, alternatives, doubts. */
   notes: string;
 };
+
+/**
+ * Whether `value` is a language pack, read at run time where a value may be a code or a pack (a
+ * config, an option): an object with a string `code` and an array of `quotes`.
+ */
+export const isPack = (value: unknown): value is LangPack =>
+  typeof value === 'object' &&
+  value !== null &&
+  typeof (value as { code?: unknown }).code === 'string' &&
+  Array.isArray((value as { quotes?: unknown }).quotes);

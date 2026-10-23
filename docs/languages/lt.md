@@ -27,6 +27,8 @@ A quotation nested deeper than the levels listed starts over from the first.
 - Short words kept with the next word (`space.short-word`, on by default; the pack's own list): none.
 - A no-break space between a number and %: yes.
 - A no-break space between a number and € after it: no.
+- A space kept before `: ; ! ?` (`space.before-punctuation`, opt-in): no.
+- A bare temperature without the degree sign (`20 C`) read as one (`symbol.degree`, opt-in): no.
 
 ### Abbreviations
 

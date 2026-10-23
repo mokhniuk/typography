@@ -9,7 +9,7 @@ import {
   splitHangs,
   typographic,
 } from './index.ts';
-import { LITERARY } from './profiles.ts';
+import { PACK } from './lang/index.ts';
 
 /** The rules output (and expect) non-breaking spaces, which look like spaces: show them as ~. */
 const t = (
@@ -437,7 +437,7 @@ describe('literary register', () => {
   test('a language with no literary profile keeps its display rules', () => {
     const sample = '“x ‘y’ z” - and 21-26 September';
     // Every language whose literary register has no marks of its own (the dialogue dash is the same in both).
-    const plain = LANGS.filter((lang) => !LITERARY[lang]);
+    const plain = LANGS.filter((lang) => !PACK[lang].literary);
     // English has a literary profile; the rest of the registry grows without this list.
     expect(plain).toEqual(expect.arrayContaining(['de', 'pl', 'fr', 'de-CH', 'fr-CH', 'uk']));
     expect(plain).not.toContain('en');

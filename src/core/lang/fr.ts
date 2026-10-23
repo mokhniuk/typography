@@ -14,6 +14,8 @@ export const fr = {
   ],
   percentSpace: true,
   currencySpace: true,
+  // A space before : ; ! ? is French: `space.before-punctuation` keeps it.
+  spaceBeforeHigh: true,
   elisions: ELISIONS_EN,
   numbers: { group: NBSP, decimal: ',' },
   dialogueDash: { mark: '—' },

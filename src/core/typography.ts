@@ -52,6 +52,7 @@
 
 import type { TypographyConfig } from './config.ts';
 import { type DiffRun, diff } from './diff.ts';
+import { resolvePack } from './resolve.ts';
 import { DEFAULT_RULES, type Rule, selectRules } from './rules.ts';
 import type { Context, Lang, QuoteStyle, Register } from './types.ts';
 import { shield } from './zones.ts';
@@ -159,7 +160,7 @@ export function typographic(
     disable?.length || enable?.length || custom
       ? selectRules({ rules: custom, disable, enable })
       : DEFAULT_RULES;
-  const context: Context = { lang, register, quoteStyle, blockStart };
+  const context: Context = { lang, pack: resolvePack(lang), register, quoteStyle, blockStart };
   const avoided = avoid ? new Set([...avoid]) : null;
   const [shielded, restore] = shield(text);
   let out = shielded;

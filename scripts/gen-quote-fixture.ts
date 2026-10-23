@@ -380,7 +380,7 @@ if (import.meta.main) {
   const outFile =
     process.argv[3] ?? new URL('../src/core/quotes.fixture.json', import.meta.url).pathname;
   const { quotes } = await import(pathToFileURL(`${srcDir}/core/quotes.ts`).href);
-  const { PACKS } = await import(pathToFileURL(`${srcDir}/core/lang/index.ts`).href);
+  const { PACK, PACKS } = await import(pathToFileURL(`${srcDir}/core/lang/index.ts`).href);
   const elisions = [
     ...new Set<string>(PACKS.flatMap((p: { elisions?: string[] }) => p.elisions ?? [])),
   ];
@@ -388,7 +388,7 @@ if (import.meta.main) {
   const fixture: Fixture = {
     inputs: list,
     ...digest(
-      quotes,
+      (text, lang, register, style) => quotes(text, PACK[lang], register, style),
       PACKS.map((p: { code: string }) => p.code),
       list,
     ),
