@@ -4,14 +4,18 @@ import { join, relative, resolve } from 'node:path';
 import { packedFiles } from '../scripts/pack.ts';
 
 /**
- * What a consumer installs is what `bun pm pack` packs (the `files` list in package.json), and a
- * release tag points at a commit that holds exactly that (scripts/release-commit.ts). The engine's
- * sources must all be in it, every entry point and the command line must resolve inside it, and
- * nothing else may come along: no tests, no fixtures, no apps, docs or tooling.
+ * What a consumer installs is what `bun pm pack` packs (the `files` list in package.json): the build
+ * in `dist/` (compiled ESM and declarations), README, CHANGELOG, LICENSE and package.json. A release
+ * tag points at a commit that holds exactly that (scripts/release-commit.ts). Every source that is not
+ * a test must ship as a `.js` and a `.d.ts`, every entry point and the command line must resolve
+ * inside the pack, and nothing else may come along: no sources, tests, apps, docs or tooling.
+ *
+ * `bun pm pack` runs `prepack` (`bun run build`), so `packedFiles` builds `dist/` afresh: one build
+ * per run, and the test fails if the build does.
  */
 const ROOT = resolve(import.meta.dir, '..');
 const TEST_ONLY = /\.test\.tsx?$|\.test-utils\.ts$|\.fixture\.json$|^src\/snapshot\.digests\.json$/;
-const OUTSIDE_SRC = new Set(['package.json', 'README.md', 'CHANGELOG.md']);
+const OUTSIDE_DIST = new Set(['package.json', 'README.md', 'CHANGELOG.md', 'LICENSE']);
 
 const packed = packedFiles(ROOT);
 const shipped = new Set(packed);
@@ -20,27 +24,58 @@ const tree = (dir: string): string[] =>
   readdirSync(dir, { withFileTypes: true }).flatMap((e) =>
     e.isDirectory() ? tree(join(dir, e.name)) : [relative(ROOT, join(dir, e.name))],
   );
+const sources = tree(join(ROOT, 'src')).filter((path) => !TEST_ONLY.test(path));
+const built = (source: string, ext: '.js' | '.d.ts') =>
+  source.replace(/^src\//, 'dist/').replace(/\.tsx?$/, ext);
 
-test('the pack holds the sources and three files, nothing else', () => {
+test('the pack holds the build and four files, nothing else', () => {
   expect(packed.length).toBeGreaterThan(0);
-  for (const path of packed) {
-    expect(path.startsWith('src/') || OUTSIDE_SRC.has(path), path).toBe(true);
-    expect(TEST_ONLY.test(path), path).toBe(false);
-  }
-  for (const path of OUTSIDE_SRC) expect(shipped.has(path), path).toBe(true);
+  for (const path of packed)
+    expect(path.startsWith('dist/') || OUTSIDE_DIST.has(path), path).toBe(true);
+  for (const path of OUTSIDE_DIST) expect(shipped.has(path), path).toBe(true);
 });
 
-test('every source file that is not a test ships', () => {
-  for (const path of tree(join(ROOT, 'src')))
-    if (!TEST_ONLY.test(path)) expect(shipped.has(path), path).toBe(true);
+test('every source that is not a test ships as JavaScript and declarations', () => {
+  expect(sources.length).toBeGreaterThan(0);
+  for (const source of sources) {
+    expect(source, 'a source the build does not compile').toMatch(/\.tsx?$/);
+    expect(shipped.has(built(source, '.js')), built(source, '.js')).toBe(true);
+    expect(shipped.has(built(source, '.d.ts')), built(source, '.d.ts')).toBe(true);
+  }
+});
+
+test('every file of the build has its source', () => {
+  const expected = new Set(sources.flatMap((s) => [built(s, '.js'), built(s, '.d.ts')]));
+  for (const path of packed)
+    if (path.startsWith('dist/')) expect(expected.has(path), path).toBe(true);
 });
 
 test('every entry point and the command line resolve inside the pack', () => {
   const pkg = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')) as {
     main: string;
-    exports: Record<string, string>;
+    types: string;
+    exports: Record<string, { types: string; default: string }>;
     bin: Record<string, string>;
   };
-  for (const target of [pkg.main, ...Object.values(pkg.exports), ...Object.values(pkg.bin)])
+  const targets = [
+    pkg.main,
+    pkg.types,
+    ...Object.values(pkg.exports).flatMap((e) => [e.types, e.default]),
+    ...Object.values(pkg.bin),
+  ];
+  expect(Object.keys(pkg.exports).length).toBeGreaterThan(0);
+  for (const target of targets) {
+    expect(target, 'every target is a string').toBeString();
     expect(shipped.has(target.replace(/^\.\//, '')), target).toBe(true);
+  }
+});
+
+test('no shipped code needs Bun', () => {
+  for (const path of packed) {
+    const text = readFileSync(join(ROOT, path), 'utf8');
+    expect(text.includes('bun:test'), path).toBe(false);
+    // The prose files (CHANGELOG, README) may name Bun's APIs; the build may not use them.
+    if (path.startsWith('dist/'))
+      expect(/bun:|import\.meta\.dir|\bBun\./.test(text), path).toBe(false);
+  }
 });

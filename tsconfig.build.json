@@ -1,0 +1,22 @@
+{
+  // The published build: ESM and declarations in dist/, from src/ without tests (package.json `build`).
+  // `types`: Node only (the command line uses node:fs, process, Buffer); Bun and Vite types must not
+  // reach the declarations.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "declaration": true,
+    "outDir": "dist",
+    "rootDir": "src",
+    "rewriteRelativeImportExtensions": true,
+    "types": ["node"]
+  },
+  "include": ["src"],
+  "exclude": [
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.test-utils.ts",
+    "**/*.fixture.json",
+    "src/snapshot.digests.json"
+  ]
+}
