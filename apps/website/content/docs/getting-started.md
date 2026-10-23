@@ -82,6 +82,7 @@ typo -c docs/*.md              # change nothing; exit 1 if any file would change
 ## Where next
 
 - [API reference](/docs/api/): every entry point, option and type.
+- [Recipes](/docs/recipes/): Vue, Svelte, Astro, Next.js, Vite, markdown-it and plain HTML.
 - [Rules](/docs/rules/): what each rule does, with an example.
 - [Languages](/docs/languages/): quote marks, dashes and spacing per language, and which are unreviewed.
 - [Known limits](/docs/limits/): read this before you depend on a language.

@@ -34,7 +34,7 @@ bun run docs:languages       # writes docs/languages/*.md from the packs
 | `scripts/gen-languages-doc.ts` | Generates `docs/languages/<code>.md` and `docs/languages/index.md` from the packs |
 | `resources/` | The sources registry (below) and the pages generated from it; not part of the package |
 | `apps/bench/` | The benchmark: a separate project with its own dependencies; sources, cases and `RESULTS.md` tracked, `node_modules` and lockfile not (see below) |
-| `apps/website/` | The website: landing, docs, articles, playground; see [ui.md](ui.md#the-website). The docs it publishes are the files listed in `DOC_FILES` in `apps/website/build/content.ts` (`apps/website/content/docs/getting-started.md`, `docs/api.md`, `cli.md`, `rules.md`, `languages.md`, `limits.md`, `practices.md`, `contributing.md` and `CHANGELOG.md`, in that order) plus the generated `docs/languages/*.md`; `README.md`, `ui.md`, `backlog.md` and `ideas.md` are not published |
+| `apps/website/` | The website: landing, docs, articles, playground; see [ui.md](ui.md#the-website). The docs it publishes are the files listed in `DOC_FILES` in `apps/website/build/content.ts` (`apps/website/content/docs/getting-started.md`, `docs/api.md`, `cli.md`, `rules.md`, `languages.md`, `limits.md`, `recipes.md`, `practices.md`, `contributing.md` and `CHANGELOG.md`, in that order) plus the generated `docs/languages/*.md`; `README.md`, `ui.md`, `backlog.md` and `ideas.md` are not published |
 | `docs/` | These pages. `rules.md` and `languages/` are generated; the others are written by hand |
 
 ## Adding a rule

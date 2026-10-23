@@ -212,6 +212,7 @@ Honesty over gloss — before you depend on it, know where it is weak:
 | [docs/languages.md](docs/languages.md) | Quote marks, dashes, orphan letters, abbreviations and `%`/`€` spacing per language; review status |
 | [docs/cli.md](docs/cli.md) | All flags, exit codes, standard input, format by extension, examples |
 | [docs/limits.md](docs/limits.md) | Known limits, speed, benchmark caveats |
+| [docs/recipes.md](docs/recipes.md) | Recipes: plain HTML, Vue, Svelte, Astro, Next.js, Vite, markdown-it, unified, and what to leave to CSS |
 | [docs/practices.md](docs/practices.md) | Good practices: what to bind and with which rule, what to leave to CSS, column width, what never to do |
 | [docs/contributing.md](docs/contributing.md) | Tests, adding a rule or a language, the benchmark, the playground, releasing, using it from another project |
 | [CHANGELOG.md](CHANGELOG.md) | What changed in each release, and whether it can change output you already have |

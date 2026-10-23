@@ -89,6 +89,14 @@ const DOC_FILES: {
       'What the engine leaves alone on purpose, what it cannot know from text alone, and the input it reads wrongly. Read it before you rely on the output.',
   },
   {
+    source: 'docs/recipes.md',
+    slug: 'recipes',
+    group: 'Guides',
+    label: 'Recipes',
+    description:
+      'Using the engine from plain HTML, Vue, Svelte, Astro, Next.js, Vite, markdown-it and unified, with a few lines each.',
+  },
+  {
     source: 'docs/practices.md',
     slug: 'practices',
     group: 'Guides',
