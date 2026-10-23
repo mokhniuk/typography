@@ -2,7 +2,7 @@
 title: Quotation marks differ, and so should your software
 date: 2026-10-20
 glyph: „“
-summary: Twenty-six languages, a dozen ways to open and close a quotation. What the engine sets, and why a straight " is never the right answer.
+summary: Twenty-seven languages, a dozen ways to open and close a quotation. What the engine sets, and why a straight " is never the right answer.
 ---
 
 # Quotation marks differ, and so should your software
@@ -36,7 +36,7 @@ The engine has two registers. `display`, the default, is for marketing and inter
 
 The input may already be curly, low, straight or guillemets, in any mix. The engine reads all of them, pairs them, and sets the marks of the language and level. It handles an apostrophe (`we're`, `п'ять`) differently from a closing single quote, and does not take an inch mark (`5"`) for a quotation.
 
-That last case is the hard one. A quotation glued to a digit (`5"a"`) is kept exactly as typed since 0.8.0. The case still open is an inch mark inside a quotation: in `"a 5" hole"` the inch mark closes the quotation early. It is listed in the [known limits](/docs/limits/) rather than guessed at.
+That last case is the hard one. A quotation glued to a digit (`5"a"`) is kept exactly as typed since 0.8.0, and since 0.18.0 an inch mark inside a quotation stays an inch mark when a later mark in the paragraph closes the quotation: `"a 5" hole"` gives `“a 5" hole”`. What is still open is unbalanced text, where a stray later mark takes the quotation over. It is listed in the [known limits](/docs/limits/) rather than guessed at.
 
 ## Try it
 

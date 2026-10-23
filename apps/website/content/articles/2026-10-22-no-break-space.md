@@ -17,7 +17,7 @@ Nineteen of the engine's 34 rules can place this one character:
 - **An initial and the surname.** `K.~Słoboda` — an initial stranded at a line end reads as a sentence that stopped (`space.initial`), and a title stays with the name: `Prof.~Dr.~Oksana` (`space.title`).
 - **The parts of an abbreviation.** German `z.~B.`, Ukrainian `т.~д.`, English `Fig.~2` and `p.~14` (`space.abbreviation`).
 - **One-letter words.** Polish, Czech, Slovak and Ukrainian typography does not let `i`, `w`, `z` end a line; English keeps `A~cat` together. Which words count comes from the language pack (`space.orphan`).
-- **Percent and euro, by language.** German, French, Czech and fourteen other languages set `5~%` and most of them `49~€`; English `5%` is left alone (`space.percent`).
+- **Percent and euro, by language.** German, French, Czech and sixteen other languages set `5~%`, and most of them, with Ukrainian and Polish, `49~€`; English `5%` is left alone (`space.percent`).
 - **After ©** (`©~2026 Studio`), **after § and ¶** (`§~5`), **before a sentence dash** (`word~— word`, so a line never opens with the dash), **before →**, and **after the dialogue dash** in the languages that space it.
 - **Around a lone operator** between words: `Tom~&~Jerry`, and around the `’n’` of `rock~’n’~roll`, an "and" with its letters dropped (`space.operator`).
 - **Money.** A sign or code stays with its amount, and a number grouped by hand stays whole: `USD~5~000` (`space.number`).
@@ -27,7 +27,7 @@ Nineteen of the engine's 34 rules can place this one character:
 
 ## Short words, and why they bind everywhere
 
-Polish and Czech typography has a name for a preposition left at the end of a line, and two sources read for this engine say the same two things about it: in a title or a heading a two- or three-letter word must travel with the word it belongs to, and in body text it may stay where it is. "May" is a permission, not a recommendation. This engine sets display text, pages, headings, short copy, where a line that ends on `to` or `of` is the stumble a reader notices, so `space.short-word` runs unless you switch it off. Three limits keep it honest: it never binds more than two words in a row, so a chain cannot grow into a whole line; it binds only the words a language pack lists, and five packs have a list (Czech, English, Polish, Slovak, Ukrainian), this package's own enumeration, not read from a guide; and it leaves the other 21 languages to the one-letter rule. For long body text in a narrow column, or where a native reader prefers the body-text convention, `disable: ['space.short-word']` restores it.
+Polish and Czech typography has a name for a preposition left at the end of a line, and two sources read for this engine say the same two things about it: in a title or a heading a two- or three-letter word must travel with the word it belongs to, and in body text it may stay where it is. "May" is a permission, not a recommendation. This engine sets display text, pages, headings, short copy, where a line that ends on `to` or `of` is the stumble a reader notices, so `space.short-word` runs unless you switch it off. Three limits keep it honest: it never binds more than two words in a row, so a chain cannot grow into a whole line; it binds only the words a language pack lists, and five packs have a list (Czech, English, Polish, Slovak, Ukrainian), this package's own enumeration, not read from a guide; and the other 22 languages have no list, for it or for the one-letter rule. For long body text in a narrow column, or where a native reader prefers the body-text convention, `disable: ['space.short-word']` restores it.
 
 ## Why CSS cannot do this
 
@@ -37,7 +37,7 @@ One boundary worth knowing: since 0.18.0 the engine sets the French space before
 
 ## The nbsp option
 
-A raw U+00A0 looks like a space in every diff and editor. In the HTML mode the `nbsp` option chooses how a changed block writes it: as `&nbsp;` (the default, visible in source) or as the bare character; see the [API reference](/docs/api/).
+A raw U+00A0 looks like a space in every diff and editor. In the HTML mode the `nbsp` option chooses how a changed block writes it: as `&nbsp;` (the default, visible in source; the narrow U+202F of French as `&#8239;`) or as the bare character; see the [API reference](/docs/api/).
 
 ## Try it
 

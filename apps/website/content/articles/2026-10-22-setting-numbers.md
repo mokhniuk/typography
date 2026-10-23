@@ -19,7 +19,7 @@ English groups thousands with a comma, German and Ukrainian with a (no-break) sp
 
 ## Units stay with their number
 
-A line must not break between `15` and `people`, `21` and `September`, `5` and `%`. The `space.number` rule sets a no-break space between a number and the short word after it. On top of that, `space.percent` knows the languages whose guides space the percent sign — German, French, Czech and fourteen others set `5 %`, while English keeps `5%` — and several of them also set `49 €`.
+A line must not break between `15` and `people`, `21` and `September`, `5` and `%`. The `space.number` rule sets a no-break space between a number and the short word after it. On top of that, `space.percent` knows the languages whose guides space the percent sign — German, French, Czech and sixteen others set `5 %`, while English keeps `5%` — and most of them, with Ukrainian and Polish, also set `49 €`.
 
 ## Money stays whole
 

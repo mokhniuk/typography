@@ -20,13 +20,13 @@ The `quote` rule runs first, and it sets apostrophes aside before it pairs anyth
 
 ## Feet and inches stay straight
 
-In `5'10"` the marks are measurements, not punctuation. A straight `"` right after a digit never opens a quotation (it can still close one, as in `"call 911"`), so `a 2" pipe and a 4" pipe` keeps both inch marks rather than turning the text between them into a quotation. The [known limits](/docs/limits/) page lists the case that still goes wrong — an inch mark inside a quotation closes it early — because listing it beats guessing.
+In `5'10"` the marks are measurements, not punctuation. A straight `"` right after a digit never opens a quotation (it can still close one, as in `"call 911"`), so `a 2" pipe and a 4" pipe` keeps both inch marks rather than turning the text between them into a quotation. Since 0.18.0 an inch mark inside a quotation stays an inch mark too, when a later `"` in the paragraph closes the quotation. The [known limits](/docs/limits/) page lists the case that still goes wrong — in unbalanced text a stray later `"` takes the quotation over — because listing it beats guessing.
 
 Strictly set text uses the prime `′` (U+2032) and double prime `″` (U+2033) for feet, inches, minutes and seconds: `5′10″`, `48°51′24″`. The engine does not set primes for you — deciding that a `"` is an inch and not a quote is already the hard part, and it errs on the side of leaving measurements exactly as typed.
 
 ## What the right characters buy
 
-Set side by side, the difference is not pedantry, and this example also shows where the engine stops. `"It's 5'10", maybe," she said` comes out as `“It’s 5'10”, maybe,” she said`: the apostrophe curls and the foot mark stays, but the inch mark closes the quotation early. That is the known limit above. The workaround is to type the prime yourself: `"It's 5′10″, maybe," she said` becomes `“It’s 5′10″, maybe,” she said`, the engine leaves typed primes alone, and every mark now says what it is.
+Set side by side, the difference is not pedantry, and this example also shows where the engine stops. `"It's 5'10", maybe," she said` comes out as `“It’s 5'10", maybe,” she said`: the apostrophe curls, and the foot and inch marks stay as typed (until 0.18.0 the inch mark closed the quotation early). The engine still does not make them primes; for that, type the prime yourself: `"It's 5′10″, maybe," she said` becomes `“It’s 5′10″, maybe,” she said`, the engine leaves typed primes alone, and every mark now says what it is.
 
 ## Try it
 
