@@ -1,6 +1,6 @@
 {
   "name": "@mokhniuk/typography",
-  "version": "0.17.0",
+  "version": "0.18.0",
   "type": "module",
   "description": "Typography for running text: quotation by language and register, dashes, non-breaking spaces, measured hanging punctuation.",
   "homepage": "https://typography.mokhni.uk",
