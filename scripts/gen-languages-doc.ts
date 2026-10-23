@@ -116,6 +116,12 @@ export function renderPack(pack: LangPack): string {
         .join(', ')}.`,
     );
   }
+  out.push(
+    '',
+    `Words that end in an apostrophe, which stays an apostrophe and never closes a quotation: ${
+      pack.truncations?.length ? pack.truncations.map((w) => code(`${w}'`)).join(', ') : 'none'
+    }.`,
+  );
 
   out.push(
     '',

@@ -542,6 +542,7 @@ const EN: [string, string, string, string, (o: string, i: string) => boolean][] 
   ['quote-apostrophe-year', 'Quotes', "the '90s", 'an apostrophe before a decade is a closing mark, not an opening quote', has('’90s')],
   ['quote-rock-n-roll', 'Quotes', "rock 'n' roll", "the elided 'n' keeps apostrophes", (o) => !/[‘“«]/u.test(o)],
   ['quote-inches', 'Quotes', 'A 5\'10" frame', 'feet and inches are not quotes', (o) => !/[“”«»]/u.test(o)],
+  ['quote-inch-inside', 'Quotes', 'He said "a 5" hole" ok', 'an inch mark inside a quotation does not close it', (o) => /[“«„]a.5["″] hole[”»“]/u.test(o)],
   ['quote-unbalanced', 'Quotes', 'He said "stone', 'an unclosed quote does not crash or lose text', (o) => o.includes('stone')],
   ['quote-empty', 'Quotes', 'An empty "" pair', 'an empty pair stays a pair', (o) => !o.includes('"')],
   ['quote-at-line-start', 'Quotes', '"Stone," he said.', 'a quote opening a line pairs', (o) => !o.includes('"')],

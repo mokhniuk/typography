@@ -55,6 +55,42 @@ describe('Italian apostrophe (ISG 4: the typographic ’; Treccani: elision l’
     expect(t('Disse "dammi un po\'" e uscì.')).toBe('Disse «dammi un po’» e uscì.');
   });
 
+  test("truncations (Treccani: po', da', di', fa', sta', va', be', mo', pie', que') inside a quotation in straight single marks", () => {
+    expect(t("'dammi un po' di pane'")).toBe('«dammi un po’ di pane»');
+    expect(t("Disse 'va' via' e uscì.")).toBe('Disse «va’ via» e uscì.');
+    expect(t("Disse 'fa' presto, di' la verità' ieri.")).toBe(
+      'Disse «fa’ presto, di’ la verità» ieri.',
+    );
+    expect(t("'a pie' di pagina'")).toBe('«a pie’ di pagina»');
+    expect(t("'Po' di pane'")).toBe('«Po’ di pane»');
+    // At the end of the quotation: the apostrophe, then the closer.
+    expect(t("'un po''")).toBe('«un po’»');
+    expect(t("Disse 'dammi un po'' e uscì.")).toBe('Disse «dammi un po’» e uscì.');
+    // In a double-quoted quotation, and in curly single marks.
+    expect(t('"dammi un po\' di pane"')).toBe('«dammi un po’ di pane»');
+    expect(t('‘dammi un po’ di pane’')).toBe('«dammi un po’ di pane»');
+  });
+
+  test('a truncation is only a listed word followed by an apostrophe', () => {
+    // A word that ends in a listed one (tempo) is not a truncation, and the quotation closes after it.
+    expect(t("Disse 'tempo' e uscì.")).toBe('Disse «tempo» e uscì.');
+    // da and di without an apostrophe are words of their own.
+    expect(t("'da Roma a casa di Mario'")).toBe('«da Roma a casa di Mario»');
+    // A listed word that ends a quotation, with no later ' that could close it: the ' closes, as before.
+    expect(t("'ha detto di'")).toBe('«ha detto di»');
+    expect(t("'da'")).toBe('«da»');
+    expect(t("'po'")).toBe('«po»');
+    expect(t("Disse 'va' e uscì.")).toBe('Disse «va» e uscì.');
+    expect(t("'non so che fa'")).toBe('«non so che fa»');
+    // The next ' opens a quotation of its own (a letter follows it): the ' after da closes.
+    expect(t("'da' e 'po'")).toBe('«da» e «po»');
+    // A ' inside a word (dell’amico) does not count as the later closer.
+    expect(t("'un po' dell'amico'")).toBe('«un po’ dell’amico»');
+    // Known ambiguity: a quotation that ends on a listed word, followed later by a lone ' that can
+    // close, reads the first ' as the truncation.
+    expect(t("'ha detto di' e poi basta.'")).toBe('«ha detto di’ e poi basta.»');
+  });
+
   test('a year with its first digits dropped: ’48, nel ’64', () => {
     expect(t("Nel '64, nel '48.")).toBe('Nel ’64, nel ’48.');
     expect(t('Disse "nel \'64, era qui" ieri.')).toBe('Disse «nel ’64, era qui» ieri.');

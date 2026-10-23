@@ -15,6 +15,8 @@ A quotation nested deeper than the levels listed starts over from the first.
 
 The language opens and closes a quotation with the same mark.
 
+Words that end in an apostrophe, which stays an apostrophe and never closes a quotation: none.
+
 ## Dashes
 
 | What | Setting |

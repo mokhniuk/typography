@@ -17,6 +17,8 @@ Read by where each mark stands, not only by shape: `»…«`, `›…‹` (turne
 
 An apostrophe before a dropped-letter word is not a quotation mark: `'em`, `'til`, `'till`, `'cause`, `'bout`, `'round`, `'tis`, `'twas`, `'cos`, `'n'`.
 
+Words that end in an apostrophe, which stays an apostrophe and never closes a quotation: none.
+
 ## Dashes
 
 | What | Setting |

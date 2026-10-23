@@ -56,6 +56,13 @@ export function wellFormed(pack: LangPack, file: string) {
     for (const [open, close] of pack.turnedPairs ?? []) {
       expect(open).not.toBe(close);
     }
+    // Truncations: lower case, letters only (written without the apostrophe), no duplicates.
+    const truncations = pack.truncations ?? [];
+    expect(new Set(truncations).size).toBe(truncations.length);
+    for (const word of truncations) {
+      expect(word).toBe(word.toLocaleLowerCase());
+      expect(/^\p{L}+$/u.test(word)).toBe(true);
+    }
     // Short words: two or three letters, lower case, no duplicates (the rule adds the capital form).
     const short = pack.shortWords ?? [];
     expect(new Set(short).size).toBe(short.length);
