@@ -24,8 +24,9 @@ bun run docs:languages       # writes docs/languages/*.md from the packs
 
 | Path | What it holds |
 |---|---|
-| `src/core/` | The engine: `typography.ts` (`typographic`, `explain`, `typesetBlock`, `keepAvoided`), `rules.ts` (the `RULES` table), `config.ts` (`TypographyConfig`, `defineConfig`, `checkConfig`), `quotes.ts`, `dashes.ts`, `spaces.ts`, `marks.ts`, `extra.ts` (the opt-in rules), `numbers.ts` (digit grouping, `number.group`), `phone.ts` (`phone.bind`), `currency.ts` (the currency codes and signs), `glyphs.ts` (what each rule can insert, read by `avoid`), `scan.ts` (helpers that read the character before a match instead of a lookbehind), `zones.ts` (text set aside), `lang/` (one pack per language, and the registry), `profiles.ts` (the tables derived from the packs), `hang.ts` (`splitHangs`), `diff.ts` |
-| `src/text`, `src/html`, `src/markdown`, `src/rehype` | The modes, each built on `typesetBlock` |
+| `src/core/` | The engine: `typography.ts` (`typographic`, `explain`, `typesetBlock`, `keepAvoided`; they take a pack and load none), `resolve.ts` (the public `typographic`, `explain` and `typesetBlock`, which take a code or a pack, and `resolvePack`: the one engine module that loads every pack), `rules.ts` (the `RULES` table), `config.ts` (`TypographyConfig`, `defineConfig`, `checkConfig`), `quotes.ts`, `dashes.ts`, `spaces.ts`, `marks.ts`, `extra.ts` (the opt-in rules), `numbers.ts` (digit grouping, `number.group`), `phone.ts` (`phone.bind`), `currency.ts` (the currency codes and signs), `glyphs.ts` (what each rule can insert, read by `avoid`), `scan.ts` (helpers that read the character before a match instead of a lookbehind), `zones.ts` (text set aside), `lang/` (one pack per language, `pack.ts` with the `LangPack` type and `isPack`, `elisions.ts` with data packs share, and the registry `index.ts`), `profiles.ts` (`LANGS` and `REGISTERS`), `hang.ts` (`splitHangs`), `diff.ts` |
+| `src/text`, `src/html`, `src/markdown`, `src/rehype` | The modes, each built on `typesetBlock`. The text, HTML and Markdown modes are split in two: the body (`text.ts`, `html.ts`, `markdown.ts`) takes a pack, and `index.ts` resolves `lang` (`withPack`) and calls it |
+| `src/lite` | The entry `./lite`: the pack-only engine and mode bodies, no pack. `lite.test.ts` fails if any module it reaches imports `lang/index.ts` or a pack |
 | `src/dom`, `src/react` | Hanging punctuation, framework-free and React |
 | `src/cli` | The `typo` command; `run.ts` takes an `Io` object so it can be tested without a process |
 | `scripts/gen-rules-doc.ts` | Generates `docs/rules.md` |
@@ -55,14 +56,15 @@ The order is part of the behaviour. For example, `dash.range` runs before `dash.
 
 A language is one object, a pack, and no code names a language: rules read the pack's fields.
 
-1. Create `src/core/lang/<code>.ts` exporting the pack (`as const satisfies LangPack`, the type is in `src/core/lang/pack.ts`). File names use the code in lower case: the pack `de-CH` is `de-ch.ts`, its test `de-ch.test.ts`, its page `docs/languages/de-ch.md`; the `code` field keeps the case (`de-CH`), and the rehype plugin matches an HTML `lang` against it in any case.
-2. Add it to `PACKS` in `src/core/lang/index.ts`: one import, one list entry. `Lang`, `LANGS`, `PROFILES` and the other tables in `profiles.ts`, the command line, the rehype plugin and the playground all follow from the list.
-3. Create `src/core/lang/<code>.test.ts`: call `wellFormed(pack, '<code>.test.ts')` from `pack-checks.test-utils.ts` and add golden tests for what the pack sets. Golden tests for a language live in that file, not in `typography.test.ts`.
-4. Run `bun run docs:languages` and commit `docs/languages/<code>.md` and `index.md`; `src/lang-docs.test.ts` fails if a page differs from its pack. Never edit them by hand.
-5. If a rule acts on the new language, add an examples row to `scripts/gen-rules-doc.ts` and run `bun run docs:rules`.
-6. Add a long example in the language to `LONG` in `apps/website/playground/examples.ts` (the playground's "Long example"; `tsc` fails while it is missing, and `apps/website/playground/examples.test.ts` checks that it gives the rules something to do).
-7. Add a line for the language to `RISKY_LETTERS` in `apps/website/font-checker/letters.ts`: the letters of the language that fonts most often lack, or an empty string. `apps/website/font-checker/letters.test.ts` fails while it is missing.
-8. Update the hand-written overview [languages.md](languages.md).
+1. Create `src/core/lang/<code>.ts` exporting the pack (`as const satisfies LangPack`, the type is in `src/core/lang/pack.ts`), under its name and as `export default <name>;`. A pack imports only `NBSP` from `../types.ts` and shared data such as `./elisions.ts`, never another language's pack (unless it is a variant of it, as `de-ch.ts` builds on `de.ts`), so its entry loads one language. File names use the code in lower case: the pack `de-CH` is `de-ch.ts`, its test `de-ch.test.ts`, its page `docs/languages/de-ch.md`; the `code` field keeps the case (`de-CH`), and the rehype plugin matches an HTML `lang` against it in any case.
+2. Add it to `PACKS` in `src/core/lang/index.ts`: one import, one list entry. `Lang`, `LANGS` (in `profiles.ts`), `PACK`, `resolvePack`, the command line, the rehype plugin and the playground all follow from the list.
+3. Add its entry to `exports` in `package.json`, next to the others: `"./lang/<code>": { "types": "./dist/core/lang/<code>.d.ts", "default": "./dist/core/lang/<code>.js" }` (the file name, in lower case). `src/package.test.ts` fails while an entry is missing or points elsewhere, and checks that the built file's default export is the pack.
+4. Create `src/core/lang/<code>.test.ts`: call `wellFormed(pack, '<code>.test.ts')` from `pack-checks.test-utils.ts` and add golden tests for what the pack sets. Golden tests for a language live in that file, not in `typography.test.ts`.
+5. Run `bun run docs:languages` and commit `docs/languages/<code>.md` and `index.md`; `src/lang-docs.test.ts` fails if a page differs from its pack. Never edit them by hand.
+6. If a rule acts on the new language, add an examples row to `scripts/gen-rules-doc.ts` and run `bun run docs:rules`.
+7. Add a long example in the language to `LONG` in `apps/website/playground/examples.ts` (the playground's "Long example"; `tsc` fails while it is missing, and `apps/website/playground/examples.test.ts` checks that it gives the rules something to do).
+8. Add a line for the language to `RISKY_LETTERS` in `apps/website/font-checker/letters.ts`: the letters of the language that fonts most often lack, or an empty string. `apps/website/font-checker/letters.test.ts` fails while it is missing.
+9. Update the hand-written overview [languages.md](languages.md).
 
 The pack:
 
@@ -77,6 +79,8 @@ The pack:
 | `sentenceDash`, `sentenceDashLiterary` | The spaced dash of a break in the sentence, when it is not an em dash. |
 | `percentSpace` | A no-break space between a number and a `%` typed against it (`5%` becomes `5~%`). |
 | `currencySpace` | A no-break space between a number and a `€` typed after it (`49€` becomes `49~€`); `€49` is never touched. Set it apart from `percentSpace`: a style guide may space `%` and write `€30` or only the code `EUR`. |
+| `spaceBeforeHigh` | The language keeps a space before `: ; ! ?` (French): the opt-in rule `space.before-punctuation` leaves it there instead of removing it. `fr` only; `fr-CH` copies fields one by one and leaves it off. |
+| `bareTemperature` | The opt-in rule `symbol.degree` reads a bare temperature with no degree sign (`20 C`) as one, after a word that is not a label (the label list is English); without it, only a number with the degree sign is read. `en` only. |
 | `dialogueDash` | `{ mark, attached? }`: a paragraph opening with a dash is a line of dialogue, in both registers; the dash, and no space after it if `attached`. Only where a style guide says the language writes dialogue that way. |
 | `turnedPairs` | Quote pairs written turned the other way (German `»…«`), read by position; they replace the usual pair of that shape. |
 | `elisions` | Words that start with an apostrophe for dropped letters (`'em`, `'til`); `n` reads rock 'n' roll. The five packs other than English list English's, because the list was read for every language before packs existed; dropping it is an output change. |
@@ -138,7 +142,7 @@ A page of the website (`apps/website/playground/`; `bun run website` serves it).
 
 `bun run build` (`scripts/build.ts`) empties `dist/`, runs `tsc -p tsconfig.build.json` (compiled ESM and `.d.ts` files of every entry point, from `src/` without the tests; `rewriteRelativeImportExtensions` turns the `.ts` specifiers of the JavaScript into `.js`) and then rewrites the `.ts` specifiers that `tsc` leaves in the `.d.ts` files to `.js`, so a declaration names the file next to it. The build config sets `types: ["node"]`: the command line needs the Node globals (`@types/node` is a dev dependency), and no Bun or Vite types may reach the declarations. `dist/` is ignored by git; `exports` and the `typo` bin point into it, and `engines.node` is `>=20.10`.
 
-`bun pm pack` and `npm pack` run `prepack`, which is `bun run build`, so a pack is always freshly built. `src/package.test.ts` packs once per test run, so `bun test` writes `dist/` too. It checks the pack: every entry point, the declarations and the command line are in it, and nothing else is. `bun scripts/smoke.ts [node]` builds, packs, installs the tarball with `react` in a temporary project, imports every entry point under the given Node (the workflow runs it on Node 20, 22 and 24) and runs the installed `typo`. `bunx @arethetypeswrong/cli --pack . --profile esm-only` checks that the `exports` resolve to their types; the profile leaves out CommonJS `require` and node10 resolution, since the package is ESM only.
+`bun pm pack` and `npm pack` run `prepack`, which is `bun run build`, so a pack is always freshly built. `src/package.test.ts` packs once per test run, so `bun test` writes `dist/` too. It checks the pack: every entry point, the declarations and the command line are in it, and nothing else is. `bun scripts/smoke.ts [node]` builds, packs, installs the tarball with `react` in a temporary project, imports every entry point under the given Node (the workflow runs it on Node 20, 22 and 24), typesets with `/lite` and the pack from `/lang/uk`, and runs the installed `typo`. `bunx @arethetypeswrong/cli --pack . --profile esm-only` checks that the `exports` resolve to their types; the profile leaves out CommonJS `require` and node10 resolution, since the package is ESM only.
 
 ## Releasing
 
