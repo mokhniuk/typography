@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { addRule, DEFAULT_RULES, RULES, type Rule } from '../core/index.ts';
+import { addRule, DEFAULT_RULES, LANGS, RULES, type Rule } from '../core/index.ts';
 import { formatRules, type Io, run } from './run.ts';
 
 function fake(files: Record<string, string> = {}, stdin = '') {
@@ -213,6 +213,14 @@ describe('typo', () => {
     await run(['--help'], t.io);
     expect(t.out()).toContain('--enable');
     expect(t.out()).toContain('--quotes');
+  });
+
+  test('--help lists every language code, the hyphenated ones included', async () => {
+    const t = fake();
+    await run(['--help'], t.io);
+    for (const code of LANGS) expect(t.out()).toContain(code);
+    expect(t.out()).toContain('de-CH');
+    expect(t.out()).toContain('fr-CH');
   });
 });
 

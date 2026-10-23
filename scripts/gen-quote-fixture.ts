@@ -17,7 +17,7 @@ import { lcg } from './corpus';
 
 export const COUNT = 3000;
 export const REGISTERS = ['display', 'literary'] as const;
-export const STYLES = ['language', 'us'] as const;
+export const STYLES = ['language', 'us', 'guillemets'] as const;
 
 const MARKS = [
   '"',
