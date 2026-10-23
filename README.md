@@ -29,51 +29,6 @@ It also puts no-break spaces where a line should not break (after one-letter wor
 
 [![The website: the engine running live, with hanging punctuation](https://raw.githubusercontent.com/mokhniuk/typography/main/docs/media/website-hero-light.webp)](https://typography.mokhni.uk)
 
-## Why this engine
-
-Measured, not promised: every claim below comes from [a published benchmark](apps/bench/RESULTS.md) that runs this package and six others over the same style-neutral checks — every case, check and output is in the file, so any check can be contested. **Read it with care: the cases were written by this package's author.** They test what is right (a German quotation is „…“ or »…«; an ISO date is not a range), not one tool's house style — this package's former English `«…»` default (now `quoteStyle: 'guillemets'`) was reported as a failure there too.
-
-Passed / scored; `–` means the tool has no such feature or language, and is not held against it. Each tool scores against its own denominator. The table shows eight of the groups; the total row counts all sixteen (every group but Registers).
-
-| | typography-engine | typography-engine literary | typograf | typopo | richtypo | tipograph | smartypants |
-|---|---|---|---|---|---|---|---|
-| Quotes | **41/41** | **41/41** | 33/37 | 20/20 | 14/18 | 24/27 | 14/17 |
-| Nested quotes | **25/25** | **25/25** | 0/21 | 4/4 | 0/2 | 10/11 | 1/1 |
-| Dashes | **37/37** | **37/37** | 7/33 | 11/15 | 9/13 | 20/22 | 6/12 |
-| Ranges | **25/25** | **25/25** | 0/21 | 4/4 | 0/2 | 11/11 | 0/1 |
-| No-break spaces | **13/13** | **13/13** | 5/13 | 4/6 | 4/9 | 1/11 | 0/5 |
-| Abbreviations | **5/5** | **5/5** | 0/5 | 2/3 | 0/1 | 0/4 | 0/1 |
-| Symbols | **19/19** | **19/19** | 10/19 | 7/16 | 5/16 | 12/18 | 5/15 |
-| Safety | **33/33** | **33/33** | 28/29 | 11/12 | 9/10 | 17/19 | 7/9 |
-| **Total, all 16 groups** | **260/260** | **260/260** | 135/236 | 86/112 | 70/107 | 127/169 | 53/90 |
-
-Speed, English text in one piece, the median of several runs (typograf is the closest tool in scope; the 0.16.1 run):
-
-| Tool | 10 KB | 100 KB | 1 MB |
-|---|---|---|---|
-| **typography-engine** | **0 ms** | **4 ms** | **38 ms** |
-| typograf | 1 ms | 6 ms | 58 ms |
-| tipograph | 0 ms | 1 ms | 11 ms |
-| smartypants | 0 ms | 1 ms | 10 ms |
-| retext-smartypants | 4 ms | 27 ms | 577 ms |
-| typopo | 21 ms | 1089 ms | 98742 ms |
-| richtypo | 2499 ms | not run (~249 s) | not run (~24835 s) |
-
-The tools that beat it on speed (tipograph, smartypants) score far below it on the checks; typograf, the closest in scope, is about 1.5× slower on large text, and typopo and richtypo slow down quadratically.
-
-## What is in the box
-
-- **34 rules** — quotes, apostrophes, dashes, ranges, no-break spaces, symbols, numbers, money, phone numbers; 24 on by default, 10 opt-in ([docs/rules.md](docs/rules.md)).
-- **27 languages** — the 24 official EU languages, `uk`, `de-CH` and `fr-CH`, each one pack with its quote marks, dash habits, elisions and abbreviations ([docs/languages.md](docs/languages.md)).
-- **Two registers** — `display` for interface and marketing text, `literary` for book-like text.
-- **Every format** — plain text, HTML, Markdown, hast trees (rehype plugin), React components, the DOM, a CLI.
-- **`explain`** — every change comes with the rule that made it and the before/after, so nothing is a mystery.
-- **Hanging punctuation** — opening marks hang in the margin at any width, no line-break measuring, with an inline script so prerendered pages do not jump ([more below](#hanging-punctuation-without-a-jump-on-a-prerendered-page)).
-- **A font without the glyph** — `avoid` names the characters a font cannot draw and the rules keep the text as it was typed instead of inserting them; in a browser `TypographyRoot` measures the page's own font and fills that list in, and the website's font checker writes it for a font file ([docs/api.md](docs/api.md#avoid)).
-- **Ship one language** — `@mokhniuk/typography/lite` carries no language pack and each pack is its own entry, `@mokhniuk/typography/lang/<code>`: one call that typesets Ukrainian is 12.2 KB brotli instead of 30.0 KB ([docs/api.md](docs/api.md#loading-only-the-languages-used)).
-- **Zero dependencies** — nothing in the package imports anything outside it; `react` is an optional peer for the `./react` entry only. Compiled ESM with declarations, so Node and plain tooling work.
-- **Safe by construction** — code, tags, URLs and protected spans are never touched; an unknown rule name throws instead of silently passing.
-
 ## Install
 
 From npm, with any package manager:
@@ -183,6 +138,51 @@ cat note.txt | typo -l uk      # from standard input
 typo -w docs/*.md              # rewrite files in place
 typo -c docs/*.md              # change nothing; exit 1 if any file would change (CI)
 ```
+
+## Why this engine
+
+Measured, not promised: every claim below comes from [a published benchmark](apps/bench/RESULTS.md) that runs this package and six others over the same style-neutral checks — every case, check and output is in the file, so any check can be contested. **Read it with care: the cases were written by this package's author.** They test what is right (a German quotation is „…“ or »…«; an ISO date is not a range), not one tool's house style — this package's former English `«…»` default (now `quoteStyle: 'guillemets'`) was reported as a failure there too.
+
+Passed / scored; `–` means the tool has no such feature or language, and is not held against it. Each tool scores against its own denominator. The table shows eight of the groups; the total row counts all sixteen (every group but Registers).
+
+| | typography-engine | typography-engine literary | typograf | typopo | richtypo | tipograph | smartypants |
+|---|---|---|---|---|---|---|---|
+| Quotes | **41/41** | **41/41** | 33/37 | 20/20 | 14/18 | 24/27 | 14/17 |
+| Nested quotes | **25/25** | **25/25** | 0/21 | 4/4 | 0/2 | 10/11 | 1/1 |
+| Dashes | **37/37** | **37/37** | 7/33 | 11/15 | 9/13 | 20/22 | 6/12 |
+| Ranges | **25/25** | **25/25** | 0/21 | 4/4 | 0/2 | 11/11 | 0/1 |
+| No-break spaces | **13/13** | **13/13** | 5/13 | 4/6 | 4/9 | 1/11 | 0/5 |
+| Abbreviations | **5/5** | **5/5** | 0/5 | 2/3 | 0/1 | 0/4 | 0/1 |
+| Symbols | **19/19** | **19/19** | 10/19 | 7/16 | 5/16 | 12/18 | 5/15 |
+| Safety | **33/33** | **33/33** | 28/29 | 11/12 | 9/10 | 17/19 | 7/9 |
+| **Total, all 16 groups** | **260/260** | **260/260** | 135/236 | 86/112 | 70/107 | 127/169 | 53/90 |
+
+Speed, English text in one piece, the median of several runs (typograf is the closest tool in scope; the 0.16.1 run):
+
+| Tool | 10 KB | 100 KB | 1 MB |
+|---|---|---|---|
+| **typography-engine** | **0 ms** | **4 ms** | **38 ms** |
+| typograf | 1 ms | 6 ms | 58 ms |
+| tipograph | 0 ms | 1 ms | 11 ms |
+| smartypants | 0 ms | 1 ms | 10 ms |
+| retext-smartypants | 4 ms | 27 ms | 577 ms |
+| typopo | 21 ms | 1089 ms | 98742 ms |
+| richtypo | 2499 ms | not run (~249 s) | not run (~24835 s) |
+
+The tools that beat it on speed (tipograph, smartypants) score far below it on the checks; typograf, the closest in scope, is about 1.5× slower on large text, and typopo and richtypo slow down quadratically.
+
+## What is in the box
+
+- **34 rules** — quotes, apostrophes, dashes, ranges, no-break spaces, symbols, numbers, money, phone numbers; 24 on by default, 10 opt-in ([docs/rules.md](docs/rules.md)).
+- **27 languages** — the 24 official EU languages, `uk`, `de-CH` and `fr-CH`, each one pack with its quote marks, dash habits, elisions and abbreviations ([docs/languages.md](docs/languages.md)).
+- **Two registers** — `display` for interface and marketing text, `literary` for book-like text.
+- **Every format** — plain text, HTML, Markdown, hast trees (rehype plugin), React components, the DOM, a CLI.
+- **`explain`** — every change comes with the rule that made it and the before/after, so nothing is a mystery.
+- **Hanging punctuation** — opening marks hang in the margin at any width, no line-break measuring, with an inline script so prerendered pages do not jump ([more below](#hanging-punctuation-without-a-jump-on-a-prerendered-page)).
+- **A font without the glyph** — `avoid` names the characters a font cannot draw and the rules keep the text as it was typed instead of inserting them; in a browser `TypographyRoot` measures the page's own font and fills that list in, and the website's font checker writes it for a font file ([docs/api.md](docs/api.md#avoid)).
+- **Ship one language** — `@mokhniuk/typography/lite` carries no language pack and each pack is its own entry, `@mokhniuk/typography/lang/<code>`: one call that typesets Ukrainian is 12.2 KB brotli instead of 30.0 KB ([docs/api.md](docs/api.md#loading-only-the-languages-used)).
+- **Zero dependencies** — nothing in the package imports anything outside it; `react` is an optional peer for the `./react` entry only. Compiled ESM with declarations, so Node and plain tooling work.
+- **Safe by construction** — code, tags, URLs and protected spans are never touched; an unknown rule name throws instead of silently passing.
 
 ## The playground
 
