@@ -10,7 +10,8 @@
  * rule given its own characters to avoid changes nothing.
  */
 
-import { type LangPack, PACKS } from './lang/index.ts';
+import { PACKS } from './lang/index.ts';
+import type { LangPack } from './lang/pack.ts';
 import { RULE_IDS } from './rules.ts';
 import type { Lang } from './types.ts';
 import { NBSP } from './types.ts';
@@ -54,11 +55,16 @@ const FIXED: Readonly<Record<string, string>> = {
 /** Every character of `text`, each once, in the order they first appear. */
 const unique = (text: string): string => [...new Set([...text])].join('');
 
-const packsOf = (lang?: Lang): readonly LangPack[] =>
-  lang ? (PACKS as readonly LangPack[]).filter((pack) => pack.code === lang) : PACKS;
+/** The packs `lang` names: a pack is itself, a code is the pack of that code, nothing is every pack. */
+const packsOf = (lang?: Lang | LangPack): readonly LangPack[] =>
+  typeof lang === 'object'
+    ? [lang]
+    : lang
+      ? (PACKS as readonly LangPack[]).filter((pack) => pack.code === lang)
+      : PACKS;
 
 /** The quote marks of a language (both registers), or of every language. */
-function quoteMarks(lang?: Lang): string {
+function quoteMarks(lang?: Lang | LangPack): string {
   const marks = packsOf(lang).flatMap((pack) =>
     [...pack.quotes, ...(pack.literary ?? []), ...(pack.turnedPairs ?? [])].flat(),
   );
@@ -66,7 +72,7 @@ function quoteMarks(lang?: Lang): string {
 }
 
 /** The dashes a language sets for a break in the sentence and for a line of dialogue. */
-function dashes(lang?: Lang): string {
+function dashes(lang?: Lang | LangPack): string {
   const packs = packsOf(lang);
   return unique(
     `—${NBSP}${packs
@@ -79,7 +85,7 @@ function dashes(lang?: Lang): string {
 }
 
 /** The digit separators `number.group` writes. */
-const separators = (lang?: Lang): string =>
+const separators = (lang?: Lang | LangPack): string =>
   unique(
     packsOf(lang)
       .map((pack) => pack.numbers?.group ?? '')
@@ -88,9 +94,9 @@ const separators = (lang?: Lang): string =>
 
 /**
  * The characters each rule can insert, by rule id. Without `lang` it is every language's marks at
- * once (what the docs show); with one, only that language's.
+ * once (what the docs show); with one (a code or a pack), only that language's.
  */
-export function ruleGlyphs(lang?: Lang): Readonly<Record<string, string>> {
+export function ruleGlyphs(lang?: Lang | LangPack): Readonly<Record<string, string>> {
   return {
     ...FIXED,
     quote: quoteMarks(lang),
@@ -104,12 +110,12 @@ export function ruleGlyphs(lang?: Lang): Readonly<Record<string, string>> {
  * Every character any rule can insert (`lang`: in that language only), the no-break space included.
  * The font checker lists these; the `avoid` option takes the ones a font cannot draw.
  */
-export const insertedCharacters = (lang?: Lang): string =>
+export const insertedCharacters = (lang?: Lang | LangPack): string =>
   unique(RULE_IDS.map((id) => ruleGlyphs(lang)[id] ?? '').join(''));
 
 /**
  * The same without the no-break space, which is the marks a font draws. Measuring a space against a
  * fallback font says nothing (both are blank), so the font-aware pass only ever tests these.
  */
-export const insertedGlyphs = (lang?: Lang): string =>
+export const insertedGlyphs = (lang?: Lang | LangPack): string =>
   insertedCharacters(lang).replaceAll(NBSP, '');

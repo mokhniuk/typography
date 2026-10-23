@@ -10,6 +10,7 @@ import {
   checkConfig,
   defineConfig,
   NBSP,
+  PACK,
   RULES,
   type Rule,
   type TypographyConfig,
@@ -258,6 +259,8 @@ describe('defineConfig and checkConfig', () => {
     expect(checkConfig({ lang: 'de-CH' })).toEqual({ lang: 'de-CH' });
     expect(checkConfig({ lang: 'fr-CH' })).toEqual({ lang: 'fr-CH' });
     expect(checkConfig({ quoteStyle: 'guillemets' })).toEqual({ quoteStyle: 'guillemets' });
+    // A module may give a pack instead of a code.
+    expect(checkConfig({ lang: PACK.uk })).toEqual({ lang: PACK.uk });
   });
 
   test('throws on what it cannot use, saying what', () => {
@@ -328,5 +331,57 @@ describe('a config spreads into any call', () => {
     expect(typesetHtml(text, { ...book, lang: 'de', nbsp: 'entity' })).toBe('»x«');
     expect(typesetMarkdown(text, { ...book, onChange: () => {} })).toBe('‘x’');
     expect(textOf(viaRehype(text, { ...site, quoteStyle: 'language' }))).toBe('«x»');
+  });
+});
+
+describe('a pack as lang', () => {
+  // Every site resolves a code to its pack, so the pack itself sets the same text.
+  const text = 'Він сказав: "це 21-26 вересня" - і пішов...';
+  const html = `<p>${text} <span lang="de">"Hallo" - sagte er</span></p>`;
+  const rehype = (lang: TypographyConfig['lang']) =>
+    String(
+      unified()
+        .use(rehypeParse, { fragment: true })
+        .use(rehypeTypography, { lang })
+        .use(rehypeStringify)
+        .processSync(html),
+    );
+  const react = (lang: TypographyConfig['lang']) =>
+    renderToString(
+      <TypographyRoot lang={lang}>
+        <Typeset text={text} />
+      </TypographyRoot>,
+    );
+
+  test('sets what its code sets, at every site', () => {
+    expect(typographic(text, PACK.uk)).toBe(typographic(text, 'uk'));
+    expect(typesetText(text, { lang: PACK.uk })).toBe(typesetText(text, { lang: 'uk' }));
+    expect(typesetHtml(html, { lang: PACK.uk })).toBe(typesetHtml(html, { lang: 'uk' }));
+    expect(typesetMarkdown(text, { lang: PACK.uk })).toBe(typesetMarkdown(text, { lang: 'uk' }));
+    expect(rehype(PACK.uk)).toBe(rehype('uk'));
+    expect(react(PACK.uk)).toBe(react('uk'));
+  });
+
+  test('the command line takes one from a module config (--lang stays a code)', async () => {
+    const byPack = fake({}, { 'typography.config.ts': { default: { lang: PACK.uk } } }, text);
+    expect(await run(['--config', 'typography.config.ts'], byPack.io)).toBe(0);
+    const byCode = fake({}, {}, text);
+    expect(await run(['--lang', 'uk'], byCode.io)).toBe(0);
+    expect(byPack.out()).toBe(byCode.out());
+    expect(byPack.err()).toBe('');
+  });
+
+  test('a pack of its own keeps winning inside lang="<its code>" in rehype', () => {
+    const own = { ...PACK.de, quotes: [['<<', '>>']] as const };
+    const out = String(
+      unified()
+        .use(rehypeParse, { fragment: true })
+        .use(rehypeTypography, { lang: own })
+        .use(rehypeStringify)
+        .processSync('<p>"a" <span lang="de-DE">"b"</span> <span lang="uk">"c"</span></p>'),
+    );
+    expect(out).toBe(
+      '<p>&#x3C;&#x3C;a>> <span lang="de-DE">&#x3C;&#x3C;b>></span> <span lang="uk">«c»</span></p>',
+    );
   });
 });

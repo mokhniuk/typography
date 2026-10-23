@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import type { Change, Lang, QuoteStyle, Register, Rule } from '../core/index.ts';
+import type { Change, Lang, LangPack, QuoteStyle, Register, Rule } from '../core/index.ts';
 
 /**
  * What `Typeset` falls back to; set for everything under a `TypographyRoot`. `disable`, `enable`,
@@ -7,7 +7,8 @@ import type { Change, Lang, QuoteStyle, Register, Rule } from '../core/index.ts'
  * (module level or `useMemo`/`useCallback`), not an array or function written inline in the render.
  */
 export type TypographySetting = {
-  lang: Lang;
+  /** A language code or a pack. */
+  lang: Lang | LangPack;
   register: Register;
   /** `language` (the default) or `us`; see `QuoteStyle`. */
   quoteStyle?: QuoteStyle | undefined;

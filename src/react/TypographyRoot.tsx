@@ -10,7 +10,15 @@ import {
   useState,
   useSyncExternalStore,
 } from 'react';
-import type { Change, Lang, QuoteStyle, Register, Rule, TypographyConfig } from '../core/index.ts';
+import type {
+  Change,
+  Lang,
+  LangPack,
+  QuoteStyle,
+  Register,
+  Rule,
+  TypographyConfig,
+} from '../core/index.ts';
 import { insertedGlyphs } from '../core/index.ts';
 import { hangPunctuation, hangScript, missingIn } from '../dom/index.ts';
 import { TypographyContext } from './context.ts';
@@ -52,7 +60,7 @@ const subscribe = () => () => {};
 export function useMissingGlyphs(
   root: RefObject<HTMLElement | null>,
   on: boolean,
-  lang?: Lang,
+  lang?: Lang | LangPack,
 ): string {
   const [missing, setMissing] = useState('');
   useEffect(() => {
@@ -112,7 +120,8 @@ export function TypographyRoot({
   children: ReactNode;
   /** A project's config (see `TypographyConfig`); a prop given here beats it. Pass a constant. `nbsp` is not read. */
   config?: TypographyConfig | undefined;
-  lang?: Lang | undefined;
+  /** A language code or a pack (pass a constant). */
+  lang?: Lang | LangPack | undefined;
   register?: Register | undefined;
   /** `language` (the default) or `us`: “…” and ‘…’ in any language. */
   quoteStyle?: QuoteStyle | undefined;

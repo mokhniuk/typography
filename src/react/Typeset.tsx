@@ -2,6 +2,7 @@ import { useContext, useMemo } from 'react';
 import {
   type Change,
   type Lang,
+  type LangPack,
   type QuoteStyle,
   type Register,
   type Rule,
@@ -47,8 +48,8 @@ export function Typeset({
   atStart?: boolean | undefined;
   /** A config (see `TypographyConfig`) that overrides the root's values; its own props beat it. Pass a constant. */
   config?: TypographyConfig | undefined;
-  /** Overrides the language of the surrounding `TypographyRoot`. */
-  lang?: Lang | undefined;
+  /** Overrides the language of the surrounding `TypographyRoot`: a code or a pack (pass a constant). */
+  lang?: Lang | LangPack | undefined;
   /** Overrides the register of the surrounding `TypographyRoot`. */
   register?: Register | undefined;
   /** Overrides the quote style of the surrounding `TypographyRoot`. */

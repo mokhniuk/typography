@@ -73,9 +73,13 @@ export function fromConfig(text: string): Switches {
     );
   }
   const config = checkConfig(value);
+  const { lang } = config;
+  if (lang !== undefined && typeof lang !== 'string') {
+    throw new Error('config: lang is a pack; the playground takes a language code');
+  }
   const on = new Set(selectRules({ disable: config.disable, enable: config.enable }));
   return {
-    lang: config.lang ?? 'en',
+    lang: lang ?? 'en',
     register: config.register ?? 'display',
     quoteStyle: config.quoteStyle ?? 'language',
     nbsp: config.nbsp ?? 'entity',

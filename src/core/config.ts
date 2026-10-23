@@ -1,3 +1,4 @@
+import { isPack, type LangPack } from './lang/pack.ts';
 import { LANGS } from './profiles.ts';
 import { type Rule, selectRules } from './rules.ts';
 import type { Lang, QuoteStyle, Register } from './types.ts';
@@ -11,8 +12,11 @@ import type { Lang, QuoteStyle, Register } from './types.ts';
  * A new option goes here, and then reaches `ModeOptions` and every mode's type from it.
  */
 export type TypographyConfig = {
-  /** Language of the text; `en` unless given. */
-  lang?: Lang | undefined;
+  /**
+   * Language of the text: a code (`'uk'`) or a pack (the `uk` export of
+   * `@mokhniuk/typography/lang/uk`); `en` unless given. JSON can only give a code.
+   */
+  lang?: Lang | LangPack | undefined;
   /** `display` (the default) or `literary`. */
   register?: Register | undefined;
   /** `language` (the default), `us` (“…” and ‘…’ in any language) or `guillemets` (« », „ “, ‚ ‘ in any language: the house style). */
@@ -77,7 +81,7 @@ export function checkConfig(value: unknown): TypographyConfig {
     }
   }
   const { lang, register, quoteStyle, disable, enable, rules, avoid, nbsp, hangAmount } = config;
-  if (lang !== undefined) oneOf('lang', lang, LANGS);
+  if (lang !== undefined && !isPack(lang)) oneOf('lang', lang, LANGS);
   if (register !== undefined) oneOf('register', register, ['display', 'literary']);
   if (quoteStyle !== undefined) oneOf('quoteStyle', quoteStyle, ['language', 'us', 'guillemets']);
   if (nbsp !== undefined) oneOf('nbsp', nbsp, ['entity', 'char']);

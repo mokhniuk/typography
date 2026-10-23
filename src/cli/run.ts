@@ -5,6 +5,7 @@ import {
   checkConfig,
   LANGS,
   type Lang,
+  type LangPack,
   type QuoteStyle,
   REGISTERS,
   type Register,
@@ -113,9 +114,10 @@ export async function run(argv: string[], io: Io): Promise<number> {
   } catch (error) {
     return usage(io, error instanceof Error ? error.message : String(error));
   }
-  const lang = (values.lang ?? config.lang ?? 'en') as Lang;
+  // `--lang` is a code; a module config may give a pack.
+  const lang = (values.lang ?? config.lang ?? 'en') as Lang | LangPack;
   const register = (values.register ?? config.register ?? 'display') as Register;
-  if (!LANGS.includes(lang))
+  if (typeof lang === 'string' && !LANGS.includes(lang))
     return usage(io, `unknown language "${values.lang}" (${LANGS.join(', ')})`);
   if (!REGISTERS.includes(register)) return usage(io, `unknown register "${values.register}"`);
   if (values.quotes && !['language', 'us', 'guillemets'].includes(values.quotes)) {

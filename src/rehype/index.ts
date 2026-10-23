@@ -1,10 +1,11 @@
 import {
-  LANGS,
-  type Lang,
+  type LangPack,
   type ModeOptions,
+  PACKS,
   type QuoteStyle,
-  typesetBlock,
+  resolvePack,
 } from '../core/index.ts';
+import { typesetBlock } from '../core/typography.ts';
 import { BLOCK, RAW_BLOCK, RAW_INLINE } from '../shared/elements.ts';
 
 /**
@@ -17,9 +18,10 @@ import { BLOCK, RAW_BLOCK, RAW_INLINE } from '../shared/elements.ts';
  * it, so a quotation pairs across a link. Left alone: the content of `pre`, `code`,
  * `kbd`, `samp`, `textarea`, `script`, `style`, `svg`, `math`, `template`, anything
  * with `data-typography="off"`, and every attribute. An element's `lang` attribute
- * sets the language of its subtree, when it is one the package has a profile for (the
- * primary subtag is read, in any case: `uk-UA` is `uk`); the `quoteStyle` option is
- * kept for every subtree, so `lang="en-US"` alone does not change the quotes. An inline
+ * sets the language of its subtree, when it is one the package has a pack for (the
+ * primary subtag is read, in any case: `uk-UA` is `uk`), or the code of the pack given
+ * as the `lang` option (a pack of one's own is used inside `lang="<its code>"`); the
+ * `quoteStyle` option is kept for every subtree, so `lang="en-US"` alone does not change the quotes. An inline
  * element in another language is typeset on its own, so a quotation does not pair across it.
  *
  * hast text is already decoded, so entities are not a concern here: text comes back
@@ -43,31 +45,36 @@ const isElement = (node: Node): node is Element => node.type === 'element';
 const isText = (node: Node): node is Text => node.type === 'text' && typeof node.value === 'string';
 
 /** What an element's `lang` sets for its subtree: the language, and the quote style that goes with it. */
-type Setting = { lang: Lang; quoteStyle: QuoteStyle | undefined };
+type Setting = { lang: LangPack; quoteStyle: QuoteStyle | undefined };
 
-/** Pack codes by their lower-case form: a language tag is matched without regard to case. */
-const BY_TAG = new Map<string, Lang>(LANGS.map((lang) => [lang.toLowerCase(), lang]));
+/** The packs by their lower-case code: a language tag is matched without regard to case. */
+const BY_TAG = new Map<string, LangPack>(PACKS.map((pack) => [pack.code.toLowerCase(), pack]));
 
 /**
  * The pack of a language tag: the longest run of its leading subtags that is a pack code, so
- * `de-CH` and `de-ch-1996` are `de-CH`, `de-AT` is `de` and `uk-UA` is `uk`.
+ * `de-CH` and `de-ch-1996` are `de-CH`, `de-AT` is `de` and `uk-UA` is `uk`. At each length the
+ * code of `base` (the pack of the `lang` option) is tried first, so a pack of one's own keeps
+ * winning inside `lang="<its code>"`.
  */
-function packOf(tag: string): Lang | undefined {
+function packOf(tag: string, base: LangPack): LangPack | undefined {
+  const own = base.code.toLowerCase();
   const subtags = tag.toLowerCase().split('-');
   for (let n = subtags.length; n > 0; n--) {
-    const lang = BY_TAG.get(subtags.slice(0, n).join('-'));
-    if (lang) return lang;
+    const code = subtags.slice(0, n).join('-');
+    if (code === own) return base;
+    const pack = BY_TAG.get(code);
+    if (pack) return pack;
   }
   return undefined;
 }
 
 /** The setting an element declares, if its language is one of ours (see `packOf`). The quote style stays the option's. */
-function declared(element: Element, quoteStyle: QuoteStyle | undefined): Setting | null {
+function declared(element: Element, base: Setting): Setting | null {
   const raw = element.properties?.lang ?? element.properties?.xmlLang;
   if (typeof raw !== 'string') return null;
-  const lang = packOf(raw);
+  const lang = packOf(raw, base.lang);
   if (!lang) return null;
-  return { lang, quoteStyle };
+  return { lang, quoteStyle: base.quoteStyle };
 }
 
 const off = (element: Element) =>
@@ -77,7 +84,7 @@ const off = (element: Element) =>
 type Entry = Text | null;
 
 export function typesetHast<T extends Node>(tree: T, options: RehypeOptions = {}): T {
-  const base: Setting = { lang: options.lang ?? 'en', quoteStyle: options.quoteStyle };
+  const base: Setting = { lang: resolvePack(options.lang), quoteStyle: options.quoteStyle };
   let run: Entry[] = [];
 
   const flush = ({ lang, quoteStyle }: Setting) => {
@@ -103,7 +110,7 @@ export function typesetHast<T extends Node>(tree: T, options: RehypeOptions = {}
         run.push(child);
       } else if (isElement(child)) {
         const tag = child.tagName.toLowerCase();
-        const inner = declared(child, options.quoteStyle) ?? current;
+        const inner = declared(child, base) ?? current;
         if (off(child) || RAW_BLOCK.has(tag)) {
           flush(current);
         } else if (RAW_INLINE.has(tag)) {

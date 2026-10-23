@@ -96,6 +96,10 @@ describe('playground config: export, and import back', () => {
   test('a bad config throws with the reason', () => {
     expect(() => fromConfig('{ lang: en }')).toThrow(/Not JSON/);
     expect(() => fromConfig('{ "lang": "xx" }')).toThrow(/lang is/);
+    // A pack passes checkConfig (a module may give one), but the page picks a language by its code.
+    expect(() => fromConfig('{ "lang": { "code": "xx", "quotes": [] } }')).toThrow(
+      /the playground takes a language code/,
+    );
     expect(() => fromConfig('{ "colour": 1 }')).toThrow(/unknown key "colour"/);
     expect(() => fromConfig('{ "disable": ["dash.rnage"] }')).toThrow(/dash\.rnage/);
     expect(() => fromConfig('{ "rules": [] }')).toThrow(/rules can only come from a module/);
