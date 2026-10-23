@@ -47,7 +47,7 @@ tr:last-child td{border-bottom:0}
 <body>
 <main>
 <h1>Typography bibliography</h1>
-<p class="lead">Every source the rules rest on: 38 read so far. Each row says who wrote it, links to it, what it is, the one thing we rely on, and which rules and languages cite it. Generated from <code>resources/sources.ts</code> by <code>bun run docs:sources</code>; do not edit by hand. The decisions themselves, with their gaps, are on the <a href="sources.html">sources page</a>.</p>
+<p class="lead">Every source the rules rest on: 47 read so far. Each row says who wrote it, links to it, what it is, the one thing we rely on, and which rules and languages cite it. Generated from <code>resources/sources.ts</code> by <code>bun run docs:sources</code>; do not edit by hand. The decisions themselves, with their gaps, are on the <a href="sources.html">sources page</a>.</p>
 <div class="table">
 <table>
 <thead><tr><th>Source</th><th>Author</th><th>Kind</th><th>What it is</th><th>Relied on</th><th>Used in</th><th>Read</th></tr></thead>
@@ -115,14 +115,32 @@ tr:last-child td{border-bottom:0}
 <td><a class="chip" href="sources.html#rule-dash-dialogue">dash.dialogue</a> <span class="meta">ro</span><br><a class="chip" href="sources.html#rule-dash-sentence">dash.sentence</a> <span class="meta">ro</span></td>
 <td><span class="via summary">Summary only, check by hand</span><br><span class="meta">2026-10-21</span></td>
 </tr>
+<tr id="src-lacroux-orthotypographie">
+<td><b><a href="https://www.orthotypographie.fr/volume-I/date-dynastie.html" target="_blank" rel="noopener">Orthotypographie (Orthographe &amp; Typographie françaises, lexique des règles typographiques en usage à l’Imprimerie nationale et ailleurs) ↗</a></b><br><span class="meta">lacroux-orthotypographie</span></td>
+<td>Jean-Pierre Lacroux</td>
+<td>Orthography</td>
+<td>A free online French orthography and typography dictionary by a French typographer, with a long reader discussion on spaces. A France reference, personal rather than official; it records the &quot;deux écoles&quot; on the colon rather than a single rule.</td>
+<td>In French the colon takes a no-break word space before it (or a slightly narrower one), while ; ! ? take a fine (narrow) no-break space between a letter or digit and the mark; no space is put between two punctuation marks (xxx!?, «xxx!»).</td>
+<td><a class="chip" href="sources.html#rule-space-before-punctuation">space.before-punctuation</a></td>
+<td><span class="via raw">Raw data</span><br><span class="meta">2026-10-23</span></td>
+</tr>
 <tr id="src-pravopys-125">
 <td><b><a href="https://www.pravopys.net/sections/125/" target="_blank" rel="noopener">Український правопис, § 125 «Розділові знаки при прямій мові» ↗</a></b><br><span class="meta">pravopys-125</span></td>
 <td>Ukrainian National Commission on Orthography (the site names no editor)</td>
 <td>Orthography</td>
-<td>The Ukrainian orthography rules (the 1993 edition, as published on pravopys.net). The 2019 edition in force has the same section headings, but its text could not be read.</td>
+<td>The Ukrainian orthography rules (the 1993 edition, as published on pravopys.net). The 2019 edition in force has the same section headings; §§ 161, 164 and 167 of it were read on a mirror (see pravopys-2019).</td>
 <td>When direct speech opens a paragraph, a dash (тире) stands before it (— Ти звідки?), and a dash stands before the words of the author (— Тату! татку! — упізнали діти.).</td>
 <td><a class="chip" href="sources.html#rule-dash-dialogue">dash.dialogue</a> <span class="meta">uk</span></td>
 <td><span class="via summary">Summary only, check by hand</span><br><span class="meta">2026-10-21</span></td>
+</tr>
+<tr id="src-pravopys-2019">
+<td><b><a href="https://slovnyk.ua/pravopys.php?prav_par=167" target="_blank" rel="noopener">Український правопис (2019), § 161 «Тире», § 164 «Лапки», § 167 «Розділові знаки для оформлення прямої мови та цитат» ↗</a></b><br><span class="meta">pravopys-2019</span></td>
+<td>Ukrainian National Commission on Orthography; text as published on slovnyk.ua (the site names no editor)</td>
+<td>Orthography</td>
+<td>The 2019 edition of the Ukrainian orthography, read as the section-by-section copy on slovnyk.ua (&quot;Правопис 2019 онлайн&quot;), because the official PDF on mon.gov.ua refused a fetch and the downloaded Wayback copy has no readable text layer. The copy was not compared with the official PDF, so it is marked `summary`: the page was downloaded and read in full, but its fidelity to the official text is unverified.</td>
+<td>A paragraph of direct speech opens with a dash (— Добридень, Замфіре!), and a dash stands between the speech and the words of the author; quotation marks are « » outside and “ ” inside (§ 164 п. 3), with „ “ and „ ” listed as further forms, and no stop before a closing mark.</td>
+<td><a class="chip" href="sources.html#rule-quote">quote</a> <span class="meta">uk</span><br><a class="chip" href="sources.html#rule-dash-dialogue">dash.dialogue</a> <span class="meta">uk</span></td>
+<td><span class="via summary">Summary only, check by hand</span><br><span class="meta">2026-10-23</span></td>
 </tr>
 <tr id="src-psp-2000">
 <td><b><a href="https://www.juls.savba.sk/ediela/psp2000/psp.pdf" target="_blank" rel="noopener">Pravidlá slovenského pravopisu, 3rd ed. (2000) ↗</a></b><br><span class="meta">psp-2000</span></td>
@@ -141,6 +159,15 @@ tr:last-child td{border-bottom:0}
 <td>Polish typography does not tell the dialogue dash from the ordinary dash: the same sign, the pauza (—) or the półpauza (–), is used for both, spaced.</td>
 <td><a class="chip" href="sources.html#rule-dash-dialogue">dash.dialogue</a> <span class="meta">pl</span></td>
 <td><span class="via summary">Summary only, check by hand</span><br><span class="meta">2026-10-21</span></td>
+</tr>
+<tr id="src-pwn-procent-spacja">
+<td><b><a href="https://sjp.pwn.pl/poradnia/haslo/Jeszcze-raz-o-spacji-lub-jej-braku-po-znaku;21530.html" target="_blank" rel="noopener">PWN Poradnia Językowa: znak % (answers of 2021, 2022, 2023) ↗</a></b><br><span class="meta">pwn-procent-spacja</span></td>
+<td>Adam Wolański (Uniwersytet Warszawski), for the PWN Poradnia Językowa</td>
+<td>Orthography</td>
+<td>Answers of the PWN language advice service on whether a space stands between a number and the percent sign: &quot;procent, proc., %&quot; (26.01.2023), &quot;Odstępy lub ich brak w oznaczeniach jednostek miar&quot; (7.03.2022), &quot;Jeszcze raz o spacji lub jej braku po znaku %&quot; (26.11.2021). The page HTML was downloaded and the answer text read in full.</td>
+<td>Polish typographic tradition writes % after the figure without a space (50%); since the 2020 legal-units regulation a space is also written, and PWN accepts both 38,4 % ± 3,4 % and 38,4% ± 3,4%; it does not say the space is no-break.</td>
+<td><a class="chip" href="sources.html#rule-space-percent">space.percent</a> <span class="meta">pl</span></td>
+<td><span class="via raw">Raw data</span><br><span class="meta">2026-10-23</span></td>
 </tr>
 <tr id="src-pwn-wolanski-sieroty">
 <td><b><a href="https://sjp.pwn.pl/poradnia/haslo/Sieroty-na-koncu-wiersza;18684.html" target="_blank" rel="noopener">Sieroty na końcu wiersza (PWN Poradnia, 8.06.2018) ↗</a></b><br><span class="meta">pwn-wolanski-sieroty</span></td>
@@ -169,6 +196,24 @@ tr:last-child td{border-bottom:0}
 <td><a class="chip" href="sources.html#rule-dash-dialogue">dash.dialogue</a> <span class="meta">sl</span></td>
 <td><span class="via summary">Summary only, check by hand</span><br><span class="meta">2026-10-21</span></td>
 </tr>
+<tr id="src-treccani-apostrofo">
+<td><b><a href="https://www.treccani.it/enciclopedia/apostrofo_(Enciclopedia-dell'Italiano)/" target="_blank" rel="noopener">Apostrofo ↗</a></b><br><span class="meta">treccani-apostrofo</span></td>
+<td>Treccani (Istituto della Enciclopedia Italiana), Enciclopedia dell’italiano</td>
+<td>Orthography</td>
+<td>The Enciclopedia dell’italiano entry on the apostrophe: elision, truncation and the apostrophe in imperatives. It lists which truncated words and imperatives are written with a final apostrophe and says an accent in their place is an error. Read as a fetch-tool summary and its quotations not yet spot-checked against the page; the entry does not discuss quotation marks.</td>
+<td>sta’, da’, va’, fa’, di’ (imperatives) and pie’, be’, po’, mo’, que’ end in an apostrophe, never an accent (po’ not pò); the mark is the apostrophe ’.</td>
+<td><a class="chip" href="sources.html#rule-apostrophe">apostrophe</a> <span class="meta">it</span></td>
+<td><span class="via summary">Summary only, check by hand</span><br><span class="meta">2026-10-23</span></td>
+</tr>
+<tr id="src-treccani-troncamento">
+<td><b><a href="https://www.treccani.it/enciclopedia/troncamento_(Enciclopedia-dell'Italiano)/" target="_blank" rel="noopener">Troncamento ↗</a></b><br><span class="meta">treccani-troncamento</span></td>
+<td>Treccani (Istituto della Enciclopedia Italiana), Enciclopedia dell’italiano</td>
+<td>Orthography</td>
+<td>The Enciclopedia dell’italiano entry on truncation (the loss of final segments of a word). It only confirms that mo’ &lt; modo and pie’ &lt; piede are called truncated forms; it does not list da’, di’, fa’, sta’, va’. Read as a fetch-tool summary.</td>
+<td>Truncation is the deletion of final segments or syllables of a word; mo’ (modo) and pie’ (piede) are given as truncated forms written with an apostrophe.</td>
+<td><a class="chip" href="sources.html#rule-apostrophe">apostrophe</a> <span class="meta">it</span></td>
+<td><span class="via summary">Summary only, check by hand</span><br><span class="meta">2026-10-23</span></td>
+</tr>
 <tr id="src-ujc-poradna-konec-radku">
 <td><b><a href="https://dotazy.ujc.cas.cz/odpovedi/?id_otazka=778&amp;filter=1&amp;id_kategorie_otazek=201&amp;id_domena_kategorii_otazek=24&amp;items=20&amp;page=1" target="_blank" rel="noopener">Jazyková poradna: category &quot;Výraz na konci řádku&quot; ↗</a></b><br><span class="meta">ujc-poradna-konec-radku</span></td>
 <td>Ústav pro jazyk český AV ČR</td>
@@ -177,6 +222,15 @@ tr:last-child td{border-bottom:0}
 <td>#12952: &quot;Na konci řádku by neměly stát jednopísmenné neslabičné předložky k, s, v, z. V hodnocení jednopísmenných slabičných předložek (o, u) a spojek (a, i) se příručky rozcházejí. … Doporučujeme, aby pokud to sazba textu umožňuje, ani tyto výrazy na koncích řádku nezůstávaly… Vícepísmenné výrazy na konci řádku zůstat mohou.&quot; #10683: &quot;Norma ČSN 01 6910 uvádí, že by na konci řádku neměly stát jednopísmenné neslabičné předložky k, s, v, z a slabičné předložky o, u. Ostatní předložky na konci řádku stát mohou.&quot; (The norm lists k s v z o u, not a i.)</td>
 <td><a class="chip" href="sources.html#rule-space-short-word">space.short-word</a><br><a class="chip" href="sources.html#rule-space-orphan">space.orphan</a> <span class="meta">cs</span></td>
 <td><span class="via raw">Raw data</span><br><span class="meta">2026-10-22</span></td>
+</tr>
+<tr id="src-wiktionary-mt-ta-ma">
+<td><b><a href="https://en.wiktionary.org/wiki/ta'" target="_blank" rel="noopener">Wiktionary: ta’, ma’ (Maltese) ↗</a></b><br><span class="meta">wiktionary-mt-ta-ma</span></td>
+<td>Wiktionary contributors (English Wiktionary, Maltese entries)</td>
+<td>Research</td>
+<td>A community dictionary, not an academy or a grammar; it shows that the Maltese prepositions ta’ (of) and ma’ (with) are written with a final apostrophe, and that bla negates b’ and has no apostrophe form. sa’ has no Maltese entry. Read as a fetch-tool summary; low authority, used only for the word list.</td>
+<td>ta’ (genitive, &quot;of&quot;, t’ before a vowel) and ma’ (&quot;with&quot;) are Maltese prepositions written with a final apostrophe; bla (without) is not.</td>
+<td><a class="chip" href="sources.html#rule-apostrophe">apostrophe</a> <span class="meta">mt</span></td>
+<td><span class="via summary">Summary only, check by hand</span><br><span class="meta">2026-10-23</span></td>
 </tr>
 <tr id="src-zu-blyzniuk-technical-rules">
 <td><b><a href="https://eprints.zu.edu.ua/7122/" target="_blank" rel="noopener">Основні технічні правила набору текстів ↗</a></b><br><span class="meta">zu-blyzniuk-technical-rules</span></td>
@@ -206,22 +260,31 @@ tr:last-child td{border-bottom:0}
 <td><span class="via raw">Raw data</span><br><span class="meta">2026-10-20</span></td>
 </tr>
 <tr id="src-cldr-numbers">
-<td><b><a href="https://cdn.jsdelivr.net/npm/cldr-numbers-full@46.0.0/main/de/numbers.json" target="_blank" rel="noopener">CLDR 46 locale data: numbers (cldr-numbers-full 46.0.0) ↗</a></b><br><span class="meta">cldr-numbers</span></td>
+<td><b><a href="https://raw.githubusercontent.com/unicode-org/cldr-json/main/cldr-json/cldr-numbers-full/main/de-CH/numbers.json" target="_blank" rel="noopener">CLDR 48 locale data: numbers (cldr-numbers-full 48.2.3) ↗</a></b><br><span class="meta">cldr-numbers</span></td>
 <td>Unicode Consortium (CLDR project)</td>
 <td>Standard</td>
-<td>How each locale formats percentages and currency amounts, including the space before the sign. Describes software output, not a printed style guide.</td>
-<td>The percent pattern is &quot;#,##0 %&quot; with U+00A0 before the sign in de and fr, and &quot;#,##0%&quot; in en, uk, pl, de-CH and fr-CH; the currency pattern puts U+00A0 between the amount and the currency sign in de, fr, uk, pl and fr-CH.</td>
-<td><a class="chip" href="sources.html#rule-space-percent">space.percent</a> <span class="meta">de, fr</span></td>
-<td><span class="via raw">Raw data</span><br><span class="meta">2026-10-20</span></td>
+<td>How each locale formats percentages and currency amounts, including the space before the sign. Describes software output, not a printed style guide. Six locales (uk, pl, de, fr, de-CH, fr-CH) were read in version 48.2.3 on 2026-10-23, the space characters decoded code point by code point; the English pattern was read earlier in version 46.0.0 (2026-10-20) and not re-read.</td>
+<td>The percent pattern is &quot;#,##0 %&quot; with U+00A0 before the sign in de and fr, and &quot;#,##0%&quot; in uk, pl, de-CH and fr-CH (and en, CLDR 46); the currency pattern puts U+00A0 between the amount and the sign in de, fr, uk, pl and fr-CH, and de-CH puts the sign first with U+00A0 after it (&quot;¤ #,##0.00&quot;).</td>
+<td><a class="chip" href="sources.html#rule-space-percent">space.percent</a> <span class="meta">de, fr, uk, pl, de-CH, fr-CH</span></td>
+<td><span class="via raw">Raw data</span><br><span class="meta">2026-10-23</span></td>
 </tr>
 <tr id="src-nist-si-checklist">
 <td><b><a href="https://physics.nist.gov/cuu/Units/checklist.html" target="_blank" rel="noopener">SI Unit rules and style conventions: Check List for Reviewing Manuscripts ↗</a></b><br><span class="meta">nist-si-checklist</span></td>
 <td>Not named on the page (hosted by NIST at physics.nist.gov)</td>
 <td>Standard</td>
 <td>A checklist of SI writing rules, including the space between a value and its unit. It backs the space itself, not that it must be a no-break space, and covers English-language SI usage only.</td>
-<td>There is a space between a numerical value and a unit symbol, and between a number and the percent sign (&quot;10 %&quot;); the page does not say the space is nonbreaking.</td>
+<td>There is a space between a numerical value and a unit symbol, and between a number and the percent sign (&quot;10 %&quot;); the page does not say the space is nonbreaking. The page itself writes the multiplication sign as the letter x (35 cm x 48 cm), per the fetch tool.</td>
 <td><a class="chip" href="sources.html#rule-space-number">space.number</a></td>
 <td><span class="via summary">Summary only, check by hand</span><br><span class="meta">2026-10-20</span></td>
+</tr>
+<tr id="src-nist-sp811-2008">
+<td><b><a href="https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication811e2008.pdf" target="_blank" rel="noopener">Guide for the Use of the International System of Units (SI), NIST Special Publication 811, 2008 Edition ↗</a></b><br><span class="meta">nist-sp811-2008</span></td>
+<td>Ambler Thompson and Barry N. Taylor (NIST)</td>
+<td>Standard</td>
+<td>NIST’s guide to SI usage in the United States (supersedes the 1995 edition). Sec. 10.5.4 sets the sign for multiplying numbers; the Check List and Sec. 7.7 show the form. It is about SI and US usage; it does not prescribe a minus sign character (it prints an en dash for &quot;minus&quot; in Appendix B.2). Text extracted from the PDF with a script (no PDF renderer), read as extracted text.</td>
+<td>With a dot decimal marker the preferred sign for multiplying numbers or values of quantities is the cross ×, not a centered dot (25 × 60.5, 35 cm × 48 cm); with a comma decimal marker the centered dot is preferred for numbers, but the cross still for values of quantities.</td>
+<td><a class="chip" href="sources.html#rule-symbol-multiply">symbol.multiply</a> <span class="meta">en, ga, mt</span></td>
+<td><span class="via raw">Raw data</span><br><span class="meta">2026-10-23</span></td>
 </tr>
 <tr id="src-uax14">
 <td><b><a href="https://www.unicode.org/reports/tr14/" target="_blank" rel="noopener">UAX #14: Unicode Line Breaking Algorithm, revision 57 (Unicode 18.0.0, 2026-09-01) ↗</a></b><br><span class="meta">uax14</span></td>
@@ -240,6 +303,24 @@ tr:last-child td{border-bottom:0}
 <td>U+2212 MINUS SIGN and U+00D7 MULTIPLICATION SIGN are characters of their own, cross-referenced to hyphen-minus (U+002D) and to latin small letter x (U+0078) as different characters.</td>
 <td><a class="chip" href="sources.html#rule-symbol-minus">symbol.minus</a><br><a class="chip" href="sources.html#rule-symbol-multiply">symbol.multiply</a></td>
 <td><span class="via raw">Raw data</span><br><span class="meta">2026-10-20</span></td>
+</tr>
+<tr id="src-bk-instructions-fr">
+<td><b><a href="https://www.bk.admin.ch/dam/fr/sd-web/t4P98Y1Vnyz-/objekt_55266.pdf" target="_blank" rel="noopener">Instructions de la Chancellerie fédérale sur la présentation des textes officiels en français ↗</a></b><br><span class="meta">bk-instructions-fr</span></td>
+<td>Chancellerie fédérale suisse (Services linguistiques centraux, Section française)</td>
+<td>Style guide</td>
+<td>The Swiss Federal Chancellery’s instructions for French official texts of the Confederation (May 2016, 12 pages), complementing the Directives de technique législative. Short: it sets numbers, abbreviations and no-break spaces, and says nothing about : ; ! ? or guillemets. The PDF text was extracted with PDFKit, which turns every no-break space into a plain space, so the claims lean on the words &quot;espace insécable&quot;.</td>
+<td>Numbers of more than four digits are grouped with an espace insécable (55 000; 1700), the apostrophe &quot;n’est pas admise&quot;, the decimal mark is a comma, and an espace insécable separates a number from its unit or abbreviation (3 %, 50 francs, 300 CHF).</td>
+<td><a class="chip" href="sources.html#rule-number-group">number.group</a> <span class="meta">fr-CH</span><br><a class="chip" href="sources.html#rule-space-percent">space.percent</a> <span class="meta">fr-CH</span></td>
+<td><span class="via raw">Raw data</span><br><span class="meta">2026-10-23</span></td>
+</tr>
+<tr id="src-bk-schreibweisungen">
+<td><b><a href="https://www.bk.admin.ch/dam/de/sd-web/YVHazXZRkqKn/schreibweisungen.pdf" target="_blank" rel="noopener">Schreibweisungen: Weisungen der Bundeskanzlei zur Schreibung und zu Formulierungen in den deutschsprachigen amtlichen Texten des Bundes ↗</a></b><br><span class="meta">bk-schreibweisungen</span></td>
+<td>Schweizerische Bundeskanzlei</td>
+<td>Style guide</td>
+<td>The Swiss Federal Chancellery’s binding spelling and typography instructions for German official texts of the Confederation (2nd edition 2013, corrected 2015, 116 pages). Official for federal texts only; German-language, so it says nothing about French or Italian Swiss texts. The PDF text was extracted with PDFKit, which turns every no-break space into a plain space, so the claims lean on the word &quot;Festabstand&quot;, not on the glyphs.</td>
+<td>Official Swiss German texts set « » with ‹ › inside and no space inside the marks, and reject „ “ and the German » «; digits are grouped in threes with a Festabstand (no-break space) from five digits up and the apostrophe is &quot;nicht mehr&quot; to be used; a Festabstand goes between a figure and %, ‰ or a currency unit or symbol; decimals take a comma and francs/rappen a point.</td>
+<td><a class="chip" href="sources.html#rule-quote">quote</a> <span class="meta">de-CH</span><br><a class="chip" href="sources.html#rule-number-group">number.group</a> <span class="meta">de-CH</span><br><a class="chip" href="sources.html#rule-space-percent">space.percent</a> <span class="meta">de-CH</span></td>
+<td><span class="via raw">Raw data</span><br><span class="meta">2026-10-23</span></td>
 </tr>
 <tr id="src-butterick-apostrophes">
 <td><b><a href="https://practicaltypography.com/apostrophes.html" target="_blank" rel="noopener">Practical Typography: Apostrophes ↗</a></b><br><span class="meta">butterick-apostrophes</span></td>
@@ -373,7 +454,7 @@ tr:last-child td{border-bottom:0}
 <td>Style guide</td>
 <td>The Quebec language office’s table of the spaces around punctuation and symbols in French, last updated 2024. A Quebec authority, so where France or Switzerland differ (a fine space instead of a full no-break space) it does not say so.</td>
 <td>In French a no-break space goes inside the guillemets (after « and before »), before %, before $ and €, and before a colon; before ; ! and ? there is no space or a fine space; no space goes before an ellipsis or a comma.</td>
-<td><a class="chip" href="sources.html#rule-quote">quote</a> <span class="meta">fr</span><br><a class="chip" href="sources.html#rule-space-percent">space.percent</a> <span class="meta">fr</span></td>
+<td><a class="chip" href="sources.html#rule-quote">quote</a> <span class="meta">fr</span><br><a class="chip" href="sources.html#rule-space-before-punctuation">space.before-punctuation</a><br><a class="chip" href="sources.html#rule-space-percent">space.percent</a> <span class="meta">fr</span></td>
 <td><span class="via summary">Summary only, check by hand</span><br><span class="meta">2026-10-20</span></td>
 </tr>
 <tr id="src-oqlf-tiret-dialogues">

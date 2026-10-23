@@ -14,18 +14,18 @@ Every source was read before it was entered, on the date given. The `confidence`
 
 Confidence: `disputed`.
 
-Why: Each language has its own quotation marks, and nesting alternates a second pair. en (“ ” ‘ ’), uk (« » „ “) and pl („ ” « ») match CLDR; fr level one and fr-CH match too. The former English default, « » „ “ ‚ ‘, is this package's house style and is kept as the option quoteStyle: 'guillemets' for any language. Butterick agrees that quotes are curly and that styles vary by language, and gives no per-language sets. OQLF puts a no-break space inside French guillemets, as the engine does.
+Why: Each language has its own quotation marks, and nesting alternates a second pair. en (“ ” ‘ ’), uk (« » „ “) and pl („ ” « ») match CLDR; fr level one and fr-CH match too. The former English default, « » „ “ ‚ ‘, is this package's house style and is kept as the option quoteStyle: 'guillemets' for any language. Butterick agrees that quotes are curly and that styles vary by language, and gives no per-language sets. OQLF puts a no-break space inside French guillemets, as the engine does. de-CH rests on the Swiss Federal Chancellery (bk-schreibweisungen, Rz. 202, 203 and 206): « » outside, ‹ › inside, no space inside the marks, and „ “ and the German » « are rejected for official texts. uk rests on CLDR and on Pravopys 2019 § 164: « » outside, and inside the recommended form is “ ”.
 
-Alternative: Disputed for the languages that still differ from CLDR: German „ “ ‚ ‘ (the engine sets » « › ‹ on display), French « » with « » inside (the engine uses “ ” inside), and de-CH „ “ ‚ ‘ (the engine's de-CH pack sets « » ‹ ›, as fr-CH). English used to be one of them (the engine set « » „ “ by house style, and every other tool in the benchmark sets “ ”, apps/bench/RESULTS.md); it now follows CLDR. Not read: the Swiss Federal Chancellery Schreibweisungen (a PDF this work could not extract text from), Pravopys 2019 (server refused the fetch), Imprimerie nationale Lexique.
+Alternative: Disputed for the languages that still differ from CLDR: German „ “ ‚ ‘ (the engine sets » « › ‹ on display), French « » with « » inside (the engine uses “ ” inside), de-CH and uk. de-CH: CLDR has „ “ ‚ ‘; the engine's pack sets « » ‹ › as the Chancellery's Schreibweisungen do (read, Rz. 202: the German » « is "nicht zulässig" in Swiss official texts, and Rz. 206 does not recommend „ “). The Chancellery binds official federal texts only, so CLDR and everyday usage can differ; the pack follows the Chancellery and the entry stays disputed against CLDR. fr-CH: « » ‹ › as CLDR has them; the Chancellery's French instructions (read) are silent on quotation marks, so fr-CH rests on CLDR alone. uk: the engine and CLDR use « » outside and „ “ inside; Pravopys 2019 § 164 (read on the slovnyk.ua mirror, not compared with the official PDF) confirms « » outside, recommends “ ” inside and lists „ “ among the allowed forms, so the pack's „ “ is allowed but not the recommended print form; it is kept, as CLDR has it. English used to be one of them (the engine set « » „ “ by house style, and every other tool in the benchmark sets “ ”, apps/bench/RESULTS.md); it now follows CLDR. Not read: the Imprimerie nationale Lexique.
 
-Sources: [cldr-delimiters](#src-cldr-delimiters), [butterick-quotes](#src-butterick-quotes), [oqlf-espacement](#src-oqlf-espacement)
+Sources: [cldr-delimiters](#src-cldr-delimiters), [butterick-quotes](#src-butterick-quotes), [oqlf-espacement](#src-oqlf-espacement), [bk-schreibweisungen](#src-bk-schreibweisungen), [pravopys-2019](#src-pravopys-2019)
 
 - `en`: [cldr-delimiters](#src-cldr-delimiters), [butterick-quotes](#src-butterick-quotes)
-- `uk`: [cldr-delimiters](#src-cldr-delimiters)
+- `uk`: [cldr-delimiters](#src-cldr-delimiters), [pravopys-2019](#src-pravopys-2019)
 - `de`: [cldr-delimiters](#src-cldr-delimiters)
 - `pl`: [cldr-delimiters](#src-cldr-delimiters)
 - `fr`: [cldr-delimiters](#src-cldr-delimiters), [oqlf-espacement](#src-oqlf-espacement)
-- `de-CH`: [cldr-delimiters](#src-cldr-delimiters)
+- `de-CH`: [cldr-delimiters](#src-cldr-delimiters), [bk-schreibweisungen](#src-bk-schreibweisungen)
 - `fr-CH`: [cldr-delimiters](#src-cldr-delimiters)
 
 ### `apostrophe`
@@ -34,11 +34,13 @@ Confidence: `verified`.
 
 Why: A typographic apostrophe is ’, not the straight typewriter mark, and the same ’ opens an elided word (’90s, rock ’n’ roll) instead of an opening quote.
 
-Alternative: Matches the engine, including the leading-apostrophe cases fixed in the CHANGELOG. Butterick makes an exception for the Hawaiian okina (‘Oʻahu’), which the engine does not know. English only; no source for other languages was read.
+Alternative: Matches the engine, including the leading-apostrophe cases fixed in the CHANGELOG. Butterick makes an exception for the Hawaiian okina (‘Oʻahu’), which the engine does not know. The verified part is English. Italian: Treccani "apostrofo" (a fetch-tool summary, quotations not yet spot-checked) lists the imperatives sta’, da’, va’, fa’, di’ and the truncations pie’, be’, po’, mo’, que’ as written with an apostrophe, never an accent; "troncamento" confirms only mo’ and pie’. Treccani reads ve’ and vo’ as archaic or local, and `to’` is on Wiktionary only, so neither is in the list. Maltese: ta’ (of) and ma’ (with) end in an apostrophe on Wiktionary, a community dictionary of low authority; sa’ and bla are not confirmed. Both lists ship in 0.18.0 as the pack field `truncations` (it: da di fa sta va po be mo pie que; mt: ta ma), so a trailing apostrophe after one of these words stays an apostrophe inside straight single quotes; until then the engine has no such field and `po'` there can close the quotation early. No source for other languages was read.
 
 Sources: [butterick-apostrophes](#src-butterick-apostrophes), [butterick-quotes](#src-butterick-quotes)
 
 - `en`: [butterick-apostrophes](#src-butterick-apostrophes)
+- `it`: [treccani-apostrofo](#src-treccani-apostrofo), [treccani-troncamento](#src-treccani-troncamento)
+- `mt`: [wiktionary-mt-ta-ma](#src-wiktionary-mt-ta-ma)
 
 ### `ellipsis`
 
@@ -58,7 +60,9 @@ Confidence: `general-knowledge`.
 
 Why: A space before , . ; : ! ? ) is a typing slip in English and most languages; French keeps it before : ; ! ?, so the rule leaves those alone there.
 
-Alternative: Opt-in rule (off unless named in `enable`). No source was read for it; the choice rests on general knowledge. typograf and typopo do the same.
+Alternative: Opt-in rule (off unless named in `enable`). The French half is sourced: Lacroux (Orthotypographie, entries Deux-points, Espace, Points de suspension; read as HTML) puts a no-break word space before a colon (or a slightly narrower one: "deux écoles") and a fine, narrow no-break space between a letter or digit and ; ! ?, and none between two punctuation marks (xxx!?, «xxx!»); OQLF (a fetch-tool summary, re-read) agrees on the colon (espace insécable) and allows no space or a fine space before ; ! ?. The English half, that a space before these marks is a slip, rests on no source read, so the decision stays general-knowledge. Planned for 0.18.0, not built: a rule that sets U+00A0 before a French colon and U+202F before ; ! ? after a letter or digit, from these two sources; it gets its own entry (space.high-punctuation) then, and this one keeps the sources until it does. fr-CH: no source was read for it. The Swiss Chancellery’s French instructions are silent on : ; ! ?, and the two weak hints (typoguide.ch, a summary of a page whose table was not seen; Lacroux on "certains Romands" and the fine space) disagree, so fr-CH is left as it is. typograf and typopo do the same as the English half.
+
+Sources: [lacroux-orthotypographie](#src-lacroux-orthotypographie), [oqlf-espacement](#src-oqlf-espacement)
 
 ### `space.after-comma`
 
@@ -110,11 +114,11 @@ Confidence: `verified`.
 
 Why: In these languages a line of dialogue opens with a dash, not a quotation mark, so a paragraph that opens with a typed hyphen and a space is such a line. The dash is the one the language uses for it, followed by a no-break space (attached with no space in Spanish), in both registers.
 
-Alternative: Which dash: the sources set the em dash for uk, es and pt; pl uses whatever dash the text uses (the pack uses the em dash); fr accepts both (em set); bg says long dash but renders the en dash and it shows the en dash, and for both the pack keeps the em dash of its ISG sentence dash so that dialogue and the narrator match; ro, hr, hu, sk, lt, cs, sl, fi and sv set the en dash; da says the same form as the tankestreg, the em dash in the pack. Only the OQLF asks for a no-break space after the dash; the engine sets one everywhere but Spanish so that the dash never ends a line alone. Not set: et (quotes are the norm, EKI), lv and el (the dash is not confirmed by a source read), and en, de, de-CH, fr-CH, nl, mt, ga (dialogue is quoted). A paragraph whose later line also opens with a dash is read as a list and left alone. The 2019 Ukrainian Pravopys (§ 161) could not be read; § 125 of the earlier edition was. In cs, sl and da a dash is one of several allowed forms.
+Alternative: Which dash: the sources set the em dash for uk, es and pt; pl uses whatever dash the text uses (the pack uses the em dash); fr accepts both (em set); bg says long dash but renders the en dash and it shows the en dash, and for both the pack keeps the em dash of its ISG sentence dash so that dialogue and the narrator match; ro, hr, hu, sk, lt, cs, sl, fi and sv set the en dash; da says the same form as the tankestreg, the em dash in the pack. Only the OQLF asks for a no-break space after the dash; the engine sets one everywhere but Spanish so that the dash never ends a line alone. Not set: et (quotes are the norm, EKI), lv and el (the dash is not confirmed by a source read), and en, de, de-CH, fr-CH, nl, mt, ga (dialogue is quoted). A paragraph whose later line also opens with a dash is read as a list and left alone. Ukrainian: § 125 of the earlier edition was read, and so was the 2019 Pravopys (on the slovnyk.ua mirror, not compared with the official PDF): § 167 opens a paragraph of direct speech with a dash and puts one before the words of the author, and § 161 is not about dialogue (it only cross-refers to § 167 and § 168). Neither names the em dash or a no-break space for prose, though the examples show an em dash followed by a space, so the em dash and no-break space of the pack with a no-break space are consistent with the sources, not specified by them. In cs, sl and da a dash is one of several allowed forms.
 
-Sources: [pravopys-125](#src-pravopys-125), [pwn-pauza-dialogowa](#src-pwn-pauza-dialogowa), [rae-raya-dialogos](#src-rae-raya-dialogos), [oqlf-tiret-dialogues](#src-oqlf-tiret-dialogues), [treccani-lineetta](#src-treccani-lineetta), [ciberduvidas-travessao](#src-ciberduvidas-travessao), [indreptar-linia-dialog](#src-indreptar-linia-dialog), [ibl-pryaka-rech](#src-ibl-pryaka-rech), [hrvatski-pravopis-8-16](#src-hrvatski-pravopis-8-16), [slovenski-pravopis-388](#src-slovenski-pravopis-388), [akh12-259](#src-akh12-259), [kotus-vuorosanaviiva](#src-kotus-vuorosanaviiva), [isof-tankstreck](#src-isof-tankstreck), [ijp-pomlcka](#src-ijp-pomlcka), [psp-2000](#src-psp-2000), [dsn-59](#src-dsn-59), [drukteinis-skyryba](#src-drukteinis-skyryba)
+Sources: [pravopys-125](#src-pravopys-125), [pravopys-2019](#src-pravopys-2019), [pwn-pauza-dialogowa](#src-pwn-pauza-dialogowa), [rae-raya-dialogos](#src-rae-raya-dialogos), [oqlf-tiret-dialogues](#src-oqlf-tiret-dialogues), [treccani-lineetta](#src-treccani-lineetta), [ciberduvidas-travessao](#src-ciberduvidas-travessao), [indreptar-linia-dialog](#src-indreptar-linia-dialog), [ibl-pryaka-rech](#src-ibl-pryaka-rech), [hrvatski-pravopis-8-16](#src-hrvatski-pravopis-8-16), [slovenski-pravopis-388](#src-slovenski-pravopis-388), [akh12-259](#src-akh12-259), [kotus-vuorosanaviiva](#src-kotus-vuorosanaviiva), [isof-tankstreck](#src-isof-tankstreck), [ijp-pomlcka](#src-ijp-pomlcka), [psp-2000](#src-psp-2000), [dsn-59](#src-dsn-59), [drukteinis-skyryba](#src-drukteinis-skyryba)
 
-- `uk`: [pravopys-125](#src-pravopys-125)
+- `uk`: [pravopys-125](#src-pravopys-125), [pravopys-2019](#src-pravopys-2019)
 - `pl`: [pwn-pauza-dialogowa](#src-pwn-pauza-dialogowa)
 - `es`: [rae-raya-dialogos](#src-rae-raya-dialogos)
 - `fr`: [oqlf-tiret-dialogues](#src-oqlf-tiret-dialogues)
@@ -144,13 +148,16 @@ Sources: [uax14](#src-uax14)
 
 ### `number.group`
 
-Confidence: `general-knowledge`.
+Confidence: `verified`.
 
 Why: Integers of five or more digits are grouped in threes with the language separator (comma, no-break space, dot) so a long number can be read.
 
-Alternative: Opt-in rule (off unless named in `enable`). The SI brochure (9th ed., 5.4.4) says digits "may be divided into groups of three by a space", that "neither dots nor commas are ever inserted in the spaces between groups", that with only four digits before or after the decimal marker a space is not used to isolate a single digit, and that the practice "is a matter of choice". The engine agrees on groups of three, on starting at five digits, and on the space itself for the languages whose pack uses a no-break space (the brochure does not say nonbreaking). It deliberately differs where the pack groups with a comma (en) or a dot, which the brochure forbids; that is local custom, not SI. The brochure is a metrology standard and does not speak for ordinary prose in any one language, so the choice stays general-knowledge. Separators per language come from the packs and are otherwise unverified; Swiss usage differs (the pack follows the Federal Chancellery, not read here).
+Alternative: Opt-in rule (off unless named in `enable`). The SI brochure (9th ed., 5.4.4) says digits "may be divided into groups of three by a space", that "neither dots nor commas are ever inserted in the spaces between groups", that with only four digits before or after the decimal marker a space is not used to isolate a single digit, and that the practice "is a matter of choice". The engine agrees on groups of three, on starting at five digits, and on the space itself for the languages whose pack uses a no-break space (the brochure does not say nonbreaking). It deliberately differs where the pack groups with a comma (en) or a dot, which the brochure forbids; that is local custom, not SI. The brochure is a metrology standard and does not speak for ordinary prose in any one language, so the verified part is the two Swiss packs, which rest on the Federal Chancellery (read as extracted PDF text): the Schreibweisungen (Rz. 512) group digits in threes with a Festabstand (no-break space) from five digits up, keep a four-digit number whole, and say the old apostrophe form "sollte nicht mehr angewendet werden"; the French instructions (ch. 4 and ch. 5) group numbers of more than four digits with an espace insécable and say "l’utilisation de l’apostrophe dans les nombres n’est pas admise". So the Swiss apostrophe grouping (1’000’000) is rejected by both and stays unread as a number group (not doing, Rz. 512). The engine cannot see a table, where Rz. 513 groups four-digit numbers too, and keeps four digits whole. Both Chancellery texts set a comma as the decimal mark (Rz. 514; ch. 4: "4,16 millions de francs"), with the point only between francs and rappen in German (Fr. 15.40, Rz. 543), while the de-CH and fr-CH packs still carry a point; setting the comma in both ships in 0.18.0. Separators for the other languages come from the packs and are otherwise unverified.
 
-Sources: [bipm-si-brochure-9](#src-bipm-si-brochure-9)
+Sources: [bipm-si-brochure-9](#src-bipm-si-brochure-9), [bk-schreibweisungen](#src-bk-schreibweisungen), [bk-instructions-fr](#src-bk-instructions-fr)
+
+- `de-CH`: [bk-schreibweisungen](#src-bk-schreibweisungen)
+- `fr-CH`: [bk-instructions-fr](#src-bk-instructions-fr)
 
 ### `dash.range`
 
@@ -191,7 +198,7 @@ Confidence: `general-knowledge`.
 
 Why: A minus sign is −, not a hyphen.
 
-Alternative: The SI brochure, 9th ed., has no passage on the minus sign: its section 5.4.4 only shows the leading zero (-0.234 but not -.234) and says nothing of the character to use, so it does not back this rule. Unicode only shows that the character exists; it does not say when to use it. Butterick says to use an en dash for the minus sign (the "Math symbols" page also lists the &minus; entity) and calls an en dash acceptable in spreadsheets, so a style guide that prefers − over – was not found. Still unchecked.
+Alternative: The SI brochure, 9th ed., has no passage on the minus sign: its section 5.4.4 only shows the leading zero (-0.234 but not -.234) and says nothing of the character to use, so it does not back this rule. Unicode only shows that the character exists; it does not say when to use it. Butterick says to use an en dash for the minus sign (the "Math symbols" page also lists the &minus; entity) and calls an en dash acceptable in spreadsheets, so a style guide that prefers − over – was not found. NIST SP 811 (2008) Sec. 7.7 and Appendix B.2 do not prescribe U+2212 either (B.2 prints an en dash for minus). Still unchecked.
 
 Sources: [unicode-names](#src-unicode-names), [butterick-dashes](#src-butterick-dashes), [butterick-math](#src-butterick-math)
 
@@ -201,11 +208,13 @@ Confidence: `verified`.
 
 Why: A dimension takes ×, not the letter x.
 
-Alternative: Butterick says to use × instead of the letter x, dimensions included. Unicode shows the two are different characters. The NIST SI checklist, as summarised by the fetch tool, does not address ×. English only; no source for other languages was read.
+Alternative: Butterick says to use × instead of the letter x, dimensions included. Unicode shows the two are different characters. NIST SP 811 (2008), Sec. 10.5.4 (read from the PDF text): where the dot is the decimal marker the preferred sign for multiplying numbers or values of quantities is the cross ×, not a centered dot (25 × 60.5, 35 cm × 48 cm; the Check List item 7 and Sec. 7.7 show the same, and the web checklist page writes the letter x). So the rule is verified for the dot-decimal languages (en, ga, mt). Where the comma is the decimal marker NIST prefers the half-high dot for bare numbers (Note 1) and the cross still for values of quantities, so a dimension with units takes × in every language, but extending × to bare numbers in a comma-decimal language has no source, and nothing was read for those languages: there the rule is general knowledge.
 
-Sources: [butterick-math](#src-butterick-math), [unicode-names](#src-unicode-names)
+Sources: [butterick-math](#src-butterick-math), [unicode-names](#src-unicode-names), [nist-sp811-2008](#src-nist-sp811-2008)
 
-- `en`: [butterick-math](#src-butterick-math)
+- `en`: [butterick-math](#src-butterick-math), [nist-sp811-2008](#src-nist-sp811-2008)
+- `ga`: [nist-sp811-2008](#src-nist-sp811-2008)
+- `mt`: [nist-sp811-2008](#src-nist-sp811-2008)
 
 ### `symbol.fraction`
 
@@ -269,13 +278,13 @@ Sources: [nist-si-checklist](#src-nist-si-checklist), [uax14](#src-uax14), [bipm
 
 ### `space.percent`
 
-Confidence: `verified`.
+Confidence: `disputed`.
 
-Why: German and French set a no-break space before % and a currency sign. CLDR agrees for % in de and fr, and for the currency sign in de and fr; it sets no space before % in en, uk, pl, de-CH and fr-CH, which is what the engine does. OQLF, a printed-style authority, agrees for French: a no-break space before %, $ and €. For € alone, the Greek, Finnish, Italian and Danish editions of the Interinstitutional Style Guide (part 3, 7) write the symbol after the figure with a space (30 €), as does the Czech handbook (250 €, with a fixed space), so currencySpace stays on in el, fi, it, da and cs.
+Why: German and French set a no-break space before % and a currency sign. CLDR 48.2.3 agrees for % in de and fr, and for the currency sign in de and fr. OQLF, a printed-style authority, agrees for French: a no-break space before %, $ and €. For € alone, the Greek, Finnish, Italian and Danish editions of the Interinstitutional Style Guide (part 3, 7) write the symbol after the figure with a space (30 €), as does the Czech handbook (250 €, with a fixed space), so currencySpace stays on in el, fi, it, da and cs. The Swiss Federal Chancellery sets a no-break space in both Swiss languages: the Schreibweisungen (Rz. 554: a Festabstand between a figure and % or ‰, none in a compound such as 6%-Anteil; Rz. 539 and 540: a Festabstand between a figure and a currency unit or symbol, before or after the figure) and the French instructions (ch. 2 and ch. 5, p. 3, 8 and 9: 3 %, 26,1 %, 50 francs, 300 CHF, each with an espace insécable). So de-CH and fr-CH set the space before % and before a currency sign, as the packs do.
 
-Alternative: The space before % and the space before € are two pack fields, percentSpace and currencySpace: Irish, Maltese, Portuguese, Latvian, Lithuanian and Estonian set the first and not the second, because their ISG editions write €30 with no space or show money only as the code EUR (see each pack's notes). CLDR also puts a no-break space before the currency sign in uk, pl and fr-CH; the engine leaves 49€ alone there (a gap, in the backlog). OQLF also asks for a no-break space before a French colon, and none or a fine space before ; ! and ?, which the engine does not set (a gap, in the backlog). OQLF is a Quebec source; a France or Swiss guide may differ (a fine space). The German side rests on CLDR only; no Duden page was read. The ISG passage is for the euro only (other currency signs are never spaced by the engine) and, apart from the Finnish edition, does not say the space is nonbreaking; the Czech handbook was read as a fetch-tool summary. The ISG percent rule (6.4) cited in the packs was not re-read here. Of the country guides named in the packs (Kielitoimiston ohjepankki, Retskrivningsordbogen, Treccani), none was read for €.
+Alternative: Disputed for de-CH and fr-CH on %: CLDR 48.2.3 has "#,##0%" (no space) in both, against the Chancellery's no-break space; the packs follow the Chancellery (a printed official guide for federal texts) over software defaults, and the entry stays disputed against CLDR as the quote entry does. For a currency sign CLDR and the Chancellery agree in fr-CH (U+00A0 after the amount); in de-CH CLDR puts the sign first with U+00A0 after it (CHF 49.99, the order the Schreibweisungen also allow, Rz. 540), and the engine, which never moves a sign, sets the space for either order. uk and pl: CLDR 48.2.3 has a no-break space between the amount and the currency sign and no space before %. The engine does not yet set the currency space there (it leaves 49€ alone); setting currencySpace in uk and pl, from CLDR alone, ships in 0.18.0. percentSpace stays off in both: CLDR has none, and PWN Poradnia (answers of 2021 to 2023, read) says Polish tradition writes 50% and, since the 2020 units regulation, 38,4 % is allowed too (both correct), without saying the space is no-break; the engine adds none. PWN on zł and a Ukrainian guide on either were not found. The space before % and the space before € are two pack fields, percentSpace and currencySpace: Irish, Maltese, Portuguese, Latvian, Lithuanian and Estonian set the first and not the second, because their ISG editions write €30 with no space or show money only as the code EUR (see each pack's notes). OQLF also asks for a no-break space before a French colon, and none or a fine space before ; ! and ?, which the engine does not set in this rule (see space.before-punctuation). OQLF is a Quebec source. The German side rests on CLDR only; no Duden page was read. The ISG passage is for the euro only (other currency signs are never spaced by the engine) and, apart from the Finnish edition, does not say the space is nonbreaking; the Czech handbook was read as a fetch-tool summary. The PDFs of the Chancellery were read as extracted text, in which every no-break space shows as a plain one, so the claim rests on the words Festabstand and espace insécable. The ISG percent rule (6.4) cited in the packs was not re-read here. Of the country guides named in the packs (Kielitoimiston ohjepankki, Retskrivningsordbogen, Treccani), none was read for €.
 
-Sources: [cldr-numbers](#src-cldr-numbers), [oqlf-espacement](#src-oqlf-espacement), [isg-2022-euro](#src-isg-2022-euro), [ijp-penezni-castky](#src-ijp-penezni-castky), [uax14](#src-uax14)
+Sources: [cldr-numbers](#src-cldr-numbers), [oqlf-espacement](#src-oqlf-espacement), [isg-2022-euro](#src-isg-2022-euro), [ijp-penezni-castky](#src-ijp-penezni-castky), [uax14](#src-uax14), [bk-schreibweisungen](#src-bk-schreibweisungen), [bk-instructions-fr](#src-bk-instructions-fr), [pwn-procent-spacja](#src-pwn-procent-spacja)
 
 - `de`: [cldr-numbers](#src-cldr-numbers)
 - `fr`: [cldr-numbers](#src-cldr-numbers), [oqlf-espacement](#src-oqlf-espacement)
@@ -284,6 +293,10 @@ Sources: [cldr-numbers](#src-cldr-numbers), [oqlf-espacement](#src-oqlf-espaceme
 - `it`: [isg-2022-euro](#src-isg-2022-euro)
 - `da`: [isg-2022-euro](#src-isg-2022-euro)
 - `cs`: [ijp-penezni-castky](#src-ijp-penezni-castky)
+- `uk`: [cldr-numbers](#src-cldr-numbers)
+- `pl`: [cldr-numbers](#src-cldr-numbers), [pwn-procent-spacja](#src-pwn-procent-spacja)
+- `de-CH`: [bk-schreibweisungen](#src-bk-schreibweisungen), [cldr-numbers](#src-cldr-numbers)
+- `fr-CH`: [bk-instructions-fr](#src-bk-instructions-fr), [cldr-numbers](#src-cldr-numbers)
 
 ### `symbol.degree`
 
@@ -390,7 +403,7 @@ Relied on: Per locale: en “ ” and ‘ ’; uk « » and „ “; de „ “ 
 
 <https://physics.nist.gov/cuu/Units/checklist.html>, read as a summary by a fetch tool, check it by hand on 2026-10-20.
 
-Relied on: There is a space between a numerical value and a unit symbol, and between a number and the percent sign ("10 %"); the page does not say the space is nonbreaking.
+Relied on: There is a space between a numerical value and a unit symbol, and between a number and the percent sign ("10 %"); the page does not say the space is nonbreaking. The page itself writes the multiplication sign as the letter x (35 cm x 48 cm), per the fetch tool.
 
 <a id="src-bipm-si-brochure-9"></a>
 **bipm-si-brochure-9**. BIPM, The International System of Units (SI), 9th edition 2019, version V4.01 of June 2026 (doi 10.59161/AUEZ1291), section 5.4.3 "Formatting the value of a quantity" and 5.4.4 "Formatting numbers, and the decimal marker", pp. 144-145; Appendix 1, 9th CGPM Resolution 7 (1948) and 22nd CGPM Resolution 10 (2003).
@@ -407,11 +420,11 @@ Relied on: A space always separates a number from its unit symbol, so "30.2 °C"
 Relied on: U+2212 MINUS SIGN and U+00D7 MULTIPLICATION SIGN are characters of their own, cross-referenced to hyphen-minus (U+002D) and to latin small letter x (U+0078) as different characters.
 
 <a id="src-cldr-numbers"></a>
-**cldr-numbers**. Unicode CLDR 46, cldr-numbers-full 46.0.0, main/<locale>/numbers.json (percentFormats standard, currencyFormats standard), locales en, uk, de, pl, fr, de-CH, fr-CH.
+**cldr-numbers**. Unicode CLDR 48, cldr-numbers-full 48.2.3, main/<locale>/numbers.json (percentFormats standard, currencyFormats standard), locales uk, pl, de, fr, de-CH, fr-CH; locale en as read in cldr-numbers-full 46.0.0.
 
-<https://cdn.jsdelivr.net/npm/cldr-numbers-full@46.0.0/main/de/numbers.json>, read as raw data on 2026-10-20.
+<https://raw.githubusercontent.com/unicode-org/cldr-json/main/cldr-json/cldr-numbers-full/main/de-CH/numbers.json>, read as raw data on 2026-10-23.
 
-Relied on: The percent pattern is "#,##0 %" with U+00A0 before the sign in de and fr, and "#,##0%" in en, uk, pl, de-CH and fr-CH; the currency pattern puts U+00A0 between the amount and the currency sign in de, fr, uk, pl and fr-CH.
+Relied on: The percent pattern is "#,##0 %" with U+00A0 before the sign in de and fr, and "#,##0%" in uk, pl, de-CH and fr-CH (and en, CLDR 46); the currency pattern puts U+00A0 between the amount and the sign in de, fr, uk, pl and fr-CH, and de-CH puts the sign first with U+00A0 after it ("¤ #,##0.00").
 
 <a id="src-uax14"></a>
 **uax14**. Unicode Standard Annex #14, Unicode Line Breaking Algorithm, revision 57, Unicode 18.0.0, 2026-09-01 (first 100,000 of 141,504 characters read; line-break class tables and rules LB12, LB12a not read in full).
@@ -419,6 +432,13 @@ Relied on: The percent pattern is "#,##0 %" with U+00A0 before the sign in de an
 <https://www.unicode.org/reports/tr14/>, read as a summary by a fetch tool, check it by hand on 2026-10-20.
 
 Relied on: U+00A0 NO-BREAK SPACE is class GL and prohibits a break on either side, and is the preferred way to keep two words on a line (a title and a name); U+202F is the same but narrow; the horizontal ellipsis is class IN, so breaks between consecutive ellipses are never allowed.
+
+<a id="src-nist-sp811-2008"></a>
+**nist-sp811-2008**. Thompson, A. and Taylor, B. N., Guide for the Use of the International System of Units (SI), NIST SP 811, 2008 Edition (2nd printing, November 2008), Sec. 10.5.4 "Multiplying numbers" and Note 1, Check List item (7), Sec. 7.7.
+
+<https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication811e2008.pdf>, read as raw data on 2026-10-23.
+
+Relied on: With a dot decimal marker the preferred sign for multiplying numbers or values of quantities is the cross ×, not a centered dot (25 × 60.5, 35 cm × 48 cm); with a comma decimal marker the centered dot is preferred for numbers, but the cross still for values of quantities.
 
 ### Style guides
 
@@ -541,6 +561,20 @@ Relied on: A tankstreck may mark direct speech, common in news and fiction: each
 
 Relied on: Direct speech shown as dialogue is set off with dashes (brūkšniai), retold direct speech with quotation marks.
 
+<a id="src-bk-schreibweisungen"></a>
+**bk-schreibweisungen**. Schweizerische Bundeskanzlei, Schreibweisungen, 2., aktualisierte Auflage 2013 (korrigierte Ausgabe 2015), Rz. 202, 203, 206 (Anführungszeichen, p. 21-22), Rz. 251 (Festabstand), Rz. 440, Rz. 512-514 (Zahlen, p. 79-80), Rz. 539-543 (Geldbeträge, p. 86-87), Rz. 554-555 (Prozent, p. 90).
+
+<https://www.bk.admin.ch/dam/de/sd-web/YVHazXZRkqKn/schreibweisungen.pdf>, read as raw data on 2026-10-23.
+
+Relied on: Official Swiss German texts set « » with ‹ › inside and no space inside the marks, and reject „ “ and the German » «; digits are grouped in threes with a Festabstand (no-break space) from five digits up and the apostrophe is "nicht mehr" to be used; a Festabstand goes between a figure and %, ‰ or a currency unit or symbol; decimals take a comma and francs/rappen a point.
+
+<a id="src-bk-instructions-fr"></a>
+**bk-instructions-fr**. Chancellerie fédérale, Instructions sur la présentation des textes officiels en français, mai 2016, ch. 2 (unités monétaires, p. 3), ch. 4 (nombres, p. 7 and note 4), ch. 5 (espaces insécables, p. 9).
+
+<https://www.bk.admin.ch/dam/fr/sd-web/t4P98Y1Vnyz-/objekt_55266.pdf>, read as raw data on 2026-10-23.
+
+Relied on: Numbers of more than four digits are grouped with an espace insécable (55 000; 1700), the apostrophe "n’est pas admise", the decimal mark is a comma, and an espace insécable separates a number from its unit or abbreviation (3 %, 50 francs, 300 CHF).
+
 ### Orthography
 
 <a id="src-ijp-penezni-castky"></a>
@@ -641,6 +675,41 @@ Relied on: Dashes are the newer alternative to quotation marks at the start and 
 
 Relied on: Dialogue may be given with a replikstreg, quotation marks or no marks; the replikstreg has the same form as the tankestreg and is set especially where a turn starts a new line.
 
+<a id="src-lacroux-orthotypographie"></a>
+**lacroux-orthotypographie**. Jean-Pierre Lacroux, Orthotypographie, vol. I, entries "Deux-points" and "Espace"; vol. II, entry "Points de suspension" (§ Espace). Web edition, orthotypographie.fr (no edition date on the pages read).
+
+<https://www.orthotypographie.fr/volume-I/date-dynastie.html>, read as raw data on 2026-10-23.
+
+Relied on: In French the colon takes a no-break word space before it (or a slightly narrower one), while ; ! ? take a fine (narrow) no-break space between a letter or digit and the mark; no space is put between two punctuation marks (xxx!?, «xxx!»).
+
+<a id="src-pravopys-2019"></a>
+**pravopys-2019**. Український правопис (2019), § 161 «Тире (—)», § 164 «Лапки (« », “ ”, „ “, рідше „ ”)», § 167 «Розділові знаки для оформлення прямої мови та цитат», п. I.1-3; as published on slovnyk.ua/pravopys.php?prav_par=161, 164, 167.
+
+<https://slovnyk.ua/pravopys.php?prav_par=167>, read as a summary by a fetch tool, check it by hand on 2026-10-23.
+
+Relied on: A paragraph of direct speech opens with a dash (— Добридень, Замфіре!), and a dash stands between the speech and the words of the author; quotation marks are « » outside and “ ” inside (§ 164 п. 3), with „ “ and „ ” listed as further forms, and no stop before a closing mark.
+
+<a id="src-pwn-procent-spacja"></a>
+**pwn-procent-spacja**. A. Wolański, PWN Poradnia Językowa, sjp.pwn.pl/poradnia: "Jeszcze raz o spacji lub jej braku po znaku %" (26.11.2021), "Odstępy lub ich brak w oznaczeniach jednostek miar" (7.03.2022), "procent, proc., %" (26.01.2023).
+
+<https://sjp.pwn.pl/poradnia/haslo/Jeszcze-raz-o-spacji-lub-jej-braku-po-znaku;21530.html>, read as raw data on 2026-10-23.
+
+Relied on: Polish typographic tradition writes % after the figure without a space (50%); since the 2020 legal-units regulation a space is also written, and PWN accepts both 38,4 % ± 3,4 % and 38,4% ± 3,4%; it does not say the space is no-break.
+
+<a id="src-treccani-apostrofo"></a>
+**treccani-apostrofo**. Enciclopedia dell’italiano (Treccani), "apostrofo", sections Definizione, Casi incerti, Errori comuni, Oggi.
+
+<https://www.treccani.it/enciclopedia/apostrofo_(Enciclopedia-dell'Italiano)/>, read as a summary by a fetch tool, check it by hand on 2026-10-23.
+
+Relied on: sta’, da’, va’, fa’, di’ (imperatives) and pie’, be’, po’, mo’, que’ end in an apostrophe, never an accent (po’ not pò); the mark is the apostrophe ’.
+
+<a id="src-treccani-troncamento"></a>
+**treccani-troncamento**. Enciclopedia dell’italiano (Treccani), "troncamento".
+
+<https://www.treccani.it/enciclopedia/troncamento_(Enciclopedia-dell'Italiano)/>, read as a summary by a fetch tool, check it by hand on 2026-10-23.
+
+Relied on: Truncation is the deletion of final segments or syllables of a word; mo’ (modo) and pie’ (piede) are given as truncated forms written with an apostrophe.
+
 ### Research
 
 <a id="src-zu-blyzniuk-technical-rules"></a>
@@ -649,3 +718,10 @@ Relied on: Dialogue may be given with a replikstreg, quotation marks or no marks
 <https://eprints.zu.edu.ua/7122/>, read as raw data on 2026-10-22.
 
 Relied on: Books: "У книжкових виданнях не слід залишати в кінці рядка прийменники та сполучники що починають речення а також однобуквені прийменники та сполучники в середині речень" (a recommendation, "не слід"). Periodicals are looser: one-letter ones inside a sentence are allowed at a line end. No letters are listed and two-letter words are not in the body-text rule.
+
+<a id="src-wiktionary-mt-ta-ma"></a>
+**wiktionary-mt-ta-ma**. English Wiktionary, entries "ta'" and "ma'" (Maltese sections) and "bla", read 2026-10-23.
+
+<https://en.wiktionary.org/wiki/ta'>, read as a summary by a fetch tool, check it by hand on 2026-10-23.
+
+Relied on: ta’ (genitive, "of", t’ before a vowel) and ma’ ("with") are Maltese prepositions written with a final apostrophe; bla (without) is not.

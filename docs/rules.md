@@ -361,7 +361,7 @@ Digits of an integer of five or more are grouped in threes with the language sep
 
 Category: `data`.
 
-Why: [sources.md](../resources/sources.md#numbergroup), `general-knowledge`.
+Why: [sources.md](../resources/sources.md#numbergroup), `verified`.
 
 Off by default: switch it on with `enable` (`--enable` on the command line).
 
@@ -635,7 +635,7 @@ Languages with `currencySpace`: German, French, German (Switzerland), French (Sw
 
 Category: `data`.
 
-Why: [sources.md](../resources/sources.md#spacepercent), `verified`.
+Why: [sources.md](../resources/sources.md#spacepercent), `disputed`.
 
 Characters it can insert, in any language: `~`. A font that lacks one of them is handled by `avoid` (see [api.md](api.md#avoid)).
 
