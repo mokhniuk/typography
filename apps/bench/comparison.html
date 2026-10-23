@@ -253,7 +253,7 @@
         <li><strong>Languages are unreviewed.</strong> Every pack has <code>reviewed: false</code>; twenty were written from style guides, some read only in part. A defensible style, not a certified one. A list of known gaps is in the backlog.</li>
         <li><strong>Opt-in rules.</strong> Fractions, ±, °C, space before punctuation, trailing-space cleanup and phone numbers exist but are off by default: ten of the thirty-three. Short words (<code>to~the</code>) bind by default since 0.14.0.</li>
         <li><strong>Speed and distribution.</strong> Still behind tipograph and smartypants, which do far less; two inputs are quadratic outside the rules (a long run of spaces in one line, many unclosed <code>&lt;</code> in HTML). Not on npm, no licence, sources shipped as TypeScript (deferred by choice).</li>
-        <li><strong>Weight.</strong> 26 KB brotli for one call, against typograf's 15: every entry point carries all 26 language packs (16 KB of it). An install from a tag is 337 KB from the next release (it was 3.9 MB, the whole repository).</li>
+        <li><strong>Weight.</strong> 26 KB brotli for one call, against typograf's 15: every entry point carries all 27 language packs (16 KB of it). An install from a tag is 337 KB from the next release (it was 3.9 MB, the whole repository).</li>
       </ul>
     </article>
   </div>
@@ -308,7 +308,7 @@
     <p>Cost</p>
     <h2>What each one costs to ship and run</h2>
   </header>
-  <p>New on 2026-10-22, from <code>bun run size</code>, <code>deps</code>, <code>engines</code> and <code>probes</code> in the benchmark. One call that typesets English, bundled for the browser with every dependency inlined and minified, then compressed. Typography-engine carries all 26 language packs whichever is asked for: 16 of its 26 KB brotli are the packs.</p>
+  <p>New on 2026-10-22, from <code>bun run size</code>, <code>deps</code>, <code>engines</code> and <code>probes</code> in the benchmark. One call that typesets English, bundled for the browser with every dependency inlined and minified, then compressed. Typography-engine carries all 27 language packs whichever is asked for: 16 of its 26 KB brotli are the packs.</p>
   <figure><table data-compact>
     <thead><tr><th>Tool</th><th>Bundle, brotli</th><th>Minified</th><th>Packages installed</th><th>Install footprint</th><th>Licence</th><th>Types</th></tr></thead>
     <tbody>
@@ -362,7 +362,7 @@
     <p>Languages</p>
     <h2>Language coverage for our audience</h2>
   </header>
-  <p>Our audience is the EU, Ukraine and the US. A tick means the tool ships rules for that language. This is a headcount, not a quality score: typograf's and tipograph's support varies from rich to a few rules, and every typography-engine pack is unreviewed by a native speaker. US English is the option <code>quoteStyle: 'us'</code>, not a separate pack; typography-engine also has a Swiss pack (<code>ch</code>) that is not a row here.</p>
+  <p>Our audience is the EU, Ukraine and the US. A tick means the tool ships rules for that language. This is a headcount, not a quality score: typograf's and tipograph's support varies from rich to a few rules, and every typography-engine pack is unreviewed by a native speaker. US English is the option <code>quoteStyle: 'us'</code>, not a separate pack; typography-engine also has two Swiss packs (<code>de-CH</code>, <code>fr-CH</code>) that are not rows here.</p>
   <figure><table data-compact id="langTable"></table></figure>
   <p id="langTiers"></p>
 </section>
@@ -519,7 +519,7 @@ const LANGS = {
 };
 
 const BACKLOG = [
-  ['P0', 'Native-speaker review of the 20 new languages', 'Every pack has <code>reviewed: false</code> (bg cs da el es et fi ga hr hu it lt lv mt nl pt ro sk sl sv, plus the older uk de pl fr ch en). Several sources could only be read in part. A native reader goes through each generated page, corrects the pack and flips the flag.'],
+  ['P0', 'Native-speaker review of the 20 new languages', 'Every pack has <code>reviewed: false</code> (bg cs da el es et fi ga hr hu it lt lv mt nl pt ro sk sl sv, plus the older uk de pl fr en and the Swiss de-CH fr-CH). Several sources could only be read in part. A native reader goes through each generated page, corrects the pack and flips the flag.'],
   ['P1', 'Two quadratic inputs outside the rules', 'Found by the new hard-input probes: a long run of spaces inside one line in the text mode (a trailing-space regex tried from every space; 40,000 spaces take 1.3 s) and many <code>&lt;</code> that never close in the HTML mode (8,000 take 0.8 s). The rules themselves stay linear.'],
   ['P1', 'Language gaps found while writing the packs', 'Limits of the pack format or unverified choices: no dialogue dash for Greek and Latvian (no source confirmed it); the Spanish and Nordic forms of the dash before the narrator; the sentence dash for nl; Italian and Maltese truncation apostrophes; Spanish and Greek paired dash; abbreviations without a full stop; per-level quote shapes (Latvian, Lithuanian); dotted time ranges; a third Swedish quote level.'],
   ['P1', 'Finish the sources registry', 'Of 33 rule decisions, 17 are still <code>general-knowledge</code> (eight opt-in rules have no source read), one is <code>disputed</code> (<code>quote</code>: CLDR differs from the engine for English, German, French level two and de-CH) and 15 are <code>verified</code> (0.8.0 read the SI brochure for <code>symbol.degree</code> and the ÚJČ handbook for the Czech orphan list). Read the remaining sources, have a native speaker check each language. Gap still open: no French colon spacing.'],

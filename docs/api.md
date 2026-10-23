@@ -21,7 +21,7 @@ These are the options the functions below take. Which function takes which is in
 
 | Option | Type | Default | Meaning |
 |---|---|---|---|
-| `lang` | `Lang` | `'en'` | Language of the text. `Lang` is the union of the 26 pack codes (the 24 EU languages, `uk`, and `ch` for Swiss usage), derived from the packs in `src/core/lang/`; `LANGS` lists them. See [languages.md](languages.md). |
+| `lang` | `Lang` | `'en'` | Language of the text. `Lang` is the union of the 27 pack codes (the 24 EU languages, `uk`, `de-CH` and `fr-CH`), derived from the packs in `src/core/lang/`; `LANGS` lists them. See [languages.md](languages.md). |
 | `register` | `Register` | `'display'` | `'display'` (marketing and interface text) or `'literary'` (book-like text). `literary` has its own rules for English (British quotes, spaced en dash); every other language keeps its display rules. The dialogue dash is the same in both registers. |
 | `quoteStyle` | `QuoteStyle` | `'language'` | `'language'` is the language's own quote marks (its literary ones in the literary register). `'us'` is `“…”` with `‘…’` inside for any language, and takes precedence over both the language table and the literary register. The rehype plugin does not read `lang="en-US"` as US quotes: a page's `<html lang="en-US">` must not change its output, so set the option. |
 | `enable` | `readonly string[]` | none | Rules to switch on that are off by default (`Rule.defaultOn: false`): ids or groups, checked like `disable`. Enabling a rule that is already on does nothing; a rule named in both `enable` and `disable` throws. Ten built-in rules are off by default (`space.before-punctuation`, `space.after-comma`, `punctuation.double`, `space.trailing`, `symbol.plusminus`, `symbol.fraction`, `symbol.degree`, `symbol.implies`, `number.group`, `phone.bind`); see [rules.md](rules.md) and [limits.md](limits.md#opt-in-rules). |
@@ -204,7 +204,7 @@ Every mode takes the whole config: `nbsp` is read by the HTML mode only, `hangAm
 | `RULE_IDS: readonly string[]` | `RULES.map(r => r.id)`. |
 | `DEFAULT_RULES: readonly Rule[]` | The rules that run when nothing is switched on or off: every rule in `RULES` that is not `defaultOn: false`, in order. |
 | `RULE_CATEGORIES`, `RuleCategory` | `['tradition', 'symbols', 'math', 'data']` and its union type. `tradition`: quotes, the apostrophe, dashes, the ellipsis, punctuation and the spaces of prose; `symbols`: arrows, ©, ®, ™; `math`: minus, ×, ±, fractions, ⇒; `data`: digit groups, ranges, units, percentages and currencies, dates. A label for lists (`typo --rules`, [rules.md](rules.md), the playground): it does not change what a rule does, and `disable` and `enable` take ids and groups of ids, not categories. |
-| `LANGS: readonly Lang[]` | Every language that has a pack (26): the 24 EU languages, `uk` and `ch`. |
+| `LANGS: readonly Lang[]` | Every language that has a pack (27): the 24 EU languages, `uk`, `de-CH` and `fr-CH`. |
 | `PACKS`, `PACK`, `LangPack` | The language packs (`src/core/lang/`), as a list and by code, and their type. See [contributing.md](contributing.md#adding-a-language). |
 | `REGISTERS: readonly Register[]` | `display`, `literary`. |
 | `NBSP` | The no-break space character, U+00A0. |

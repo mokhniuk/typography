@@ -10,15 +10,15 @@ Priorities: **P0** blocks the audience, **P1** closes a gap other tools do not h
 |---|---|---|---|
 | Benchmark checks passed (default / literary register) | 242 / 250, 250 / 250 | typograf 131 / 226 | `apps/bench/RESULTS.md` |
 | 1 MB of English, text mode | 74 ms (0.14.0 run, short-word rule on, a machine about twice as slow for every tool as the 0.12.0 run's 30 ms) | typograf 115 ms, tipograph 23 ms, smartypants 19 ms | `cd apps/bench && bun run bench` (the ratios are what count) |
-| Target languages covered (26) | 26 | typograf 21 of 26, tipograph 11 | [languages/index.md](languages/index.md) |
+| Target languages covered (27) | 27 | typograf 21 of 27, tipograph 11 | [languages/index.md](languages/index.md) |
 
-The 26 target languages are the 24 official languages of the EU, Ukrainian and Swiss German (`ch`); US English is not a pack but the option `quoteStyle: 'us'`. This engine's 8 default-run misses are all the house `«…»` for English, which the checks count as a failure; the literary register passes every check. The cases were written by this package's author; read the caveats in [limits.md](limits.md). The cases for the twenty new languages come from the same style guides as the packs, so they are not an independent test.
+The 27 target languages are the 24 official languages of the EU, Ukrainian, and German and French as written in Switzerland (`de-CH`, `fr-CH`); US English is not a pack but the option `quoteStyle: 'us'`. This engine's 8 default-run misses are all the house `«…»` for English, which the checks count as a failure; the literary register passes every check. The cases were written by this package's author; read the caveats in [limits.md](limits.md). The cases for the twenty new languages come from the same style guides as the packs, so they are not an independent test.
 
 ## P0
 
 ### Native-speaker review of the 20 new languages
 
-Every pack has `reviewed: false`: bg cs da el es et fi ga hr hu it lt lv mt nl pt ro sk sl sv (plus the older uk de pl fr ch en, never reviewed either). They were written from style guides, and several sources (Pravidla 2000, Svenska skrivregler, the RAE, the Maltese Language Council, DOOM) could only be read in part. For each language: a native reader goes through its generated page ([languages/index.md](languages/index.md)), corrects the pack, and flips `reviewed` to `true`.
+Every pack has `reviewed: false`: bg cs da el es et fi ga hr hu it lt lv mt nl pt ro sk sl sv (plus the older uk de pl fr en and the Swiss de-CH fr-CH, never reviewed either). They were written from style guides, and several sources (Pravidla 2000, Svenska skrivregler, the RAE, the Maltese Language Council, DOOM) could only be read in part. For each language: a native reader goes through its generated page ([languages/index.md](languages/index.md)), corrects the pack, and flips `reviewed` to `true`.
 
 ## P1
 
@@ -65,7 +65,7 @@ Each is a limit of the pack format or an unverified choice, not a crash:
 - **Swedish level 3** restarts oddly, because Swedish defines no third level.
 - **Three levels of straight quotes** are ambiguous and not stable on a second pass (inherent, all languages).
 - **`rock 'n' roll`** is handled only in the packs that list the elision `n`.
-- **`number.group`** treats `ch` as no-break-space grouped (Swiss Federal Chancellery); five-digit amounts after a capital word are skipped; the ZIP-code guard is English, German, Italian and French in shape.
+- **`number.group`** treats `de-CH` and `fr-CH` as no-break-space grouped (Swiss Federal Chancellery); five-digit amounts after a capital word are skipped; the ZIP-code guard is English, German, Italian and French in shape.
 - **`symbol.degree`** knows an English label list only (`Type C`, `Vitamin C`).
 - **`space.short-word`** lists are editorial in all five packs, and twenty-one languages have none (see the item below); on by default since 0.14.0.
 - The opt-in rules' own limits are in [limits.md](limits.md#opt-in-rules).
