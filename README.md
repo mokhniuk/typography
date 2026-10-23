@@ -26,8 +26,7 @@ The group separator in `125,000`, the dropped space before the comma, and the `�
 
 It also puts no-break spaces where a line should not break (after one-letter words, inside ranges, before units), nests quotations in the marks each language expects, and can hang opening punctuation in the margin. English gets `“…”` with `‘…’` inside, as above; `quoteStyle: 'us'` gives the same marks in any language, `quoteStyle: 'guillemets'` gives this project's house style `«…»` with `„…“` inside in any language, and the `literary` register gives British `‘…’`.
 
-<!-- Image paths are repository-relative; swap for absolute URLs (the website, once it is hosted) when the package goes on a public registry. -->
-[![The website: the engine running live, with hanging punctuation](docs/media/website-hero.webp)](apps/website/)
+[![The website: the engine running live, with hanging punctuation](https://raw.githubusercontent.com/mokhniuk/typography/main/docs/media/website-hero.webp)](https://typography.mokhni.uk)
 
 ## Why this engine
 
@@ -177,7 +176,7 @@ typo -c docs/*.md              # change nothing; exit 1 if any file would change
 
 Paste text, HTML or Markdown; see the result, every change with the rule that made it, and a preview with hanging punctuation. It runs entirely in the browser. It is a page of the website: `bun run website` serves it along with the docs and articles.
 
-![The playground: input beside the typeset result, with the changes counted](docs/media/playground.webp)
+![The playground: input beside the typeset result, with the changes counted](https://raw.githubusercontent.com/mokhniuk/typography/main/docs/media/playground.webp)
 
 ## Hanging punctuation without a jump on a prerendered page
 
