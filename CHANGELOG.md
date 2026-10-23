@@ -4,6 +4,10 @@ Versions follow semver while the package is below 1.0.0: a **minor** release may
 
 ## Unreleased
 
+### Fixes
+
+- HTML mode: many `<` that never close no longer cost the square of the input. `'<a '.repeat(8000)` (24 KB) took about 800 ms and 4 000 repeats about 200 ms; both now take under 1 ms. The tag pattern read to the end of the input from every `<` that had no `>` after it; it is now shown the input only up to the last `>` (every token ends at one), and what follows is text. `src/html/linear.test.ts` holds a loose budget and `scripts/stress.ts` times the input. No output change.
+
 ### Tooling and docs
 
 - The sources under `src/` carry their file extensions in every relative import and re-export (`./run.ts`, `../core/index.ts`; Biome's `useImportExtensions` enforces it for `src/`), so they are valid ESM for Node as well as Bun. `src/cli/run.ts` imports `package.json` with `with { type: 'json' }`, and `typo` starts with `#!/usr/bin/env node`: the command line needs Bun today, because the sources ship as TypeScript, and from the npm release it runs on Node 20 or later as well (a `--config` file in TypeScript then needs Bun, or Node 22.18 or later). The Bun-only test helper `pack-checks.ts` is now `pack-checks.test-utils.ts` and stays out of the pack. No output change.
