@@ -5,7 +5,7 @@ import { LANGS, RULES } from '../../../src/core';
 export const SITE_ROOT = join(import.meta.dirname, '..');
 export const REPO_ROOT = join(SITE_ROOT, '..', '..');
 
-const pkg = JSON.parse(readFileSync(join(REPO_ROOT, 'package.json'), 'utf8')) as {
+export const pkg = JSON.parse(readFileSync(join(REPO_ROOT, 'package.json'), 'utf8')) as {
   version: string;
 };
 
@@ -21,6 +21,13 @@ export const BASE = (process.env.SITE_BASE ?? '/').replace(/\/*$/, '/');
 export const SITE_URL = 'https://typography.mokhni.uk';
 export const GITHUB = 'https://github.com/mokhniuk/typography';
 export const NAME = 'Typography Engine';
+export const AUTHOR = { name: 'Oleg Mokhniuk', url: 'https://oleg.berlin' } as const;
+export const NPM_URL = 'https://www.npmjs.com/package/@mokhniuk/typography';
+/** The image a link to any page shows when it is shared; made by `scripts/site-images.ts`. */
+export const SHARE_IMAGE = { file: 'og.png', width: 1200, height: 630 } as const;
+export const SHARE_ALT =
+  'Typography Engine: straight quotes, hyphens and plain spaces set as real quotation marks, dashes and no-break spaces.';
+
 /** Where a reader reports a problem: a new GitHub issue. */
 export const ISSUES = `${GITHUB}/issues/new`;
 /** A new issue with its title and body filled in. */

@@ -7,6 +7,7 @@ import { examplesFigure, samplesTable, specimenFigure } from './examples';
 import { markHangsInPage } from './hang';
 import { highlightHtml } from './highlight';
 import { generatedPages, latestArticles } from './pages';
+import { feed, forget, robots, seoHead, sitemap } from './seo';
 import { BASE, fill, SITE_ROOT, TYPESET } from './site';
 
 /** The path of a page on the site: "docs/api/", "" for the landing page. */
@@ -50,9 +51,13 @@ function finish(html: string, path: string): string {
     .replace('<!--examples-->', () => examplesFigure())
     .replace('<!--specimen-->', () => specimenFigure())
     .replace('<!--samples-->', () => samplesTable())
-    .replace('<!--articles-->', () => latestArticles())
-    .replace('</head>', () => `${preload(path)}\n</head>`);
-  return markHangsInPage(typesetHtml(externalLinks(highlightHtml(filled)), TYPESET));
+    .replace('<!--articles-->', () => latestArticles());
+  // The head tags are made from the finished title and description, so they come last.
+  const withHead = filled.replace(
+    '</head>',
+    () => `${seoHead(filled, path)}\n${preload(path)}\n</head>`,
+  );
+  return markHangsInPage(typesetHtml(externalLinks(highlightHtml(withHead)), TYPESET));
 }
 
 /**
@@ -63,6 +68,7 @@ function finish(html: string, path: string): string {
 export function website(): Plugin {
   const virtual = new Map<string, string>();
   const index = () => {
+    forget();
     virtual.clear();
     for (const [path, html] of generatedPages())
       virtual.set(join(SITE_ROOT, path, 'index.html'), html);
@@ -126,6 +132,19 @@ export function website(): Plugin {
     generateBundle: {
       order: 'post',
       handler(_options, bundle) {
+        // The files a search engine looks for, made from the pages as they were written.
+        const pages: [string, string][] = [];
+        for (const [name, file] of Object.entries(bundle)) {
+          if (
+            file.type === 'asset' &&
+            typeof file.source === 'string' &&
+            /(^|\/)index\.html$/.test(name)
+          )
+            pages.push([name.replace(/index\.html$/, ''), file.source]);
+        }
+        this.emitFile({ type: 'asset', fileName: 'sitemap.xml', source: sitemap(pages) });
+        this.emitFile({ type: 'asset', fileName: 'robots.txt', source: robots() });
+        this.emitFile({ type: 'asset', fileName: 'feed.xml', source: feed() });
         const notFound = bundle['404.html'];
         if (notFound?.type === 'asset' && typeof notFound.source === 'string')
           notFound.source = rootLinks(notFound.source);

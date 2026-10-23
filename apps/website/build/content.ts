@@ -15,6 +15,8 @@ export type Doc = {
   headings: Heading[];
   title: string;
   lead: string;
+  /** What a search result says about the page. */
+  description: string;
 };
 
 export type Article = {
@@ -31,21 +33,85 @@ export type Article = {
 };
 
 /** The hand-ordered part of the docs; the language pages are added after it. */
-const DOC_FILES: { source: string; slug: string; group: string; label: string }[] = [
+const DOC_FILES: {
+  source: string;
+  slug: string;
+  group: string;
+  label: string;
+  description: string;
+}[] = [
   {
     source: 'apps/website/content/docs/getting-started.md',
     slug: 'getting-started',
     group: 'Start',
     label: 'Getting started',
+    description:
+      'Install Typography Engine from npm, typeset a string, and pick the mode for your text: plain text, HTML, Markdown, React or the command line.',
   },
-  { source: 'docs/api.md', slug: 'api', group: 'Reference', label: 'API' },
-  { source: 'docs/cli.md', slug: 'cli', group: 'Reference', label: 'Command line' },
-  { source: 'docs/rules.md', slug: 'rules', group: 'Reference', label: 'Rules' },
-  { source: 'docs/languages.md', slug: 'languages', group: 'Reference', label: 'Languages' },
-  { source: 'docs/limits.md', slug: 'limits', group: 'Guides', label: 'Known limits' },
-  { source: 'docs/practices.md', slug: 'practices', group: 'Guides', label: 'Good practices' },
-  { source: 'docs/contributing.md', slug: 'contributing', group: 'Guides', label: 'Contributing' },
-  { source: 'CHANGELOG.md', slug: 'changelog', group: 'Project', label: 'Changelog' },
+  {
+    source: 'docs/api.md',
+    slug: 'api',
+    group: 'Reference',
+    label: 'API',
+    description:
+      'The API reference: every entry point of @mokhniuk/typography, its options (language, register, quote style, rules) and what each function returns.',
+  },
+  {
+    source: 'docs/cli.md',
+    slug: 'cli',
+    group: 'Reference',
+    label: 'Command line',
+    description:
+      'The typo command: typeset files in place, check them in CI, read from standard input, and keep your settings in a config file. Runs on Node and Bun.',
+  },
+  {
+    source: 'docs/rules.md',
+    slug: 'rules',
+    group: 'Reference',
+    label: 'Rules',
+    description:
+      'Every typography rule the engine applies, in order, with an example, the reason for it and how to switch it on or off.',
+  },
+  {
+    source: 'docs/languages.md',
+    slug: 'languages',
+    group: 'Reference',
+    label: 'Languages',
+    description:
+      'The language packs behind the engine: quotation marks, dashes, spacing habits and abbreviations for the 24 EU languages, Ukrainian and Swiss German and French.',
+  },
+  {
+    source: 'docs/limits.md',
+    slug: 'limits',
+    group: 'Guides',
+    label: 'Known limits',
+    description:
+      'What the engine leaves alone on purpose, what it cannot know from text alone, and the input it reads wrongly. Read it before you rely on the output.',
+  },
+  {
+    source: 'docs/practices.md',
+    slug: 'practices',
+    group: 'Guides',
+    label: 'Good practices',
+    description:
+      'What to bind with a no-break space, what to leave to the browser and what never to do, with the source behind each decision.',
+  },
+  {
+    source: 'docs/contributing.md',
+    slug: 'contributing',
+    group: 'Guides',
+    label: 'Contributing',
+    description:
+      'How to work on Typography Engine: the checks, adding a rule or a language pack, tests, the benchmark, and how a release is made.',
+  },
+  {
+    source: 'CHANGELOG.md',
+    slug: 'changelog',
+    group: 'Project',
+    label: 'Changelog',
+    description:
+      'Every release of Typography Engine, newest first, with whether it can change the output you already have.',
+  },
 ];
 
 /** Repository path to site path, for every file the site publishes. */
@@ -90,6 +156,8 @@ export function docs(): Doc[] {
     group: 'Languages',
     label: 'All languages',
     path: 'docs/languages/all/',
+    description:
+      'All language packs of Typography Engine on one page: each language with its quotation marks, its review status and the sources it was written from.',
   });
   for (const name of readdirSync(join(REPO_ROOT, 'docs/languages')).sort()) {
     if (!name.endsWith('.md') || name === 'index.md') continue;
@@ -102,13 +170,23 @@ export function docs(): Doc[] {
       group: 'Languages',
       label: code,
       path: `docs/languages/${file}/`,
+      description: '',
     });
   }
   return entries.map((entry) => {
     const source = readFileSync(join(REPO_ROOT, entry.source), 'utf8');
     const markdown = entry.source === 'CHANGELOG.md' ? latestDateOnly(source) : source;
     const out = render(markdown, linker(entry.source, entry.path));
-    return { ...entry, ...out };
+    if (entry.group !== 'Languages' || entry.path === 'docs/languages/all/')
+      return {
+        ...entry,
+        ...out,
+        title: entry.path === 'docs/languages/all/' ? 'All languages' : out.title,
+      };
+    // A language page names the language and its marks; the title says what the page is about.
+    const marks = /^\| display \| (.+) \|$/m.exec(source)?.[1]?.replace(/`/g, '') ?? '';
+    const description = `${out.title} typography: quotation marks ${marks}, the dash, spacing, abbreviations and short words, with the sources behind each choice.`;
+    return { ...entry, ...out, title: `${out.title} typography`, description };
   });
 }
 

@@ -76,7 +76,8 @@
     "compare": "bun scripts/compare-engines.ts",
     "snapshot": "bun scripts/update-snapshot.ts",
     "website": "vite --config apps/website/vite.config.ts",
-    "website:build": "vite build --config apps/website/vite.config.ts"
+    "website:build": "vite build --config apps/website/vite.config.ts",
+    "site:images": "bun scripts/site-images.ts"
   },
   "peerDependencies": {
     "react": ">=18"

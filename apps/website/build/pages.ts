@@ -1,5 +1,6 @@
 import { page, rootOf } from './chrome';
 import { type Article, articles, type Doc, docs } from './content';
+import { snippet } from './seo';
 import { issueUrl, NAME } from './site';
 
 const esc = (text: string): string =>
@@ -73,7 +74,7 @@ function docPage(all: Doc[], doc: Doc): string {
   return page({
     path: doc.path,
     title: doc.title,
-    description: doc.lead.slice(0, 200),
+    description: snippet(doc.description || doc.lead, 200),
     mainAttrs: 'data-layout="docs"',
     body: `${sidebar(all, doc.path)}
 <article data-hanging>
@@ -112,7 +113,7 @@ function articlePage(all: Article[], article: Article): string {
   return page({
     path: article.path,
     title: article.title,
-    description: article.summary,
+    description: snippet(article.summary, 175),
     mainAttrs: 'data-layout="article"',
     body: `<article data-hanging>
 <header>
@@ -147,7 +148,7 @@ function articlesIndex(all: Article[]): string {
   return page({
     path: 'articles/',
     title: 'Articles',
-    description: `Notes on typography and on how ${NAME} makes its decisions.`,
+    description: `Notes on typography on the screen: quotation marks, dashes, no-break spaces, numbers, and how each decision in ${NAME} was made.`,
     mainAttrs: 'data-layout="index"',
     body: `<div class="container">
 <header>

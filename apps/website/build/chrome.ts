@@ -1,3 +1,4 @@
+import { escapeAttribute } from './seo';
 import { GITHUB, ISSUES, NAME, NAV } from './site';
 
 /** The relative path from a page at `path` ("docs/api/") back to the site root ("../../"). */
@@ -76,7 +77,7 @@ export function page(options: {
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>${full}</title>
-<meta name="description" content="${options.description.replace(/"/g, '&quot;')}" />
+<meta name="description" content="${escapeAttribute(options.description)}" />
 <link rel="icon" href="${root}favicon.svg" type="image/svg+xml" />
 <link rel="stylesheet" href="${root}style.css" />
 ${THEME}
