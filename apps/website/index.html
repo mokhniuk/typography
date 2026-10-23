@@ -61,7 +61,7 @@
           </div>
           <div>
             <dt>A pack per language, and no default rule that names one</dt>
-            <dd>Quotation marks and how they nest, the dash, the spacing habits, the one-letter words that may not end a line: each is data in a language pack, which is why adding a language is one pack file. Two opt-in rules still have a case for one language: the space before French punctuation, and the English temperature labels of the degree sign. <a href="./docs/languages/">The languages</a></dd>
+            <dd>Quotation marks and how they nest, the dash, the spacing habits, the one-letter words that may not end a line: each is data in a language pack, which is why adding a language is one pack file. One opt-in rule still has a case for one language: the English labels (<code>Type C</code>, <code>Vitamin C</code>) that the degree sign leaves alone. The French space before <code>: ; ! ?</code> is a pack field too. <a href="./docs/languages/">The languages</a></dd>
           </div>
           <div>
             <dt>Two registers</dt>
@@ -142,6 +142,7 @@ explain('He said "hi"... 21-26', 'en', { quoteStyle: 'us' }).changes;
             <tr><th scope="row"><code>…/rehype</code></th><td>A unified or rehype pipeline, or any hast tree.</td></tr>
             <tr><th scope="row"><code>…/react</code></th><td><code>Typeset</code> and <code>TypographyRoot</code>, with hanging punctuation. <code>TypographyRoot</code> measures the page's font and fills <code>avoid</code>.</td></tr>
             <tr><th scope="row"><code>…/dom</code></th><td>Hanging punctuation in the browser, without a framework, and which characters the page's font can draw.</td></tr>
+            <tr><th scope="row"><code>…/lite</code></th><td>One language only: the engine and the text, HTML and Markdown modes with no pack, and the page imports its pack from <code>…/lang/&lt;code&gt;</code>.</td></tr>
             <tr><th scope="row"><code>typo</code></th><td>The command line, for files and CI. Node 20.10 or later, or Bun.</td></tr>
           </tbody>
         </table>
@@ -161,7 +162,7 @@ explain('He said "hi"... 21-26', 'en', { quoteStyle: 'us' }).changes;
         <ul data-plain>
           <li><strong>No language has been read by a native speaker.</strong> Twenty packs follow published style guides, and I could read some of those guides only in part. English, Ukrainian, German, Polish, French and the two Swiss packs come from general knowledge. Each language page lists what it was written from.</li>
           <li><strong>Where the engine and Unicode's CLDR disagree about quotation marks</strong> (German, French, Swiss German), the decision record says so instead of choosing quietly.</li>
-          <li><strong>Some input can't be read with certainty.</strong> An inch mark inside a quotation (<code>"a 5" hole"</code>) is one: the engine closes the quotation early, at the inch mark. Such cases are listed in the known limits.</li>
+          <li><strong>Some input can't be read with certainty.</strong> A stray quote mark in unbalanced text is one: in <code>He said "born 1985". Then she left"</code> the engine reads the mark after 1985 as an inch mark and runs the quotation on to the last one. Such cases are listed in the known limits.</li>
         </ul>
         <p><a href="./docs/limits/">Known limits</a> · <a href="./docs/languages/">Languages and their review status</a></p>
       </div>
