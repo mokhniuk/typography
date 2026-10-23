@@ -50,4 +50,5 @@ jobs:
           commit="$(bun scripts/release-commit.ts $parent)"
           # plain tag, not annotated: Bun 1.3 cannot resolve an annotated tag by name
           git tag "$version" "$commit"
-          git push origin "$commit:refs/heads/release" "refs/tags/$version"
+          # atomic: a rejected branch update (the tip moved since the fetch) must not leave a tag on an orphan commit
+          git push --atomic origin "$commit:refs/heads/release" "refs/tags/$version"

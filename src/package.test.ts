@@ -12,7 +12,11 @@ const ROOT = resolve(import.meta.dir, '..');
 const TEST_ONLY = /\.test\.tsx?$|\.fixture\.json$|^src\/snapshot\.digests\.json$/;
 const OUTSIDE_SRC = new Set(['package.json', 'README.md', 'CHANGELOG.md']);
 
-const packed = Bun.spawnSync({ cmd: ['bun', 'pm', 'pack', '--dry-run'], cwd: ROOT, stdout: 'pipe' })
+const packed = Bun.spawnSync({
+  cmd: [process.execPath, 'pm', 'pack', '--dry-run'],
+  cwd: ROOT,
+  stdout: 'pipe',
+})
   .stdout.toString()
   .split('\n')
   .map((line) => /^packed \S+ (.+)$/.exec(line.trim())?.[1])

@@ -95,7 +95,7 @@ const TOOLS: [string, string[]][] = [
 
 /** This package installs from a git tag whose commit holds what `bun pm pack` packs (scripts/release-commit.ts). */
 function enginePackage(): { files: number; bytes: number } {
-  const listed = Bun.spawnSync({ cmd: ['bun', 'pm', 'pack', '--dry-run'], cwd: REPO, stdout: 'pipe' })
+  const listed = Bun.spawnSync({ cmd: [process.execPath, 'pm', 'pack', '--dry-run'], cwd: REPO, stdout: 'pipe' })
     .stdout.toString()
     .split('\n')
     .map((line) => /^packed \S+ (.+)$/.exec(line.trim())?.[1])

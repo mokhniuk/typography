@@ -31,14 +31,15 @@ try {
   const tree = join(work, 'tree');
   await $`mkdir ${tree} && tar -xzf ${join(work, tarball)} -C ${tree} --strip-components=1`;
 
-  // A separate index, so the repository's own index and working tree stay as they are.
+  // A separate index, so the repository's own index and working tree stay as they are; `-f`, so the
+  // repository's exclude file and the user's global ignore list cannot drop a file the pack holds.
   const env = {
     ...process.env,
     GIT_DIR: join(root, '.git'),
     GIT_INDEX_FILE: join(work, 'index'),
     GIT_WORK_TREE: tree,
   };
-  await $`git add -A .`.cwd(tree).env(env).quiet();
+  await $`git add -A -f .`.cwd(tree).env(env).quiet();
   const treeId = (await $`git write-tree`.cwd(tree).env(env).text()).trim();
   const parents = parent ? ['-p', parent] : [];
   const commit = (

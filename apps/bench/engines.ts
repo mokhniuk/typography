@@ -3,6 +3,7 @@
  * a fresh process by `driver.ts`: load time, speed and memory. Bun alone is not enough: browsers and most
  * servers run V8, and a tool's ranking can change with the engine. `bun apps/bench/engines.ts`.
  */
+import { fileURLToPath } from 'node:url';
 import { buildAll, ENTRIES, OUT } from './bundle';
 
 type Engine = { name: string; cmd: string[] };
@@ -56,7 +57,7 @@ const MEMORY_TIMEOUT = 20_000;
 
 export async function enginesSection(paths?: Map<string, string>): Promise<string[]> {
   const built = paths ?? (await buildAll());
-  const result = await Bun.build({ entrypoints: [new URL('./driver.ts', import.meta.url).pathname], outdir: OUT, target: 'node', format: 'esm' });
+  const result = await Bun.build({ entrypoints: [fileURLToPath(new URL('./driver.ts', import.meta.url))], outdir: OUT, target: 'node', format: 'esm' });
   if (!result.success) throw new AggregateError(result.logs, 'bundling the driver failed');
 
   const load: string[][] = [];

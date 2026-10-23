@@ -3,6 +3,7 @@
  * backtracks, or a loop that rescans, shows here as seconds where 10 KB of prose takes milliseconds.
  * Each probe runs in its own process with a time limit. `bun apps/bench/probes.ts`.
  */
+import { fileURLToPath } from 'node:url';
 import { TOOLS } from './tools';
 
 const SIZE = 10_000;
@@ -29,7 +30,7 @@ const tools = TOOLS.filter((t) => t.name !== 'typography-engine literary' && t.n
 
 function probe(tool: string, id: string): string {
   const r = Bun.spawnSync({
-    cmd: ['bun', new URL(import.meta.url).pathname, tool, id],
+    cmd: [process.execPath, fileURLToPath(import.meta.url), tool, id],
     stdout: 'pipe',
     stderr: 'pipe',
     timeout: LIMIT_MS,

@@ -38,8 +38,8 @@ The benchmark findings are published as an artifact: https://claude.ai/artifact/
 
 If the changes since the last tag touch `src/` (anything that ships), check that a release is prepared. If it is not, prepare it first and tell me what you chose:
 
-1. Find the last tag: `git describe --tags --abbrev=0`, then `git log <tag>..HEAD --oneline` and `git diff <tag>..HEAD --stat -- src`.
-2. If `src/` changed and `version` in `package.json` still equals that tag, the release is missing. Pick the bump by the rules in `docs/contributing.md`: minor if output or API can change ("Can change existing output: yes"), patch for a fix that keeps output. Ask me if unsure.
+1. Find the last release commit on `main` (tags sit on the `release` branch, so `git describe` does not see them): `last=$(git log --grep='^release: ' -1 --format=%H)`, then `git log $last..HEAD --oneline` and `git diff $last..HEAD --stat -- src`.
+2. If `src/` changed and `version` in `package.json` still equals the version in that commit's message, the release is missing. Pick the bump by the rules in `docs/contributing.md`: minor if output or API can change ("Can change existing output: yes"), patch for a fix that keeps output. Ask me if unsure.
 3. Move the new `CHANGELOG.md` entries under `## X.Y.Z (date)`, set `version` in `package.json`.
 4. Run `bun test src apps/playground apps/website resources`, `bun run typecheck`, `bun run docs:rules`, and `bun run gen:script` if `src/dom/hang.ts` changed.
 5. Commit as `release: X.Y.Z`.
