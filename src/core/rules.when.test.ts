@@ -36,6 +36,7 @@ describe('Rule.when', () => {
       'space.before-punctuation',
       'space.after-comma',
       'punctuation.double',
+      'space.high-punctuation',
       'symbol.implies',
       'phone.bind',
       'dash.range',

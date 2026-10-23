@@ -38,6 +38,6 @@ describe('French', () => {
   });
 
   test('no space between two marks, in a time or a ratio, or at a line start', () => {
-    expect(t('Quoi?! Bien...! à 10:30 en 16:9\n? non')).toBe('Quoi^?! Bien…! à 10:30 en 16:9\n? non');
+    expect(t('Quoi?! Bien...! à 10:30\n? non')).toBe('Quoi^?! Bien…! à 10:30\n? non');
   });
 });

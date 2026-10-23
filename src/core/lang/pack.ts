@@ -84,10 +84,12 @@ export type LangPack = {
   sameMarkQuotes?: boolean;
   numbers?: NumberFormat;
   /**
-   * The language keeps a space before `: ; ! ?` (French): `space.before-punctuation` leaves it there,
-   * since the space is correct in the language, not a fault.
+   * The space the language sets before high punctuation (French): `colon` before `:`, `others` before
+   * `; ! ?` (French: U+00A0 and U+202F). `space.high-punctuation` sets it where a letter or digit stands
+   * before the mark, replacing a typed space; the opt-in `space.before-punctuation` keeps a space typed
+   * before a mark that has one here, since the space is correct in the language, not a fault.
    */
-  spaceBeforeHigh?: boolean;
+  highPunctuation?: { colon?: string; others?: string };
   /**
    * A bare temperature with no degree sign (`20 C`) is read as one by `symbol.degree`, after a word
    * that is not a label (English; the label list is English). Without it, only a number with the

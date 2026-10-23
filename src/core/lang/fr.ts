@@ -14,8 +14,9 @@ export const fr = {
   ],
   percentSpace: true,
   currencySpace: true,
-  // A space before : ; ! ? is French: `space.before-punctuation` keeps it.
-  spaceBeforeHigh: true,
+  // A no-break space before :, a narrow no-break space before ; ! ? (Lacroux, Orthotypographie;
+  // OQLF): `space.high-punctuation` sets them, `space.before-punctuation` keeps them.
+  highPunctuation: { colon: NBSP, others: '\u202F' },
   elisions: ELISIONS_EN,
   numbers: { group: NBSP, decimal: ',' },
   dialogueDash: { mark: '—' },

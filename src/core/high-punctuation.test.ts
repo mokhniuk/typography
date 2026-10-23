@@ -64,12 +64,15 @@ describe('space.high-punctuation (French)', () => {
   });
 
   test('a colon between digits is a time or a ratio, never high punctuation', () => {
-    expect(fr('à 10:30, 13:52:45, en 16:9 et 3:2')).toBe('à 10:30, 13:52:45, en 16:9 et 3:2');
-    expect(fr('10 : 30 et 3 :2 et 10h:30')).toBe('10 : 30 et 3 :2 et 10h:30');
+    // (space.number binds a number to a short word after it, so each one ends a line here.)
+    expect(fr('à 10:30\n13:52:45\nen 16:9\nratio 3:2')).toBe(
+      'à 10:30\n13:52:45\nen 16:9\nratio 3:2',
+    );
+    expect(fr('10 : 30\n3 :2\n10h:30')).toBe('10 : 30\n3 :2\n10h:30');
   });
 
   test('a mark a letter or digit follows is not sentence punctuation', () => {
-    expect(fr('a:b, x?y, Note:3 et a;b')).toBe('a:b, x?y, Note:3 et a;b');
+    expect(fr('a:b, x?y, a;b et Note:3')).toBe('a:b, x?y, a;b et Note:3');
   });
 
   test('emoticons and code-like marks are left as they are', () => {

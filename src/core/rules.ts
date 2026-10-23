@@ -9,6 +9,7 @@ import {
   plusMinus,
   trailingSpace,
 } from './extra.ts';
+import { highPunctuation } from './high-punctuation.ts';
 import type { LangPack } from './lang/pack.ts';
 import { apostrophe, arrows, ellipsis, legal, minus, multiply } from './marks.ts';
 import { groupNumbers } from './numbers.ts';
@@ -79,6 +80,9 @@ export type Rule = {
   packFields?: readonly (keyof LangPack)[];
 };
 
+/** One of the high punctuation marks (no `g` flag: `test` keeps no state). */
+const HIGH_MARK = /[:;!?]/;
+
 const has = (needle: string) => (text: string) => text.includes(needle);
 const hasAny =
   (...needles: string[]) =>
@@ -106,6 +110,10 @@ const hasAny =
  *  - the punctuation-space rules (`space.before-punctuation`, `space.after-comma`,
  *    `punctuation.double`) go immediately after `ellipsis`: a ... is already … when they run, and
  *    they run before any rule that binds a space.
+ *  - `space.high-punctuation` closes that group: after `space.before-punctuation` (which removes
+ *    spaces before marks and keeps these) and `punctuation.double` (a run of marks is final), and
+ *    before `space.collapse` and every rule that binds a space (a no-break space set later cannot
+ *    be taken for the typed space it replaces).
  *  - `symbol.degree` goes after `space.number` (and `space.percent`): the number rules bind the
  *    degree sign's space first, and this rule only tidies what is left.
  *  - `space.trailing` is the last rule, so nothing runs after it and it cannot be undone by one.
@@ -139,7 +147,8 @@ export const RULES: readonly Rule[] = [
     about: 'Removes a space before , . ; : ! ? ) (French keeps the space before : ; ! ?)',
     defaultOn: false,
     when: hasAny(' ', '\t'),
-    apply: (text, { pack }) => beforePunctuation(text, !!pack.spaceBeforeHigh),
+    packFields: ['highPunctuation'],
+    apply: (text, { pack }) => beforePunctuation(text, !!pack.highPunctuation),
   },
   {
     id: 'space.after-comma',
@@ -156,6 +165,16 @@ export const RULES: readonly Rule[] = [
     defaultOn: false,
     when: hasAny('!!', '??'),
     apply: doubleMarks,
+  },
+  {
+    id: 'space.high-punctuation',
+    category: 'tradition',
+    about:
+      'In languages whose pack sets highPunctuation: the space before : and before ; ! ? after a letter or digit (French: a no-break space before :, a narrow one before ; ! ?), a typed space replaced; not in a time (10:30), between two marks (?!) or at a line start',
+    packFields: ['highPunctuation'],
+    when: (text, { pack }) => !!pack.highPunctuation && HIGH_MARK.test(text),
+    apply: (text, { pack }) =>
+      pack.highPunctuation ? highPunctuation(text, pack.highPunctuation) : text,
   },
   { id: 'arrow', category: 'symbols', about: '-> and <- become → and ←', apply: arrows },
   {
