@@ -380,14 +380,14 @@ Every full entry carries all 27 packs, because it resolves a code at run time. `
 
 | Bundle | Minified | brotli |
 |---|---|---|
-| `./text` (`typesetText`, every pack) | 89.6 KB | 26.6 KB |
-| `./lite`, the whole entry, no pack | 37.5 KB | 13.2 KB |
-| `typesetText` from `./lite`, no pack | 29.2 KB | 10.2 KB |
-| `typesetText` from `./lite` + `./lang/en` | 30.5 KB | 10.8 KB |
-| `typesetText` from `./lite` + `./lang/uk` | 30.6 KB | 10.8 KB |
-| the 27 packs alone | 59.7 KB | 16.4 KB |
+| `./text` (`typesetText`, every pack) | 101.2 KB | 30.0 KB |
+| `./lite`, the whole entry, no pack | 40.8 KB | 14.1 KB |
+| `typesetText` from `./lite`, no pack | 32.5 KB | 11.1 KB |
+| `typesetText` from `./lite` + `./lang/en` | 33.9 KB | 11.7 KB |
+| `typesetText` from `./lite` + `./lang/uk` | 35.0 KB | 12.2 KB |
+| the 27 packs alone | 68.0 KB | 18.9 KB |
 
-A pack adds 0.4 to 1.5 KB of brotli on top of the engine (German 0.4 KB, English and Ukrainian 0.6 KB, Lithuanian, the largest, 1.5 KB). For several languages, import each pack you need; for a language picked at run time, `import()` its `./lang/<code>` entry.
+A pack adds 0.4 to 1.5 KB of brotli on top of the engine (English 0.6 KB, Ukrainian 1.1 KB). For several languages, import each pack you need; for a language picked at run time, `import()` its `./lang/<code>` entry.
 
 ## Hanging punctuation
 

@@ -37,15 +37,15 @@ Passed / scored; `–` means the tool has no such feature or language, and is no
 
 | | typography-engine | typography-engine literary | typograf | typopo | richtypo | tipograph | smartypants |
 |---|---|---|---|---|---|---|---|
-| Quotes | **40/40** | **40/40** | 33/36 | 19/19 | 14/17 | 24/26 | 14/16 |
+| Quotes | **41/41** | **41/41** | 33/37 | 20/20 | 14/18 | 24/27 | 14/17 |
 | Nested quotes | **25/25** | **25/25** | 0/21 | 4/4 | 0/2 | 10/11 | 1/1 |
-| Dashes | **36/36** | **36/36** | 7/32 | 11/15 | 9/13 | 20/22 | 6/12 |
+| Dashes | **37/37** | **37/37** | 7/33 | 11/15 | 9/13 | 20/22 | 6/12 |
 | Ranges | **25/25** | **25/25** | 0/21 | 4/4 | 0/2 | 11/11 | 0/1 |
-| No-break spaces | **9/9** | **9/9** | 4/9 | 4/6 | 3/5 | 0/7 | 0/5 |
+| No-break spaces | **13/13** | **13/13** | 5/13 | 4/6 | 4/9 | 1/11 | 0/5 |
 | Abbreviations | **5/5** | **5/5** | 0/5 | 2/3 | 0/1 | 0/4 | 0/1 |
-| Symbols | **17/17** | **17/17** | 10/17 | 7/16 | 5/16 | 12/17 | 5/15 |
+| Symbols | **19/19** | **19/19** | 10/19 | 7/16 | 5/16 | 12/18 | 5/15 |
 | Safety | **33/33** | **33/33** | 28/29 | 11/12 | 9/10 | 17/19 | 7/9 |
-| **Total, all 16 groups** | **250/250** | **250/250** | 132/226 | 85/111 | 69/102 | 126/162 | 53/89 |
+| **Total, all 16 groups** | **260/260** | **260/260** | 135/236 | 86/112 | 70/107 | 127/169 | 53/90 |
 
 Speed, English text in one piece, the median of several runs (typograf is the closest tool in scope; the 0.16.1 run):
 
@@ -70,7 +70,7 @@ The tools that beat it on speed (tipograph, smartypants) score far below it on t
 - **`explain`** — every change comes with the rule that made it and the before/after, so nothing is a mystery.
 - **Hanging punctuation** — opening marks hang in the margin at any width, no line-break measuring, with an inline script so prerendered pages do not jump ([more below](#hanging-punctuation-without-a-jump-on-a-prerendered-page)).
 - **A font without the glyph** — `avoid` names the characters a font cannot draw and the rules keep the text as it was typed instead of inserting them; in a browser `TypographyRoot` measures the page's own font and fills that list in, and the website's font checker writes it for a font file ([docs/api.md](docs/api.md#avoid)).
-- **Ship one language** — `@mokhniuk/typography/lite` carries no language pack and each pack is its own entry, `@mokhniuk/typography/lang/<code>`: one call that typesets Ukrainian is 10.8 KB brotli instead of 26.6 KB ([docs/api.md](docs/api.md#loading-only-the-languages-used)).
+- **Ship one language** — `@mokhniuk/typography/lite` carries no language pack and each pack is its own entry, `@mokhniuk/typography/lang/<code>`: one call that typesets Ukrainian is 11.7 KB brotli instead of 30.0 KB ([docs/api.md](docs/api.md#loading-only-the-languages-used)).
 - **Zero dependencies** — nothing in the package imports anything outside it; `react` is an optional peer for the `./react` entry only. Compiled ESM with declarations, so Node and plain tooling work.
 - **Safe by construction** — code, tags, URLs and protected spans are never touched; an unknown rule name throws instead of silently passing.
 
@@ -159,7 +159,7 @@ unified().use(remarkParse).use(remarkRehype).use(rehypeTypography, { lang: 'uk' 
 // reads each element's lang attribute; skips data-typography="off" and code
 ```
 
-One language only: `/lite` loads no pack, and the page brings the one it sets (10.8 KB brotli for this call, against 26.6 KB for `/text` with all 27):
+One language only: `/lite` loads no pack, and the page brings the one it sets (11.7 KB brotli for this call, against 30.0 KB for `/text` with all 27):
 
 ```ts
 import { typesetText } from '@mokhniuk/typography/lite';

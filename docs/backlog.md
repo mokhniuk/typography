@@ -8,11 +8,11 @@ Priorities: **P0** blocks the audience, **P1** closes a gap other tools do not h
 
 | | typography-engine | best other | Source |
 |---|---|---|---|
-| Benchmark checks passed (default / literary register) | 250 / 250, 250 / 250 | typograf 132 / 226 | `apps/bench/RESULTS.md` |
+| Benchmark checks passed (default / literary register) | 260 / 260, 260 / 260 | typograf 135 / 236 | `apps/bench/RESULTS.md` |
 | 1 MB of English, text mode | 38 ms (0.16.1 run, short-word rule on; the 0.17.0 run, on a machine busy with a virtual machine, gave 72 against typograf's 111, the same 1.5 ratio; 49 in the 0.15.0 run, 74 in the 0.14.0 run against 115) | typograf 58 ms, tipograph 11 ms, smartypants 10 ms | `cd apps/bench && bun run bench` (the ratios are what count) |
 | Target languages covered (27) | 27 | typograf 21 of 27, tipograph 11 | [languages/index.md](languages/index.md) |
 
-The 27 target languages are the 24 official languages of the EU, Ukrainian, and German and French as written in Switzerland (`de-CH`, `fr-CH`); US English is not a pack but the option `quoteStyle: 'us'`. The 8 default-run misses of the 0.14.0 run were the house `«…»` for English, which the checks count as a failure; since 0.15.0 English defaults to `“…”` and the house style is `quoteStyle: 'guillemets'`, and the default run passes every check: 250/250. The cases were written by this package's author; read the caveats in [limits.md](limits.md). The cases for the twenty new languages come from the same style guides as the packs, so they are not an independent test.
+The 27 target languages are the 24 official languages of the EU, Ukrainian, and German and French as written in Switzerland (`de-CH`, `fr-CH`); US English is not a pack but the option `quoteStyle: 'us'`. The 8 default-run misses of the 0.14.0 run were the house `«…»` for English, which the checks count as a failure; since 0.15.0 English defaults to `“…”` and the house style is `quoteStyle: 'guillemets'`, and the default run passes every check: 260/260 (the 0.18.0 run). The cases were written by this package's author; read the caveats in [limits.md](limits.md). The cases for the twenty new languages come from the same style guides as the packs, so they are not an independent test.
 
 ## P0
 
@@ -100,7 +100,7 @@ No quadratic input is known outside the rules since 0.15.0 (the two the probes f
 
 ### One language in the rehype plugin, React and the config check
 
-Since 0.17.0 `/lite` with `/lang/<code>` ships one language (10.8 KB brotli for one call in English or Ukrainian, against 26.6 KB for `/text`), but only for the text, HTML and Markdown modes. The rehype plugin maps an element's `lang` attribute to a pack by code, React resolves a code from its context, and `checkConfig` lists the codes: all three still load the 27 packs. A lite rehype plugin that takes the packs it may meet, a lite React entry, and a `checkConfig` that takes a pack only would close it. Wait for a user who needs one of them.
+Since 0.17.0 `/lite` with `/lang/<code>` ships one language (11.7 to 12.2 KB brotli for one call in English or Ukrainian, against 30.0 KB for `/text`), but only for the text, HTML and Markdown modes. The rehype plugin maps an element's `lang` attribute to a pack by code, React resolves a code from its context, and `checkConfig` lists the codes: all three still load the 27 packs. A lite rehype plugin that takes the packs it may meet, a lite React entry, and a `checkConfig` that takes a pack only would close it. Wait for a user who needs one of them.
 
 ### A larger real-text benchmark
 
