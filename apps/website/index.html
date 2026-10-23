@@ -26,18 +26,18 @@
           <form>
             <fieldset>
               <legend class="sr-only">Package manager</legend>
-              <label><input type="radio" name="pm" value="npm install @mokhniuk/typography" /><span>npm <small>at 1.0</small></span></label>
-              <label><input type="radio" name="pm" value="pnpm add @mokhniuk/typography" /><span>pnpm <small>at 1.0</small></span></label>
-              <label><input type="radio" name="pm" value="bun add @mokhniuk/typography" /><span>bun <small>at 1.0</small></span></label>
-              <label><input type="radio" name="pm" value="yarn add @mokhniuk/typography" /><span>yarn <small>at 1.0</small></span></label>
-              <label><input type="radio" name="pm" value="bun add {{git}}" checked /><span>git <small>today</small></span></label>
+              <label><input type="radio" name="pm" value="npm install @mokhniuk/typography" checked /><span>npm</span></label>
+              <label><input type="radio" name="pm" value="pnpm add @mokhniuk/typography" /><span>pnpm</span></label>
+              <label><input type="radio" name="pm" value="bun add @mokhniuk/typography" /><span>bun</span></label>
+              <label><input type="radio" name="pm" value="yarn add @mokhniuk/typography" /><span>yarn</span></label>
+              <label><input type="radio" name="pm" value="bun add {{git}}" /><span>git</span></label>
             </fieldset>
           </form>
           <div data-command>
-            <pre><code>bun add {{git}}</code></pre>
+            <pre><code>npm install @mokhniuk/typography</code></pre>
             <button type="button" data-copy aria-label="Copy the install command">Copy</button>
           </div>
-          <p data-status>Version {{version}}, a pre-release. Not on npm yet; it will be there at 1.0. Until then, install a release tag from git. The repository is private, so the machine needs SSH access. The package ships TypeScript sources, so it needs Bun or a bundler that reads TypeScript.</p>
+          <p data-status>Version {{version}}, on npm from 0.16.0. Compiled ESM with TypeScript declarations and no dependencies; the command line needs Node 20 or later, or Bun. Below 1.0.0 it follows semver, so a minor release may change output. A release tag also installs from git (the repository is private, so the machine needs SSH access).</p>
         </section>
 
         <p data-actions>
@@ -144,7 +144,7 @@ explain('He said "hi"... 21-26', 'en', { quoteStyle: 'us' }).changes;
             <tr><th scope="row"><code>…/rehype</code></th><td>A unified or rehype pipeline, or any hast tree.</td></tr>
             <tr><th scope="row"><code>…/react</code></th><td><code>Typeset</code> and <code>TypographyRoot</code>, with hanging punctuation. <code>TypographyRoot</code> measures the page's font and fills <code>avoid</code>.</td></tr>
             <tr><th scope="row"><code>…/dom</code></th><td>Hanging punctuation in the browser, without a framework, and which characters the page's font can draw.</td></tr>
-            <tr><th scope="row"><code>typo</code></th><td>The command line, for files and CI. Needs Bun.</td></tr>
+            <tr><th scope="row"><code>typo</code></th><td>The command line, for files and CI. Node 20 or later, or Bun.</td></tr>
           </tbody>
         </table>
         </div>
