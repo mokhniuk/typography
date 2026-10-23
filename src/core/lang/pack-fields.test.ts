@@ -69,15 +69,33 @@ describe('pack fields the quote scan reads', () => {
   });
 });
 
+describe('pack fields a default rule reads', () => {
+  test('highPunctuation: the space each names is set before : and before ; ! ?', () => {
+    const run = (text: string, fields: Partial<LangPack>) =>
+      typographic(text, pack(fields)).replaceAll(NBSP, '~').replaceAll('\u202F', '^');
+    const text = 'Voici: ici; oui! non?';
+    expect(run(text, { highPunctuation: { colon: NBSP, others: '\u202F' } })).toBe(
+      'Voici~: ici^; oui^! non^?',
+    );
+    expect(run(text, { highPunctuation: { colon: NBSP } })).toBe('Voici~: ici; oui! non?');
+    expect(run(text, { highPunctuation: { others: NBSP } })).toBe('Voici: ici~; oui~! non~?');
+    expect(run(text, {})).toBe(text);
+  });
+});
+
 describe('pack fields an opt-in rule reads, through the pack-only typographic', () => {
   const run = (text: string, fields: Partial<LangPack>, rule: string) =>
     typographic(text, pack(fields), { enable: [rule] }).replaceAll(NBSP, '~');
 
-  test('spaceBeforeHigh: the space before : ; ! ? stays, the one before , . goes', () => {
+  test('highPunctuation: the space before : ; ! ? stays, the one before , . goes', () => {
     const text = 'Attention : ici ! Et là , oui .';
-    expect(run(text, { spaceBeforeHigh: true }, 'space.before-punctuation')).toBe(
-      'Attention : ici ! Et là, oui.',
-    );
+    const high = { colon: NBSP, others: '\u202F' };
+    expect(
+      typographic(text, pack({ highPunctuation: high }), {
+        disable: ['space.high-punctuation'],
+        enable: ['space.before-punctuation'],
+      }),
+    ).toBe('Attention : ici ! Et là, oui.');
     expect(run(text, {}, 'space.before-punctuation')).toBe('Attention: ici! Et là, oui.');
   });
 
