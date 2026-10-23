@@ -27,7 +27,7 @@ What the engine deliberately leaves alone, what it knowingly does not do, and wh
 - **The abbreviation lists are short and have not been read by a native speaker.** See [languages.md](languages.md).
 - **Dash profiles come from the style guides, not from a native reader.** Twelve packs set a spaced en dash (`cs de et fi hr hu lt lv ro sk sl sv`, from the Interinstitutional Style Guide and the national guides), English does in the literary register, and every other pack gets the spaced em dash.
 - **German has only the guillemet nesting** (`»outer ›inner‹ outer«`). The more common `„outer ‚inner‘ outer“` is not implemented.
-- **Literary differs from display for `en` only.** Every other language, `uk` included, gives the same output in both registers. Not implemented: literary profiles for `de`, `pl`, `fr` and `ch`. American English is not a register but `quoteStyle: 'us'`.
+- **Literary differs from display for `en` only.** Every other language, `uk` included, gives the same output in both registers. Not implemented: literary profiles for `de`, `pl`, `fr`, `de-CH` and `fr-CH`. American English is not a register but `quoteStyle: 'us'`.
 - **The literary register has been tested but not looked at on a real page.** It has unit tests and a rendered check of the British quotes and the hanging marks, not of a Ukrainian dialogue page.
 - **`space.operator` binds chains end to end.** A lone `&`, `+` or `=` between two letter words is bound on both sides, so a chain (`Tom & Jerry & Co`, `one + two + three + four + five`) binds end to end into one unbreakable unit; a pathological chain could bind a whole line. It does not bind an operator next to an inline tag in HTML or Markdown (`Tom &amp; <em>Jerry</em>`: the tag placeholder is not a letter), after a word ending in a combining mark (decomposed `café & bar`), or where either side of it is not a letter (a digit, a bracket, a full stop, the start or end of the text, as in `2 + 2` and `x = 5`).
 
@@ -74,7 +74,7 @@ Ten rules are off until named in `enable` (`number.group` is described in the ru
 
 ## Rehype
 
-- Only an element's `lang` (or `xmlLang`) property sets the language of its subtree, and only if its primary subtag is a pack code (`LANGS`); `de-CH` is read as `de`, not `ch`.
+- Only an element's `lang` (or `xmlLang`) property sets the language of its subtree, and only if it names a pack: the longest run of its leading subtags that is a pack code, in any case (`de-CH`, `de-ch` and `de-CH-1996` are `de-CH`; `de-AT` is `de`; `uk-UA` is `uk`).
 
 ## Hanging punctuation
 
@@ -112,7 +112,7 @@ These are repeated at the top of `apps/bench/RESULTS.md`.
 
 - The style-neutral cases (252: 250 are scored for this package, plus 2 register cases) were written by the author of this package. They check what is right (a German quotation is `„…“` or `»…«`; an ISO date is not a range), not one tool's house style, but a tool's default that differs from them is reported as a failure, including this package's own `«…»` for English. Read the cases in `apps/bench/RESULTS.md` and contest them.
 - They cover what typography tools claim to do, not everything a typographer cares about.
-- Most cases are English: 96 of the 252 cases are English, 11 Ukrainian, 10 German, 8 Polish, 7 French and 6 each for the other twenty languages (a quote, a nested quote, a dash, a range, a sample and a stability check). None is Swiss (`ch`). The 6 cases per new language come from the same style guides as its pack, so they do not test it independently.
+- Most cases are English: 96 of the 252 cases are English, 11 Ukrainian, 10 German, 8 Polish, 7 French and 6 each for the other twenty languages (a quote, a nested quote, a dash, a range, a sample and a stability check). None is Swiss (`de-CH`, `fr-CH`). The 6 cases per new language come from the same style guides as its pack, so they do not test it independently.
 - typograf was run with its default rules and the locales it ships that this package also covers. The only typographic rule it has off by default for these languages (`common/nbsp/afterNumber`) is also run, as a separate column. The other default-off rules insert a final newline, strip or escape HTML, wrap paragraphs, or are for a language this package does not cover.
 - typopo only supports English and German here, and a language a tool does not support is not scored, so the totals compare different numbers of cases: read each tool's row against its own denominator.
 - richtypo was run with its recommended rules for English and French (it has none for the other languages). tipograph was run with its default presets for English, German, Polish and French (no Ukrainian). smartypants and retext-smartypants were run for English only: they have no locale, so another language would be judged on English quotes. smartypants was given quotes, dashes and ellipses (`qde`); retext-smartypants has default options. The last three are text only here, except richtypo and tipograph, which read HTML.
