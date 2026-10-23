@@ -49,17 +49,22 @@ const TIME_RANGE = /(\d{1,2}:\d{2})[ \u00A0]*(?:--|[-–])[ \u00A0]*(?=\d{1,2}:\
 /** Two times written with a full stop (9.00-18.30), the second one read by the lookahead. */
 const DOTTED_TIME_RANGE =
   /(\d{1,2})\.(\d{2})[ \u00A0]*(?:--|[-–])[ \u00A0]*(?=(\d{1,2})\.(\d{2}))/g;
-/** What may not stand before a dotted time: it would be the tail of a longer number, a date or a name. */
-const NOT_BEFORE_TIME = /[\p{L}\p{N}.,:]/u;
-/** What may follow the second time: not more digits (18.300) nor another part (5.10.2026, 9.00.15). */
-const NOT_AFTER_TIME = /^(?:\d|[.,:]\d)/;
+/** What may not stand before a dotted time: the tail of a longer number, a date, a name or a chain (8.00-9.00-10.00). */
+const NOT_BEFORE_TIME = /[\p{L}\p{N}.,:\-–]/u;
+/** What may follow the second time: not more digits (18.300), another part (5.10.2026, 9.00.15) or a chain. */
+const NOT_AFTER_TIME = /^(?:\d|[.,:\-–]\d)/;
+/** A time of day: minutes up to 59, hours up to 23, and 24.00 (the end of a day) but no later. */
+const isTime = (hours: string, minutes: string): boolean =>
+  Number(minutes) <= 59 && (Number(hours) < 24 || (Number(hours) === 24 && Number(minutes) === 0));
 
 /**
  * A range of two times written with a full stop: 9.00-18.30 (ISG 10.1.7, Latvian and Finnish practice).
  * A full stop between digits is as often a decimal mark, so both sides must read as a time of day:
- * two-digit minutes up to 59 (1.5-2.5 is no time), hours up to 24, the second time later than the
- * first, not inside a longer number or a date. The colon form (TIME_RANGE) keeps its looser reading.
- * The character before the first time is read here, not by a lookbehind tried at every position.
+ * two-digit minutes up to 59 (1.5-2.5 is no time), hours up to 23 or 24.00, the second time later
+ * than the first, not inside a longer number, a date or a chain. A decimal pair with time-like digits
+ * (1.50-2.50) is read as a time too: the en dash is right for it either way. The colon form
+ * (TIME_RANGE) keeps its looser reading. The character before the first time is read here, not by a
+ * lookbehind tried at every position.
  */
 function dottedTimeRanges(text: string): string {
   DOTTED_TIME_RANGE.lastIndex = 0;
@@ -72,10 +77,8 @@ function dottedTimeRanges(text: string): string {
     if (
       NOT_BEFORE_TIME.test(before(text, m.index)) ||
       NOT_AFTER_TIME.test(text.slice(tail, tail + 2)) ||
-      Number(h1) > 24 ||
-      Number(h2) > 24 ||
-      Number(m1) > 59 ||
-      Number(m2) > 59 ||
+      !isTime(h1, m1) ||
+      !isTime(h2, m2) ||
       Number(h1) * 60 + Number(m1) >= Number(h2) * 60 + Number(m2)
     ) {
       DOTTED_TIME_RANGE.lastIndex = m.index + 1;

@@ -86,7 +86,7 @@ The pack:
 | `elisions` | Words that start with an apostrophe for dropped letters (`'em`, `'til`); `n` reads rock 'n' roll. The five packs other than English list English's, because the list was read for every language before packs existed; dropping it is an output change. |
 | `openers` | Characters that may stand before an opening quote mark, besides a space and a bracket (Spanish `¿¡`). |
 | `sameMarkQuotes` | The language opens and closes with the same mark (Swedish `”…”`). Carried and documented only: the engine does not act on it yet. |
-| `numbers` | `{ group, decimal }`. |
+| `numbers` | `{ group, decimal }`; `decimal` lists the accepted decimal marks, the language's own first (`,.` in de-CH and fr-CH: a point is the franc decimal there, never a separator). |
 | `reviewed`, `sources`, `notes` | Whether a native speaker has read the pack; the style guides it came from; what a reader should know. A pack that is `reviewed` must cite `sources`. |
 
 Abbreviation lists and the like come from a style guide, not from memory; say in `sources` which, and keep `reviewed: false` until a native reader has seen the pack.

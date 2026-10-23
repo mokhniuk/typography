@@ -148,7 +148,11 @@ export function renderPack(pack: LangPack): string {
   out.push('', '## Numbers', '');
   out.push(
     pack.numbers
-      ? `Groups of three are separated by ${code(pack.numbers.group)}, the decimal mark is ${code(pack.numbers.decimal)}.`
+      ? `Groups of three are separated by ${code(pack.numbers.group)}, the decimal mark is ${code(pack.numbers.decimal.charAt(0))}${
+          pack.numbers.decimal.length > 1
+            ? ` (also ${[...pack.numbers.decimal.slice(1)].map(code).join(', ')} in amounts)`
+            : ''
+        }.`
       : 'No number format yet.',
   );
 

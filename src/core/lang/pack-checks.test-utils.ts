@@ -43,6 +43,10 @@ export function wellFormed(pack: LangPack, file: string) {
     if (pack.numbers) {
       expect(pack.numbers.group.length).toBeGreaterThan(0);
       expect(pack.numbers.decimal.length).toBeGreaterThan(0);
+      // `decimal` lists the accepted decimal marks, the language's own first: distinct, none a separator.
+      const marks = [...pack.numbers.decimal];
+      expect(new Set(marks).size).toBe(marks.length);
+      for (const mark of marks) expect(pack.numbers.group).not.toContain(mark);
     }
     for (const [open, close] of pack.turnedPairs ?? []) {
       expect(open).not.toBe(close);

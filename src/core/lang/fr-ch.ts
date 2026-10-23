@@ -24,13 +24,14 @@ export const frCH = {
   currencySpace: true,
   elisions: fr.elisions,
   // Instructions ch. 4: groups of three with an espace insécable, no apostrophe; a decimal comma.
-  numbers: { group: NBSP, decimal: ',' },
+  // A point is read as a decimal mark too (a franc amount, Schreibweisungen Rz. 514, 543), never a separator.
+  numbers: { group: NBSP, decimal: ',.' },
   reviewed: false,
   sources: [INSTRUCTIONS, SCHREIBWEISUNGEN, CLDR_FR_CH, ...fr.sources],
   notes: [
     'Swiss French quotes: `«outer ‹inner› outer»`, without the no-break space inside that the fr pack sets, as the former ch pack set them from the Swiss Federal Chancellery Schreibweisungen (the German edition, Rz. 202-203). The Chancellery’s French instructions (May 2016, read in full) say nothing on quotation marks; CLDR has the same marks for fr-CH.',
     'No space is set before `; ! ?` and `:`: the pack field that keeps that space (spaceBeforeHigh) is set by the fr pack only (this pack copies the fr fields it takes one by one, and not that one), and whether Swiss French sets one is unverified. Dialogue is quoted here (no dialogueDash), unlike the fr pack: the OQLF source on dialogue dashes is cited with the fr sources, but no dialogue dash is set, and either choice is unverified for Switzerland.',
-    'Numbers, from the French instructions (ch. 4): numbers of more than four digits are grouped in threes with an espace insécable (55 000; 1700 stays whole; number.group), and "l’utilisation de l’apostrophe dans les nombres n’est pas admise" (note 4), so everyday Swiss 1’000’000 is not used. The decimal mark is a comma (4,16 millions de francs). The instructions set no point between francs and centimes (23 fr. 50, "et non fr. 50.-", ch. 2), so a number of five or more digits before a point (CHF 1234567.50) is left ungrouped by number.group: the engine does not tell money from other numbers.',
+    'Numbers, from the French instructions (ch. 4): numbers of more than four digits are grouped in threes with an espace insécable (55 000; 1700 stays whole; number.group), and "l’utilisation de l’apostrophe dans les nombres n’est pas admise" (note 4), so everyday Swiss 1’000’000 is not used. The decimal mark is a comma (4,16 millions de francs). The French instructions write francs and centimes as 23 fr. 50 ("et non fr. 50.-", ch. 2); the German Schreibweisungen set a point between francs and rappen in amounts (Rz. 514, 543: Fr. 327.65) and never group with a point or a comma (Rz. 512). So number.group reads a point as a decimal mark too (numbers.decimal ",."), never a separator: CHF 1234567.50 becomes CHF 1 234 567.50, 1234567,50 becomes 1 234 567,50.',
     'Percent and currency: an espace insécable between a number and its unit (ch. 5: 3 %, 50 francs, 300 CHF; 26,1 %), so percentSpace and currencySpace are set. CLDR 48 disagrees on %: its fr-CH percent pattern is "#,##0%" without a space; the Chancellery is followed here. The pack stays reviewed: false (no native reader).',
   ].join(' '),
 } as const satisfies LangPack;

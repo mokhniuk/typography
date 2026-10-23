@@ -36,11 +36,12 @@ describe('German (Switzerland)', () => {
     expect(t('1234', on)).toBe('1234');
   });
 
-  test('a franc amount with a point (Rz. 514, 543: Fr. 327.65) is left as typed by number.group: a known limit', () => {
+  test('a franc amount takes a point (Rz. 514, 543: Fr. 327.65): number.group reads it as a decimal mark too', () => {
     const on = { enable: ['number.group'] };
-    // The point marks rappen only in money; the engine does not tell amounts apart, so the
-    // number is not grouped rather than grouped with the wrong decimal mark.
-    expect(t('Fr. 1234567.50', on)).toBe('Fr. 1234567.50');
+    // A point or comma is never a thousands separator here (Rz. 512), so both are decimal marks.
+    expect(t('Fr. 1234567.50', on)).toBe('Fr. 1~234~567.50');
+    expect(t('CHF 1234567.50', on)).toBe('CHF~1~234~567.50');
+    expect(t('12345.67', on)).toBe('12~345.67');
     expect(t('Fr. 327.65', on)).toBe('Fr. 327.65');
     expect(t('Fr. 1 234 567.50', on)).toBe('Fr. 1~234~567.50');
   });

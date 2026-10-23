@@ -591,7 +591,7 @@ describe('symbols between numbers and with them', () => {
     expect(t('5% und 49€', 'de')).toBe('5~% und 49~€');
     expect(t('5% et 49€', 'fr')).toBe('5~% et 49~€');
     expect(t('5% and 49€', 'en')).toBe('5% and~49€');
-    expect(t('5% i 49€', 'pl')).toBe('5% i~49€');
+    expect(t('5% i 49€', 'pl')).toBe('5% i~49~€');
   });
 });
 

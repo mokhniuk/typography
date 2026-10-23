@@ -28,11 +28,12 @@ describe('French (Switzerland)', () => {
     expect(t('1234567,50', on)).toBe('1~234~567,50');
   });
 
-  test('a decimal point is not the Swiss French mark: the number is left as typed by number.group', () => {
+  test('a point is read as a decimal mark too (a franc amount), never as a thousands separator', () => {
     const on = { enable: ['number.group'] };
-    // The French instructions set no point between francs and centimes (23 fr. 50, not fr. 50.-);
-    // the engine does not tell money from other numbers, so a point leaves the number ungrouped.
-    expect(t('CHF 1234567.50', on)).toBe('CHF~1234567.50');
+    // Swiss federal texts never group with a point or comma (Schreibweisungen Rz. 512), so a point
+    // after digits can only be the franc decimal of an amount (Rz. 514, 543).
+    expect(t('CHF 1234567.50', on)).toBe('CHF~1~234~567.50');
+    expect(t('Fr. 1234567.50', on)).toBe('Fr. 1~234~567.50');
   });
 
   test('% and € stand apart from the number, as in French', () => {

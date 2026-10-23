@@ -31,6 +31,18 @@ describe('time ranges written with a full stop (9.00-18.30)', () => {
     expect(dashRange('22:00-02:00')).toBe('22:00–02:00');
   });
 
+  test('a decimal pair with time-like digits is read as a time, and an en dash is right for it either way', () => {
+    expect(dashRange('1.50-2.50')).toBe('1.50–2.50');
+  });
+
+  test('hour 24 is only 24.00; a chain of times is left alone', () => {
+    expect(dashRange('23.00-24.00')).toBe('23.00–24.00');
+    expect(dashRange('24.00-24.30')).toBe('24.00-24.30');
+    expect(dashRange('23.30-24.30')).toBe('23.30-24.30');
+    expect(dashRange('9.00-18.30-20.00')).toBe('9.00-18.30-20.00');
+    expect(dashRange('9.00–18.30-20.00')).toBe('9.00–18.30-20.00');
+  });
+
   test('decimals are no time: one-digit minutes are left alone', () => {
     expect(dashRange('1.5-2.5')).toBe('1.5-2.5');
     expect(dashRange('0.5-1.5 mm')).toBe('0.5-1.5 mm');

@@ -17,7 +17,11 @@ export type Abbreviations = {
   bare?: readonly string[];
 };
 
-/** How a language writes numbers: the group separator (1 000 000) and the decimal mark. */
+/**
+ * How a language writes numbers: the group separator (1 000 000) and the decimal marks it accepts,
+ * the language's own first (`,`); a second one is read as a decimal mark too, never a separator
+ * (`,.` in Switzerland: 4,16 and the franc amount Fr. 327.65).
+ */
 export type NumberFormat = { group: string; decimal: string };
 
 /**
