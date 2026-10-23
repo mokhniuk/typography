@@ -1,6 +1,6 @@
 # Backlog
 
-What the package still lacks, after the 0.2.0 work that closed the gaps found by comparing it with typograf, typopo, richtypo, tipograph, smartypants and retext-smartypants (2026-10-20, versions in [../apps/bench/RESULTS.md](../apps/bench/RESULTS.md)). Our audience is the EU, Ukraine and the US; tools for a single other language (Russian, Chinese) are out of scope.
+What the package still lacks. The comparison with typograf, typopo, richtypo, tipograph, smartypants and retext-smartypants was made at 0.2.0 (2026-10-20, versions in [../apps/bench/RESULTS.md](../apps/bench/RESULTS.md)); the file is kept current since. Our audience is the EU, Ukraine and the US; tools for a single other language (Russian, Chinese) are out of scope.
 
 Priorities: **P0** blocks the audience, **P1** closes a gap other tools do not have, **P2** is worth doing later. An item is done when its test exists and the docs say so; move it out of this file into [../CHANGELOG.md](../CHANGELOG.md).
 
@@ -18,7 +18,7 @@ The 27 target languages are the 24 official languages of the EU, Ukrainian, and 
 
 ### Native-speaker review of the 20 new languages
 
-Every pack has `reviewed: false`: bg cs da el es et fi ga hr hu it lt lv mt nl pt ro sk sl sv (plus the older uk de pl fr en and the Swiss de-CH fr-CH, never reviewed either). They were written from style guides, and several sources (Pravidla 2000, Svenska skrivregler, the RAE, the Maltese Language Council, DOOM) could only be read in part. For each language: a native reader goes through its generated page ([languages/index.md](languages/index.md)), corrects the pack, and flips `reviewed` to `true`.
+Every pack has `reviewed: false`: bg cs da el es et fi ga hr hu it lt lv mt nl pt ro sk sl sv (plus the older uk de pl fr en and the Swiss de-CH fr-CH, never reviewed either). They were written from style guides, and several sources (Pravidla 2000, Svenska skrivregler, the RAE, the Maltese Language Council, DOOM) could only be read in part. For each language: a native reader goes through its generated page ([languages/index.md](languages/index.md)), corrects the pack, and flips `reviewed` to `true`. This is the step after the npm release and before 1.0.0.
 
 ## P1
 
@@ -109,9 +109,9 @@ No quadratic input is known outside the rules since 0.15.0 (the two the probes f
 
 `phone.bind` (opt-in) only keeps an international number whole; it never reformats one and leaves local numbers alone (a limit, in [limits.md](limits.md#opt-in-rules)). Each language writes its numbers in its own groups (`+49 30 1234567`, `+33 1 23 45 67 89`, `+380 44 123 45 67`) and some bind a local number too. Read a national numbering plan or style guide per language before binding or grouping anything beyond what is typed.
 
-### Publish to npm, with a licence and compiled output (1.0.0)
+### Load only the languages used
 
-The package ships `.ts` sources, is private, installs from a git tag, and has no licence. A consumer needs Bun or a TypeScript-aware bundler. This is the last step of 1.0.0, after the website, the open bugs and the docs: ship JavaScript with `.d.ts` files (ESM) so Node and plain tooling work, a `LICENSE`, a CI matrix with Node, then publish. Two numbers from `bun run size` and `bun run deps` (2026-10-22) belong to this step. The install size is done (Unreleased: a `files` list and release tags on a commit that holds only the pack, 69 files instead of 303). Every entry point carries all 27 language packs, 57 KB of the 87 KB minified bundle of `/text` (16 of 26 KB brotli), and `/dom` weighs 89 KB as well (check what of the engine hanging punctuation really pulls in). A way to load only the languages used (a pack registry the caller fills, or one entry per language) would bring a one-language bundle near typograf's 15 KB brotli. Output changes stay minor releases after 1.0.0 (see [contributing.md](contributing.md#releasing)); only API breaks are major, so an API change such as a renamed option is best made before it (the `ch` code became `de-CH` and `fr-CH` in Unreleased).
+Every entry point carries all 27 language packs: 57 KB of the 87 KB minified bundle of `/text` (16 of 26 KB brotli), and `/dom` weighs 89 KB as well (check what of the engine hanging punctuation really pulls in). A way to load only the languages used (a pack registry the caller fills, or one entry per language) would bring a one-language bundle near typograf's 15 KB brotli. Numbers from `bun run size` (2026-10-22).
 
 ### A larger real-text benchmark
 

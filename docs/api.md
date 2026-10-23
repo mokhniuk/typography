@@ -1,6 +1,6 @@
 # API reference
 
-Every entry point in `package.json` `exports`, plus the `typo` command (see [cli.md](cli.md)). All of them ship as TypeScript sources: there is no build step and no `.d.ts` files; a TypeScript-aware bundler or Bun reads the `.ts` directly. The package is private and not published to a registry; it is installed from a git tag (see [contributing.md](contributing.md#using-it-from-another-project)), and the import names below are its package name `@mokhniuk/typography`.
+Every entry point in `package.json` `exports`, plus the `typo` command (see [cli.md](cli.md)). All of them ship as compiled ESM with `.d.ts` declarations: the Source column names the files in `src/`, the shipped files are the same paths under `dist/`. The package is published on npm (from 0.16.0) and also installs from a git tag whose commit holds the built package (see [contributing.md](contributing.md#using-it-from-another-project)); the import names below are its package name `@mokhniuk/typography`.
 
 | Entry | Source | What it exports |
 |---|---|---|
@@ -11,7 +11,7 @@ Every entry point in `package.json` `exports`, plus the `typo` command (see [cli
 | `./rehype` | `src/rehype/index.ts` | default `rehypeTypography`, `typesetHast`, `RehypeOptions` |
 | `./dom` | `src/dom/index.ts` | `hangPunctuation`, `hangScript`, `markHangs`, `hangStyle`, and the glyph measuring: `supports`, `glyphStatus`, `missingGlyphs`, `missingIn`, `fontOf` |
 | `./react` | `src/react/index.ts` | `Typeset`, `TypographyRoot`, `HangText`, `HangScript`, `useHangingPunctuation`, `useMissingGlyphs`, `TypographyContext`, `TypographySetting` |
-| bin `typo` | `src/cli/main.ts` | the command line; needs Bun |
+| bin `typo` | `src/cli/main.ts` | the command line; Node 20 or later, or Bun |
 
 The main entry is not only plain text: it carries the whole engine (`typographic`, `explain`, `RULES`, `splitHangs`, ...) and the plain-text mode. It does not export the HTML, Markdown, rehype, DOM or React modules; import those from their own entry.
 

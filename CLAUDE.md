@@ -1,12 +1,13 @@
 # Typography
 
-Package `@mokhniuk/typography`, consumed from other projects as a git dependency on a tag. Full release rules are in `docs/contributing.md`.
+Package `@mokhniuk/typography`, published on npm, and also installable from a git tag. Full release rules are in `docs/contributing.md`.
 
-Bun project, TypeScript sources shipped as they are (no build step). Details: `README.md` (entry points), `docs/contributing.md` (layout, adding a rule or language, tests), `docs/api.md`.
+Bun project; the package ships compiled ESM with declarations (`bun run build`). Details: `README.md` (entry points), `docs/contributing.md` (layout, adding a rule or language, tests), `docs/api.md`.
 
 ## Commands
 
 - `bun test src apps/playground apps/website resources`: all tests. `bun run typecheck`: `tsc`, covers src, apps/playground, scripts, resources.
+- `bun run build`: compile to `dist/` (`tsc -p tsconfig.build.json`); what ships, with `exports` and the `typo` bin pointing into it.
 - `bun run docs:rules`: regenerate `docs/rules.md` (generated, never edit by hand; `src/docs.test.ts` fails if stale).
 - `bun run docs:languages`: regenerate `docs/languages/*.md` from the language packs (generated; `src/lang-docs.test.ts` fails if stale).
 - `bun run gen:script`: regenerate `src/dom/script.ts` (generated) after changing `src/dom/hang.ts`.
@@ -43,7 +44,7 @@ If the changes since the last tag touch `src/` (anything that ships), check that
 3. Move the new `CHANGELOG.md` entries under `## X.Y.Z (date)`, set `version` in `package.json`.
 4. Run `bun test src apps/playground apps/website resources`, `bun run typecheck`, `bun run docs:rules`, and `bun run gen:script` if `src/dom/hang.ts` changed.
 5. Commit as `release: X.Y.Z`.
-6. Push `main`. Do NOT tag by hand: `.github/workflows/release.yml` builds a commit on the `release` branch that holds only the packed package (`scripts/release-commit.ts`, the `files` list in `package.json`) and puts the plain tag `vX.Y.Z` on it. If a tag is ever needed manually, follow "Releasing" in `docs/contributing.md`, and use a plain `git tag`, never `git tag -a` (Bun 1.3 cannot resolve annotated tags).
+6. Push `main`. Do NOT tag by hand: `.github/workflows/release.yml` builds, tests, runs the Node smoke test, builds a commit on the `release` branch that holds only the packed package (`scripts/release-commit.ts`, the `files` list in `package.json`), puts the plain tag `vX.Y.Z` on it and then publishes to npm with provenance. If a tag is ever needed manually, follow "Releasing" in `docs/contributing.md`, and use a plain `git tag`, never `git tag -a` (Bun 1.3 cannot resolve annotated tags).
 
 Skip the release steps for changes that touch only docs, tests, playground or CI.
 
