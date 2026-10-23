@@ -28,12 +28,12 @@ const fromMarkdown = (md: string, options?: RehypeOptions) =>
 
 describe('rehypeTypography', () => {
   test('typesets the text of a block', () => {
-    expect(fromHtml('<p>He said "hi" - and left.</p>')).toBe('<p>He said «hi»~— and~left.</p>');
+    expect(fromHtml('<p>He said "hi" - and left.</p>')).toBe('<p>He said “hi”~— and~left.</p>');
   });
 
   test('a quotation pairs across inline elements', () => {
     expect(fromHtml('<p>"See <a href="/x?a=1-2">the <em>docs</em></a> now"</p>')).toBe(
-      '<p>«See <a href="/x?a=1-2">the <em>docs</em></a> now»</p>',
+      '<p>“See <a href="/x?a=1-2">the <em>docs</em></a> now”</p>',
     );
   });
 
@@ -49,13 +49,13 @@ describe('rehypeTypography', () => {
 
   test('works on a Markdown pipeline, code kept', () => {
     expect(fromMarkdown('# "Title" - sub\n\nRun `a -> b` and "see [the docs](/x)".\n')).toBe(
-      '<h1>«Title»~— sub</h1>\n<p>Run <code>a -> b</code> and~«see <a href="/x">the~docs</a>».</p>',
+      '<h1>“Title”~— sub</h1>\n<p>Run <code>a -> b</code> and~“see <a href="/x">the~docs</a>”.</p>',
     );
   });
 
   test('the lang attribute sets the language of its subtree', () => {
     expect(fromHtml('<p>"a" <span lang="de">"b"</span> <span lang="xx">"c"</span></p>')).toBe(
-      '<p>«a» <span lang="de">»b«</span> <span lang="xx">«c»</span></p>',
+      '<p>“a” <span lang="de">»b«</span> <span lang="xx">“c”</span></p>',
     );
     expect(fromHtml('<div lang="uk-UA"><p>- Привіт</p></div>', { register: 'literary' })).toBe(
       '<div lang="uk-UA"><p>—~Привіт</p></div>',
@@ -74,7 +74,7 @@ describe('rehypeTypography', () => {
   });
 
   test('a block that needs no change is not touched', () => {
-    const html = '<div><p>Plain text.</p><p>«Done» - fine</p></div>';
+    const html = '<div><p>Plain text.</p><p>“Done” - fine</p></div>';
     const seen: string[] = [];
     fromHtml(html, { onChange: (c) => seen.push(c.rule) });
     expect(seen).toEqual(['dash.sentence']);

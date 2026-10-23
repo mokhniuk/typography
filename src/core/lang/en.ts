@@ -24,11 +24,11 @@ export const en = {
   name: 'English',
   sample:
     'He said "we\'re here" - and left... The lab runs 21-26 September, 10:00-12:00. Read more ->',
-  // «outer „inner“ ‚third‘».
+  // “outer ‘inner’ outer”, as CLDR gives English (a third level reopens with “). The former
+  // house style, «outer „inner“ ‚third‘», is quoteStyle: 'guillemets', for any language.
   quotes: [
-    ['«', '»'],
-    ['„', '“'],
-    ['‚', '‘'],
+    ['“', '”'],
+    ['‘', '’'],
   ],
   // Literary quotation, British English: ‘outer “inner” outer’ (a third level reopens with ‘).
   literary: [
@@ -49,5 +49,5 @@ export const en = {
     'https://style-guide.europa.eu/en/content/-/isg/topic?identifier=6.5-punctuation-in-figures',
   ],
   notes:
-    'Display register uses guillemets by house style; British quotes are the literary register. Digits of a number of five or more are grouped with a comma (opt-in rule number.group): the EU English Style Guide sets a hard space in running text and allows a comma for web writing, promotional material and press releases, which is what this engine is for. The separator is the pack field numbers.group (a no-break space is the EU form).',
+    "Display register uses “…” with ‘…’ inside, as CLDR gives English; British quotes (‘…’ with “…” inside) are the literary register; quoteStyle: 'guillemets' sets the former house style, «…» with „…“ inside. Digits of a number of five or more are grouped with a comma (opt-in rule number.group): the EU English Style Guide sets a hard space in running text and allows a comma for web writing, promotional material and press releases, which is what this engine is for. The separator is the pack field numbers.group (a no-break space is the EU form).",
 } as const satisfies LangPack;

@@ -61,12 +61,12 @@ Category: `tradition`.
 
 Why: [sources.md](../resources/sources.md#quote), `disputed`.
 
-Characters it can insert, in any language: `«` `»` `„` `“` `‚` `‘` `’` `”` `›` `‹` `~`. A font that lacks one of them is handled by `avoid` (see [api.md](api.md#avoid)).
+Characters it can insert, in any language: `“` `”` `‘` `’` `«` `»` `„` `‚` `›` `‹` `~`. A font that lacks one of them is handled by `avoid` (see [api.md](api.md#avoid)).
 
 ```text
 (en)
 before  He said "stone" and left.
-after   He said «stone» and left.
+after   He said “stone” and left.
 ```
 
 Display register, the default.
@@ -74,7 +74,7 @@ Display register, the default.
 ```text
 (en)
 before  He said "we said 'no' twice" and left.
-after   He said «we said „no“ twice» and left.
+after   He said “we said ‘no’ twice” and left.
 ```
 
 Nesting level two. Source marks may be straight, curly or guillemets.
@@ -86,6 +86,14 @@ after   He said ‘we said “no” twice’ and left.
 ```
 
 British English in the literary register.
+
+```text
+(en, quoteStyle guillemets)
+before  He said "we said 'no' twice" and left.
+after   He said «we said „no“ twice» and left.
+```
+
+The house style, in any language and register.
 
 ```text
 (de)

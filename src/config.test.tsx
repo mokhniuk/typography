@@ -238,7 +238,7 @@ describe('precedence', () => {
           <Typeset text={'"x"'} config={{ lang: 'pl' }} lang="en" />
         </TypographyRoot>,
       ),
-    ).toBe('«x»');
+    ).toBe('“x”');
   });
 });
 
@@ -255,6 +255,7 @@ describe('defineConfig and checkConfig', () => {
     const config: TypographyConfig = { lang: 'de', rules, enable: ['extra.shout'] };
     expect(defineConfig(config)).toBe(config);
     expect(checkConfig({})).toEqual({});
+    expect(checkConfig({ quoteStyle: 'guillemets' })).toEqual({ quoteStyle: 'guillemets' });
   });
 
   test('throws on what it cannot use, saying what', () => {
@@ -265,7 +266,7 @@ describe('defineConfig and checkConfig', () => {
     bad({ language: 'en' }, /unknown key "language"/);
     bad({ lang: 'xx' }, /lang is .*"uk".*not "xx"/);
     bad({ register: 'book' }, /register is "display", "literary", not "book"/);
-    bad({ quoteStyle: 'uk' }, /quoteStyle is "language", "us", not "uk"/);
+    bad({ quoteStyle: 'uk' }, /quoteStyle is "language", "us", "guillemets", not "uk"/);
     bad({ nbsp: 'raw' }, /nbsp is "entity", "char", not "raw"/);
     bad({ hangAmount: 2 }, /hangAmount is a number from 0 to 1, not 2/);
     bad({ hangAmount: '0.5' }, /hangAmount is a number from 0 to 1/);

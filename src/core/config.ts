@@ -79,7 +79,7 @@ export function checkConfig(value: unknown): TypographyConfig {
   const { lang, register, quoteStyle, disable, enable, rules, avoid, nbsp, hangAmount } = config;
   if (lang !== undefined) oneOf('lang', lang, LANGS);
   if (register !== undefined) oneOf('register', register, ['display', 'literary']);
-  if (quoteStyle !== undefined) oneOf('quoteStyle', quoteStyle, ['language', 'us']);
+  if (quoteStyle !== undefined) oneOf('quoteStyle', quoteStyle, ['language', 'us', 'guillemets']);
   if (nbsp !== undefined) oneOf('nbsp', nbsp, ['entity', 'char']);
   if (avoid !== undefined && typeof avoid !== 'string') {
     throw new Error(

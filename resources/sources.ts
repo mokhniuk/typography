@@ -588,9 +588,9 @@ const general = (why: string): Decision => ({
 export const RULE_SOURCES: Record<string, Decision> = {
   quote: {
     sources: ['cldr-delimiters', 'butterick-quotes', 'oqlf-espacement'],
-    why: 'Each language has its own quotation marks, and nesting alternates a second pair. uk (« » „ “) and pl („ ” « ») match CLDR; fr level one and ch (« » ‹ ›, as fr-CH) match too. Butterick agrees that quotes are curly and that styles vary by language, and gives no per-language sets. OQLF puts a no-break space inside French guillemets, as the engine does.',
+    why: "Each language has its own quotation marks, and nesting alternates a second pair. en (“ ” ‘ ’), uk (« » „ “) and pl („ ” « ») match CLDR; fr level one and ch (« » ‹ ›, as fr-CH) match too. The former English default, « » „ “ ‚ ‘, is this package's house style and is kept as the option quoteStyle: 'guillemets' for any language. Butterick agrees that quotes are curly and that styles vary by language, and gives no per-language sets. OQLF puts a no-break space inside French guillemets, as the engine does.",
     alternative:
-      'CLDR gives English “ ” ‘ ’ (the engine default is « » „ “, a gap already in the backlog as P0), German „ “ ‚ ‘ (the engine sets » « › ‹ on display), French « » with « » inside (the engine uses “ ” inside), and de-CH „ “ ‚ ‘ (the engine ch profile is the fr-CH one). The backlog records that every other tool in the benchmark produces “ ” for English by default (apps/bench/RESULTS.md). Not read: the Swiss Federal Chancellery Schreibweisungen (a PDF this work could not extract text from), Pravopys 2019 (server refused the fetch), Imprimerie nationale Lexique.',
+      'Disputed for the languages that still differ from CLDR: German „ “ ‚ ‘ (the engine sets » « › ‹ on display), French « » with « » inside (the engine uses “ ” inside), and de-CH „ “ ‚ ‘ (the engine ch profile is the fr-CH one). English used to be one of them (the engine set « » „ “ by house style, and every other tool in the benchmark sets “ ”, apps/bench/RESULTS.md); it now follows CLDR. Not read: the Swiss Federal Chancellery Schreibweisungen (a PDF this work could not extract text from), Pravopys 2019 (server refused the fetch), Imprimerie nationale Lexique.',
     confidence: 'disputed',
     langs: {
       en: ['cldr-delimiters', 'butterick-quotes'],

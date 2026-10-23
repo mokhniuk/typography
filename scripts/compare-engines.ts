@@ -5,7 +5,8 @@
  *
  * The base is `src/` of a git ref, extracted with `git archive` into a temp directory outside the
  * repository (or an existing `src` directory given with `--base-dir`); the head is this checkout's
- * `src/` (or `--head`). For every language x register x quoteStyle x rule set (default; every opt-in
+ * `src/` (or `--head`). For every language x register x quoteStyle (`guillemets` only when the base
+ * accepts it) x rule set (default; every opt-in
  * rule enabled) x mode (typographic with `explain`, text, HTML, Markdown, hast) it compares the
  * output and every `onChange` record (rule id, from, to, order). A thrown error is a result too:
  * both must throw the same message. Exit code 1 on any difference. Then it prints timings.
@@ -14,6 +15,7 @@ import { execFileSync } from 'node:child_process';
 import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
+import type { QuoteStyle } from '../src/core';
 import {
   corpus,
   type Engine,
@@ -118,7 +120,15 @@ const optIn = base.core.RULES.filter((r) => r.defaultOn === false && headIds.has
 
 const pool = corpus(N, 1);
 const registers = ['display', 'literary'] as const;
-const quoteStyles = ['language', 'us'] as const;
+const quoteStyles: QuoteStyle[] = ['language', 'us'];
+// 'guillemets' came after 0.14: a base engine whose checkConfig rejects it is compared without it.
+let guillemetsSkipped = false;
+try {
+  base.core.checkConfig({ quoteStyle: 'guillemets' });
+  quoteStyles.push('guillemets');
+} catch {
+  guillemetsSkipped = true;
+}
 const ruleSets: [string, string[] | undefined][] = [
   ['default', undefined],
   ['all-optin', optIn],
@@ -211,6 +221,9 @@ console.log(
 console.log(
   `corpus: ${pool.length} strings, ${SLICE} per combination for typographic and ${MODE_SLICE} for each other mode, ${total} comparisons`,
 );
+console.log(`quote styles compared: ${quoteStyles.join(', ')}`);
+if (guillemetsSkipped)
+  console.log("note: the base engine rejects quoteStyle 'guillemets'; skipped");
 console.log(`opt-in rules enabled in the all-optin set: ${optIn.join(', ')}`);
 
 for (const d of diffs) {

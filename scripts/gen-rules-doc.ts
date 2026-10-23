@@ -13,6 +13,7 @@ import { mdAnchor, RULE_SOURCES } from '../resources/sources';
 import {
   type Lang,
   NBSP,
+  type QuoteStyle,
   type Register,
   RULE_CATEGORIES,
   RULES,
@@ -26,6 +27,7 @@ export type Example = {
   input: string;
   lang?: Lang;
   register?: Register;
+  quoteStyle?: QuoteStyle;
   blockStart?: boolean;
   /** Characters the font cannot draw (the `avoid` option), for an example that shows what it keeps. */
   avoid?: string;
@@ -66,6 +68,11 @@ export const EXAMPLES: Record<string, readonly Example[]> = {
       input: `He said "we said 'no' twice" and left.`,
       register: 'literary',
       note: 'British English in the literary register.',
+    },
+    {
+      input: `He said "we said 'no' twice" and left.`,
+      quoteStyle: 'guillemets',
+      note: 'The house style, in any language and register.',
     },
     { input: `Er sagte "Sie rief 'Haus' laut" und ging.`, lang: 'de' },
   ],
@@ -234,6 +241,7 @@ const show = (text: string): string => text.replaceAll(NBSP, '~');
 export function runOnly(id: string, example: Example, rules: readonly Rule[] = RULES): string {
   return typographic(example.input, example.lang ?? 'en', {
     register: example.register ?? 'display',
+    quoteStyle: example.quoteStyle,
     blockStart: example.blockStart ?? true,
     avoid: example.avoid,
     rules,
@@ -245,6 +253,7 @@ export function runOnly(id: string, example: Example, rules: readonly Rule[] = R
 function setting(example: Example): string {
   const parts: string[] = [example.lang ?? 'en'];
   if (example.register) parts.push(example.register);
+  if (example.quoteStyle) parts.push(`quoteStyle ${example.quoteStyle}`);
   if (example.blockStart === false) parts.push('not at block start');
   if (example.avoid) parts.push(`avoid ${show(example.avoid)}`);
   return parts.join(', ');

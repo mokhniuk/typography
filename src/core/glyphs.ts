@@ -15,8 +15,8 @@ import { RULE_IDS } from './rules.ts';
 import type { Lang } from './types.ts';
 import { NBSP } from './types.ts';
 
-/** The quote marks of the `us` style, which any language can be set in. */
-const US_QUOTES = '“”‘’';
+/** The quote marks of the `us` and `guillemets` styles, which any language can be set in. */
+const STYLE_QUOTES = '“”‘’«»„‚';
 
 /** The characters a rule inserts whatever the language. A rule that only removes text has none. */
 const FIXED: Readonly<Record<string, string>> = {
@@ -62,7 +62,7 @@ function quoteMarks(lang?: Lang): string {
   const marks = packsOf(lang).flatMap((pack) =>
     [...pack.quotes, ...(pack.literary ?? []), ...(pack.turnedPairs ?? [])].flat(),
   );
-  return unique(marks.join('') + US_QUOTES);
+  return unique(marks.join('') + STYLE_QUOTES);
 }
 
 /** The dashes a language sets for a break in the sentence and for a line of dialogue. */

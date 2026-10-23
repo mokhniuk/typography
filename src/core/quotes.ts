@@ -275,6 +275,13 @@ const US: readonly Level[] = [
   ['‘', '’'],
 ];
 
+/** `quoteStyle: 'guillemets'`: «…», then „…“, then ‚…‘, whatever the language and register. */
+const HOUSE: readonly Level[] = [
+  ['«', '»'],
+  ['„', '“'],
+  ['‚', '‘'],
+];
+
 /** The quote setter of one pack: marks of its language, register and nesting level; source quotes may be of any style. */
 export function quotesFor(
   pack: LangPack,
@@ -319,7 +326,11 @@ export function quotesFor(
       out = closeLone(openLone(out, openerBefore));
     }
     const levels =
-      quoteStyle === 'us' ? US : (register === 'literary' && pack.literary) || pack.quotes;
+      quoteStyle === 'us'
+        ? US
+        : quoteStyle === 'guillemets'
+          ? HOUSE
+          : (register === 'literary' && pack.literary) || pack.quotes;
     let depth = 0;
     let next = 0;
     return out.replace(PLACEHOLDERS, (ch) => {

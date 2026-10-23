@@ -15,7 +15,9 @@ describe('the characters the rules insert', () => {
       expect(own.quote).toContain('“');
       expect(insertedCharacters(lang)).toContain(own.quote?.[0] ?? '');
     }
-    expect(ruleGlyphs('en').quote).toContain('«');
+    // Any language can be set in the us and guillemets styles, so their marks are listed for each.
+    expect(ruleGlyphs('de').quote).toContain('«');
+    expect(ruleGlyphs('en').quote).toContain('‚');
     expect(ruleGlyphs('de').quote).toContain('»');
     expect(ruleGlyphs('en')['number.group']).toBe(',');
     expect(ruleGlyphs()['number.group']).toContain(',');
@@ -31,7 +33,7 @@ describe('the characters the rules insert', () => {
 describe('avoid', () => {
   test('a rule that would insert an avoided character leaves the text as it was', () => {
     expect(typographic('Wait... what?', 'en', { avoid: '…' })).toBe('Wait... what?');
-    expect(typographic('He said "stone"', 'en', { avoid: '«»' })).toBe('He said "stone"');
+    expect(typographic('He said "stone"', 'en', { avoid: '“”' })).toBe('He said "stone"');
     expect(typographic('Read more ->', 'en', { avoid: '→' })).toBe('Read more ->');
     expect(typographic('It was -5', 'en', { avoid: '−' })).toBe('It was -5');
   });
@@ -47,13 +49,13 @@ describe('avoid', () => {
     expect(typographic('Řekl "dům" a odešel', 'cs', { avoid: '„' })).toBe(
       `Řekl "dům" a${NBSP}odešel`,
     );
-    expect(typographic('He said "x" and "y"...', 'en', { avoid: '«' })).toBe(
+    expect(typographic('He said "x" and "y"...', 'en', { avoid: '“' })).toBe(
       `He said "x" and${NBSP}"y"…`,
     );
     // Avoiding the inner level keeps the outer pair too: they are one rule's work. The straight
     // marks then stay as typed, and the apostrophe rule claims the single one, as it does whenever
     // the quotation rule leaves it (the same output as `disable: ['quote']`).
-    expect(typographic(`He said "we said 'no' twice"`, 'en', { avoid: '„“' })).toBe(
+    expect(typographic(`He said "we said 'no' twice"`, 'en', { avoid: '‘' })).toBe(
       typographic(`He said "we said 'no' twice"`, 'en', { disable: ['quote'] }),
     );
     // A rule whose changes stand on their own still drops one change at a time.

@@ -16,7 +16,7 @@ import { hangPunctuation, markHangs } from '../../src/dom';
 import { typesetHtml } from '../../src/html';
 import { typesetMarkdown } from '../../src/markdown';
 import { typesetText } from '../../src/text';
-import { configText, fromConfig } from './config-io';
+import { configText, fromConfig, quoteStyleOf } from './config-io';
 import { example, exampleIn, type Mode, type Size } from './examples';
 import {
   allOn,
@@ -110,7 +110,7 @@ function load(): State {
       mode,
       lang,
       register: saved.register === 'literary' ? 'literary' : 'display',
-      quoteStyle: saved.quoteStyle === 'us' ? 'us' : 'language',
+      quoteStyle: quoteStyleOf(saved.quoteStyle),
       nbsp: saved.nbsp === 'char' ? 'char' : 'entity',
       avoid: typeof saved.avoid === 'string' ? saved.avoid : '',
       view: saved.view === 'changes' || saved.view === 'preview' ? saved.view : 'result',
@@ -467,7 +467,7 @@ registerSelect.addEventListener('change', () => {
   schedule();
 });
 quoteStyleSelect.addEventListener('change', () => {
-  state.quoteStyle = quoteStyleSelect.value === 'us' ? 'us' : 'language';
+  state.quoteStyle = quoteStyleOf(quoteStyleSelect.value);
   schedule();
 });
 nbspSelect.addEventListener('change', () => {

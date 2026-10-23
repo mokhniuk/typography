@@ -47,7 +47,7 @@ describe('docs/rules.md with a rule that is off by default', () => {
   });
 
   test('an example of a default-on rule is unchanged by the opt-in rule being there', () => {
-    expect(runOnly('quote', { input: 'a "x"' }, list)).toBe('a «x»');
+    expect(runOnly('quote', { input: 'a "x"' }, list)).toBe('a “x”');
   });
 
   test('the page says how many rules are on by default, and marks the opt-in one', () => {

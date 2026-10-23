@@ -28,8 +28,9 @@ describe("quoteStyle: 'us'", () => {
   });
 
   test('the default is the language: nothing changes unless asked', () => {
-    expect(typographic('"x"', 'en')).toBe('«x»');
-    expect(typographic('"x"', 'en', { quoteStyle: 'language' })).toBe('«x»');
+    expect(typographic('"x"', 'de')).toBe('»x«');
+    expect(typographic('"x"', 'de', { quoteStyle: 'language' })).toBe('»x«');
+    expect(typographic('"x"', 'en')).toBe('“x”');
     expect(typographic('"x"', 'en', { register: 'literary', quoteStyle: 'language' })).toBe('‘x’');
   });
 
@@ -69,5 +70,43 @@ describe("quoteStyle: 'us'", () => {
   test('an opening mark without a partner is read by where it stands, as with any style', () => {
     expect(t('"first paragraph')).toBe('“first paragraph');
     expect(t('last paragraph"')).toBe('last paragraph”');
+  });
+});
+
+const guillemets = { quoteStyle: 'guillemets' } as const;
+const g = (text: string, lang: Parameters<typeof typographic>[1] = 'en', options = guillemets) =>
+  typographic(text, lang, options).replaceAll(NBSP, '~');
+
+describe("quoteStyle: 'guillemets'", () => {
+  test('en: «…», then „…“, then ‚…‘, from any source style', () => {
+    expect(g('He said "stone" and left.')).toBe('He said «stone» and~left.');
+    expect(g('"x \'y\' z"')).toBe('«x „y“ z»');
+    expect(g('“1 ‘2 “3” 2’ 1”')).toBe('«1 „2 ‚3‘ 2“ 1»');
+  });
+
+  test('de gets the same marks instead of its own »…«', () => {
+    expect(g('Er sagte "Haus" und ging.', 'de')).toBe('Er sagte «Haus» und ging.');
+    expect(g('Er sagte »x ›y‹ z«', 'de')).toBe('Er sagte «x „y“ z»');
+  });
+
+  test('it takes precedence over the literary register in every language', () => {
+    for (const lang of LANGS) {
+      expect(
+        g('"x \'y\' z"', lang, { quoteStyle: 'guillemets', register: 'literary' } as never),
+      ).toBe('«x „y“ z»');
+    }
+  });
+
+  test('a quotation nested deeper than three levels starts over', () => {
+    expect(g('“1 ‘2 “3 ‘4’ 3” 2’ 1”')).toBe('«1 „2 ‚3 «4» 3‘ 2“ 1»');
+  });
+
+  test('is stable on its own output', () => {
+    for (const sample of ['«a „b ‚c‘ b“ a»', "He said \"we're here\" and 'x'", '«lone opener']) {
+      for (const lang of LANGS) {
+        const once = typographic(sample, lang, guillemets);
+        expect(typographic(once, lang, guillemets)).toBe(once);
+      }
+    }
   });
 });

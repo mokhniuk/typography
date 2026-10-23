@@ -31,7 +31,7 @@ describe('typo', () => {
   test('typesets standard input to standard output', async () => {
     const t = fake({}, 'He said "hi" - and left.\n');
     expect(await run([], t.io)).toBe(0);
-    expect(nb(t.out())).toBe('He said «hi»~— and~left.\n');
+    expect(nb(t.out())).toBe('He said “hi”~— and~left.\n');
   });
 
   test('reads the language and register from the options', async () => {
@@ -45,14 +45,14 @@ describe('typo', () => {
 
   test('--avoid keeps the text as typed where a rule would insert a character the font lacks', async () => {
     const t = fake({}, 'He said "hi"... ok\n');
-    expect(await run(['--avoid', '«»'], t.io)).toBe(0);
+    expect(await run(['--avoid', '“”'], t.io)).toBe(0);
     expect(nb(t.out())).toBe('He said "hi"… ok\n');
     const u = fake(
       { 'package.json': JSON.stringify({ typography: { avoid: '…' } }) },
       '"x"... ok\n',
     );
     await run([], u.io);
-    expect(nb(u.out())).toBe('«x»... ok\n');
+    expect(nb(u.out())).toBe('“x”... ok\n');
   });
 
   test('a Ukrainian dialogue dash is read at the start of every paragraph', async () => {
@@ -64,19 +64,19 @@ describe('typo', () => {
   test('picks the format from the extension, and --format overrides it', async () => {
     const t = fake({ 'a.html': '<p>"x" - <code>"y"</code></p>', 'b.md': '# "x" - `"y"`\n' });
     await run(['a.html'], t.io);
-    expect(t.out()).toBe('<p>«x»&nbsp;— <code>"y"</code></p>');
+    expect(t.out()).toBe('<p>“x”&nbsp;— <code>"y"</code></p>');
     const u = fake({ 'b.md': '# "x" - `"y"`\n' });
     await run(['b.md'], u.io);
-    expect(nb(u.out())).toBe('# «x»~— `"y"`\n');
+    expect(nb(u.out())).toBe('# “x”~— `"y"`\n');
     const v = fake({ 'b.md': '"x"\n' });
     await run(['-f', 'text', 'b.md'], v.io);
-    expect(v.out()).toBe('«x»\n');
+    expect(v.out()).toBe('“x”\n');
   });
 
   test('--write rewrites only the files that change', async () => {
     const t = fake({ 'a.txt': '"x"\n', 'b.txt': 'plain\n' });
     expect(await run(['-w', 'a.txt', 'b.txt'], t.io)).toBe(0);
-    expect(t.written).toEqual({ 'a.txt': '«x»\n' });
+    expect(t.written).toEqual({ 'a.txt': '“x”\n' });
     expect(t.err()).toBe('a.txt: typeset\n');
   });
 
@@ -118,7 +118,7 @@ describe('typo', () => {
   test('--disable switches rules off; a typo in a rule is a usage error', async () => {
     const t = fake({}, 'wait... "x"\n');
     await run(['-d', 'ellipsis'], t.io);
-    expect(t.out()).toBe('wait... «x»\n');
+    expect(t.out()).toBe('wait... “x”\n');
     const u = fake({}, '1-2 "x"\n');
     await run(['-d', 'dash.range,quote'], u.io);
     expect(u.out()).toBe('1-2 "x"\n');
@@ -137,14 +137,14 @@ describe('typo', () => {
   test('--explain lists the changes instead of the text, --json as data', async () => {
     const t = fake({ 'a.txt': 'say "x"... now\n' });
     expect(await run(['--explain', 'a.txt'], t.io)).toBe(0);
-    expect(t.out()).toContain('a.txt: quote: "\\"" -> "«"');
+    expect(t.out()).toContain('a.txt: quote: "\\"" -> "“"');
     expect(t.out()).toContain('a.txt: ellipsis: "..." -> "…"');
-    expect(t.out()).not.toContain('say «x»');
+    expect(t.out()).not.toContain('say “x”');
     const u = fake({}, '"x"\n');
     await run(['--explain', '--json'], u.io);
     expect(JSON.parse(u.out())).toEqual([
-      { file: null, rule: 'quote', from: '"', to: '«' },
-      { file: null, rule: 'quote', from: '"', to: '»' },
+      { file: null, rule: 'quote', from: '"', to: '“' },
+      { file: null, rule: 'quote', from: '"', to: '”' },
     ]);
   });
 
@@ -157,7 +157,7 @@ describe('typo', () => {
     // No built-in rule is off by default yet: enabling one that is already on changes nothing.
     const t = fake({}, 'wait... "x"\n');
     expect(await run(['--enable', 'ellipsis,space'], t.io)).toBe(0);
-    expect(t.out()).toBe('wait… «x»\n');
+    expect(t.out()).toBe('wait… “x”\n');
     const u = fake({}, 'x');
     expect(await run(['--enable', 'ellipsi'], u.io)).toBe(2);
     expect(u.err()).toContain('Unknown typography rule "ellipsi"');
@@ -179,6 +179,15 @@ describe('typo', () => {
     const w = fake({ 'a.html': '<p>"x"</p>', 'b.md': '"x"\n' });
     await run(['--quotes', 'us', 'a.html'], w.io);
     expect(w.out()).toBe('<p>“x”</p>');
+  });
+
+  test('--quotes guillemets sets «…» and „…“ in any language', async () => {
+    const t = fake({}, '"x \'y\'"\n');
+    expect(await run(['--quotes', 'guillemets'], t.io)).toBe(0);
+    expect(t.out()).toBe('«x „y“»\n');
+    const u = fake({}, '"x"\n');
+    await run(['--quotes', 'guillemets', '-l', 'de'], u.io);
+    expect(u.out()).toBe('«x»\n');
   });
 
   test('--quotes with anything else is a usage error', async () => {

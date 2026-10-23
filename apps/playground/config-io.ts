@@ -21,6 +21,10 @@ export type Switches = RuleState & {
   hang: number;
 };
 
+/** A quote style saved by the page or picked in its select; anything else is the language's. */
+export const quoteStyleOf = (value: unknown): QuoteStyle =>
+  value === 'us' || value === 'guillemets' ? value : 'language';
+
 /** In the order the rules run, so the same switches always export the same text. */
 const inRuleOrder = (ids: readonly string[]) =>
   RULES.map((rule) => rule.id).filter((id) => ids.includes(id));

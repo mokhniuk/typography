@@ -21,6 +21,7 @@ import {
   typographic,
 } from '../../../src/core';
 import { glyphStatus, hangPunctuation, markHangs } from '../../../src/dom';
+import { quoteStyleOf } from '../../playground/config-io';
 import { example } from '../../playground/examples';
 import { RISKY_LETTERS } from './letters';
 
@@ -79,7 +80,7 @@ function read(): Partial<State> {
     return {
       langs: langs.length ? langs : ['en'],
       register: saved.register === 'literary' ? 'literary' : 'display',
-      quoteStyle: saved.quoteStyle === 'us' ? 'us' : 'language',
+      quoteStyle: quoteStyleOf(saved.quoteStyle),
       optIn: saved.optIn === true,
     };
   } catch {
@@ -133,7 +134,7 @@ registerSelect.addEventListener('change', () => {
   render();
 });
 quoteStyleSelect.addEventListener('change', () => {
-  state.quoteStyle = quoteStyleSelect.value === 'us' ? 'us' : 'language';
+  state.quoteStyle = quoteStyleOf(quoteStyleSelect.value);
   render();
 });
 optIn.addEventListener('change', () => {
@@ -448,7 +449,7 @@ function render() {
   const config = {
     ...(state.langs.length === 1 ? { lang: lang0() } : {}),
     ...(state.register === 'literary' ? { register: state.register } : {}),
-    ...(state.quoteStyle === 'us' ? { quoteStyle: state.quoteStyle } : {}),
+    ...(state.quoteStyle !== 'language' ? { quoteStyle: state.quoteStyle } : {}),
     ...(avoid ? { avoid } : {}),
   };
   configText.value = JSON.stringify(config, null, 2);
