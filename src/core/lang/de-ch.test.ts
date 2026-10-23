@@ -28,11 +28,27 @@ describe('German (Switzerland)', () => {
     expect(t('5% und 49€')).toBe('5~% und 49~€');
   });
 
-  test('number.group (opt-in) groups digits with a no-break space; the decimal mark is a point', () => {
+  test('number.group (opt-in) groups digits with a no-break space; the decimal mark is a comma (Rz. 512, 514)', () => {
     const on = { enable: ['number.group'] };
     expect(t('1234567')).toBe('1234567');
     expect(t('1234567', on)).toBe('1~234~567');
-    expect(t('1234567.50', on)).toBe('1~234~567.50');
+    expect(t('4,16 Millionen und 1234567,50', on)).toBe('4,16~Millionen und 1~234~567,50');
+    expect(t('1234', on)).toBe('1234');
+  });
+
+  test('a franc amount with a point (Rz. 514, 543: Fr. 327.65) is left as typed by number.group: a known limit', () => {
+    const on = { enable: ['number.group'] };
+    // The point marks rappen only in money; the engine does not tell amounts apart, so the
+    // number is not grouped rather than grouped with the wrong decimal mark.
+    expect(t('Fr. 1234567.50', on)).toBe('Fr. 1234567.50');
+    expect(t('Fr. 327.65', on)).toBe('Fr. 327.65');
+    expect(t('Fr. 1 234 567.50', on)).toBe('Fr. 1~234~567.50');
+  });
+
+  test('a no-break space between a figure and % or € (Rz. 554, 539, 540)', () => {
+    expect(t('6% und 49€')).toBe('6~% und 49~€');
+    // Known gap: Rz. 555 writes a compound without the space (6%-Anteil); the engine sets one.
+    expect(t('6%-Anteil')).toBe('6~%-Anteil');
   });
 
   test('dialogue is quoted: a paragraph that opens with a dash is left alone', () => {

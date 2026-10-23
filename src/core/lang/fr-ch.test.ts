@@ -20,11 +20,19 @@ describe('French (Switzerland)', () => {
     expect(t("l'homme et l'atelier d'été")).toBe('l’homme et l’atelier d’été');
   });
 
-  test('number.group (opt-in) groups digits with a no-break space; the decimal mark is a point', () => {
+  test('number.group (opt-in) groups digits with a no-break space; the decimal mark is a comma (Instructions ch. 4)', () => {
     const on = { enable: ['number.group'] };
     expect(t('1234567')).toBe('1234567');
     expect(t('1234567', on)).toBe('1~234~567');
-    expect(t('CHF 1234567.50', on)).toBe('CHF~1~234~567.50');
+    expect(t('55000 et 1700', on)).toBe('55~000~et 1700');
+    expect(t('1234567,50', on)).toBe('1~234~567,50');
+  });
+
+  test('a decimal point is not the Swiss French mark: the number is left as typed by number.group', () => {
+    const on = { enable: ['number.group'] };
+    // The French instructions set no point between francs and centimes (23 fr. 50, not fr. 50.-);
+    // the engine does not tell money from other numbers, so a point leaves the number ungrouped.
+    expect(t('CHF 1234567.50', on)).toBe('CHF~1234567.50');
   });
 
   test('% and € stand apart from the number, as in French', () => {
