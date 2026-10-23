@@ -61,6 +61,21 @@ function orphanLetters(pattern: RegExp): string {
   return letters ? [...letters].join(' ') : `pattern ${code(pattern.source)}`;
 }
 
+/** A space character by name: the pack's highPunctuation holds the characters themselves. */
+const SPACE_NAMES: Readonly<Record<string, string>> = {
+  '\u00A0': 'no-break space (U+00A0)',
+  '\u202F': 'narrow no-break space (U+202F)',
+};
+const spaceName = (space: string) =>
+  SPACE_NAMES[space] ?? `U+${space.codePointAt(0)?.toString(16).toUpperCase().padStart(4, '0')}`;
+/** What `space.high-punctuation` sets in the pack. */
+const highSetting = (p: LangPack) =>
+  p.highPunctuation
+    ? `${p.highPunctuation.colon ? spaceName(p.highPunctuation.colon) : 'none'} before \`:\`, ${
+        p.highPunctuation.others ? spaceName(p.highPunctuation.others) : 'none'
+      } before \`; ! ?\`, after a letter or digit`
+    : 'none';
+
 export function renderPack(pack: LangPack): string {
   const out: string[] = [
     `# ${pack.name}`,
@@ -121,7 +136,7 @@ export function renderPack(pack: LangPack): string {
     }.`,
     `- A no-break space between a number and %: ${pack.percentSpace ? 'yes' : 'no'}.`,
     `- A no-break space between a number and € after it: ${pack.currencySpace ? 'yes' : 'no'}.`,
-    `- A space kept before \`: ; ! ?\` (\`space.before-punctuation\`, opt-in): ${pack.spaceBeforeHigh ? 'yes' : 'no'}.`,
+    `- The space before \`:\` and before \`; ! ?\` (\`space.high-punctuation\`; the opt-in \`space.before-punctuation\` keeps it): ${highSetting(pack)}.`,
     `- A bare temperature without the degree sign (\`20 C\`) read as one (\`symbol.degree\`, opt-in): ${pack.bareTemperature ? 'yes' : 'no'}.`,
   );
   const lists = pack.abbreviations;

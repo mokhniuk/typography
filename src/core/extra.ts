@@ -14,7 +14,7 @@ const NOT_BEFORE_SPACES = /[\s([{“"«‘„]/;
  * Removes a space before , . ; : ! ? ). Not at a line start, not before an ellipsis, a decimal
  * (` .5`), a file extension (` .gitignore`), `!=` or `??`, not a spaced time or ratio (`10 : 30`),
  * not an emoticon (` :)`, ` ;-)`), and not before `: ; ! ?` when `keepHigh` (a language that sets a
- * space there, French: the pack's `spaceBeforeHigh`).
+ * space there, French: the pack's `highPunctuation`).
  *
  * Was `text.replace(/(?<=[^\s(\[{“"«‘„])[ \t]+([,.;:!?)])/gu, …)`: a lookbehind opening the pattern is
  * tried at every position (16 to 20 ms per MB). The pair "space, mark" is found first, the run of

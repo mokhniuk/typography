@@ -16,7 +16,7 @@ import { typesetHtml as set } from './html.ts';
  * (`&mdash; &laquo; &hellip;` …) and numeric references are read as the characters
  * they stand for, so `&quot;x&quot;` is a quotation. In a block that changes, text
  * is written back as Unicode characters, with `& < >` escaped and, by default, a
- * no-break space as `&nbsp;` (so it stays visible in source); use UTF-8. Any other
+ * no-break space as `&nbsp;` and a narrow one as `&#8239;` (so they stay visible in source); use UTF-8. Any other
  * entity (`&copy;`, `&euro;`) is kept as it was.
  *
  * Not done: the `lang` attribute is not read (pass `lang`), and a tag is not told
@@ -24,7 +24,7 @@ import { typesetHtml as set } from './html.ts';
  * alone rather than repaired.
  *
  * `nbsp` (a `TypographyConfig` field, read by this mode only) is how a no-break space is written in
- * a block that changes: `entity` (`&nbsp;`, the default) or the character.
+ * a block that changes: `entity` (`&nbsp;`, and `&#8239;` for the narrow one; the default) or the character.
  */
 export type HtmlOptions = ModeOptions;
 

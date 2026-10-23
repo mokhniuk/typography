@@ -27,7 +27,7 @@ A quotation nested deeper than the levels listed starts over from the first.
 - Short words kept with the next word (`space.short-word`, on by default; the pack's own list): `do` `od` `vo` `na` `so` `za` `po` `pre` `pri` `nad` `pod` `bez`.
 - A no-break space between a number and %: no.
 - A no-break space between a number and € after it: no.
-- A space kept before `: ; ! ?` (`space.before-punctuation`, opt-in): no.
+- The space before `:` and before `; ! ?` (`space.high-punctuation`; the opt-in `space.before-punctuation` keeps it): none.
 - A bare temperature without the degree sign (`20 C`) read as one (`symbol.degree`, opt-in): no.
 - Abbreviations: no list.
 

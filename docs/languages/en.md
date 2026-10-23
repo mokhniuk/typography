@@ -29,7 +29,7 @@ An apostrophe before a dropped-letter word is not a quotation mark: `'em`, `'til
 - Short words kept with the next word (`space.short-word`, on by default; the pack's own list): `to` `of` `in` `on` `at` `by` `as` `or` `if` `an` `the` `and` `for`.
 - A no-break space between a number and %: no.
 - A no-break space between a number and € after it: no.
-- A space kept before `: ; ! ?` (`space.before-punctuation`, opt-in): no.
+- The space before `:` and before `; ! ?` (`space.high-punctuation`; the opt-in `space.before-punctuation` keeps it): none.
 - A bare temperature without the degree sign (`20 C`) read as one (`symbol.degree`, opt-in): yes.
 
 ### Abbreviations

@@ -222,6 +222,42 @@ add({
   expect: 'a no-break space before the dash, so a line never starts with it',
   pass: matches(new RegExp(`Stone${NBSP}[–—]`)),
 });
+// French high punctuation (Lacroux, Orthotypographie; OQLF): a no-break space before : and a
+// narrow one before ; ! ?. Either no-break space passes (U+00A0 before ; ! ? is the other accepted
+// form); a plain space, which can break a line before the mark, does not.
+const NB = `[${NBSP}${NNBSP}]`;
+add({
+  id: 'nbsp-high-punctuation-fr',
+  group: 'No-break spaces',
+  lang: 'fr',
+  input: 'Pourquoi? Attention! Voici: le plan; sinon rien.',
+  expect: 'a no-break space before ? ! : ;',
+  pass: matches(new RegExp(`Pourquoi${NB}\\?.*Attention${NB}!.*Voici${NB}:.*plan${NB};`)),
+});
+add({
+  id: 'nbsp-high-punctuation-typed-fr',
+  group: 'No-break spaces',
+  lang: 'fr',
+  input: 'Pourquoi ? Voici : le plan',
+  expect: 'the typed space before ? and : becomes a no-break space',
+  pass: matches(new RegExp(`Pourquoi${NB}\\? Voici${NB}: le plan`)),
+});
+add({
+  id: 'nbsp-high-punctuation-time-fr',
+  group: 'No-break spaces',
+  lang: 'fr',
+  input: 'Rendez-vous à 10:30, écran 16:9.',
+  expect: 'no space inside a time or a ratio',
+  pass: has('10:30', '16:9'),
+});
+add({
+  id: 'nbsp-high-punctuation-run-fr',
+  group: 'No-break spaces',
+  lang: 'fr',
+  input: 'Quoi?! Vraiment...?',
+  expect: 'one no-break space before ?!, none between the marks or after the ellipsis',
+  pass: matches(new RegExp(`Quoi${NB}\\?! Vraiment(…|\\.\\.\\.)\\?$`)),
+});
 
 // Abbreviations
 add({

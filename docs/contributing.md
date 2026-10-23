@@ -79,7 +79,7 @@ The pack:
 | `sentenceDash`, `sentenceDashLiterary` | The spaced dash of a break in the sentence, when it is not an em dash. |
 | `percentSpace` | A no-break space between a number and a `%` typed against it (`5%` becomes `5~%`). |
 | `currencySpace` | A no-break space between a number and a `€` typed after it (`49€` becomes `49~€`); `€49` is never touched. Set it apart from `percentSpace`: a style guide may space `%` and write `€30` or only the code `EUR`. |
-| `spaceBeforeHigh` | The language keeps a space before `: ; ! ?` (French): the opt-in rule `space.before-punctuation` leaves it there instead of removing it. `fr` only; `fr-CH` copies fields one by one and leaves it off. |
+| `highPunctuation` | The space the language sets before high punctuation: `colon` before `:`, `others` before `; ! ?` (French: U+00A0 and U+202F). `space.high-punctuation` sets it after a letter or digit, replacing a typed space; the opt-in `space.before-punctuation` keeps a space typed before those marks instead of removing it. `fr` only; `fr-CH` copies fields one by one and leaves it off (no Swiss French source read). |
 | `bareTemperature` | The opt-in rule `symbol.degree` reads a bare temperature with no degree sign (`20 C`) as one, after a word that is not a label (the label list is English); without it, only a number with the degree sign is read. `en` only. |
 | `dialogueDash` | `{ mark, attached? }`: a paragraph opening with a dash is a line of dialogue, in both registers; the dash, and no space after it if `attached`. Only where a style guide says the language writes dialogue that way. |
 | `turnedPairs` | Quote pairs written turned the other way (German `»…«`), read by position; they replace the usual pair of that shape. |

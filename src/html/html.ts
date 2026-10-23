@@ -179,12 +179,15 @@ function decode(text: string, kept: string[]): string {
 
 function encode(text: string, nbsp: 'entity' | 'char'): string {
   const escaped = text
-    // Any `&` before a no-break space is escaped (`&nbsp;` in the default mode), so `&&nbsp;` is never written; `space.operator` is what puts one there.
+    // Any `&` before a no-break space, plain or narrow, is escaped (`&nbsp;` and `&#8239;` in the default mode), so `&&nbsp;` is never written; `space.operator` is what puts one there.
     // The same pattern also escapes an `&` before an ASCII letter or `#`, which would otherwise read as the start of an entity (pre-existing).
-    .replace(/&(?=[#A-Za-z\u00a0])/g, '&amp;')
+    .replace(/&(?=[#A-Za-z\u00a0\u202f])/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;');
-  return nbsp === 'entity' ? escaped.replaceAll(NBSP, '&nbsp;') : escaped;
+  // The narrow no-break space (U+202F, French `space.high-punctuation`) has no named entity: `&#8239;`.
+  return nbsp === 'entity'
+    ? escaped.replaceAll(NBSP, '&nbsp;').replaceAll('\u202F', '&#8239;')
+    : escaped;
 }
 
 type Piece = { text: string } | { unit: string };
