@@ -155,7 +155,7 @@ What `npm install` (or a git dependency) puts on disk for one tool: its package 
 
 | Tool | Packages installed | Install footprint | Licence | Types | Format | Version published |
 |---|---|---|---|---|---|---|
-| typography-engine | 1 (react is an optional peer) | 483 KB (136 files) | MIT | yes | ESM | not published yet (0.16.0) |
+| typography-engine | 1 (react is an optional peer) | 483 KB (136 files) | MIT | yes | ESM | 2026-10-23 (0.16.0) |
 | typograf | 1 | 604 KB | MIT | yes | ESM and CommonJS | 2026-08-14 (7.8.0) |
 | typopo | 1 | 105 KB | MIT | yes | ESM and CommonJS | 2026-05-25 (3.1.0) |
 | richtypo | 1 | 22 KB | MIT | yes | ESM | 2026-04-27 (8.0.0) |
