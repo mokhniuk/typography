@@ -9,7 +9,7 @@ The package is `@mokhniuk/typography`. Website, docs and playground: [typography
 ![26 languages](https://img.shields.io/badge/languages-26-4c72b0)
 ![Zero dependencies](https://img.shields.io/badge/dependencies-0-2ca02c)
 ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6)
-![1 MB in 30 ms](https://img.shields.io/badge/1%20MB%20of%20text-30%20ms-2ca02c)
+![1 MB in 74 ms](https://img.shields.io/badge/1%20MB%20of%20text-74%20ms-2ca02c)
 
 ```diff
 - Ada said: "The sign read 'Closed' again" - and laughed... We're used to it by now.
@@ -47,23 +47,23 @@ Passed / scored; `–` means the tool has no such feature or language, and is no
 | Safety | **33/33** | **33/33** | 28/29 | 11/12 | 9/10 | 17/19 | 7/9 |
 | **Total, all 16 groups** | **242/250** | **250/250** | 131/226 | 85/111 | 68/102 | 126/162 | 53/89 |
 
-Speed, English text in one piece, best of three (typograf is the closest tool in scope):
+Speed, English text in one piece, the median of several runs (typograf is the closest tool in scope; the 0.14.0 run, with the short-word rule on):
 
 | Tool | 10 KB | 100 KB | 1 MB |
 |---|---|---|---|
-| **typography-engine** | **0 ms** | **3 ms** | **30 ms** |
-| typograf | 1 ms | 6 ms | 58 ms |
-| tipograph | 0 ms | 1 ms | 13 ms |
-| smartypants | 0 ms | 1 ms | 10 ms |
-| retext-smartypants | 4 ms | 28 ms | 545 ms |
-| typopo | 20 ms | 1053 ms | 99 s |
-| richtypo | 2493 ms | not run (~248 s) | not run (~7 h) |
+| **typography-engine** | **1 ms** | **8 ms** | **74 ms** |
+| typograf | 1 ms | 11 ms | 115 ms |
+| tipograph | 0 ms | 2 ms | 23 ms |
+| smartypants | 0 ms | 2 ms | 19 ms |
+| retext-smartypants | 6 ms | 49 ms | 2062 ms |
+| typopo | 38 ms | 2084 ms | not run (~208 s) |
+| richtypo | 4866 ms | not run (~484 s) | not run (~13 h) |
 
-The tools that beat it on speed (tipograph, smartypants) score far below it on the checks; typograf, the closest in scope, is about 2× slower on large text, and typopo and richtypo slow down quadratically.
+The tools that beat it on speed (tipograph, smartypants) score far below it on the checks; typograf, the closest in scope, is about 1.5× slower on large text, and typopo and richtypo slow down quadratically.
 
 ## What is in the box
 
-- **33 rules** — quotes, apostrophes, dashes, ranges, no-break spaces, symbols, numbers, money, phone numbers; 22 on by default, 11 opt-in ([docs/rules.md](docs/rules.md)).
+- **33 rules** — quotes, apostrophes, dashes, ranges, no-break spaces, symbols, numbers, money, phone numbers; 23 on by default, 10 opt-in ([docs/rules.md](docs/rules.md)).
 - **26 languages** — the 24 official EU languages, `uk` and `ch`, each one pack with its quote marks, dash habits, elisions and abbreviations ([docs/languages.md](docs/languages.md)).
 - **Two registers** — `display` for interface and marketing text, `literary` for book-like text.
 - **Every format** — plain text, HTML, Markdown, hast trees (rehype plugin), React components, the DOM, a CLI.

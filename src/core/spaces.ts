@@ -248,10 +248,12 @@ function shortWordPattern(lang: Lang): RegExp | null {
 }
 
 /**
- * A short word (two or three letters) travels with the word after it: `to~the shop`. For titles and
- * headings, which is why the rule is off by default — the sources read say such a word may stay at a
- * line end in body text. Never more than two words in a row: a short word that follows one this rule
- * has just bound stays free, so a chain cannot grow into a whole line.
+ * A short word (two or three letters) travels with the word after it: `to~the shop`. On by default
+ * since 0.14.0 (it was opt-in, for titles): the sources read say such a word MAY stay at a line end in
+ * body text and must not in a title, and this engine's default register is display text, where a line
+ * ending on "to" reads as a stumble; `disable: ['space.short-word']` restores the body-text convention.
+ * Never more than two words in a row: a short word that follows one this rule has just bound stays
+ * free, so a chain cannot grow into a whole line.
  */
 export function shortWords(text: string, lang: Lang): string {
   const pattern = shortWordPattern(lang);

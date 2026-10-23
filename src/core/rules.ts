@@ -336,8 +336,7 @@ export const RULES: readonly Rule[] = [
   {
     id: 'space.short-word',
     category: 'tradition',
-    about: `${names(PACKS.filter((pack) => 'shortWords' in pack && pack.shortWords?.length))}: a short word of two or three letters stays with the word after it (to~the shop), for titles and headings; never more than two words in a row`,
-    defaultOn: false,
+    about: `${names(PACKS.filter((pack) => 'shortWords' in pack && pack.shortWords?.length))}: a short word of two or three letters stays with the word after it (to~the shop); never more than two words in a row`,
     when: (_text, { lang }) => SHORT_WORDS[lang] !== undefined,
     apply: (text, { lang }) => shortWords(text, lang),
   },
