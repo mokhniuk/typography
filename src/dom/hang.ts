@@ -1,4 +1,4 @@
-import { HANG_SCRIPT } from './script';
+import { HANG_SCRIPT } from './script.ts';
 
 /**
  * Hangs the punctuation marked by `HangText` (or `markHangs`) under `root`

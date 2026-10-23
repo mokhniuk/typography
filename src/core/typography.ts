@@ -50,11 +50,11 @@
  * end (see `hangPieces` and `hangPunctuation` in ../dom).
  */
 
-import type { TypographyConfig } from './config';
-import { type DiffRun, diff } from './diff';
-import { DEFAULT_RULES, type Rule, selectRules } from './rules';
-import type { Context, Lang, QuoteStyle, Register } from './types';
-import { shield } from './zones';
+import type { TypographyConfig } from './config.ts';
+import { type DiffRun, diff } from './diff.ts';
+import { DEFAULT_RULES, type Rule, selectRules } from './rules.ts';
+import type { Context, Lang, QuoteStyle, Register } from './types.ts';
+import { shield } from './zones.ts';
 
 export type Change = {
   /** The id of the rule that made it. */

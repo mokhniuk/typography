@@ -1,4 +1,4 @@
-import type { Lang } from './lang';
+import type { Lang } from './lang/index.ts';
 
 /** A no-break space. */
 export const NBSP = '\u00A0';
@@ -16,10 +16,11 @@ export type Register = 'display' | 'literary';
 
 /**
  * Which quote marks to set. `language` (the default) is the language's own table, or its
- * literary one in the literary register. `us` is “…” with ‘…’ inside for any language, and takes
- * precedence over both the table and the register.
+ * literary one in the literary register. `us` is “…” with ‘…’ inside for any language, and
+ * `guillemets` is «…» with „…“ inside and ‚…‘ third (this package's house style); both take
+ * precedence over the table and the register.
  */
-export type QuoteStyle = 'language' | 'us';
+export type QuoteStyle = 'language' | 'us' | 'guillemets';
 
 /** What a rule needs to know besides the text. */
 export type Context = {

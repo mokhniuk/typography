@@ -1,5 +1,11 @@
-import { LANGS, type Lang, type ModeOptions, type QuoteStyle, typesetBlock } from '../core';
-import { BLOCK, RAW_BLOCK, RAW_INLINE } from '../shared/elements';
+import {
+  LANGS,
+  type Lang,
+  type ModeOptions,
+  type QuoteStyle,
+  typesetBlock,
+} from '../core/index.ts';
+import { BLOCK, RAW_BLOCK, RAW_INLINE } from '../shared/elements.ts';
 
 /**
  * A rehype plugin (and a function for any hast tree) that typesets the text of an
@@ -39,12 +45,27 @@ const isText = (node: Node): node is Text => node.type === 'text' && typeof node
 /** What an element's `lang` sets for its subtree: the language, and the quote style that goes with it. */
 type Setting = { lang: Lang; quoteStyle: QuoteStyle | undefined };
 
-/** The setting an element declares, if its language is one of ours: `uk-UA` is `uk`. The quote style stays the option's. */
+/** Pack codes by their lower-case form: a language tag is matched without regard to case. */
+const BY_TAG = new Map<string, Lang>(LANGS.map((lang) => [lang.toLowerCase(), lang]));
+
+/**
+ * The pack of a language tag: the longest run of its leading subtags that is a pack code, so
+ * `de-CH` and `de-ch-1996` are `de-CH`, `de-AT` is `de` and `uk-UA` is `uk`.
+ */
+function packOf(tag: string): Lang | undefined {
+  const subtags = tag.toLowerCase().split('-');
+  for (let n = subtags.length; n > 0; n--) {
+    const lang = BY_TAG.get(subtags.slice(0, n).join('-'));
+    if (lang) return lang;
+  }
+  return undefined;
+}
+
+/** The setting an element declares, if its language is one of ours (see `packOf`). The quote style stays the option's. */
 function declared(element: Element, quoteStyle: QuoteStyle | undefined): Setting | null {
   const raw = element.properties?.lang ?? element.properties?.xmlLang;
   if (typeof raw !== 'string') return null;
-  const tag = raw.toLowerCase();
-  const lang = LANGS.find((l) => l === tag.split('-')[0]);
+  const lang = packOf(raw);
   if (!lang) return null;
   return { lang, quoteStyle };
 }

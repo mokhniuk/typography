@@ -1,4 +1,4 @@
-import { type ModeOptions, typesetBlock } from '../core';
+import { type ModeOptions, typesetBlock } from '../core/index.ts';
 
 /**
  * Typesets plain text a paragraph at a time. Paragraphs are separated by blank
@@ -15,7 +15,10 @@ function setParagraph(paragraph: string, options: ModeOptions): string {
   for (let i = 0; i < parts.length; i += 2) {
     const text = parts[i] ?? '';
     const lead = /^[ \t]*/.exec(text)?.[0] ?? '';
-    const content = text.slice(lead.length).replace(/[ \t]+$/, '');
+    // Backward scan: the regex `/[ \t]+$/` was tried from every space of a long run (quadratic).
+    let end = text.length;
+    while (end > lead.length && (text[end - 1] === ' ' || text[end - 1] === '\t')) end--;
+    const content = text.slice(lead.length, end);
     lines.push({
       lead,
       content,

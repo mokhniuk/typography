@@ -1,5 +1,5 @@
-import type { DialogueDash } from './lang/pack';
-import { NBSP } from './types';
+import type { DialogueDash } from './lang/pack.ts';
+import { NBSP } from './types.ts';
 
 /**
  * Whether `a`-`b` is a range of numbers rather than an identifier, a partial date

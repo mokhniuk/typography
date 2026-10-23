@@ -10,10 +10,10 @@ import {
   useState,
   useSyncExternalStore,
 } from 'react';
-import type { Change, Lang, QuoteStyle, Register, Rule, TypographyConfig } from '../core';
-import { insertedGlyphs } from '../core';
-import { hangPunctuation, hangScript, missingIn } from '../dom';
-import { TypographyContext } from './context';
+import type { Change, Lang, QuoteStyle, Register, Rule, TypographyConfig } from '../core/index.ts';
+import { insertedGlyphs } from '../core/index.ts';
+import { hangPunctuation, hangScript, missingIn } from '../dom/index.ts';
+import { TypographyContext } from './context.ts';
 
 /**
  * Sends the hanging pass inline, to run on the parent of this element as the page is

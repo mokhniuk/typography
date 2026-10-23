@@ -1,2 +1,2 @@
-export * from './core';
-export { type TextOptions, typesetText } from './text';
+export * from './core/index.ts';
+export { type TextOptions, typesetText } from './text/index.ts';

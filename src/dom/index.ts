@@ -1,3 +1,3 @@
-export { fontOf, glyphStatus, missingGlyphs, missingIn, supports } from './glyphs';
-export { hangPunctuation, hangScript } from './hang';
-export { hangStyle, markHangs } from './mark';
+export { fontOf, glyphStatus, missingGlyphs, missingIn, supports } from './glyphs.ts';
+export { hangPunctuation, hangScript } from './hang.ts';
+export { hangStyle, markHangs } from './mark.ts';

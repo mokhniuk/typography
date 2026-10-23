@@ -2,9 +2,9 @@
  * The opt-in rules (`defaultOn: false` in rules.ts): each runs only when named in `enable`.
  * Their guards err towards leaving text alone; the known limits are in docs/limits.md.
  */
-import { before, isLetterOrNumber } from './scan';
-import type { Lang } from './types';
-import { NBSP } from './types';
+import { before, isLetterOrNumber } from './scan.ts';
+import type { Lang } from './types.ts';
+import { NBSP } from './types.ts';
 
 /** Languages that set a space before `: ; ! ?` (French): the space is correct there, not a fault. */
 const SPACE_BEFORE_HIGH = new Set<Lang>(['fr']);

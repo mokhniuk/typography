@@ -1,6 +1,6 @@
-import { LANGS } from './profiles';
-import { type Rule, selectRules } from './rules';
-import type { Lang, QuoteStyle, Register } from './types';
+import { LANGS } from './profiles.ts';
+import { type Rule, selectRules } from './rules.ts';
+import type { Lang, QuoteStyle, Register } from './types.ts';
 
 /**
  * A project's typography in one object: the options every function, component and the command line
@@ -79,7 +79,7 @@ export function checkConfig(value: unknown): TypographyConfig {
   const { lang, register, quoteStyle, disable, enable, rules, avoid, nbsp, hangAmount } = config;
   if (lang !== undefined) oneOf('lang', lang, LANGS);
   if (register !== undefined) oneOf('register', register, ['display', 'literary']);
-  if (quoteStyle !== undefined) oneOf('quoteStyle', quoteStyle, ['language', 'us']);
+  if (quoteStyle !== undefined) oneOf('quoteStyle', quoteStyle, ['language', 'us', 'guillemets']);
   if (nbsp !== undefined) oneOf('nbsp', nbsp, ['entity', 'char']);
   if (avoid !== undefined && typeof avoid !== 'string') {
     throw new Error(

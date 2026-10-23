@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react';
-import { hangPieces } from '../core';
-import { hangStyle } from '../dom/mark';
+import { hangPieces } from '../core/index.ts';
+import { hangStyle } from '../dom/mark.ts';
 
 /**
  * Text that already went through `typographic`, with the punctuation that hangs wrapped in the

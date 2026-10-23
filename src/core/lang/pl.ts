@@ -1,5 +1,5 @@
-import { ELISIONS_EN } from './en';
-import type { LangPack } from './pack';
+import { ELISIONS_EN } from './en.ts';
+import type { LangPack } from './pack.ts';
 
 export const pl = {
   code: 'pl',

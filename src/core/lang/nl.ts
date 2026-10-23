@@ -1,4 +1,4 @@
-import type { LangPack } from './pack';
+import type { LangPack } from './pack.ts';
 
 export const nl = {
   code: 'nl',

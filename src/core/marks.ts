@@ -1,4 +1,4 @@
-import { before, isLetter } from './scan';
+import { before, isLetter } from './scan.ts';
 
 const SPACE_OR_OPENER = /[\s([]/;
 

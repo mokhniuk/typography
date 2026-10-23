@@ -1,14 +1,14 @@
-export { checkConfig, defineConfig, type TypographyConfig } from './config';
+export { checkConfig, defineConfig, type TypographyConfig } from './config.ts';
 export {
   CURRENCY_CODES,
   CURRENCY_SIGNS,
   CURRENCY_WORDS,
-} from './currency';
-export { type DiffRun, diff } from './diff';
-export { insertedCharacters, insertedGlyphs, ruleGlyphs } from './glyphs';
-export { type HangPiece, hangPieces, splitHangs, type TextPart } from './hang';
-export { type LangPack, type Level, PACK, PACKS } from './lang';
-export { LANGS, REGISTERS } from './profiles';
+} from './currency.ts';
+export { type DiffRun, diff } from './diff.ts';
+export { insertedCharacters, insertedGlyphs, ruleGlyphs } from './glyphs.ts';
+export { type HangPiece, hangPieces, splitHangs, type TextPart } from './hang.ts';
+export { type LangPack, type Level, PACK, PACKS } from './lang/index.ts';
+export { LANGS, REGISTERS } from './profiles.ts';
 export {
   addRule,
   DEFAULT_RULES,
@@ -20,8 +20,8 @@ export {
   type RulePosition,
   selectRules,
   without,
-} from './rules';
-export { type Context, type Lang, NBSP, type QuoteStyle, type Register } from './types';
+} from './rules.ts';
+export { type Context, type Lang, NBSP, type QuoteStyle, type Register } from './types.ts';
 export {
   type Change,
   explain,
@@ -30,4 +30,4 @@ export {
   type TypographicOptions,
   typesetBlock,
   typographic,
-} from './typography';
+} from './typography.ts';
