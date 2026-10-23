@@ -627,7 +627,7 @@ after   On 21~September, 15~people paid 5~%.
 
 ## `space.percent`
 
-In a language that sets it (percentSpace): a no-break space between a number and % (5 %); with currencySpace, also before € after the number (49 €)
+In languages whose pack sets percentSpace: a no-break space between a number and % (5 %); where the pack also sets currencySpace, before € after the number too (49 €)
 
 Languages with `percentSpace`: German, French, German (Switzerland), French (Switzerland), Czech, Spanish, Italian, Portuguese, Irish, Maltese, Bulgarian, Croatian, Slovenian, Lithuanian, Latvian, Estonian, Danish, Finnish and Greek.
 
@@ -755,7 +755,7 @@ The `’n’` of rock ’n’ roll is an "and" with its letters dropped, so it i
 
 ## `space.short-word`
 
-In a language with a list (shortWords): a short word of two or three letters stays with the word after it (to~the shop); never more than two words in a row
+In languages whose pack lists shortWords: a short word of two or three letters stays with the word after it (to~the shop); never more than two words in a row
 
 Languages with `shortWords`: English, Ukrainian, Polish, Czech and Slovak.
 
