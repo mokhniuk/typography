@@ -87,8 +87,32 @@ redirects to `/docs/api/` and the page's relative links resolve from there; `abs
 keeps that redirect on the host it was asked for rather than the container's own name; `error_page
 404 /404.html` serves the 404 page for an address that is not there; asset names carry a hash of
 their contents and are cached for a year, while a page is `no-cache` because a deployment rewrites
-it in place. Checked on the built image: every page 200, `/docs/api` 301 to the slash, a deep
+it in place (a `map` from the address to the `Cache-Control` value, set once at the server level;
+see the headers below for why it is not set per location). Checked on the built image: every page 200, `/docs/api` 301 to the slash, a deep
 missing path serving the styled 404 page, `font/woff2` for the fonts and gzip on the stylesheet.
+
+Every response also carries security headers, as defence in depth: no reachable cross-site scripting
+was found, and the headers and their tests keep it so.
+
+- `Content-Security-Policy`: `default-src 'self'`, with `script-src 'self'` plus the SHA-256 hashes of
+  the only two inline scripts (the theme script in each page head and the hang script the build
+  appends), `object-src 'none'`, and `base-uri`, `form-action`, `frame-ancestors` and the frame,
+  font and connect sources limited to `'self'`.
+- `X-Content-Type-Options: nosniff`, `X-Frame-Options: SAMEORIGIN`, `Referrer-Policy:
+  strict-origin-when-cross-origin` and `Permissions-Policy: camera=(), microphone=(), geolocation=()`.
+- No `Strict-Transport-Security`: the container speaks plain HTTP and the proxy in front of it owns TLS.
+
+`style-src` allows `'unsafe-inline'` because the hanging punctuation is placed with `style`
+attributes, and `img-src` allows `data:` because the select arrow in `style.css` is a data URI;
+scripts get no such exception. `apps/website/nginx.test.ts` hashes the inline scripts of the generated
+pages and fails when either changes; the fix is to replace that hash in `nginx.conf`. The headers are
+all set at the server level because a location that sets any header drops every server-level one,
+which is why `Cache-Control` is a `map` and not an `add_header` per location.
+
+The playground's HTML preview shows pasted HTML in a frame with `sandbox="allow-same-origin"`.
+`typesetHtml` is not a sanitizer, so the sandbox is the barrier: never render its output outside that
+frame and never add `allow-scripts` to it (`playground/preview.test.ts` pins both). The frame inherits
+the page's policy, so pasted HTML cannot load a remote image or script either.
 
 - Fonts: KyivType Sans (Regular, Medium, Bold; Latin and Cyrillic) is self-hosted in `apps/website/fonts/KyivType/`, with Poppins (Latin and Latin Extended, SIL OFL) as the fallback; see `fonts/README.md`.
 - Landing copy is a draft for the author to review; `data-raw` marks text that must show exactly as written, so the build's own typesetting skips it.
