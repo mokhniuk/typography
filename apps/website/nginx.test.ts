@@ -2,15 +2,19 @@ import { describe, expect, test } from 'bun:test';
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { markHangsInPage } from './build/hang';
 import { generatedPages } from './build/pages';
-import { source } from './build/plugin';
-import { fill, SITE_ROOT } from './build/site';
+import { finish, source } from './build/plugin';
+import { SITE_ROOT } from './build/site';
 
-const conf = readFileSync(join(SITE_ROOT, 'nginx.conf'), 'utf8');
+// Comment lines are dropped first, so a directive that was commented out cannot satisfy a check.
+export const uncommented = (text: string): string => text.replace(/^\s*#.*$/gm, '');
 
-const header = (name: string): string | undefined =>
-  new RegExp(`add_header ${name} "([^"]*)" always;`).exec(conf)?.[1];
+const conf = uncommented(readFileSync(join(SITE_ROOT, 'nginx.conf'), 'utf8'));
+
+export const headerIn = (text: string, name: string): string | undefined =>
+  new RegExp(`add_header ${name} "([^"]*)" always;`).exec(uncommented(text))?.[1];
+
+const header = (name: string): string | undefined => headerIn(conf, name);
 
 const policy = (): Map<string, string[]> => {
   const directives = new Map<string, string[]>();
@@ -21,14 +25,18 @@ const policy = (): Map<string, string[]> => {
   return directives;
 };
 
-// The pages that carry an inline script: the theme script sits in every head, and the build adds the
-// hang script to a page with `data-hanging` content (`finish` in build/plugin.ts, by `markHangsInPage`).
+// The pages that carry an inline script, as the build emits them: every page goes through `finish`
+// (build/plugin.ts), so a build step that alters an inline script changes what is hashed here too.
+// The paths are the ones `website()` gives it: generated pages by their own path, the hand-written
+// ones by their directory.
 const pages = [
-  ...generatedPages().values(),
-  ...['index.html', 'playground/index.html', 'font-checker/index.html'].map((file) =>
-    fill(source(file)),
-  ),
-].map(markHangsInPage);
+  ...[...generatedPages()].map(([path, html]) => finish(html, path)),
+  ...[
+    ['', 'index.html'],
+    ['playground/', 'playground/index.html'],
+    ['font-checker/', 'font-checker/index.html'],
+  ].map(([path, file]) => finish(source(file as string), path as string)),
+];
 
 // A script block with a `type` other than JavaScript (JSON-LD) is data: browsers never run it and
 // the policy ignores it.
@@ -45,6 +53,23 @@ const hash = (script: string): string =>
   `'sha256-${createHash('sha256').update(script, 'utf8').digest('base64')}'`;
 
 describe('security headers', () => {
+  test('a commented-out directive is not found', () => {
+    const text =
+      '# add_header Content-Security-Policy "x" always;\n  # add_header X-Frame-Options "DENY" always;\n';
+    expect(headerIn(text, 'Content-Security-Policy')).toBeUndefined();
+    expect(
+      headerIn(`${text}add_header X-Frame-Options "SAMEORIGIN" always;`, 'X-Frame-Options'),
+    ).toBe('SAMEORIGIN');
+  });
+
+  test('no page has an inline event handler or a javascript: link, which script-src would not cover', () => {
+    for (const html of pages) {
+      const markup = html.replace(/<script[\s\S]*?<\/script>/gi, '');
+      expect(markup).not.toMatch(/\son[a-z]+\s*=\s*["']/i);
+      expect(markup).not.toMatch(/href=["']javascript:/i);
+    }
+  });
+
   test('every inline script is allowed by its hash', () => {
     const allowed = policy().get('script-src') ?? [];
     const scripts = new Set(pages.flatMap(inlineScripts));

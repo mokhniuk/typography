@@ -44,7 +44,7 @@ const preload = (path: string): string =>
   ).join('\n');
 
 /** What every page goes through: the shared header and footer, the numbers, the engine's own typesetting. */
-function finish(html: string, path: string): string {
+export function finish(html: string, path: string): string {
   const filled = fill(html)
     .replace('<!--header-->', () => header(path))
     .replace('<!--footer-->', () => footer(path))
