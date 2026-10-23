@@ -17,6 +17,7 @@ import { typesetHtml } from '../../../src/html';
 import { typesetMarkdown } from '../../../src/markdown';
 import { typesetText } from '../../../src/text';
 import { configText, fromConfig, quoteStyleOf } from './config-io';
+import { escapeHtml } from './escape';
 import { example, exampleIn, type Mode, type Size } from './examples';
 import {
   allOn,
@@ -222,8 +223,6 @@ el('rulesAll').addEventListener('click', () => {
   schedule();
 });
 
-const escapeHtml = (text: string) =>
-  text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const visible = (text: string) => text.replaceAll(' ', '⍽');
 
 function convert(): { output: string; changes: Change[] } {
