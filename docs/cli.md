@@ -4,7 +4,7 @@
 typo [options] [file...]
 ```
 
-The `typo` bin points at `src/cli/main.ts` (`#!/usr/bin/env node`). It needs Bun today, because the sources ship as TypeScript; from the npm release it runs on Node 20 or later as well, and a `--config` file written in TypeScript then needs Bun or a Node that strips types (22.18 or later, 24). Without linking the bin, run `bun run src/cli/main.ts ...` from the package folder (or `bun /path/to/typography/src/cli/main.ts`).
+The `typo` bin points at `src/cli/main.ts` (`#!/usr/bin/env bun`) and needs Bun, because the sources ship as TypeScript. A compiled build and a bin that runs on Node come with the npm release. Without linking the bin, run `bun run src/cli/main.ts ...` from the package folder (or `bun /path/to/typography/src/cli/main.ts`).
 
 It typesets text, HTML or Markdown with the same engine as the library functions (`typesetText`, `typesetHtml`, `typesetMarkdown`).
 

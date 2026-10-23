@@ -195,7 +195,7 @@ out(
 );
 out();
 out(
-  "**Read this with care.** The cases were written by the author of one of the tools. They are checks of what is right (a German quotation is „…“ or »…«; an ISO date is not a range), not of one tool's house style, and a tool's default that differs from them is reported as a failure, including this package's own `«…»` for English. They cover what typography tools claim to do, not everything a typographer cares about.",
+  "**Read this with care.** The cases were written by the author of one of the tools. They are checks of what is right (a German quotation is „…“ or »…«; an ISO date is not a range), not of one tool's house style, and a tool's default that differs from them is reported as a failure (none of this package's defaults does since 0.15.0, when English became `“…”`). They cover what typography tools claim to do, not everything a typographer cares about.",
 );
 out();
 out('| Tool | Version | Configuration |');
