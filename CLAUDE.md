@@ -33,7 +33,7 @@ Bun project; the package ships compiled ESM with declarations (`bun run build`).
 
 ## Comparison page
 
-The benchmark findings are published as an artifact: https://claude.ai/artifact/4GjMbDUzengRYRAv97de87. Its source is `apps/bench/comparison.html` (untracked, with the benchmark). After every update that changes what it shows (a fixed bug, a new rule or language, new benchmark numbers, a finished backlog item), edit that file to match and republish it to that URL with the Artifact tool (`url` set, so the link stays), without being asked.
+The benchmark findings are published as an artifact: https://claude.ai/artifact/4GjMbDUzengRYRAv97de87. Its source is `apps/bench/comparison.html` (tracked, with the benchmark). After every update that changes what it shows (a fixed bug, a new rule or language, new benchmark numbers, a finished backlog item), edit that file to match and republish it to that URL with the Artifact tool (`url` set, so the link stays), without being asked.
 
 ## Before pushing to main (or opening a PR into it)
 
