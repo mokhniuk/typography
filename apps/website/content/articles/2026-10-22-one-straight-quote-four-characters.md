@@ -26,7 +26,7 @@ Strictly set text uses the prime `′` (U+2032) and double prime `″` (U+2033) 
 
 ## What the right characters buy
 
-Set side by side, the difference is not pedantry, and this example also shows where the engine stops. `"It's 5'10", maybe," she said` comes out as `«It’s 5'10», maybe,» she said`: the apostrophe curls and the foot mark stays, but the inch mark closes the quotation early. That is the known limit above. The workaround is to type the prime yourself: `"It's 5′10″, maybe," she said` becomes `«It’s 5′10″, maybe,» she said`, the engine leaves typed primes alone, and every mark now says what it is.
+Set side by side, the difference is not pedantry, and this example also shows where the engine stops. `"It's 5'10", maybe," she said` comes out as `“It’s 5'10”, maybe,” she said`: the apostrophe curls and the foot mark stays, but the inch mark closes the quotation early. That is the known limit above. The workaround is to type the prime yourself: `"It's 5′10″, maybe," she said` becomes `“It’s 5′10″, maybe,” she said`, the engine leaves typed primes alone, and every mark now says what it is.
 
 ## Try it
 
