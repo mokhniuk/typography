@@ -111,7 +111,7 @@ No quadratic input is known outside the rules since 0.15.0 (the two the probes f
 
 ### Load only the languages used
 
-Every entry point carries all 27 language packs: 57 KB of the 87 KB minified bundle of `/text` (16 of 26 KB brotli), and `/dom` weighs 89 KB as well (check what of the engine hanging punctuation really pulls in). A way to load only the languages used (a pack registry the caller fills, or one entry per language) would bring a one-language bundle near typograf's 15 KB brotli. Numbers from `bun run size` (2026-10-22).
+Every entry point carries all 27 language packs: 57 KB of the 87 KB minified bundle of `/text` (16 of 26 KB brotli), while `/dom` holds only the hanging-punctuation code (7.6 KB minified, 2.4 KB brotli) and carries no pack since 0.16.1. A way to load only the languages used (a pack registry the caller fills, or one entry per language) would bring a one-language bundle near typograf's 15 KB brotli. Numbers from `bun run size` (2026-10-22).
 
 ### A larger real-text benchmark
 
