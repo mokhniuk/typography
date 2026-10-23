@@ -88,7 +88,7 @@ Ten rules are off until named in `enable` (`number.group` is described in the ru
 
 ## Speed
 
-Since 0.2.0 the package is faster than typograf on English text in one piece, and about 3 to 4 times slower than tipograph and smartypants, which do much less (smartypants only quotes, dashes and ellipses; neither has abbreviations or ranges). The benchmark (`apps/bench/RESULTS.md`, generated on the author's machine) reports, for English text in one piece, text mode, the median of several runs (the 0.15.0 run):
+Since 0.2.0 the package is faster than typograf on English text in one piece, and about 3 to 4 times slower than tipograph and smartypants, which do much less (smartypants only quotes, dashes and ellipses; neither has abbreviations or ranges). The benchmark (`apps/bench/RESULTS.md`, generated on the author's machine) reports, for English text in one piece, text mode, the median of several runs (the 0.16.1 run):
 
 | Tool | 10 KB | 100 KB | 1000 KB |
 |---|---|---|---|

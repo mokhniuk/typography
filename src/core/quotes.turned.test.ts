@@ -70,7 +70,7 @@ describe('turned pairs, as set before the rewrite', () => {
 /** The ORIGINAL matcher of quotes.ts, verbatim, with what `setupOf` passed it. */
 const RAW = '„“”‚‘’«»‹›"';
 const BODY = `[^${RAW}]*`;
-const OPEN = '';
+const OPEN = '\ue000';
 const original = (open: string, close: string, before: string) =>
   new RegExp(`(?<=${before})${open}(?=\\S)(${BODY})(?<=\\S)${close}`, 'g');
 const beforeOf = (openers: string) => {

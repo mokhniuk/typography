@@ -130,7 +130,7 @@ console.log(entries.length + ' entries; ' + text + '; ' + html);
     if (!out.includes('«привіт»')) throw new Error(`printed ${JSON.stringify(out)}`);
   });
   const [major = 0, minor = 0] = nodeVersion.replace(/^v/, '').split('.').map(Number);
-  if (major > 22 || (major === 22 && minor >= 18)) {
+  if ((major === 22 && minor >= 18) || (major === 23 && minor >= 6) || major >= 24) {
     writeFileSync(join(project, 'typography.config.ts'), "export default { lang: 'uk' };\n");
     step('typo --config typography.config.ts sets «привіт»', () => {
       const out = sh(typo, ['--config', 'typography.config.ts'], {
@@ -141,7 +141,7 @@ console.log(entries.length + ' entries; ' + text + '; ' + html);
       if (!out.includes('«привіт»')) throw new Error(`printed ${JSON.stringify(out)}`);
     });
   } else {
-    console.log(`smoke: skipped: a .ts config needs Node 22.18 or later (this is ${nodeVersion})`);
+    console.log(`smoke: skipped: a .ts config needs Node 22.18, 23.6 or 24 and later (this is ${nodeVersion})`);
   }
   console.log('smoke: all passed');
 } catch (error) {

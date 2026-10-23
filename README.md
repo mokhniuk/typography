@@ -57,9 +57,9 @@ Speed, English text in one piece, the median of several runs (typograf is the cl
 | smartypants | 0 ms | 1 ms | 10 ms |
 | retext-smartypants | 4 ms | 27 ms | 577 ms |
 | typopo | 21 ms | 1089 ms | 98742 ms |
-| richtypo | 3189 ms | not run (~317 s) | not run (~31690 s) |
+| richtypo | 2499 ms | not run (~249 s) | not run (~24835 s) |
 
-The tools that beat it on speed (tipograph, smartypants) score far below it on the checks; typograf, the closest in scope, is about 1.45× slower on large text, and typopo and richtypo slow down quadratically.
+The tools that beat it on speed (tipograph, smartypants) score far below it on the checks; typograf, the closest in scope, is about 1.5× slower on large text, and typopo and richtypo slow down quadratically.
 
 ## What is in the box
 
