@@ -9,7 +9,7 @@ import {
   plusMinus,
   trailingSpace,
 } from './extra.ts';
-import { PACKS } from './lang/index.ts';
+import type { LangPack } from './lang/pack.ts';
 import { apostrophe, arrows, ellipsis, legal, minus, multiply } from './marks.ts';
 import { groupNumbers } from './numbers.ts';
 import { bindPhones } from './phone.ts';
@@ -71,6 +71,12 @@ export type Rule = {
    */
   when?: (text: string, context: Context) => boolean;
   apply: (text: string, context: Context) => string;
+  /**
+   * The pack fields whose languages the rule acts in (`space.percent`: `percentSpace` and
+   * `currencySpace`). A note for readers: `docs/rules.md` and `typo --rules` list the languages that
+   * set each one. It does not change what the rule does, and this file never reads the packs.
+   */
+  packFields?: readonly (keyof LangPack)[];
 };
 
 const has = (needle: string) => (text: string) => text.includes(needle);
@@ -78,19 +84,6 @@ const hasAny =
   (...needles: string[]) =>
   (text: string) =>
     needles.some((needle) => text.includes(needle));
-
-/**
- * Short English names of some packs, joined for a description: `German and French`. A pack whose
- * short name an earlier one already took keeps its full name: `German, German (Switzerland)`.
- */
-function names(packs: readonly { name: string }[]): string {
-  const list: string[] = [];
-  for (const pack of packs) {
-    const short = pack.name.split(' (')[0] ?? pack.name;
-    list.push(list.includes(short) ? pack.name : short);
-  }
-  return list.length > 1 ? `${list.slice(0, -1).join(', ')} and ${list.at(-1)}` : (list[0] ?? '');
-}
 
 /**
  * The rules, in the order they run.
@@ -184,6 +177,7 @@ export const RULES: readonly Rule[] = [
     category: 'tradition',
     about:
       'A paragraph opening with a dash is a line of dialogue, in languages that write dialogue that way: their dash and a no-break space (Ukrainian — Привіт)',
+    packFields: ['dialogueDash'],
     apply: (text, { pack, blockStart }) => {
       const style = pack.dialogueDash;
       return style && blockStart ? dialogue(text, style) : text;
@@ -296,7 +290,9 @@ export const RULES: readonly Rule[] = [
   {
     id: 'space.percent',
     category: 'data',
-    about: `${names(PACKS.filter((pack) => 'percentSpace' in pack && pack.percentSpace))}: a no-break space between a number and % (5 %); ${names(PACKS.filter((pack) => 'currencySpace' in pack && pack.currencySpace))}: also before € after the number (49 €)`,
+    about:
+      'In a language that sets it (percentSpace): a no-break space between a number and % (5 %); with currencySpace, also before € after the number (49 €)',
+    packFields: ['percentSpace', 'currencySpace'],
     when: (text, { pack }) =>
       (!!pack.percentSpace && text.includes('%')) || (!!pack.currencySpace && text.includes('€')),
     apply: (text, { pack }) => unitSymbol(text, pack),
@@ -341,7 +337,9 @@ export const RULES: readonly Rule[] = [
   {
     id: 'space.short-word',
     category: 'tradition',
-    about: `${names(PACKS.filter((pack) => 'shortWords' in pack && pack.shortWords?.length))}: a short word of two or three letters stays with the word after it (to~the shop); never more than two words in a row`,
+    about:
+      'In a language with a list (shortWords): a short word of two or three letters stays with the word after it (to~the shop); never more than two words in a row',
+    packFields: ['shortWords'],
     when: (_text, { pack }) => !!pack.shortWords?.length,
     apply: (text, { pack }) => shortWords(text, pack),
   },
@@ -349,6 +347,7 @@ export const RULES: readonly Rule[] = [
     id: 'space.orphan',
     category: 'tradition',
     about: 'No-break space after a one-letter word the language must not strand at a line end',
+    packFields: ['orphans'],
     when: (_text, { pack }) => pack.orphans !== undefined,
     apply: (text, { pack }) => orphans(text, pack),
   },

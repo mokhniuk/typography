@@ -295,6 +295,8 @@ after   © 2026 Studio ® ™
 
 A paragraph opening with a dash is a line of dialogue, in languages that write dialogue that way: their dash and a no-break space (Ukrainian — Привіт)
 
+Languages with `dialogueDash`: Ukrainian, Polish, French, Czech, Slovak, Swedish, Romanian, Hungarian, Spanish, Italian, Portuguese, Bulgarian, Croatian, Slovenian, Lithuanian, Danish and Finnish.
+
 Category: `tradition`.
 
 Why: [sources.md](../resources/sources.md#dashdialogue), `verified`.
@@ -625,7 +627,11 @@ after   On 21~September, 15~people paid 5~%.
 
 ## `space.percent`
 
-German, French, German (Switzerland), French (Switzerland), Czech, Spanish, Italian, Portuguese, Irish, Maltese, Bulgarian, Croatian, Slovenian, Lithuanian, Latvian, Estonian, Danish, Finnish and Greek: a no-break space between a number and % (5 %); German, French, German (Switzerland), French (Switzerland), Czech, Spanish, Italian, Bulgarian, Croatian, Slovenian, Danish, Finnish and Greek: also before € after the number (49 €)
+In a language that sets it (percentSpace): a no-break space between a number and % (5 %); with currencySpace, also before € after the number (49 €)
+
+Languages with `percentSpace`: German, French, German (Switzerland), French (Switzerland), Czech, Spanish, Italian, Portuguese, Irish, Maltese, Bulgarian, Croatian, Slovenian, Lithuanian, Latvian, Estonian, Danish, Finnish and Greek.
+
+Languages with `currencySpace`: German, French, German (Switzerland), French (Switzerland), Czech, Spanish, Italian, Bulgarian, Croatian, Slovenian, Danish, Finnish and Greek.
 
 Category: `data`.
 
@@ -749,7 +755,9 @@ The `’n’` of rock ’n’ roll is an "and" with its letters dropped, so it i
 
 ## `space.short-word`
 
-English, Ukrainian, Polish, Czech and Slovak: a short word of two or three letters stays with the word after it (to~the shop); never more than two words in a row
+In a language with a list (shortWords): a short word of two or three letters stays with the word after it (to~the shop); never more than two words in a row
+
+Languages with `shortWords`: English, Ukrainian, Polish, Czech and Slovak.
 
 Category: `tradition`.
 
@@ -780,6 +788,8 @@ after   Ласкаво просимо до~міста
 ## `space.orphan`
 
 No-break space after a one-letter word the language must not strand at a line end
+
+Languages with `orphans`: English, Ukrainian, Polish, Czech and Slovak.
 
 Category: `tradition`.
 

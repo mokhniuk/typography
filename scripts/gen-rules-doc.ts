@@ -12,7 +12,9 @@ import { join } from 'node:path';
 import { mdAnchor, RULE_SOURCES } from '../resources/sources';
 import {
   type Lang,
+  type LangPack,
   NBSP,
+  PACKS,
   type QuoteStyle,
   type Register,
   RULE_CATEGORIES,
@@ -22,6 +24,32 @@ import {
   ruleGlyphs,
   typographic,
 } from '../src';
+
+/**
+ * Short English names of some packs, joined for a description: `German and French`. A pack whose
+ * short name an earlier one already took keeps its full name: `German, German (Switzerland)`.
+ */
+function names(packs: readonly { name: string }[]): string {
+  const list: string[] = [];
+  for (const pack of packs) {
+    const short = pack.name.split(' (')[0] ?? pack.name;
+    list.push(list.includes(short) ? pack.name : short);
+  }
+  return list.length > 1 ? `${list.slice(0, -1).join(', ')} and ${list.at(-1)}` : (list[0] ?? '');
+}
+
+/** Whether a pack sets `field`: a value that is not empty (an empty list sets nothing). */
+const sets = (pack: LangPack, field: keyof LangPack): boolean => {
+  const value = pack[field];
+  return Array.isArray(value) ? value.length > 0 : !!value;
+};
+
+/** One line per pack field a rule names (`Rule.packFields`): the languages whose pack sets it. */
+export const packFieldLines = (rule: Rule): string[] =>
+  (rule.packFields ?? []).map(
+    (field) =>
+      `Languages with \`${field}\`: ${names(PACKS.filter((pack) => sets(pack, field))) || 'none'}.`,
+  );
 
 export type Example = {
   input: string;
@@ -292,6 +320,7 @@ export function render(rules: readonly Rule[] = RULES): string {
   for (const rule of rules) {
     const confidence = RULE_SOURCES[rule.id]?.confidence ?? 'general-knowledge';
     out.push('', `## \`${rule.id}\``, '', rule.about, '');
+    for (const line of packFieldLines(rule)) out.push(line, '');
     if (rule.category) out.push(`Category: \`${rule.category}\`.`, '');
     out.push(
       `Why: [sources.md](../resources/sources.md#${mdAnchor(rule.id)}), \`${confidence}\`.`,

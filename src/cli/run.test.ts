@@ -245,6 +245,17 @@ describe('formatRules', () => {
     expect(lines.at(-1)).toMatch(/^extra\.shout {2,}Upper case/);
   });
 
+  test('lists the languages of each pack field a rule names', () => {
+    const lines = formatRules(RULES).split('\n');
+    const percent = lines.find((line) => line.startsWith('space.percent ')) ?? '';
+    expect(percent).toMatch(
+      / \[percentSpace: German, French, .* and Greek\] \[currencySpace: German, /,
+    );
+    expect(lines.find((line) => line.startsWith('space.short-word '))).toContain(
+      '[shortWords: English, Ukrainian, Polish, Czech and Slovak]',
+    );
+  });
+
   test('is unchanged for the built-in list', () => {
     expect(formatRules(DEFAULT_RULES)).not.toContain('off by default');
   });
