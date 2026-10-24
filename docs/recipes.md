@@ -109,13 +109,7 @@ export default function Page() {
 }
 ```
 
-`/react` (`TypographyRoot`, `Typeset`) uses hooks and context, so it runs on the client. In the App Router, import it from a file that starts with `'use client'`:
-
-```tsx
-// components/Prose.tsx
-'use client';
-export { TypographyRoot, Typeset } from '@mokhniuk/typography/react';
-```
+`/react` (`TypographyRoot`, `Typeset`) uses hooks and context, so it runs on the client; its files start with `'use client'` (since 0.18.1), so a server component can import it directly and Next sends it to the browser. Before that, re-export it from a file of your own that starts with `'use client'`.
 
 `TypographyRoot` sends its hanging pass as an inline script; on a page with a strict content security policy, pass `early={false}` ([limits.md](limits.md)).
 

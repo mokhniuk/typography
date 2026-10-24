@@ -2,6 +2,12 @@
 
 Versions follow semver: a **minor** release may change the output of the engine or the API (every entry says whether it can change output you already have), a **patch** release fixes a bug without changing output you rely on. If you depend on exact output, pin a version and read this file before you move it.
 
+## Unreleased
+
+### Changes
+
+- **`@mokhniuk/typography/react` works from a server component tree.** `Typeset`, `TypographyRoot` and the context file start with `'use client'` (the build keeps it), so in the Next.js App Router a server component can import them directly instead of through a wrapper file of your own; Vite, webpack and plain React ignore the directive. Output is unchanged. Can change existing output: no.
+
 ## 0.18.0 (2026-10-24)
 
 ### Changes

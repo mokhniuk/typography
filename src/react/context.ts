@@ -1,3 +1,5 @@
+'use client';
+
 import { createContext } from 'react';
 import type { Change, Lang, LangPack, QuoteStyle, Register, Rule } from '../core/index.ts';
 
