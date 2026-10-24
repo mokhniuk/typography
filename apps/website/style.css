@@ -2923,24 +2923,12 @@ figure[data-marquee] figcaption {
   text-transform: uppercase;
   color: var(--color-muted);
 }
-figure[data-marquee] button {
-  min-height: calc(var(--baseline) * 3);
-  padding: 0 var(--space-3);
-  font: 500 var(--size-xs) var(--font-ui);
-  letter-spacing: 0;
-  text-transform: none;
-  color: var(--color-muted);
-  background: transparent;
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-md);
-  cursor: pointer;
-}
 figure[data-marquee] [data-track] {
   display: flex;
   width: max-content;
   animation: marquee 56s linear infinite;
 }
-figure[data-marquee]:is(:hover, :focus-within, [data-paused]) [data-track] {
+figure[data-marquee]:hover [data-track] {
   animation-play-state: paused;
 }
 @keyframes marquee {
@@ -3023,8 +3011,7 @@ figure[data-marquee] li[data-logo="vite"]::before {
   figure[data-marquee] ul {
     flex-wrap: wrap;
   }
-  figure[data-marquee] ul[aria-hidden],
-  figure[data-marquee] button {
+  figure[data-marquee] ul[aria-hidden] {
     display: none;
   }
 }

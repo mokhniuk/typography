@@ -154,13 +154,3 @@ if (heroIn && heroOut && heroLang) {
     run();
   });
 }
-
-// The "Works with" strip scrolls by itself, so it has a button that stops it (and it stops under the
-// pointer and on focus, and not at all for a reader who asks for less motion).
-const marquee = document.querySelector<HTMLElement>('figure[data-marquee]');
-const pause = marquee?.querySelector<HTMLButtonElement>('button');
-pause?.addEventListener('click', () => {
-  const paused = marquee?.toggleAttribute('data-paused') ?? false;
-  pause.setAttribute('aria-pressed', String(paused));
-  pause.textContent = paused ? 'Play' : 'Pause';
-});
