@@ -10,11 +10,7 @@ The package is `@mokhniuk/typography`. Version {{version}}, on npm. It is compil
 npm install @mokhniuk/typography
 ```
 
-`pnpm add`, `bun add` and `yarn add` work the same. Every release tag also installs from git. The repository is private, so the machine needs SSH access to it:
-
-```sh
-bun add git+ssh://git@github.com/mokhniuk/typography.git#v{{version}}
-```
+`pnpm add`, `bun add` and `yarn add` work the same.
 
 The core has no dependencies; `react` 18 or later is an optional peer, needed only by the React entry. The `typo` command runs on Node 20.10 or later, or Bun. A minor release may change output, so read the changelog before you move up.
 

@@ -1,6 +1,6 @@
 # Typography
 
-Package `@mokhniuk/typography`, published on npm, and also installable from a git tag. Full release rules are in `docs/contributing.md`.
+Package `@mokhniuk/typography`, published on npm. Full release rules are in `docs/contributing.md`.
 
 Bun project; the package ships compiled ESM with declarations (`bun run build`). Details: `README.md` (entry points), `docs/contributing.md` (layout, adding a rule or language, tests), `docs/api.md`.
 

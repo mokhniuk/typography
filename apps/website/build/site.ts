@@ -56,7 +56,6 @@ export const FACTS: Record<string, string> = {
   rulesOff: String(RULES.filter((rule) => rule.defaultOn === false).length),
   langs: String(LANGS.length),
   issues: ISSUES,
-  git: `git+ssh://git@github.com/mokhniuk/typography.git#v${pkg.version}`,
 };
 
 export const NAV = [

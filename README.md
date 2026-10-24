@@ -40,13 +40,7 @@ bun add @mokhniuk/typography
 yarn add @mokhniuk/typography
 ```
 
-Every release tag also installs, over SSH (the repository is private, so the machine needs access). The tag's commit holds the built package:
-
-```sh
-bun add git+ssh://git@github.com/mokhniuk/typography.git#vX.Y.Z
-```
-
-Replace `vX.Y.Z` with a version from [CHANGELOG.md](CHANGELOG.md). The package is compiled ESM with `.d.ts` declarations and has no dependencies (`react` is an optional peer, for the `./react` entry only). The `typo` command runs on Node 20.10 or later and on Bun. Versions follow semver, and a minor release may change output. Tag handling in Bun, local linking and bundler notes: [docs/contributing.md](docs/contributing.md#using-it-from-another-project).
+Pick a version from [CHANGELOG.md](CHANGELOG.md) if you want to pin one. The package is compiled ESM with `.d.ts` declarations and has no dependencies (`react` is an optional peer, for the `./react` entry only). The `typo` command runs on Node 20.10 or later and on Bun. Versions follow semver, and a minor release may change output. Local linking and bundler notes: [docs/contributing.md](docs/contributing.md#using-it-from-another-project).
 
 ## Use
 
