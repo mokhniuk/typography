@@ -134,6 +134,7 @@ describe('lite typesets as the full entries do', () => {
       [
         'DEFAULT_RULES',
         'NBSP',
+        'PRESET_NAMES',
         'RULES',
         'RULE_CATEGORIES',
         'RULE_IDS',
@@ -142,6 +143,7 @@ describe('lite typesets as the full entries do', () => {
         'explain',
         'hangPieces',
         'keepAvoided',
+        'presets',
         'selectRules',
         'splitHangs',
         'typesetBlock',

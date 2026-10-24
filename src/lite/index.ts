@@ -23,6 +23,7 @@ export type {
   Level,
   NumberFormat,
 } from '../core/lang/pack.ts';
+export { PRESET_NAMES, type Preset, type PresetName, presets } from '../core/presets.ts';
 export {
   addRule,
   DEFAULT_RULES,

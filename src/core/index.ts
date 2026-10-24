@@ -8,6 +8,7 @@ export { type DiffRun, diff } from './diff.ts';
 export { insertedCharacters, insertedGlyphs, ruleGlyphs } from './glyphs.ts';
 export { type HangPiece, hangPieces, splitHangs, type TextPart } from './hang.ts';
 export { type LangPack, type Level, PACK, PACKS } from './lang/index.ts';
+export { PRESET_NAMES, type Preset, type PresetName, presets } from './presets.ts';
 export { LANGS, REGISTERS } from './profiles.ts';
 export { explain, resolvePack, typesetBlock, typographic } from './resolve.ts';
 export {
