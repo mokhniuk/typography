@@ -41,13 +41,14 @@
         </ul>
       </article>
       <article>
-        <h3>Where we trail</h3>
+        <h3>What we are improving</h3>
         <ul>
-          <li><strong>English quotes.</strong> English is <code>“…”</code> with <code>‘…’</code> inside by default since 0.15.0; <code>quoteStyle: 'guillemets'</code> keeps the house style <code>«…»</code>.</li>
-          <li><strong>Languages are unreviewed.</strong> Every pack has <code>reviewed: false</code>; twenty were written from style guides, some read only in part. A defensible style, not a certified one. The known gaps are listed in the <a href="https://github.com/mokhniuk/typography/blob/main/docs/backlog.md">backlog</a>.</li>
-          <li><strong>Opt-in rules.</strong> Fractions, ±, °C, space before punctuation, trailing-space cleanup and phone numbers exist but are off by default: {{rulesOff}} of the {{rules}}. Short words (<code>to~the</code>) bind by default since 0.14.0.</li>
-          <li><strong>Speed and distribution.</strong> Still behind tipograph and smartypants, which do far less; no hard input is quadratic since 0.15.0. On npm from 0.16.0 as compiled ESM with declarations, MIT-licensed.</li>
-          <li><strong>Weight.</strong> 30.0 KB brotli for one call from <code>/text</code>, against typograf's 15: the full entry points carry all 27 language packs (18.9 KB of it). Since 0.17.0 a page that sets one language imports <code>/lite</code> and its pack from <code>/lang/&lt;code&gt;</code> instead: 11.7 KB brotli for the same call in English (12.2 KB in Ukrainian), under typograf. <code>/lite</code> has no rehype plugin or React components yet; those still carry every pack. An install is 546 KB, 150 files (compiled JavaScript and declarations; it was 3.9 MB, the whole repository, for tags up to v0.13.0).</li>
+          <li><strong>Native-speaker review.</strong> Every pack has <code>reviewed: false</code>. Twenty were written from style guides, some read only in part, and none has had a native reader go through its page. That review comes first, and each language gets its flag only after it.</li>
+          <li><strong>Sources.</strong> 16 of the {{rules}} rule decisions still rest on general knowledge, and two (<code>quote</code> and <code>space.percent</code>) disagree with CLDR for some languages. The plan is to read the sources, then upgrade or change each decision.</li>
+          <li><strong>Language gaps.</strong> No dialogue dash for Greek and Latvian, the Spanish and Nordic dash before the narrator, the Irish pack is thin, and the short-word lists are editorial in five packs and absent from the other twenty-two.</li>
+          <li><strong>Lighter entries.</strong> A page that sets one language already imports <code>/lite</code> and its pack (about 12 KB brotli, against 30 KB for the full entry). The rehype, React, markdown-it and Vue entries still carry all {{langs}} packs, and the pack prose that the engine never reads still ships; both are planned.</li>
+          <li><strong>More places to use it.</strong> Plugins for Figma and Penpot are coming; an Astro integration, a Vue component with server rendering, Svelte helpers and a remark plugin are next if people ask.</li>
+          <li><strong>A bigger benchmark.</strong> English has 97 of the 262 cases and most other languages six. Real-text cases per language, written by a native reader, would make the scores harder to argue with.</li>
         </ul>
       </article>
     </div>
