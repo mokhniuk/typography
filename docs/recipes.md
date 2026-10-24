@@ -126,7 +126,7 @@ export default function Page() {
 }
 ```
 
-`/react` (`TypographyRoot`, `Typeset`) uses hooks and context, so it runs on the client; its files start with `'use client'` (since 0.18.1), so a server component can import it directly and Next sends it to the browser. Before that, re-export it from a file of your own that starts with `'use client'`.
+`/react` (`TypographyRoot`, `Typeset`) uses hooks and context, so it runs on the client; its files start with `'use client'` (since 0.19.0), so a server component can import it directly and Next sends it to the browser. Before that, re-export it from a file of your own that starts with `'use client'`.
 
 `TypographyRoot` sends its hanging pass as an inline script; on a page with a strict content security policy, pass `early={false}` ([limits.md](limits.md)).
 
