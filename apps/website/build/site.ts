@@ -45,8 +45,8 @@ export const ISSUES = `${GITHUB}/issues/new`;
 export const issueUrl = (title: string, body: string): string =>
   `${ISSUES}?${new URLSearchParams({ title, body })}`;
 
-/** How the site sets its own text: the engine, with American quotes because the readers are English. */
-export const TYPESET = { lang: 'en', quoteStyle: 'us' } as const;
+/** How the site sets its own text: the engine, with guillemets as the house style. */
+export const TYPESET = { lang: 'en', quoteStyle: 'guillemets' } as const;
 
 /** Numbers the pages quote, read from the engine so they cannot go stale. */
 export const FACTS: Record<string, string> = {
