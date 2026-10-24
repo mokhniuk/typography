@@ -18,7 +18,5 @@ export declare const deCH: {
         readonly decimal: ',.';
     };
     readonly reviewed: false;
-    readonly sources: readonly ["https://www.bk.admin.ch/dam/de/sd-web/YVHazXZRkqKn/schreibweisungen.pdf (Schweizerische Bundeskanzlei, Schreibweisungen, 2nd ed. 2013, corrected 2015, read in full as PDF text: Rz. 202-206 Anführungszeichen, 251 Festabstand, 512-514 Zahlen, 539-543 Geldbeträge, 554-555 Prozent)", "https://raw.githubusercontent.com/unicode-org/cldr-json/main/cldr-json/cldr-numbers-full/main/de-CH/numbers.json (CLDR 48, cldr-numbers-full 48.2.3: currency pattern \"¤ #,##0.00\" with U+00A0, the sign first; percent pattern \"#,##0%\", no space)", "https://style-guide.europa.eu/en/content/-/isg/topic?identifier=6.5-punctuation-in-figures"];
-    readonly notes: string;
 };
 export default deCH;

@@ -17,7 +17,5 @@ export declare const cs: {
         readonly mark: '–';
     };
     readonly reviewed: false;
-    readonly sources: readonly ["https://prirucka.ujc.cas.cz/?id=165", "https://prirucka.ujc.cas.cz/?slovo=uvozovky", "https://prirucka.ujc.cas.cz/?id=880", "https://prirucka.ujc.cas.cz/?slovo=procento", "https://prirucka.ujc.cas.cz/?slovo=poml%C4%8Dka", "https://en.wikipedia.org/wiki/Quotation_mark"];
-    readonly notes: string;
 };
 export default cs;

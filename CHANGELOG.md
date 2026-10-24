@@ -2,6 +2,17 @@
 
 Versions follow semver: a **minor** release may change the output of the engine or the API (every entry says whether it can change output you already have), a **patch** release fixes a bug without changing output you rely on. If you depend on exact output, pin a version and read this file before you move it.
 
+## 0.20.0 (2026-10-24)
+
+### Changes
+
+- **Every bundle is half the size: the sources and notes of the language packs are no longer part of them.** The engine never read `sources` and `notes`; they were 56 of the 68 KB of the packs and shipped in every entry. They moved to `src/core/lang/prose/<code>.ts` (one `PackProse` per language, `PROSE` in `prose/index.ts`), which the documentation generator and the tests read and the build leaves out, so no bundle and no install carries it. One call from `/text` is 14.4 KB brotli (it was 30.0), `/lite` with one pack 11.4 KB (it was 11.7), the packs alone 3.2 KB (18.9), the install 458 KB (546). The language pages say where their prose lives. Can change existing output: no (nothing the engine reads changed).
+- **`LangPack` no longer has `sources` and `notes`** (a breaking change to a public type, and to the packs' runtime shape): a custom pack need not write them, and `PACK.uk.notes` and `PACKS[i].sources` no longer exist. `PackProse` is the type of the moved fields, for the packs in this repository. Can change existing output: no for the engine; yes for code that read `notes` or `sources` from a pack (see Migration).
+
+### Migration
+
+- A custom pack that set `sources` or `notes` no longer type-checks against `LangPack` (an excess property): delete both. Code that read `pack.notes` or `pack.sources` for display has no replacement in the package; the text of each built-in pack is on its page under `docs/languages/`.
+
 ## 0.19.0 (2026-10-24)
 
 ### Changes

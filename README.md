@@ -40,13 +40,7 @@ bun add @mokhniuk/typography
 yarn add @mokhniuk/typography
 ```
 
-Every release tag also installs, over SSH (the repository is private, so the machine needs access). The tag's commit holds the built package:
-
-```sh
-bun add git+ssh://git@github.com/mokhniuk/typography.git#vX.Y.Z
-```
-
-Replace `vX.Y.Z` with a version from [CHANGELOG.md](CHANGELOG.md). The package is compiled ESM with `.d.ts` declarations and has no dependencies (`react` is an optional peer, for the `./react` entry only). The `typo` command runs on Node 20.10 or later and on Bun. Versions follow semver, and a minor release may change output. Tag handling in Bun, local linking and bundler notes: [docs/contributing.md](docs/contributing.md#using-it-from-another-project).
+Pick a version from [CHANGELOG.md](CHANGELOG.md) if you want to pin one. The package is compiled ESM with `.d.ts` declarations and has no dependencies (`react` is an optional peer, for the `./react` entry only). The `typo` command runs on Node 20.10 or later and on Bun. Versions follow semver, and a minor release may change output. Local linking and bundler notes: [docs/contributing.md](docs/contributing.md#using-it-from-another-project).
 
 ## Use
 
@@ -120,7 +114,7 @@ unified().use(remarkParse).use(remarkRehype).use(rehypeTypography, { lang: 'uk' 
 // reads each element's lang attribute; skips data-typography="off" and code
 ```
 
-One language only: `/lite` loads no pack, and the page brings the one it sets (12.2 KB brotli for this call, against 30.0 KB for `/text` with all 27):
+One language only: `/lite` loads no pack, and the page brings the one it sets (11.5 KB brotli for this call, against 14.4 KB for `/text` with all 27):
 
 ```ts
 import { typesetText } from '@mokhniuk/typography/lite';
@@ -149,7 +143,7 @@ Measured, not promised: every claim below comes from [a published benchmark](app
 
 Passed / scored; `–` means the tool has no such feature or language, and is not held against it. Each tool scores against its own denominator. The table shows eight of the groups; the total row counts all sixteen (every group but Registers).
 
-| | typography-engine | typography-engine literary | typograf | typopo | richtypo | tipograph | smartypants |
+| | @mokhniuk/typography | @mokhniuk/typography literary | typograf | typopo | richtypo | tipograph | smartypants |
 |---|---|---|---|---|---|---|---|
 | Quotes | **41/41** | **41/41** | 33/37 | 20/20 | 14/18 | 24/27 | 14/17 |
 | Nested quotes | **25/25** | **25/25** | 0/21 | 4/4 | 0/2 | 10/11 | 1/1 |
@@ -165,7 +159,7 @@ Speed, English text in one piece, the median of several runs (typograf is the cl
 
 | Tool | 10 KB | 100 KB | 1 MB |
 |---|---|---|---|
-| **typography-engine** | **0 ms** | **4 ms** | **38 ms** |
+| **@mokhniuk/typography** | **0 ms** | **4 ms** | **38 ms** |
 | typograf | 1 ms | 6 ms | 58 ms |
 | tipograph | 0 ms | 1 ms | 11 ms |
 | smartypants | 0 ms | 1 ms | 10 ms |
@@ -184,7 +178,7 @@ The tools that beat it on speed (tipograph, smartypants) score far below it on t
 - **`explain`** — every change comes with the rule that made it and the before/after, so nothing is a mystery.
 - **Hanging punctuation** — opening marks hang in the margin at any width, no line-break measuring, with an inline script so prerendered pages do not jump ([more below](#hanging-punctuation-without-a-jump-on-a-prerendered-page)).
 - **A font without the glyph** — `avoid` names the characters a font cannot draw and the rules keep the text as it was typed instead of inserting them; in a browser `TypographyRoot` measures the page's own font and fills that list in, and the website's font checker writes it for a font file ([docs/api.md](docs/api.md#avoid)).
-- **Ship one language** — `@mokhniuk/typography/lite` carries no language pack and each pack is its own entry, `@mokhniuk/typography/lang/<code>`: one call that typesets Ukrainian is 12.2 KB brotli instead of 30.0 KB ([docs/api.md](docs/api.md#loading-only-the-languages-used)).
+- **Ship one language** — `@mokhniuk/typography/lite` carries no language pack and each pack is its own entry, `@mokhniuk/typography/lang/<code>`: one call that typesets Ukrainian is 11.5 KB brotli instead of 14.4 KB ([docs/api.md](docs/api.md#loading-only-the-languages-used)).
 - **Zero dependencies** — nothing in the package imports anything outside it; `react` is an optional peer for the `./react` entry only. Compiled ESM with declarations, so Node and plain tooling work.
 - **Safe by construction** — code, tags, URLs and protected spans are never touched; an unknown rule name throws instead of silently passing.
 

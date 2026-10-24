@@ -116,6 +116,13 @@ export type LangPack = {
     bareTemperature?: boolean;
     /** Whether a native speaker has read the pack. */
     reviewed: boolean;
+};
+/**
+ * What a reader of a pack's page should know, kept out of the pack so that no bundle carries it: the
+ * engine never reads it. One module per language in `lang/prose/`, read by the documentation
+ * generators and the tests, and not shipped in the package.
+ */
+export type PackProse = {
     /** The style guides the pack was written from. */
     sources: readonly string[];
     /** What a reader should know: choices made, alternatives, doubts. */
