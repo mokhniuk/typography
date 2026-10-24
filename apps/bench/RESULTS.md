@@ -128,7 +128,7 @@ One call that typesets English text, bundled for the browser with `Bun.build` (E
 
 | Bundle | Minified | gzip | brotli |
 |---|---|---|---|
-| @mokhniuk/typography | 101.2 KB | 34.9 KB | 30.0 KB |
+| @mokhniuk/typography | 44.1 KB | 16.5 KB | 14.4 KB |
 | typograf | 49.3 KB | 17.2 KB | 14.7 KB |
 | typopo | 29.3 KB | 7.4 KB | 6.5 KB |
 | richtypo | 3.2 KB | 1.4 KB | 1.2 KB |
@@ -140,26 +140,26 @@ This package's entry points one by one (`react` is a peer dependency, left out o
 
 | Bundle | Minified | gzip | brotli |
 |---|---|---|---|
-| @mokhniuk/typography (everything, `.`) | 106.7 KB | 36.8 KB | 31.7 KB |
-| @mokhniuk/typography/text | 101.2 KB | 34.9 KB | 30.0 KB |
-| @mokhniuk/typography/html | 104.3 KB | 36.3 KB | 31.3 KB |
-| @mokhniuk/typography/markdown | 102.9 KB | 35.7 KB | 30.9 KB |
-| @mokhniuk/typography/rehype | 102.2 KB | 35.3 KB | 30.4 KB |
-| @mokhniuk/typography/dom | 7.6 KB | 2.8 KB | 2.4 KB |
-| @mokhniuk/typography/react | 110.9 KB | 38.2 KB | 32.9 KB |
-| @mokhniuk/typography/lite (no language pack) | 40.8 KB | 15.9 KB | 14.1 KB |
-| @mokhniuk/typography/lite text (no pack) | 32.5 KB | 12.5 KB | 11.1 KB |
-| @mokhniuk/typography/lite text + lang/en | 33.9 KB | 13.2 KB | 11.7 KB |
-| @mokhniuk/typography/lite text + lang/uk | 35.0 KB | 13.8 KB | 12.2 KB |
-| @mokhniuk/typography: the language packs alone | 68.0 KB | 22.6 KB | 18.9 KB |
+| @mokhniuk/typography (everything, `.`) | 50.1 KB | 18.6 KB | 16.2 KB |
+| @mokhniuk/typography/text | 44.1 KB | 16.5 KB | 14.4 KB |
+| @mokhniuk/typography/html | 47.2 KB | 18.0 KB | 15.6 KB |
+| @mokhniuk/typography/markdown | 45.9 KB | 17.4 KB | 15.1 KB |
+| @mokhniuk/typography/rehype | 45.1 KB | 17.0 KB | 14.8 KB |
+| @mokhniuk/typography/dom | 40.8 KB | 15.4 KB | 13.6 KB |
+| @mokhniuk/typography/react | 53.9 KB | 19.8 KB | 17.2 KB |
+| @mokhniuk/typography/lite (no language pack) | 41.5 KB | 16.1 KB | 14.3 KB |
+| @mokhniuk/typography/lite text (no pack) | 32.7 KB | 12.6 KB | 11.2 KB |
+| @mokhniuk/typography/lite text + lang/en | 33.3 KB | 12.8 KB | 11.4 KB |
+| @mokhniuk/typography/lite text + lang/uk | 33.5 KB | 13.1 KB | 11.5 KB |
+| @mokhniuk/typography: the language packs alone | 10.8 KB | 3.7 KB | 3.2 KB |
 
 ## Dependencies
 
-What `npm install` (or a git dependency) puts on disk for one tool: its package and everything it depends on, counted once each, read from `apps/bench/node_modules` (for this package, what `bun pm pack` packs, which is what a release tag holds). This is the developer's disk and install time; what reaches a reader of a page is in [Bundle size](#bundle-size). The licence, types and format are those of the tool's own package; the date is when the installed version was published to npm.
+What `npm install` puts on disk for one tool: its package and everything it depends on, counted once each, read from `apps/bench/node_modules` (for this package, what `bun pm pack` packs, which is what npm installs). This is the developer's disk and install time; what reaches a reader of a page is in [Bundle size](#bundle-size). The licence, types and format are those of the tool's own package; the date is when the installed version was published to npm.
 
 | Tool | Packages installed | Install footprint | Licence | Types | Format | Version published |
 |---|---|---|---|---|---|---|
-| @mokhniuk/typography | 1 (react is an optional peer) | 546 KB (150 files) | MIT | yes | ESM | not published yet (0.17.0) |
+| @mokhniuk/typography | 1 (react is an optional peer) | 458 KB (158 files) | MIT | yes | ESM | not published yet (0.19.0) |
 | typograf | 1 | 604 KB | MIT | yes | ESM and CommonJS | 2026-08-14 (7.8.0) |
 | typopo | 1 | 105 KB | MIT | yes | ESM and CommonJS | 2026-05-25 (3.1.0) |
 | richtypo | 1 | 22 KB | MIT | yes | ESM | 2026-04-27 (8.0.0) |

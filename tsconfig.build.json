@@ -17,6 +17,7 @@
     "**/*.test.tsx",
     "**/*.test-utils.ts",
     "**/*.fixture.json",
-    "src/snapshot.digests.json"
+    "src/snapshot.digests.json",
+    "src/core/lang/prose/**"
   ]
 }

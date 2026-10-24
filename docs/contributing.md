@@ -57,14 +57,15 @@ The order is part of the behaviour. For example, `dash.range` runs before `dash.
 A language is one object, a pack, and no code names a language: rules read the pack's fields.
 
 1. Create `src/core/lang/<code>.ts` exporting the pack (`as const satisfies LangPack`, the type is in `src/core/lang/pack.ts`), under its name and as `export default <name>;`. A pack imports only `NBSP` from `../types.ts` and shared data such as `./elisions.ts`, never another language's pack (unless it is a variant of it, as `de-ch.ts` builds on `de.ts`), so its entry loads one language. File names use the code in lower case: the pack `de-CH` is `de-ch.ts`, its test `de-ch.test.ts`, its page `docs/languages/de-ch.md`; the `code` field keeps the case (`de-CH`), and the rehype plugin matches an HTML `lang` against it in any case.
-2. Add it to `PACKS` in `src/core/lang/index.ts`: one import, one list entry. `Lang`, `LANGS` (in `profiles.ts`), `PACK`, `resolvePack`, the command line, the rehype plugin and the playground all follow from the list.
-3. Add its entry to `exports` in `package.json`, next to the others: `"./lang/<code>": { "types": "./dist/core/lang/<code>.d.ts", "default": "./dist/core/lang/<code>.js" }` (the file name, in lower case). `src/package.test.ts` fails while an entry is missing or points elsewhere, and checks that the built file's default export is the pack.
-4. Create `src/core/lang/<code>.test.ts`: call `wellFormed(pack, '<code>.test.ts')` from `pack-checks.test-utils.ts` and add golden tests for what the pack sets. Golden tests for a language live in that file, not in `typography.test.ts`.
-5. Run `bun run docs:languages` and commit `docs/languages/<code>.md` and `index.md`; `src/lang-docs.test.ts` fails if a page differs from its pack. Never edit them by hand.
-6. If a rule acts on the new language, add an examples row to `scripts/gen-rules-doc.ts` and run `bun run docs:rules`.
-7. Add a long example in the language to `LONG` in `apps/website/playground/examples.ts` (the playground's "Long example"; `tsc` fails while it is missing, and `apps/website/playground/examples.test.ts` checks that it gives the rules something to do).
-8. Add a line for the language to `RISKY_LETTERS` in `apps/website/font-checker/letters.ts`: the letters of the language that fonts most often lack, or an empty string. `apps/website/font-checker/letters.test.ts` fails while it is missing.
-9. Update the hand-written overview [languages.md](languages.md).
+2. Create `src/core/lang/prose/<code>.ts` exporting its `sources` and `notes` (a `PackProse`, under the pack's name) and add it to `PROSE` in `src/core/lang/prose/index.ts`. They are read by the documentation generator and the tests, never by the engine, and the build leaves the folder out (`src/core/lang/prose/prose.test.ts` fails if anything that ships imports it).
+3. Add it to `PACKS` in `src/core/lang/index.ts`: one import, one list entry. `Lang`, `LANGS` (in `profiles.ts`), `PACK`, `resolvePack`, the command line, the rehype plugin and the playground all follow from the list.
+4. Add its entry to `exports` in `package.json`, next to the others: `"./lang/<code>": { "types": "./dist/core/lang/<code>.d.ts", "default": "./dist/core/lang/<code>.js" }` (the file name, in lower case). `src/package.test.ts` fails while an entry is missing or points elsewhere, and checks that the built file's default export is the pack.
+5. Create `src/core/lang/<code>.test.ts`: call `wellFormed(pack, '<code>.test.ts')` from `pack-checks.test-utils.ts` and add golden tests for what the pack sets. Golden tests for a language live in that file, not in `typography.test.ts`.
+6. Run `bun run docs:languages` and commit `docs/languages/<code>.md` and `index.md`; `src/lang-docs.test.ts` fails if a page differs from its pack. Never edit them by hand.
+7. If a rule acts on the new language, add an examples row to `scripts/gen-rules-doc.ts` and run `bun run docs:rules`.
+8. Add a long example in the language to `LONG` in `apps/website/playground/examples.ts` (the playground's "Long example"; `tsc` fails while it is missing, and `apps/website/playground/examples.test.ts` checks that it gives the rules something to do).
+9. Add a line for the language to `RISKY_LETTERS` in `apps/website/font-checker/letters.ts`: the letters of the language that fonts most often lack, or an empty string. `apps/website/font-checker/letters.test.ts` fails while it is missing.
+10. Update the hand-written overview [languages.md](languages.md).
 
 The pack:
 
@@ -87,9 +88,9 @@ The pack:
 | `openers` | Characters that may stand before an opening quote mark, besides a space and a bracket (Spanish `¿¡`). |
 | `sameMarkQuotes` | The language opens and closes with the same mark (Swedish `”…”`). Carried and documented only: the engine does not act on it yet. |
 | `numbers` | `{ group, decimal }`; `decimal` lists the accepted decimal marks, the language's own first (`,.` in de-CH and fr-CH: a point is the franc decimal there, never a separator). |
-| `reviewed`, `sources`, `notes` | Whether a native speaker has read the pack; the style guides it came from; what a reader should know. A pack that is `reviewed` must cite `sources`. |
+| `reviewed` | Whether a native speaker has read the pack. The style guides it came from (`sources`) and what a reader should know (`notes`) are not in the pack but in `src/core/lang/prose/<code>.ts` (step 2 below), so no bundle carries them. A pack that is `reviewed` must cite `sources`. |
 
-Abbreviation lists and the like come from a style guide, not from memory; say in `sources` which, and keep `reviewed: false` until a native reader has seen the pack.
+Abbreviation lists and the like come from a style guide, not from memory; say in the prose module's `sources` which, and keep `reviewed: false` until a native reader has seen the pack.
 
 ## Tests
 

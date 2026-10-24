@@ -1,0 +1,21 @@
+import type { PackProse } from '../pack.ts';
+import { fr } from './fr.ts';
+
+const INSTRUCTIONS =
+  'https://www.bk.admin.ch/dam/fr/sd-web/t4P98Y1Vnyz-/objekt_55266.pdf (Chancellerie fédérale, Instructions sur la présentation des textes officiels en français, May 2016, read in full as PDF text: ch. 2 unités monétaires, ch. 4 nombres and note 4, ch. 5 espaces insécables)';
+
+const SCHREIBWEISUNGEN =
+  'https://www.bk.admin.ch/dam/de/sd-web/YVHazXZRkqKn/schreibweisungen.pdf (Schweizerische Bundeskanzlei, Schreibweisungen, the German edition, 2013/2015: Rz. 202-203 quotation marks)';
+
+const CLDR_FR_CH =
+  'https://raw.githubusercontent.com/unicode-org/cldr-json/main/cldr-json/cldr-numbers-full/main/fr-CH/numbers.json (CLDR 48, cldr-numbers-full 48.2.3: currency pattern "#,##0.00 ¤" with U+00A0; percent pattern "#,##0%", no space)';
+
+export const frCH: PackProse = {
+  sources: [INSTRUCTIONS, SCHREIBWEISUNGEN, CLDR_FR_CH, ...fr.sources],
+  notes: [
+    'Swiss French quotes: `«outer ‹inner› outer»`, without the no-break space inside that the fr pack sets, as the former ch pack set them from the Swiss Federal Chancellery Schreibweisungen (the German edition, Rz. 202-203). The Chancellery’s French instructions (May 2016, read in full) say nothing on quotation marks; CLDR has the same marks for fr-CH.',
+    'No space is set before `; ! ?` and `:`: the pack field that sets it (highPunctuation, read by space.high-punctuation) is set by the fr pack only (this pack copies the fr fields it takes one by one, and not that one). Open item: no Swiss French source on it was read. The Federal Chancellery’s French instructions (May 2016) are silent on `: ; ! ?`; the hints disagree (typoguide.ch is said to set a fine space before `; : ? !`, seen as a summary only; Lacroux mentions Romands who set the fine space; the Chancellery’s own text is typeset with a full space before `:` and `;`). To read before setting the field here: the Guide du typographe (Groupe de Lausanne de l’Association suisse des typographes, the Guide du typographe romand). Dialogue is quoted here (no dialogueDash), unlike the fr pack: the OQLF source on dialogue dashes is cited with the fr sources, but no dialogue dash is set, and either choice is unverified for Switzerland.',
+    'Numbers, from the French instructions (ch. 4): numbers of more than four digits are grouped in threes with an espace insécable (55 000; 1700 stays whole; number.group), and "l’utilisation de l’apostrophe dans les nombres n’est pas admise" (note 4), so everyday Swiss 1’000’000 is not used. The decimal mark is a comma (4,16 millions de francs). The French instructions write francs and centimes as 23 fr. 50 ("et non fr. 50.-", ch. 2); the German Schreibweisungen set a point between francs and rappen in amounts (Rz. 514, 543: Fr. 327.65) and never group with a point or a comma (Rz. 512). So number.group reads a point as a decimal mark too (numbers.decimal ",."), never a separator: CHF 1234567.50 becomes CHF 1 234 567.50, 1234567,50 becomes 1 234 567,50.',
+    'Percent and currency: an espace insécable between a number and its unit (ch. 5: 3 %, 50 francs, 300 CHF; 26,1 %), so percentSpace and currencySpace are set. CLDR 48 disagrees on %: its fr-CH percent pattern is "#,##0%" without a space; the Chancellery is followed here. The pack stays reviewed: false (no native reader).',
+  ].join(' '),
+};

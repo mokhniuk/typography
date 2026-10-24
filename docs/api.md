@@ -445,18 +445,18 @@ A pack is a plain object (`LangPack`, documented in `src/core/lang/pack.ts` and 
 
 ## Loading only the languages used
 
-Every full entry carries all 27 packs, because it resolves a code at run time. `./lite` with the packs a page uses carries only those. Bundled for the browser (`Bun.build`, minified), brotli quality 11, from [apps/bench/RESULTS.md](../apps/bench/RESULTS.md#bundle-size):
+Every full entry carries all 27 packs (3.2 KB brotli), because it resolves a code at run time. `./lite` with the packs a page uses carries only those. Bundled for the browser (`Bun.build`, minified), brotli quality 11, from [apps/bench/RESULTS.md](../apps/bench/RESULTS.md#bundle-size):
 
 | Bundle | Minified | brotli |
 |---|---|---|
-| `./text` (`typesetText`, every pack) | 101.2 KB | 30.0 KB |
-| `./lite`, the whole entry, no pack | 40.8 KB | 14.1 KB |
-| `typesetText` from `./lite`, no pack | 32.5 KB | 11.1 KB |
-| `typesetText` from `./lite` + `./lang/en` | 33.9 KB | 11.7 KB |
-| `typesetText` from `./lite` + `./lang/uk` | 35.0 KB | 12.2 KB |
-| the 27 packs alone | 68.0 KB | 18.9 KB |
+| `./text` (`typesetText`, every pack) | 44.1 KB | 14.4 KB |
+| `./lite`, the whole entry, no pack | 41.5 KB | 14.3 KB |
+| `typesetText` from `./lite`, no pack | 32.7 KB | 11.2 KB |
+| `typesetText` from `./lite` + `./lang/en` | 33.3 KB | 11.4 KB |
+| `typesetText` from `./lite` + `./lang/uk` | 33.5 KB | 11.5 KB |
+| the 27 packs alone | 10.8 KB | 3.2 KB |
 
-A pack adds 0.4 to 1.5 KB of brotli on top of the engine (English 0.6 KB, Ukrainian 1.1 KB). For several languages, import each pack you need; for a language picked at run time, `import()` its `./lang/<code>` entry.
+A pack adds 0.2 to 0.3 KB of brotli on top of the engine. Up to 0.19.0 the packs were 68 KB (18.9 KB brotli): the sources and notes of each language, which the engine never reads, were part of them; they live in `src/core/lang/prose/` now and ship nowhere. What is left of the full entries' extra weight is the 3.2 KB of pack data; the `rehype`, React, markdown-it and Vue entries carry it, and a one-language variant of each would save about that much. For several languages, import each pack you need; for a language picked at run time, `import()` its `./lang/<code>` entry.
 
 ## Hanging punctuation
 

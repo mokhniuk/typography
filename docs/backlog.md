@@ -100,11 +100,11 @@ No quadratic input is known outside the rules since 0.15.0 (the two the probes f
 
 ### One language in the rehype plugin, React and the config check
 
-Since 0.17.0 `/lite` with `/lang/<code>` ships one language (11.7 to 12.2 KB brotli for one call in English or Ukrainian, against 30.0 KB for `/text`), but only for the text, HTML and Markdown modes. The rehype plugin maps an element's `lang` attribute to a pack by code, React resolves a code from its context, and `checkConfig` lists the codes: all three still load the 27 packs. A lite rehype plugin that takes the packs it may meet, a lite React entry, and a `checkConfig` that takes a pack only would close it. Wait for a user who needs one of them.
+Since 0.17.0 `/lite` with `/lang/<code>` ships one language (11.4 to 11.5 KB brotli for one call in English or Ukrainian, against 14.4 KB for `/text` since 0.20.0 moved the pack prose out of the bundles; it was 30.0 KB), but only for the text, HTML and Markdown modes. The rehype plugin maps an element's `lang` attribute to a pack by code, React resolves a code from its context, and `checkConfig` lists the codes: all three still load the 27 packs. A lite rehype plugin that takes the packs it may meet, a lite React entry, and a `checkConfig` that takes a pack only would close it, and save about 3 KB brotli each (the pack data is 3.2 KB of the full entries). That is a small saving for three more entries to keep, so wait for a user who needs one of them.
 
 ### Framework integrations: what is left
 
-`/markdown-it` and `/vue` ship all 27 packs (the lite route does not reach them), like `/rehype` and `/react`: one-language variants belong with the item above. Not built: an Astro integration (`integrations: [typography()]` that adds the rehype plugin: the recipe, which sets `markdown.rehypePlugins` by hand, built in Astro 7.4 on 2026-10-24, but Astro's reference does not say whether `updateConfig` concatenates or replaces that array, so an integration waits for a run that checks it); a Vue component and server-side rendering for the directive (it runs in the browser only; it was run in `happy-dom` and server-rendered, never in a browser); Svelte and Solid actions or components (the recipes call the string modes); a remark plugin (the rehype route works through `remark-rehype`). Wait for a user who needs one.
+`/markdown-it` and `/vue` ship all 27 packs (the lite route does not reach them), like `/rehype` and `/react`: one-language variants belong with the item above (about 3 KB brotli each). Not built: an Astro integration (`integrations: [typography()]` that adds the rehype plugin: the recipe, which sets `markdown.rehypePlugins` by hand, built in Astro 7.4 on 2026-10-24, but Astro's reference does not say whether `updateConfig` concatenates or replaces that array, so an integration waits for a run that checks it); a Vue component and server-side rendering for the directive (it runs in the browser only; it was run in `happy-dom` and server-rendered, never in a browser); Svelte and Solid actions or components (the recipes call the string modes); a remark plugin (the rehype route works through `remark-rehype`). Wait for a user who needs one.
 
 ### One vocabulary for the options
 
@@ -117,10 +117,6 @@ Since 0.17.0 `/lite` with `/lang/<code>` ships one language (11.7 to 12.2 KB bro
 ### French space after a closing guillemet, bracket or inline tag
 
 `space.high-punctuation` sets the French space only after a letter or digit, so a mark that follows a closer keeps whatever was typed: `« non » : c’est clair`, `(voir) : rien` and `<strong>Attention</strong> :` keep a breakable plain space before the mark. French sets the same no-break space there (before `:`) and the narrow one (before `; ! ?`). Extend the rule to a mark after `»`, `)`, `]` and the end of an inline tag, and when a typed space already stands between the closer and the mark, replace it with the pack's space. Read the Lacroux and OQLF passages on a mark after a closing quote before changing anything.
-
-### Pack prose in bundles
-
-The `notes` and `sources` of each language pack are 56 of the 68 KB of the raw packs and ship in every bundle, although the engine never reads them. The cost: `/text` is 30.0 KB brotli, the packs alone 18.9 KB, and `/lite` with one language 12.2 KB against typograf's 15. Move them out of the runtime pack (a separate module that the docs generators read, or strip them in the build) and measure again with `bun run size`. Related to "Load only the languages used" (done in 0.17.0, see the changelog), which this continues.
 
 ### A larger real-text benchmark
 

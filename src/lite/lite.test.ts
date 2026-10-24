@@ -6,6 +6,7 @@ import { corpus, htmlOf, markdownOf, proseOf } from '../../scripts/corpus.ts';
 import * as full from '../core/index.ts';
 import { PACKS } from '../core/lang/index.ts';
 import type { LangPack } from '../core/lang/pack.ts';
+import { PROSE } from '../core/lang/prose/index.ts';
 import type { Change } from '../core/typography.ts';
 import { typesetHtml } from '../html/index.ts';
 import { typesetMarkdown } from '../markdown/index.ts';
@@ -105,7 +106,8 @@ describe('lite loads no language pack', () => {
     for (const pack of PACKS) {
       expect(code.includes(JSON.stringify(pack.name)), pack.name).toBe(false);
       expect(code.includes(pack.sample), pack.code).toBe(false);
-      for (const source of pack.sources) expect(code.includes(source), source).toBe(false);
+      for (const source of PROSE[pack.code as keyof typeof PROSE].sources)
+        expect(code.includes(source), source).toBe(false);
     }
   });
 

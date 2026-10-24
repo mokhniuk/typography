@@ -1,6 +1,7 @@
 import { expect, test } from 'bun:test';
 import { PACK } from './index.ts';
 import type { LangPack } from './pack.ts';
+import { PROSE } from './prose/index.ts';
 
 /** The tests every pack must pass, whoever wrote it: its data is complete and in the shape the engine reads. */
 export function wellFormed(pack: LangPack, file: string) {
@@ -10,10 +11,12 @@ export function wellFormed(pack: LangPack, file: string) {
     expect(pack.name.length).toBeGreaterThan(0);
     expect(pack.sample.length).toBeGreaterThan(0);
     expect(typeof pack.reviewed).toBe('boolean');
-    expect(Array.isArray(pack.sources)).toBe(true);
+    const prose = PROSE[pack.code as keyof typeof PROSE];
+    expect(prose, 'a pack has a prose module in lang/prose/').toBeDefined();
+    expect(Array.isArray(prose.sources)).toBe(true);
     // A pack nobody has read must say so in its notes or sources, not leave the page blank.
-    if (pack.reviewed) expect(pack.sources.length).toBeGreaterThan(0);
-    expect(pack.notes.length).toBeGreaterThan(0);
+    if (pack.reviewed) expect(prose.sources.length).toBeGreaterThan(0);
+    expect(prose.notes.length).toBeGreaterThan(0);
   });
 
   test(`${pack.code}: quote levels are pairs of non-empty marks`, () => {

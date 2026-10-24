@@ -14,8 +14,6 @@ const pack = (fields: Partial<LangPack>): LangPack => ({
     ['„', '“'],
   ],
   reviewed: false,
-  sources: [],
-  notes: '',
   ...fields,
 });
 

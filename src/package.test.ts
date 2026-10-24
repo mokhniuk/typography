@@ -15,7 +15,9 @@ import { PACKS } from './core/lang/index.ts';
  * per run, and the test fails if the build does.
  */
 const ROOT = resolve(import.meta.dir, '..');
-const TEST_ONLY = /\.test\.tsx?$|\.test-utils\.ts$|\.fixture\.json$|^src\/snapshot\.digests\.json$/;
+/** Not shipped: tests, their fixtures, and the prose of the language pages (read by the doc generators only). */
+const TEST_ONLY =
+  /\.test\.tsx?$|\.test-utils\.ts$|\.fixture\.json$|^src\/snapshot\.digests\.json$|^src\/core\/lang\/prose\//;
 const OUTSIDE_DIST = new Set(['package.json', 'README.md', 'CHANGELOG.md', 'LICENSE']);
 
 const packed = packedFiles(ROOT);

@@ -123,7 +123,7 @@ export async function depsSection(): Promise<string[]> {
   return [
     '## Dependencies',
     '',
-    "What `npm install` (or a git dependency) puts on disk for one tool: its package and everything it depends on, counted once each, read from `apps/bench/node_modules` (for this package, what `bun pm pack` packs, which is what a release tag holds). This is the developer's disk and install time; what reaches a reader of a page is in [Bundle size](#bundle-size). The licence, types and format are those of the tool's own package; the date is when the installed version was published to npm.",
+    "What `npm install` puts on disk for one tool: its package and everything it depends on, counted once each, read from `apps/bench/node_modules` (for this package, what `bun pm pack` packs, which is what npm installs). This is the developer's disk and install time; what reaches a reader of a page is in [Bundle size](#bundle-size). The licence, types and format are those of the tool's own package; the date is when the installed version was published to npm.",
     '',
     ...rows,
     '',

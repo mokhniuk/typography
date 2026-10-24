@@ -6,7 +6,7 @@ The recipes are the package's modes called from each tool's own hooks; the packa
 
 ## One language, any framework
 
-If a page sets one language, load one pack: `/lite` carries no pack and `/lang/<code>` is one. The recipes below use `/html` with a language code for brevity; swap in this pair to cut the bundle from about 30 KB brotli to about 12 ([api.md](api.md#loading-only-the-languages-used)):
+If a page sets one language, load one pack: `/lite` carries no pack and `/lang/<code>` is one. The recipes below use `/html` with a language code for brevity; swap in this pair to cut the bundle from about 14 KB brotli to about 11 ([api.md](api.md#loading-only-the-languages-used)):
 
 ```ts
 import { typesetHtml } from '@mokhniuk/typography/lite';

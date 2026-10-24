@@ -114,7 +114,7 @@ unified().use(remarkParse).use(remarkRehype).use(rehypeTypography, { lang: 'uk' 
 // reads each element's lang attribute; skips data-typography="off" and code
 ```
 
-One language only: `/lite` loads no pack, and the page brings the one it sets (12.2 KB brotli for this call, against 30.0 KB for `/text` with all 27):
+One language only: `/lite` loads no pack, and the page brings the one it sets (11.5 KB brotli for this call, against 14.4 KB for `/text` with all 27):
 
 ```ts
 import { typesetText } from '@mokhniuk/typography/lite';
@@ -178,7 +178,7 @@ The tools that beat it on speed (tipograph, smartypants) score far below it on t
 - **`explain`** — every change comes with the rule that made it and the before/after, so nothing is a mystery.
 - **Hanging punctuation** — opening marks hang in the margin at any width, no line-break measuring, with an inline script so prerendered pages do not jump ([more below](#hanging-punctuation-without-a-jump-on-a-prerendered-page)).
 - **A font without the glyph** — `avoid` names the characters a font cannot draw and the rules keep the text as it was typed instead of inserting them; in a browser `TypographyRoot` measures the page's own font and fills that list in, and the website's font checker writes it for a font file ([docs/api.md](docs/api.md#avoid)).
-- **Ship one language** — `@mokhniuk/typography/lite` carries no language pack and each pack is its own entry, `@mokhniuk/typography/lang/<code>`: one call that typesets Ukrainian is 12.2 KB brotli instead of 30.0 KB ([docs/api.md](docs/api.md#loading-only-the-languages-used)).
+- **Ship one language** — `@mokhniuk/typography/lite` carries no language pack and each pack is its own entry, `@mokhniuk/typography/lang/<code>`: one call that typesets Ukrainian is 11.5 KB brotli instead of 14.4 KB ([docs/api.md](docs/api.md#loading-only-the-languages-used)).
 - **Zero dependencies** — nothing in the package imports anything outside it; `react` is an optional peer for the `./react` entry only. Compiled ESM with declarations, so Node and plain tooling work.
 - **Safe by construction** — code, tags, URLs and protected spans are never touched; an unknown rule name throws instead of silently passing.
 
