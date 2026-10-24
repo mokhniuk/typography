@@ -6,7 +6,7 @@ Priorities: **P0** blocks the audience, **P1** closes a gap other tools do not h
 
 ## Where we stand
 
-| | typography-engine | best other | Source |
+| | @mokhniuk/typography | best other | Source |
 |---|---|---|---|
 | Benchmark checks passed (default / literary register) | 260 / 260, 260 / 260 | typograf 135 / 236 | `apps/bench/RESULTS.md` |
 | 1 MB of English, text mode | 38 ms (0.16.1 run, short-word rule on; the 0.18.0 run, on a machine busy with a virtual machine, gave 74 against typograf's 117, about the same ratio; 49 in the 0.15.0 run, 74 in the 0.14.0 run against 115) | typograf 58 ms, tipograph 11 ms, smartypants 10 ms | `cd apps/bench && bun run bench` (the ratios are what count) |
@@ -104,7 +104,15 @@ Since 0.17.0 `/lite` with `/lang/<code>` ships one language (11.7 to 12.2 KB bro
 
 ### Framework integrations: what is left
 
-`/markdown-it` and `/vue` ship all 27 packs (the lite route does not reach them), like `/rehype` and `/react`: one-language variants belong with the item above. Not built: an Astro integration (`integrations: [typography()]` that adds the rehype plugin; the recipe sets `markdown.rehypePlugins` by hand, and Astro's reference does not say whether `updateConfig` concatenates or replaces that array, nor which markdown option now holds smartypants, so it waits for a run in a real Astro project); a Vue component and server-side rendering for the directive (it runs in the browser only; the directive was tested against a stand-in for the DOM, not in a mounted app); Svelte and Solid actions or components (the recipes call the string modes); a remark plugin (the rehype route works through `remark-rehype`). Wait for a user who needs one.
+`/markdown-it` and `/vue` ship all 27 packs (the lite route does not reach them), like `/rehype` and `/react`: one-language variants belong with the item above. Not built: an Astro integration (`integrations: [typography()]` that adds the rehype plugin: the recipe, which sets `markdown.rehypePlugins` by hand, built in Astro 7.4 on 2026-10-24, but Astro's reference does not say whether `updateConfig` concatenates or replaces that array, so an integration waits for a run that checks it); a Vue component and server-side rendering for the directive (it runs in the browser only; it was run in `happy-dom` and server-rendered, never in a browser); Svelte and Solid actions or components (the recipes call the string modes); a remark plugin (the rehype route works through `remark-rehype`). Wait for a user who needs one.
+
+### One vocabulary for the options
+
+`typographic(text, lang, options)` takes the language as its second argument, every other function takes it in `options`; `Typeset` calls `blockStart` `atStart`; `early` and `avoidMissing` are props of `TypographyRoot` and not config keys; `typesetBlock` is exported next to the high-level functions. None is wrong, and renaming any is a breaking change, so it waits for a major release. Until then the API reference lists each (docs/api.md, the option matrix), and an alias that keeps the old name is the cheaper step.
+
+### Presets rest on no read source
+
+`presets.web`, `presets.book` and `presets.ui` (0.19.0) are editorial: which opt-in rules a page of articles, a book and a button label want comes from [practices.md](practices.md), not from a style guide. Read what a house style says about degrees, fractions and trailing spaces in running text before calling them settled, or have users say what they changed.
 
 ### French space after a closing guillemet, bracket or inline tag
 
@@ -124,4 +132,4 @@ English has 97 of the 262 cases, and most other languages six (Ukrainian, French
 
 ## How this was measured
 
-Everything above can be regenerated from the separate benchmark project in `apps/bench/` (see [contributing.md](contributing.md#the-benchmark)): `bun run bench` (quality, speed, engines, bundle size, dependencies and hard inputs; each table also runs alone as `size`, `deps`, `engines`, `probes`), `bun run latency` (a paragraph), `bun run profile` (our rules, one by one) and `bun run features` (the same English inputs through every tool). The comparison page that draws on them is a snapshot; update this file when the numbers move.
+Everything above can be regenerated from the separate benchmark project in `apps/bench/` (see [contributing.md](contributing.md#the-benchmark)): `bun run bench` (quality, speed, engines, bundle size, dependencies and hard inputs; each table also runs alone as `size`, `deps`, `engines`, `probes`), `bun run latency` (a paragraph), `bun run profile` (our rules, one by one) and `bun run features` (the same English inputs through every tool). The comparison page that draws on them (`apps/website/comparison/`, numbers in `data.ts`) is a snapshot; update this file and that page when the numbers move.

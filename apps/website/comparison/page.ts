@@ -1,16 +1,4 @@
-import {
-  BACKLOG,
-  FIXES,
-  LANGS,
-  PROFILE,
-  REGEX,
-  ROWS,
-  SAMPLES,
-  SCORE,
-  SIZES,
-  TOOLS,
-  WHY,
-} from './data.ts';
+import { FIXES, LANGS, PROFILE, REGEX, ROWS, SAMPLES, SCORE, SIZES, TOOLS, WHY } from './data.ts';
 
 /**
  * The comparison page: its tables, bars and cards are drawn from `data.ts` on load, so a number is
@@ -78,7 +66,7 @@ $('matrix').innerHTML = matrix;
 $('sampleList').innerHTML = SAMPLES.map((s) => {
   const list = TOOLS.map((t) => {
     const v = s.out[t];
-    return `<dt${me(t === 'typography-engine')}>${nm(t)}</dt>${v == null ? '<dd data-na>not applicable</dd>' : `<dd>${nb(v)}</dd>`}`;
+    return `<dt${me(t === '@mokhniuk/typography')}>${nm(t)}</dt>${v == null ? '<dd data-na>not applicable</dd>' : `<dd>${nb(v)}</dd>`}`;
   }).join('');
   return `<details><summary><b>${esc(s.name)}</b><code>${esc(s.in)}</code></summary><dl>${list}</dl></details>`;
 }).join('');
@@ -109,7 +97,7 @@ function drawSpeed(): void {
         i.t === 'typograf' ? '' : ` <small>${ratio.toFixed(ratio < 10 ? 1 : 0)}×</small>`;
       const txt = i.label ?? `${fmt(i.v)} ${cfg.unit}`;
       return bar(nm(i.t), Math.max(1, pos(i.v)), `${txt}${mult}`, {
-        me: i.t === 'typography-engine',
+        me: i.t === '@mokhniuk/typography',
         est: i.est,
         track: `${nm(i.t)}: ${txt}`,
       });
@@ -166,10 +154,4 @@ $('langTable').innerHTML =
       '',
     )}</tbody><tfoot><tr><td>Of these 26 rows</td>${counts.map((c, i) => `<td${me(i === 0)}>${c}</td>`).join('')}</tr></tfoot>`;
 $('langTiers').innerHTML =
-  `Counting English and US English separately, so a tool that has English only gets one of the two. typograf ships 29 locales in all, tipograph 16, typopo 6 (en-US, de-DE, de-CH, sk, cs, rue), richtypo 3 (en, fr, ru); smartypants and retext-smartypants one each. typography-engine is the only tool with a pack for Croatian, Lithuanian and Maltese. Counts for the other tools are from the 0.1.1 comparison and were not re-checked; <code>apps/bench/RESULTS.md</code> counts 21 of 26 for typograf by a slightly different rule.`;
-
-/* ---------- backlog ---------- */
-$('backlogList').innerHTML = BACKLOG.map(
-  ([p, t, d]) =>
-    `<li data-priority="${p.toLowerCase()}"><b>${p}</b><div><h3>${t}</h3><p>${d}</p></div></li>`,
-).join('');
+  `Counting English and US English separately, so a tool that has English only gets one of the two. typograf ships 29 locales in all, tipograph 16, typopo 6 (en-US, de-DE, de-CH, sk, cs, rue), richtypo 3 (en, fr, ru); smartypants and retext-smartypants one each. @mokhniuk/typography is the only tool with a pack for Croatian, Lithuanian and Maltese. Counts for the other tools are from the 0.1.1 comparison and were not re-checked; <code>apps/bench/RESULTS.md</code> counts 21 of 26 for typograf by a slightly different rule.`;

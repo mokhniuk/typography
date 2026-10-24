@@ -5,7 +5,7 @@
  */
 
 export const TOOLS = [
-  'typography-engine',
+  '@mokhniuk/typography',
   'typograf',
   'typopo',
   'richtypo',
@@ -17,8 +17,8 @@ export type Tool = (typeof TOOLS)[number];
 
 export const SCORE: readonly (readonly [name: string, pass: number, of: number, mine: boolean])[] =
   [
-    ['typography-engine literary', 260, 260, true],
-    ['typography-engine', 260, 260, true],
+    ['@mokhniuk/typography literary', 260, 260, true],
+    ['@mokhniuk/typography', 260, 260, true],
     ['tipograph', 127, 169, false],
     ['typopo', 86, 112, false],
     ['typograf + nbsp rule', 141, 236, false],
@@ -36,7 +36,7 @@ export const ROWS: readonly (
   ['g', 'Quotes and punctuation'],
   [
     'US-style “ ” ‘ ’ quotes',
-    "typography-engine: option quoteStyle 'us'; the default for English since 0.15.0 is “…” (house style «…»: quoteStyle 'guillemets'), British ‘…’ in the literary register",
+    "@mokhniuk/typography: option quoteStyle 'us'; the default for English since 0.15.0 is “…” (house style «…»: quoteStyle 'guillemets'), British ‘…’ in the literary register",
     'YYYYYYY',
   ],
   ['Nested quotes resolved', 'a quote inside a quote gets the right marks', 'YNYNYYY'],
@@ -54,19 +54,19 @@ export const ROWS: readonly (
   ['Arrows → ←', '=> is converted by nobody', 'YYNNYNN'],
   [
     'Fractions ½ and ±',
-    'typography-engine: opt-in rules; typopo and tipograph do ± only',
+    '@mokhniuk/typography: opt-in rules; typopo and tipograph do ± only',
     'YYPNPNN',
   ],
-  ['Degree sign (20 °C)', 'typography-engine: opt-in rule', 'YYNNNNN'],
+  ['Degree sign (20 °C)', '@mokhniuk/typography: opt-in rule', 'YYNNNNN'],
   [
     'Space before punctuation removed',
-    'word , → word, (typography-engine: opt-in rule)',
+    'word , → word, (@mokhniuk/typography: opt-in rule)',
     'YYYNNNN',
   ],
   ['Repeated spaces collapsed', 'richtypo turns them into a no-break space', 'YYYPYNN'],
   [
     'Trailing spaces trimmed',
-    'typography-engine: opt-in rule, kept by default in text mode',
+    '@mokhniuk/typography: opt-in rule, kept by default in text mode',
     'YYYNPNN',
   ],
   ['g', 'No-break spaces'],
@@ -82,12 +82,12 @@ export const ROWS: readonly (
   ],
   [
     'Phone numbers kept whole',
-    'typography-engine: opt-in rule phone.bind, international numbers, digits unchanged; typograf has a Russian-format rule',
+    '@mokhniuk/typography: opt-in rule phone.bind, international numbers, digits unchanged; typograf has a Russian-format rule',
     'YPNNNNN',
   ],
   [
     'Short words bound to the next word (to the)',
-    'typography-engine: space.short-word, on by default since 0.14.0, five languages; the sources read say a title must bind them and body text may',
+    '@mokhniuk/typography: space.short-word, on by default since 0.14.0, five languages; the sources read say a title must bind them and body text may',
     'YPNPNNN',
   ],
   ['g', 'Safe on code and markup'],
@@ -110,10 +110,10 @@ export const ROWS: readonly (
   ['Reports what it changed', 'explain() and onChange, with the rule id', 'YNNNNNN'],
   [
     'Keeps the text as typed where the font lacks the glyph',
-    "typography-engine: the avoid option, measured from the page's own font in the browser, plus a font checker on the website",
+    "@mokhniuk/typography: the avoid option, measured from the page's own font in the browser, plus a font checker on the website",
     'YNNNNNN',
   ],
-  ['Custom rules and plugins', 'typography-engine: addRule and a rules list', 'YYNYNNN'],
+  ['Custom rules and plugins', '@mokhniuk/typography: addRule and a rules list', 'YYNYNNN'],
   ['Registers (display / literary)', '', 'YNNNNNN'],
   ['Hanging punctuation (DOM, React)', '', 'YNNNNNN'],
   ['React component', '', 'YNNNNNN'],
@@ -133,7 +133,7 @@ export const SIZES: Record<
     unit: 'µs',
     note: 'time per call',
     data: {
-      'typography-engine': 85,
+      '@mokhniuk/typography': 85,
       typograf: 135,
       typopo: 3783,
       richtypo: 51053,
@@ -146,7 +146,7 @@ export const SIZES: Record<
     unit: 'ms',
     note: 'median of seven runs',
     data: {
-      'typography-engine': 4,
+      '@mokhniuk/typography': 4,
       typograf: 6,
       typopo: 1089,
       richtypo: [249000, 'est. 249 s'],
@@ -159,7 +159,7 @@ export const SIZES: Record<
     unit: 'ms',
     note: 'median of three runs',
     data: {
-      'typography-engine': 38,
+      '@mokhniuk/typography': 38,
       typograf: 58,
       typopo: 98742,
       richtypo: [24835000, 'est. 6.9 h'],
@@ -176,7 +176,7 @@ export const REGEX: readonly (readonly [
   lookbehinds: number,
   time: string,
 ])[] = [
-  ['typography-engine', 103, 42, '38 ms'],
+  ['@mokhniuk/typography', 103, 42, '38 ms'],
   ['typograf', 0, 0, '58 ms'],
   ['tipograph', 0, 0, '11 ms'],
   ['typopo', 70, 0, '99 s'],
@@ -222,7 +222,7 @@ export const WHY: readonly (readonly [title: string, tag: string, text: string])
     'Read from the source: each rule starts with a lookbehind <code>(?&lt;!&lt;[^&gt;]*)</code>, meaning “not inside a tag”. On text with no tags the engine scans back to the start for every match, so the work is quadratic. A fixed-length or one-pass check would remove it.',
   ],
   [
-    'typography-engine',
+    '@mokhniuk/typography',
     '38 ms/MB',
     'Linear (the 0.16.1 run, short-word rule on; the 0.15.0 run gave 49, the 0.14.0 run 74 on a busier machine, the 0.12.0 run 30). In 0.1.1 (324 ms) the cost was regular expressions that open with a lookbehind, tried at every position, plus a quote rule that looped until nothing changed (about 190 ms/MB). Now a rule finds a literal first and reads the character before it, a rule is skipped when a cheap test shows its trigger is absent, and the quote rule rebuilds the text in one pass (about 5 ms/MB). Output is identical to 0.1.1 where the rules have not changed, checked by a differential run. 1 KB takes 85 µs in the latency run (not re-run for 0.15.0).',
   ],
@@ -275,193 +275,40 @@ export const LANGS: {
       'en',
       'English',
       'covered',
-      'typography-engine typograf typopo richtypo tipograph smartypants retext',
+      '@mokhniuk/typography typograf typopo richtypo tipograph smartypants retext',
     ],
     [
       'en-US',
       'US English (“ ” quotes)',
       'covered',
-      'typography-engine typograf typopo richtypo tipograph smartypants retext',
+      '@mokhniuk/typography typograf typopo richtypo tipograph smartypants retext',
     ],
-    ['uk', 'Ukrainian', 'covered', 'typography-engine typograf'],
-    ['de', 'German', 'covered', 'typography-engine typograf typopo tipograph'],
-    ['fr', 'French', 'covered', 'typography-engine typograf richtypo tipograph'],
-    ['pl', 'Polish', 'covered', 'typography-engine typograf tipograph'],
-    ['es', 'Spanish', 'covered', 'typography-engine typograf tipograph'],
-    ['it', 'Italian', 'covered', 'typography-engine typograf tipograph'],
-    ['pt', 'Portuguese', 'covered', 'typography-engine tipograph'],
-    ['nl', 'Dutch', 'covered', 'typography-engine typograf'],
-    ['cs', 'Czech', 'covered', 'typography-engine typograf typopo tipograph'],
-    ['sk', 'Slovak', 'covered', 'typography-engine typograf typopo'],
-    ['ro', 'Romanian', 'covered', 'typography-engine typograf'],
-    ['hu', 'Hungarian', 'covered', 'typography-engine typograf'],
-    ['sv', 'Swedish', 'covered', 'typography-engine typograf tipograph'],
-    ['da', 'Danish', 'covered', 'typography-engine typograf tipograph'],
-    ['fi', 'Finnish', 'covered', 'typography-engine typograf tipograph'],
-    ['el', 'Greek', 'covered', 'typography-engine typograf'],
-    ['bg', 'Bulgarian', 'covered', 'typography-engine typograf'],
-    ['hr', 'Croatian', 'covered', 'typography-engine'],
-    ['sl', 'Slovenian', 'covered', 'typography-engine typograf'],
-    ['et', 'Estonian', 'covered', 'typography-engine typograf'],
-    ['lv', 'Latvian', 'covered', 'typography-engine typograf'],
-    ['lt', 'Lithuanian', 'covered', 'typography-engine'],
-    ['ga', 'Irish', 'covered', 'typography-engine typograf'],
-    ['mt', 'Maltese', 'covered', 'typography-engine'],
+    ['uk', 'Ukrainian', 'covered', '@mokhniuk/typography typograf'],
+    ['de', 'German', 'covered', '@mokhniuk/typography typograf typopo tipograph'],
+    ['fr', 'French', 'covered', '@mokhniuk/typography typograf richtypo tipograph'],
+    ['pl', 'Polish', 'covered', '@mokhniuk/typography typograf tipograph'],
+    ['es', 'Spanish', 'covered', '@mokhniuk/typography typograf tipograph'],
+    ['it', 'Italian', 'covered', '@mokhniuk/typography typograf tipograph'],
+    ['pt', 'Portuguese', 'covered', '@mokhniuk/typography tipograph'],
+    ['nl', 'Dutch', 'covered', '@mokhniuk/typography typograf'],
+    ['cs', 'Czech', 'covered', '@mokhniuk/typography typograf typopo tipograph'],
+    ['sk', 'Slovak', 'covered', '@mokhniuk/typography typograf typopo'],
+    ['ro', 'Romanian', 'covered', '@mokhniuk/typography typograf'],
+    ['hu', 'Hungarian', 'covered', '@mokhniuk/typography typograf'],
+    ['sv', 'Swedish', 'covered', '@mokhniuk/typography typograf tipograph'],
+    ['da', 'Danish', 'covered', '@mokhniuk/typography typograf tipograph'],
+    ['fi', 'Finnish', 'covered', '@mokhniuk/typography typograf tipograph'],
+    ['el', 'Greek', 'covered', '@mokhniuk/typography typograf'],
+    ['bg', 'Bulgarian', 'covered', '@mokhniuk/typography typograf'],
+    ['hr', 'Croatian', 'covered', '@mokhniuk/typography'],
+    ['sl', 'Slovenian', 'covered', '@mokhniuk/typography typograf'],
+    ['et', 'Estonian', 'covered', '@mokhniuk/typography typograf'],
+    ['lv', 'Latvian', 'covered', '@mokhniuk/typography typograf'],
+    ['lt', 'Lithuanian', 'covered', '@mokhniuk/typography'],
+    ['ga', 'Irish', 'covered', '@mokhniuk/typography typograf'],
+    ['mt', 'Maltese', 'covered', '@mokhniuk/typography'],
   ],
 };
-
-export const BACKLOG: readonly (readonly [priority: string, title: string, text: string])[] = [
-  [
-    'P0',
-    'Native-speaker review of the 20 new languages',
-    'Every pack has <code>reviewed: false</code> (bg cs da el es et fi ga hr hu it lt lv mt nl pt ro sk sl sv, plus the older uk de pl fr en and the Swiss de-CH fr-CH). Several sources could only be read in part. A native reader goes through each generated page, corrects the pack and flips the flag.',
-  ],
-  [
-    'done',
-    'Presets, a markdown-it plugin, a Vue directive, recipes (0.19.0)',
-    "Named starting configs (<code>web</code>, <code>book</code>, <code>ui</code>); <code>/markdown-it</code> and <code>/vue</code> entries over a new <code>typesetElement</code>; <code>'use client'</code> on the React files; a recipes page for plain HTML, Vue, Svelte, Astro, Next.js, Vite and unified.",
-  ],
-  [
-    'done',
-    'Inch marks inside a quotation, French high punctuation, truncations (0.18.0)',
-    'An inch mark inside a quotation stays an inch mark when a later mark closes it (<code>"a 5" hole"</code> gives <code>“a 5" hole”</code>); unbalanced text is the limit left. French sets a no-break space before <code>:</code> and a narrow one before <code>; ! ?</code> (<code>space.high-punctuation</code>, on by default, <code>fr</code> only). Italian <code>po\'</code> and Maltese <code>ta\'</code> stay apostrophes inside a quotation; <code>klo 17</code>, <code>nr 5</code> are bound; <code>9.00-18.30</code> takes an en dash; uk and pl space <code>49 €</code>; de-CH and fr-CH read the decimal point of franc amounts.',
-  ],
-  [
-    'done',
-    'Load only the languages used (0.17.0)',
-    "The entry <code>/lite</code> carries no language pack and each of the 27 packs is its own entry, <code>/lang/&lt;code&gt;</code>; <code>lang</code> takes a pack in every function and component. One call that typesets English or Ukrainian is 11.7 to 12.2 KB brotli instead of 30.0, under typograf's 14.7. No module of <code>/lite</code> imports the pack table, so the saving holds without tree-shaking. Output unchanged.",
-  ],
-  [
-    'done',
-    'Two quadratic inputs outside the rules (0.15.0)',
-    'Found by the hard-input probes: a long run of spaces inside one line in the text mode (40,000 spaces took 1.3 s) and many <code>&lt;</code> that never close in the HTML mode (8,000 took 0.8 s). Both are linear now: the probes take 1.7 ms and 2.9 ms at 10 KB. So is the same <code>&lt;</code> run before one lone quote and a <code>&gt;</code> (8,000 took 0.9 s, now under 2 ms).',
-  ],
-  [
-    'P1',
-    'Language gaps found while writing the packs',
-    'Limits of the pack format or unverified choices: no dialogue dash for Greek and Latvian (no source confirmed it); the Spanish and Nordic forms of the dash before the narrator; the sentence dash for nl; Spanish and Greek paired dash; per-level quote shapes (Latvian, Lithuanian); a third Swedish quote level. Italian and Maltese truncation apostrophes, abbreviations without a full stop and dotted time ranges shipped in 0.18.0.',
-  ],
-  [
-    'P1',
-    'Finish the sources registry',
-    'Of 34 rule decisions, 16 are still <code>general-knowledge</code> (eight opt-in rules have no source read), two are <code>disputed</code> (<code>quote</code> and <code>space.percent</code>, both against CLDR) and 16 are <code>verified</code> (0.8.0 read the SI brochure for <code>symbol.degree</code> and the ÚJČ handbook for the Czech orphan list). Read the remaining sources, have a native speaker check each language.',
-  ],
-  [
-    'P1',
-    'Currencies: what is left',
-    "Done in 0.10.0: the sign or code before the amount is bound, a hand-grouped amount keeps its groups together, and one table holds the signs and codes. Open: placement and spacing per language (only <code>€</code> has a pack field; uk and pl set its space since 0.18.0), and a three-letter code that is not money (<code>PIN 1234</code>) being bound as if it were. Not doing: Swiss apostrophe grouping (<code>CHF 1'000</code>), which the Federal Chancellery rejects.",
-  ],
-  [
-    'P1',
-    'Font checker: what is left',
-    'Shipped in 0.10.0 on the website: load a font file (read with <code>FontFace</code>, never uploaded) or name an installed font, pick languages, and see which marks and letters the font draws itself, which it borrows from another font and which are nowhere to be found, with the <code>avoid</code> config it writes, the examples set in the font and a preset measured from it. Open: the detection is a width comparison (a <code>cmap</code> reader would be exact), the per-language letter lists are ours, the preset rests on no read source, and the playground still cannot load a font.',
-  ],
-  [
-    'P1',
-    'Irish: make the pack real',
-    'The Irish style guide could not be read, so quotes, the sentence dash, short words and abbreviations are thin or unset.',
-  ],
-  [
-    'P1',
-    'Short words: what is left',
-    "Shipped in 0.14.0: <code>space.short-word</code> is on by default (the sources allow either in body text and require binding in titles; display text is this engine's register), with <code>disable</code> for the body-text convention. Shipped in 0.13.0: <code>rock ’n’ roll</code> is bound on both sides of the <code>’n’</code> (<code>space.operator</code>, which already bound <code>&amp;</code>, <code>+</code> and <code>=</code>), and the opt-in <code>space.short-word</code> binds a short word to a word that opens with a quotation mark, an apostrophe or a bracket (<code>the~’90s</code>). Shipped in 0.10.0: the opt-in <code>space.short-word</code> and the pack field <code>shortWords</code>, with lists for cs, en, pl, sk and uk, for titles and headings — which is what the read sources (PWN, ÚJČ) say, since such a word may stay at a line end in body text. Open: the lists are editorial in all five packs and twenty-one languages have none; the rule cannot tell a title from body text; and binding by markup (<code>nowrap</code>) instead of a character is still unresearched.",
-  ],
-  [
-    'P2',
-    'Framework integrations: what is left',
-    'The markdown-it plugin and the Vue directive carry all 27 packs. Not built: an Astro integration, a Vue component and server-side rendering for the directive (it runs in the browser only), Svelte and Solid helpers, a remark plugin. Wait for a user who needs one.',
-  ],
-  [
-    'P2',
-    'One language in the rehype plugin, React and the config check',
-    'Since 0.17.0 <code>/lite</code> with <code>/lang/&lt;code&gt;</code> ships one language for the text, HTML and Markdown modes. The rehype plugin, React and <code>checkConfig</code> still load all 27 packs; lite versions of them wait for a user who needs one.',
-  ],
-  [
-    'P2',
-    'A larger real-text benchmark',
-    'English has 97 of the 262 cases and most other languages six. Add a real-text corpus per language, written by a native reader, and score the other tools on it.',
-  ],
-  [
-    'done',
-    'Short words bind by default (0.14.0)',
-    "A two- or three-letter word from the pack's list stays with the word after it in any text (<code>Welcome to~the city</code>, <code>Zapraszamy do~Gdańska</code>); it needed <code>enable</code> before. The sources read say a title must bind such a word and body text may; this engine sets display text, where a line ending on <code>to</code> is the stumble readers notice, and typograf and typopo bind by default too. <code>disable: ['space.short-word']</code> restores the body-text convention. Ten rules are opt-in now. Two HTML checks that spelled <code>the docs</code> with a plain space accept the no-break space; nothing else in the scores moved.",
-  ],
-  [
-    'done',
-    'rock ’n’ roll, 3 × 4, short words before a mark, the sources scripts (0.13.0)',
-    'The <code>’n’</code> of rock ’n’ roll is bound on both sides like a lone <code>&amp;</code>; <code>3 x 4</code> is <code>3~×~4</code>, not <code>3~× 4</code>; the opt-in short-word rule binds before an opening mark (<code>the~’90s</code>). The sources scripts share one escape, one usage lookup and one anchor per page, say "unused" alike, throw on a rule with no decision, and a test checks every rule link from the rules page lands on the sources page. The benchmark\'s sources and cases are tracked in git.',
-  ],
-  [
-    'done',
-    'avoid and explain on a long paragraph, the zone scan, space.number (0.12.0)',
-    'The word-level diff that <code>avoid</code> and <code>explain</code> share gave up a paragraph of twenty kilobytes that one rule changed at both ends as one change, so one avoided character anywhere in it dropped every change of that rule (<code>(c) 2026 … (TM)</code> with <code>™</code> avoided lost its <code>©</code>). Above its table limit it now aligns change by change with the same table on a window around each change. The zone scan lost a regex flag that cost 300 ms per MB on text with lone backticks, and <code>space.number</code> is one scan.',
-  ],
-  [
-    'done',
-    'Fonts, money, phone numbers, short words (0.10.0)',
-    "The <code>avoid</code> option keeps the text as typed wherever a rule would insert a character the font cannot draw, and in a browser <code>TypographyRoot</code> measures the page's own font and writes that list itself; a font checker on the website does it for a font file. Money stays whole (<code>USD 5 000</code>, <code>€ 49.99</code>, <code>1 000 грн</code>) from one table of signs and codes. Two opt-in rules: <code>phone.bind</code> (an international number kept whole, digits unchanged) and <code>space.short-word</code> (short words in titles, five languages).",
-  ],
-  [
-    'done',
-    'Inch marks, § ¶, operators, practices (0.8.0)',
-    'A quotation glued to a digit (<code>5"a"</code>) stays as typed and non-ASCII digits before <code>"</code> are read; <code>space.section</code> keeps <code>§</code> and <code>¶</code> with their number (Practical Typography, read); <code>space.operator</code> binds <code>&amp;</code> <code>+</code> <code>=</code> between words; the registry grew to 31 decisions with <code>symbol.degree</code> and the Czech orphan list now verified; a good-practices page joined the docs.',
-  ],
-  [
-    'done',
-    'A config per project (0.6.0)',
-    "One <code>TypographyConfig</code> object (language, register, quote style, rules switched on and off, <code>nbsp</code>, hang amount) drives every function, <code>TypographyRoot</code>, <code>typo --config</code> or a <code>typography</code> key in <code>package.json</code>, and the playground's export and import.",
-  ],
-  [
-    'done',
-    'Percent and currency spacing split (0.6.0)',
-    'The pack field <code>percentSpace</code> covers <code>%</code> only and <code>currencySpace</code> the <code>€</code>: Irish, Maltese, Portuguese, Latvian, Lithuanian and Estonian no longer get a space in <code>30€</code>, which their guides do not write.',
-  ],
-  [
-    'done',
-    'Rule categories (0.6.0)',
-    'Every rule has a category, <code>tradition</code>, <code>symbols</code>, <code>math</code> or <code>data</code>, shown by <code>typo --rules</code>, on the rules page and as groups in the playground; the ids <code>disable</code> takes are unchanged.',
-  ],
-  [
-    'done',
-    'Dialogue dash in 17 languages (0.4.0)',
-    'A paragraph that opens with <code>- </code> is a line of dialogue where the language writes dialogue with a dash: em dash in uk pl fr it pt bg da, the attached raya in es (<code>—¿Esperamos?</code>), en dash in ro hr sl hu fi sv cs sk lt, in both registers. Each from its orthography or language advice service; a paragraph of dash lines is read as a list and left alone. Before, only Ukrainian literary text had it.',
-  ],
-  [
-    'done',
-    'American English quotes',
-    "The option <code>quoteStyle: 'us'</code> sets “…” with ‘…’ inside in any language. The English default has been “…” since 0.15.0; the house style «…» is <code>quoteStyle: 'guillemets'</code>.",
-  ],
-  [
-    'done',
-    '20 more languages',
-    'bg cs da el es et fi ga hr hu it lt lv mt nl pt ro sk sl sv: all 24 EU languages, Ukrainian and Swiss usage, each a pack with cited sources.',
-  ],
-  [
-    'done',
-    'Sources registry (0.3.0)',
-    'A decision record for every rule: sources read, why, what others do, and a confidence. Two generated pages: a filterable list of decisions and a bibliography of every source with author and link. Docs and tests only. Found and fixed on the way: two inch marks in one text (<code>A 2" pipe and a 4" pipe</code>) were read as a quotation and lost a space; a straight <code>"</code> right after a digit no longer opens one.',
-  ],
-  [
-    'done',
-    'Eleven opt-in rules',
-    'space.before-punctuation, space.after-comma, punctuation.double, space.trailing, space.short-word, symbol.plusminus, symbol.fraction, symbol.degree, symbol.implies, number.group, phone.bind.',
-  ],
-  [
-    'done',
-    'Speed: no superlinear input left (0.2.1)',
-    'Runs of 40,000 opening marks 59 s to 7 ms; dialogue text 180 to 200 ms/MB to 45 to 70 ms; long runs of one character under 3 ms.',
-  ],
-  [
-    'done',
-    'Custom rule API, digit grouping, bigger benchmark, speed',
-    '<code>addRule</code> and a <code>rules</code> list; <code>number.group</code> (locale thousands separators); 250 scored cases for 26 languages; 1 MB of English from 324 ms to 33 ms.',
-  ],
-  [
-    'no',
-    'Ordinals',
-    "Dropped: no consensus form across the audience's languages, and no tool in the comparison does them well.",
-  ],
-];
 
 export const SAMPLES: readonly { name: string; in: string; out: Record<string, string | null> }[] =
   [
@@ -469,7 +316,7 @@ export const SAMPLES: readonly { name: string; in: string; out: Record<string, s
       name: 'nested quotes',
       in: 'He said "she said \'go\' to me" now',
       out: {
-        'typography-engine': 'He said “she said ‘go’ to~me” now',
+        '@mokhniuk/typography': 'He said “she said ‘go’ to~me” now',
         typograf: "He~said “she said 'go' to~me” now",
         typopo: 'He said “she said ‘go’ to me” now',
         richtypo: "He~said “she said 'go' to~me”~now",
@@ -482,7 +329,7 @@ export const SAMPLES: readonly { name: string; in: string; out: Record<string, s
       name: 'apostrophe',
       in: "It's the '90s, rock 'n' roll, don't",
       out: {
-        'typography-engine': 'It’s the~’90s, rock~’n’~roll, don’t',
+        '@mokhniuk/typography': 'It’s the~’90s, rock~’n’~roll, don’t',
         typograf: "It’s the~'90s, rock 'n' roll, don’t",
         typopo: 'It’s the ’90s, rock~’n’~roll, don’t',
         richtypo: "It's the~'90s, rock 'n' roll,~don't",
@@ -495,7 +342,7 @@ export const SAMPLES: readonly { name: string; in: string; out: Record<string, s
       name: 'number range',
       in: 'pages 21-26 and 10:00-12:00',
       out: {
-        'typography-engine': 'pages 21–26~and 10:00–12:00',
+        '@mokhniuk/typography': 'pages 21–26~and 10:00–12:00',
         typograf: 'pages 21-26 and~10:00-12:00',
         typopo: 'pages 21–26~and 10:00–12:00',
         richtypo: 'pages 21-26~and~10:00-12:00',
@@ -508,7 +355,7 @@ export const SAMPLES: readonly { name: string; in: string; out: Record<string, s
       name: 'minus',
       in: 'result 5 - 3 = 2 and -4 C',
       out: {
-        'typography-engine': 'result 5~— 3 = 2~and −4~C',
+        '@mokhniuk/typography': 'result 5~— 3 = 2~and −4~C',
         typograf: 'result 5~— 3 = 2 and~-4 °C',
         typopo: 'result 5–3 = 2~and -4~C',
         richtypo: 'result 5 — 3~= 2~and~-4~C',
@@ -521,7 +368,7 @@ export const SAMPLES: readonly { name: string; in: string; out: Record<string, s
       name: 'multiply',
       in: '3x4 and 1920x1080',
       out: {
-        'typography-engine': '3×4~and 1920×1080',
+        '@mokhniuk/typography': '3×4~and 1920×1080',
         typograf: '3×4 and~1920×1080',
         typopo: '3~×~4 and 1920~×~1080',
         richtypo: '3x4~and~1920x1080',
@@ -534,7 +381,7 @@ export const SAMPLES: readonly { name: string; in: string; out: Record<string, s
       name: 'arrows',
       in: 'a -> b <- c => d',
       out: {
-        'typography-engine': 'a~→ b ←~c => d',
+        '@mokhniuk/typography': 'a~→ b ←~c => d',
         typograf: 'a~→ b~← c~=> d',
         typopo: 'a~-> b~<- c~=> d',
         richtypo: 'a~-> b~<- c =>~d',
@@ -547,7 +394,7 @@ export const SAMPLES: readonly { name: string; in: string; out: Record<string, s
       name: 'plus-minus',
       in: '+-5 and 1/2',
       out: {
-        'typography-engine': '+-5~and 1/2',
+        '@mokhniuk/typography': '+-5~and 1/2',
         typograf: '±5 and~½',
         typopo: '±5~and 1/2',
         richtypo: '+-5~and~1/2',
@@ -560,7 +407,7 @@ export const SAMPLES: readonly { name: string; in: string; out: Record<string, s
       name: 'degree',
       in: '20 C and 5 degrees',
       out: {
-        'typography-engine': '20~C and~5~degrees',
+        '@mokhniuk/typography': '20~C and~5~degrees',
         typograf: '20 °C and~5 degrees',
         typopo: '20~C and 5~degrees',
         richtypo: '20~C~and~5~degrees',
@@ -573,7 +420,7 @@ export const SAMPLES: readonly { name: string; in: string; out: Record<string, s
       name: 'nbsp number+unit',
       in: 'it is 5 km or 10 kg or 3 GB',
       out: {
-        'typography-engine': 'it is 5~km or~10~kg or~3~GB',
+        '@mokhniuk/typography': 'it is 5~km or~10~kg or~3~GB',
         typograf: 'it~is~5 km~or~10 kg~or~3 GB',
         typopo: 'it is 5~km or 10~kg or 3~GB',
         richtypo: 'it~is~5~km~or~10~kg~or~3~GB',
@@ -586,7 +433,7 @@ export const SAMPLES: readonly { name: string; in: string; out: Record<string, s
       name: 'nbsp abbreviation',
       in: 'Dr. Smith and Mr. Jones, e.g. this',
       out: {
-        'typography-engine': 'Dr.~Smith and~Mr.~Jones, e.g. this',
+        '@mokhniuk/typography': 'Dr.~Smith and~Mr.~Jones, e.g. this',
         typograf: 'Dr. Smith and~Mr. Jones, e.g. this',
         typopo: 'Dr.~Smith and Mr.~Jones, e.g. this',
         richtypo: 'Dr. Smith and~Mr. Jones, e.g.~this',
@@ -599,7 +446,7 @@ export const SAMPLES: readonly { name: string; in: string; out: Record<string, s
       name: 'nbsp initials',
       in: 'J. R. R. Tolkien',
       out: {
-        'typography-engine': 'J.~R.~R.~Tolkien',
+        '@mokhniuk/typography': 'J.~R.~R.~Tolkien',
         typograf: 'J. R. R. Tolkien',
         typopo: 'J.R.R. Tolkien',
         richtypo: 'J. R. R.~Tolkien',
@@ -612,7 +459,7 @@ export const SAMPLES: readonly { name: string; in: string; out: Record<string, s
       name: 'space before punct',
       in: 'word , and word .',
       out: {
-        'typography-engine': 'word , and~word .',
+        '@mokhniuk/typography': 'word , and~word .',
         typograf: 'word, and~word.',
         typopo: 'word, and word.',
         richtypo: 'word , and~word~.',
@@ -625,7 +472,7 @@ export const SAMPLES: readonly { name: string; in: string; out: Record<string, s
       name: 'URL/email kept',
       in: 'see https://a.com/x-y--z "q" and me@a-b.com',
       out: {
-        'typography-engine': 'see https://a.com/x-y--z “q” and me@a-b.com',
+        '@mokhniuk/typography': 'see https://a.com/x-y--z “q” and me@a-b.com',
         typograf: 'see https://a.com/x-y--z “q” and~me@a-b.com',
         typopo: 'see https://a.com/x-y--z “q” and me@a-b.com',
         richtypo: 'see https://a.com/x-y — z “q” and~me@a-b.com',
@@ -638,7 +485,7 @@ export const SAMPLES: readonly { name: string; in: string; out: Record<string, s
       name: 'code span kept',
       in: 'use `a -> b "x"` here',
       out: {
-        'typography-engine': 'use `a -> b "x"` here',
+        '@mokhniuk/typography': 'use `a -> b "x"` here',
         typograf: 'use `a → b~“x"` here',
         typopo: 'use ’a -> b~“x”’ here',
         richtypo: 'use `a -> b "x"`~here',
@@ -651,7 +498,7 @@ export const SAMPLES: readonly { name: string; in: string; out: Record<string, s
       name: 'ISO date / identifiers',
       in: '2026-10-20 and 555-1234 and foo-bar',
       out: {
-        'typography-engine': '2026-10-20~and 555-1234~and foo-bar',
+        '@mokhniuk/typography': '2026-10-20~and 555-1234~and foo-bar',
         typograf: '2026-10-20 and~555-1234 and~foo-bar',
         typopo: '2026–10–20~and 555–1234 and foo-bar',
         richtypo: '2026-10-20~and~555-1234~and~foo-bar',

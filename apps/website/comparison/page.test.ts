@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'bun:test';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { BACKLOG, FIXES, LANGS, REGEX, ROWS, SAMPLES, SCORE, SIZES, TOOLS, WHY } from './data.ts';
+import { FIXES, LANGS, REGEX, ROWS, SAMPLES, SCORE, SIZES, TOOLS, WHY } from './data.ts';
 
 /**
  * The comparison page draws its tables from `data.ts` when it loads, so what can go wrong is a row
@@ -44,11 +44,9 @@ describe('comparison data', () => {
       for (const w of who.split(' ')) expect(known.has(w), `${code} ${w}`).toBe(true);
   });
 
-  test('cards, regex rows and backlog items are filled in', () => {
-    for (const row of [...WHY, ...FIXES, ...BACKLOG])
-      for (const cell of row) expect(cell).not.toBe('');
+  test('cards and regex rows are filled in', () => {
+    for (const row of [...WHY, ...FIXES]) for (const cell of row) expect(cell).not.toBe('');
     for (const [tool] of REGEX) expect(tool).not.toBe('');
-    for (const [priority] of BACKLOG) expect(['P0', 'P1', 'P2', 'done', 'no']).toContain(priority);
   });
 });
 

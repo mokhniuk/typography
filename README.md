@@ -143,7 +143,7 @@ Measured, not promised: every claim below comes from [a published benchmark](app
 
 Passed / scored; `–` means the tool has no such feature or language, and is not held against it. Each tool scores against its own denominator. The table shows eight of the groups; the total row counts all sixteen (every group but Registers).
 
-| | typography-engine | typography-engine literary | typograf | typopo | richtypo | tipograph | smartypants |
+| | @mokhniuk/typography | @mokhniuk/typography literary | typograf | typopo | richtypo | tipograph | smartypants |
 |---|---|---|---|---|---|---|---|
 | Quotes | **41/41** | **41/41** | 33/37 | 20/20 | 14/18 | 24/27 | 14/17 |
 | Nested quotes | **25/25** | **25/25** | 0/21 | 4/4 | 0/2 | 10/11 | 1/1 |
@@ -159,7 +159,7 @@ Speed, English text in one piece, the median of several runs (typograf is the cl
 
 | Tool | 10 KB | 100 KB | 1 MB |
 |---|---|---|---|
-| **typography-engine** | **0 ms** | **4 ms** | **38 ms** |
+| **@mokhniuk/typography** | **0 ms** | **4 ms** | **38 ms** |
 | typograf | 1 ms | 6 ms | 58 ms |
 | tipograph | 0 ms | 1 ms | 11 ms |
 | smartypants | 0 ms | 1 ms | 10 ms |

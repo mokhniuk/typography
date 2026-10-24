@@ -109,7 +109,7 @@ export async function depsSection(): Promise<string[]> {
   const rows = [
     '| Tool | Packages installed | Install footprint | Licence | Types | Format | Version published |',
     '|---|---|---|---|---|---|---|',
-    `| typography-engine | 1 (react is an optional peer) | ${kb(e.bytes)} (${e.files} files) | ${own.license ?? 'none'} | yes | ESM | ${ownPublished} (${own.version}) |`,
+    `| @mokhniuk/typography | 1 (react is an optional peer) | ${kb(e.bytes)} (${e.files} files) | ${own.license ?? 'none'} | yes | ESM | ${ownPublished} (${own.version}) |`,
   ];
   for (const [tool, roots] of TOOLS) {
     const dirs = closure(roots);

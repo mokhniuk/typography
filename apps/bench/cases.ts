@@ -515,7 +515,7 @@ add({
   input: '- Привіт, - сказав він.\n\n- Як справи?',
   expect: 'a dialogue line opens with an em dash',
   pass: (out) => /^—[\s ]Привіт/u.test(out) && /\n\n—[\s ]Як/u.test(out),
-  only: ['typography-engine literary'],
+  only: ['@mokhniuk/typography literary'],
 });
 add({
   id: 'british-quotes',
@@ -524,7 +524,7 @@ add({
   input: 'She said "stone" and left',
   expect: 'British literary quotes ‘…’',
   pass: has('‘stone’'),
-  only: ['typography-engine literary'],
+  only: ['@mokhniuk/typography literary'],
 });
 
 // A wider English battery: statements of what is right, one per line.

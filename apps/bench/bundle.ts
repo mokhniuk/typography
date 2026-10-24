@@ -19,7 +19,7 @@ export type Entry = {
   external?: string[];
 };
 
-export const ENGINE = 'typography-engine';
+export const ENGINE = '@mokhniuk/typography';
 
 export const ENTRIES: Entry[] = [
   {

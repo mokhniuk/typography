@@ -145,15 +145,15 @@ function retextSmartypantsRun(input: string, lang: Lang, format: Format): string
 
 export const TOOLS: Tool[] = [
   {
-    name: 'typography-engine',
+    name: '@mokhniuk/typography',
     version: 'this repo',
     about: 'default (display register)',
     run: (input, lang, format) =>
       format === 'html' ? typesetHtml(input, { lang, nbsp: 'char' }) : typesetText(input, { lang }),
   },
   {
-    name: 'typography-engine literary',
-    variantOf: 'typography-engine',
+    name: '@mokhniuk/typography literary',
+    variantOf: '@mokhniuk/typography',
     version: 'this repo',
     about: 'literary register (British English quotes)',
     run: (input, lang, format) =>
