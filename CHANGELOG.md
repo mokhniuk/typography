@@ -6,6 +6,10 @@ Versions follow semver: a **minor** release may change the output of the engine 
 
 ### Changes
 
+- **New entry `@mokhniuk/typography/markdown-it`: a markdown-it plugin.** `new MarkdownIt().use(markdownItTypography, { lang: 'uk' })` typesets every inline token as a block with links, emphasis and code spans as gaps, so a quotation pairs across a link; code, fences, raw HTML and escaped characters are left as typed. For plain paragraphs its output equals `typesetMarkdown`'s. Takes the options of the other modes. No dependency (markdown-it is a dev dependency for the tests). Can change existing output: no (new entry).
+- **New entry `@mokhniuk/typography/vue`: the `v-typography` directive.** `app.use(typography, options)` registers it; its value replaces the plugin's options per element. It typesets the element's text in the browser on mount and update, and not on a server. Tested against a stand-in for the DOM, not in a mounted Vue app. Can change existing output: no (new entry).
+- **New `typesetElement(root, { lang: pack })` in `./dom`**, the DOM counterpart of the HTML mode (blocks, gaps for inline elements, `pre` and `code` left alone, `data-typography="off"`); it runs the Vue directive. `./dom` still carries no language pack. Can change existing output: no (new export).
+- **New `presets` (`web`, `book`, `ui`), `PRESET_NAMES`, `Preset`, `PresetName`**, exported from the main entry and `./lite`: plain frozen configs without a language to spread into `defineConfig` or any call. Not a new option, so nothing changes in any mode. Can change existing output: no (new export).
 - **`@mokhniuk/typography/react` works from a server component tree.** `Typeset`, `TypographyRoot` and the context file start with `'use client'` (the build keeps it), so in the Next.js App Router a server component can import them directly instead of through a wrapper file of your own; Vite, webpack and plain React ignore the directive. Output is unchanged. Can change existing output: no.
 
 ## 0.18.0 (2026-10-24)

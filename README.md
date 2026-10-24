@@ -78,6 +78,8 @@ typesetMarkdown(md, { ...site, lang: 'de' });
 <TypographyRoot config={site}>…</TypographyRoot>
 ```
 
+Start from a preset when you have no opinion yet: `defineConfig({ ...presets.web, lang: 'uk' })`; `web` (articles), `book` (running prose, literary register) and `ui` (short labels, narrow boxes) are plain objects ([docs/api.md](docs/api.md#presets)).
+
 `typo --config typography.config.ts` reads it too, and so does a `typography` key in `package.json` ([docs/api.md](docs/api.md#config)).
 
 ### Entry points
@@ -89,7 +91,9 @@ typesetMarkdown(md, { ...site, lang: 'de' });
 | `@mokhniuk/typography/html` | An HTML string | `typesetHtml` |
 | `@mokhniuk/typography/markdown` | A Markdown document | `typesetMarkdown` |
 | `@mokhniuk/typography/rehype` | A unified/rehype pipeline, or any hast tree | default `rehypeTypography`, `typesetHast` |
-| `@mokhniuk/typography/dom` | Hanging punctuation in the browser, no framework | `hangPunctuation`, `hangScript`, `markHangs`, `hangStyle`; glyph checks `supports`, `glyphStatus`, `missingGlyphs`, `missingIn`, `fontOf` |
+| `@mokhniuk/typography/markdown-it` | A markdown-it pipeline | default `markdownItTypography` (a plugin) |
+| `@mokhniuk/typography/vue` | Vue 3 pages | default plugin that registers `v-typography`, `vTypography`, `createDirective` |
+| `@mokhniuk/typography/dom` | Hanging punctuation in the browser, no framework | `hangPunctuation`, `hangScript`, `markHangs`, `hangStyle`, `typesetElement`; glyph checks `supports`, `glyphStatus`, `missingGlyphs`, `missingIn`, `fontOf` |
 | `@mokhniuk/typography/react` | React pages | `Typeset`, `TypographyRoot`, `HangText`, `HangScript`, `useHangingPunctuation`, `useMissingGlyphs`, `TypographyContext` |
 | `@mokhniuk/typography/lite` | One language: the engine and the text, HTML and Markdown modes with no pack; `lang` is a pack | `typographic`, `explain`, `typesetText`, `typesetHtml`, `typesetMarkdown`, the rule table and its helpers ([docs/api.md](docs/api.md#lite)) |
 | `@mokhniuk/typography/lang/<code>` | One language pack, the code in lower case (`./lang/uk`, `./lang/de-ch`; 27 entries) | the pack under its name (`uk`, `deCH`) and as the default export |

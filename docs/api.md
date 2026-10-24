@@ -9,8 +9,10 @@ Every entry point in `package.json` `exports`, plus the `typo` command (see [cli
 | `./html` | `src/html/index.ts` | `typesetHtml`, `HtmlOptions` |
 | `./markdown` | `src/markdown/index.ts` | `typesetMarkdown`, `MarkdownOptions` |
 | `./rehype` | `src/rehype/index.ts` | default `rehypeTypography`, `typesetHast`, `RehypeOptions` |
-| `./dom` | `src/dom/index.ts` | `hangPunctuation`, `hangScript`, `markHangs`, `hangStyle`, and the glyph measuring: `supports`, `glyphStatus`, `missingGlyphs`, `missingIn`, `fontOf` |
+| `./markdown-it` | `src/markdown-it/index.ts` | default `markdownItTypography`, a markdown-it plugin; `MarkdownItOptions` |
+| `./dom` | `src/dom/index.ts` | `hangPunctuation`, `hangScript`, `markHangs`, `hangStyle`, `typesetElement`, and the glyph measuring: `supports`, `glyphStatus`, `missingGlyphs`, `missingIn`, `fontOf` |
 | `./react` | `src/react/index.ts` | `Typeset`, `TypographyRoot`, `HangText`, `HangScript`, `useHangingPunctuation`, `useMissingGlyphs`, `TypographyContext`, `TypographySetting` |
+| `./vue` | `src/vue/index.ts` | default plugin that registers `v-typography`, `vTypography`, `createDirective`, `VueOptions` |
 | `./lite` | `src/lite/index.ts` | the engine and the text, HTML and Markdown modes without a language pack: `lang` is a pack, never a code. See [`./lite`](#lite) |
 | `./lang/<code>` | `src/core/lang/<code>.ts` | one language pack, under its name (`uk`, `deCH`, `frCH`, ...) and as the default export; 27 entries, the code in lower case (`./lang/de-ch`). See [`./lang/<code>`](#langcode) |
 | bin `typo` | `src/cli/main.ts` | the command line; Node 20.10 or later, or Bun |
@@ -122,6 +124,26 @@ typo --config typography.config.ts page.md   # or a "typography" key in package.
 - The playground's "Config" panel shows its switches as a config, ready for `package.json` or a file, and applies one pasted back.
 - A new option goes into `TypographyConfig`; `ModeOptions` is derived from it, so it reaches every mode's type.
 
+### Presets
+
+`presets` holds three named starting points, plain frozen objects with no `lang`: spread one into `defineConfig` or into any call, and add the language.
+
+| Preset | For | Sets |
+|---|---|---|
+| `web` | Articles, marketing pages | `enable`: `symbol.degree`, `symbol.plusminus`, `symbol.fraction`, `space.trailing` |
+| `book` | Running prose | `register: 'literary'` and the `web` rules plus `punctuation.double` (one `!` or `?`) |
+| `ui` | Labels, buttons, short strings in narrow boxes | `disable`: `space.short-word`, `space.orphan` (a bound pair is a longer unbreakable unit); `enable`: `space.trailing` |
+
+```ts
+import { defineConfig, presets } from '@mokhniuk/typography';
+
+export const site = defineConfig({ ...presets.book, lang: 'de' });
+// a key you give replaces the preset's, lists included: repeat what you keep
+export const prose = defineConfig({ ...presets.web, lang: 'uk', enable: [...presets.web.enable, 'number.group'] });
+```
+
+`PRESET_NAMES` is `['web', 'book', 'ui']`; `PresetName` and `Preset` are the types. A preset is not a new option: it is a value, so every mode, component, the plugins and the command line (`--config`) read it as they read any config. The sets are editorial, chosen from [practices.md](practices.md), not from a style guide; the rules they switch on are opt-in because they change text some projects want as typed (`symbol.degree` rewrites `20 C`).
+
 ## The change record
 
 ```ts
@@ -206,6 +228,7 @@ Every mode takes the whole config: `nbsp` is read by the HTML mode only, `hangAm
 | Export | What it is |
 |---|---|
 | `TypographyConfig`, `defineConfig`, `checkConfig` | See [Config](#config). |
+| `presets`, `PRESET_NAMES`, `PresetName`, `Preset` | `web`, `book` and `ui` as configs without a language. See [Presets](#presets). Also exported by `./lite`. |
 | `RULES: readonly Rule[]` | The rules in the order they run. `Rule` is `{ id: string; about: string; category?: RuleCategory; defaultOn?: boolean; avoidWhole?: boolean; packFields?: readonly (keyof LangPack)[]; when?(text, context): boolean; apply(text, context): string }`; `defaultOn: false` means the rule runs only when named in `enable`. `avoidWhole: true` makes [`avoid`](#avoid) all or nothing for the rule: if one of its changes would bring in an avoided character, every change it made to that text is dropped (`quote` sets it). `category` says what the rule is for (see `RULE_CATEGORIES`); every built-in rule has one, a custom rule may leave it out. `when` is an optional cheap test: when it returns false `apply` is skipped, so it must be false only if `apply` would return the text unchanged. `packFields` names the pack fields whose languages the rule acts in (`space.percent`: `percentSpace` and `currencySpace`): a note for readers that `docs/rules.md` and `typo --rules` list, which does not change what the rule does. A rule without `when` always runs. A custom rule made by spreading a built-in (`{ ...RULES[i], apply }`) copies its `when`: set `when: undefined`. |
 | `selectRules({ rules?, disable?, enable? })` | The rules that run, in order. Names are checked against `rules` (the built-in list unless given); an unknown name, or a rule named in both `disable` and `enable`, throws. `without(disable)` is `selectRules({ disable })`. |
 | `addRule(list, rule, position)` | A new list with `rule` at `{ before: id }`, `{ after: id }`, `{ first: true }` or `{ last: true }`. Does not change `list` or `RULES`; an unknown anchor or a duplicate id throws. |
@@ -276,6 +299,41 @@ unified().use(remarkParse).use(remarkRehype).use(rehypeTypography, { lang: 'uk' 
 
 Typesets any hast tree in place and returns the same tree. Text is typeset a block at a time with the inline elements inside it, so a quotation pairs across a link. Left alone: `pre`, `code`, `kbd`, `samp`, `textarea`, `script`, `style`, `svg`, `math`, `template`, any element with `data-typography="off"` (and its subtree), and every attribute. An element's `lang` (or `xmlLang`) property sets the language of its subtree, when it names a pack: the longest run of its leading subtags that is a pack code wins, in any case (`de-CH`, `de-ch` and `de-CH-1996` are `de-CH`; `de-AT` is `de`; `uk-UA` is `uk`); an inline element in another language is typeset on its own, so a quotation does not pair across it. hast text is already decoded, so entities are not a concern.
 
+## `./markdown-it`
+
+A [markdown-it](https://github.com/markdown-it/markdown-it) plugin. markdown-it is not a dependency: the plugin describes the few parts of it that it touches.
+
+```ts
+import MarkdownIt from 'markdown-it';
+import markdownItTypography from '@mokhniuk/typography/markdown-it';
+
+const md = new MarkdownIt().use(markdownItTypography, { lang: 'uk', quoteStyle: 'us' });
+md.render('Він сказав "привіт" - і пішов');
+```
+
+It takes the options of the other modes (`ModeOptions`: `lang`, `register`, `quoteStyle`, `disable`, `enable`, `rules`, `avoid`, `onChange`; a preset spreads in). It runs once the document is parsed, on the children of every `inline` token: a paragraph, a heading, a table cell and a list item each count as one block, and every child that is not text (a link, emphasis, a code span, raw inline HTML, a line break) is a gap, so a quotation pairs across a link. Code blocks, fences, code spans, raw HTML and attribute values are never touched, and an escaped character (`\"`) stays as typed, because the plugin runs before markdown-it joins escapes into the text around them (markdown-it before 13 has no such step; there it runs last and an escaped quote may be typeset). Leave markdown-it's own `typographer` off: it sets quotes and dashes first, and the two disagree about details. Output for plain paragraphs equals `typesetMarkdown`'s. The plugin carries all 27 packs (a one-language build is in the backlog).
+
+## `./vue`
+
+A Vue 3 directive, `v-typography`, that typesets the text under an element in the browser. Vue is not a dependency: the plugin describes the parts of it that it touches.
+
+```ts
+import { createApp } from 'vue';
+import typography from '@mokhniuk/typography/vue';
+import { presets } from '@mokhniuk/typography';
+
+createApp(App).use(typography, { ...presets.web, lang: 'uk' });   // defaults for every use
+```
+
+```vue
+<p v-typography>Він сказав "привіт" - і пішов.</p>
+<article v-typography="{ lang: 'de', register: 'literary' }"> ... </article>
+```
+
+The directive's value is an options object (`VueOptions`, the same as `ModeOptions`) and replaces the plugin's options for that element, key by key. It runs when the element mounts and after every update, on the element's whole subtree with [`typesetElement`](#typesetelementroot-options-void): text is typeset a block at a time, `pre`, `code` and `data-typography="off"` are left alone, and a text node that needs no change is not written. `createDirective(defaults)` gives the directive object without a plugin, and `vTypography` is `createDirective()` (English, default rules) for a component's `directives` option.
+
+Limits: it runs in the browser only (Vue does not call a directive while rendering on a server, so server-rendered text arrives as written until hydration, and a page that must be right before scripts run should typeset the string with `typesetText` or `typesetHtml`); it applies one language to the element (an inner `lang` attribute is not read; use the rehype plugin for that); and it changes the DOM text after Vue has written it, so Vue's own devtools show typeset text. It was tested against a stand-in for the DOM, not in a mounted Vue app.
+
 ## `./dom`
 
 Framework-free, browser only (it needs `getComputedStyle`, `ResizeObserver`, `MutationObserver` and `requestAnimationFrame`).
@@ -311,6 +369,17 @@ character lets the next font in the list draw it, and then the two widths are th
 What it cannot see: a font whose glyph happens to have the same advance width as the fallback's in
 both probes is reported as missing, and a font that draws a wrong glyph of its own is reported as
 present. The measure is one canvas and two probes per character.
+
+### `typesetElement(root, options): void`
+
+Typesets the text under `root` in place, as the HTML mode does a string: a block at a time, the inline elements standing in as gaps (a quotation pairs across a link), `pre`, `script`, `style`, `template`, `code`, `kbd`, `samp`, `textarea`, `svg`, `math` and `data-typography="off"` left alone. `options` is `LiteOptions`: `lang` is a **pack** (use `resolvePack` for a code), because this entry carries no pack table. A text node whose text needs no change is not written, so a second run does nothing; it does not watch the element, so call it again after the content changes. `DomNode` is the shape it reads (`nodeType`, `nodeValue`, `childNodes`, `nodeName`, `getAttribute`): a real element fits, so does a stand-in in a test. This is what `./vue` runs.
+
+```ts
+import { typesetElement } from '@mokhniuk/typography/dom';
+import { en } from '@mokhniuk/typography/lang/en';
+
+typesetElement(document.querySelector('article')!, { lang: en });
+```
 
 ### `markHangs(el: HTMLElement): void`
 
@@ -348,7 +417,7 @@ import { uk } from '@mokhniuk/typography/lang/uk';
 typesetText('Він сказав "привіт"', { lang: uk });   // Він сказав «привіт»
 ```
 
-It exports `typographic(text, pack, options?)`, `explain(text, pack, options?)`, `typesetBlock(joined, options)`, `typesetText`, `typesetHtml` and `typesetMarkdown` (`options` is `LiteOptions`: `ModeOptions` with `lang` a `LangPack`, required), `keepAvoided`, `RULES`, `DEFAULT_RULES`, `RULE_IDS`, `RULE_CATEGORIES`, `addRule`, `selectRules`, `without`, `diff`, `splitHangs`, `hangPieces`, `NBSP`, and the types `Change`, `TypographicOptions`, `PackModeOptions`, `LiteOptions`, `Rule`, `RuleCategory`, `RulePosition`, `Context`, `QuoteStyle`, `Register`, `LangPack`, `Level`, `Abbreviations`, `NumberFormat`, `DialogueDash`, `DiffRun`, `TextPart`, `HangPiece`. Its output and change records are those of the full entries given the same pack (`src/lite/lite.test.ts` checks every pack, both registers, the three quote styles and the opt-in rules).
+It exports `typographic(text, pack, options?)`, `explain(text, pack, options?)`, `typesetBlock(joined, options)`, `typesetText`, `typesetHtml` and `typesetMarkdown` (`options` is `LiteOptions`: `ModeOptions` with `lang` a `LangPack`, required), `keepAvoided`, `presets`, `PRESET_NAMES`, `RULES`, `DEFAULT_RULES`, `RULE_IDS`, `RULE_CATEGORIES`, `addRule`, `selectRules`, `without`, `diff`, `splitHangs`, `hangPieces`, `NBSP`, and the types `Preset`, `PresetName`, `Change`, `TypographicOptions`, `PackModeOptions`, `LiteOptions`, `Rule`, `RuleCategory`, `RulePosition`, `Context`, `QuoteStyle`, `Register`, `LangPack`, `Level`, `Abbreviations`, `NumberFormat`, `DialogueDash`, `DiffRun`, `TextPart`, `HangPiece`. Its output and change records are those of the full entries given the same pack (`src/lite/lite.test.ts` checks every pack, both registers, the three quote styles and the opt-in rules).
 
 A language code where a pack belongs throws `lang is a language pack here: import one from @mokhniuk/typography/lang/<code>`. Not in `./lite`, because they need the table of every pack: `checkConfig` and `defineConfig`, `LANGS`, `PACKS`, `resolvePack`, the glyph lists (`ruleGlyphs`, `insertedCharacters`, `insertedGlyphs`), the rehype plugin and React. A config object still spreads in: `typesetHtml(html, { ...site, lang: uk })`.
 

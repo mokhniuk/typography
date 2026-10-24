@@ -2,7 +2,7 @@
 
 How to use the engine from the tools you already have. Every recipe is a few lines over a mode described in [api.md](api.md); none needs a plugin. Pick the mode by where your text lives: a string (`/text`), an HTML string (`/html`), a Markdown string (`/markdown`), a hast tree (`/rehype`), a React tree (`/react`).
 
-The recipes for Vue, Svelte, Astro, Next and Vite are the package's modes called from each tool's own hooks; they were written from the tools' documentation, and only the package calls in them are run by the package's tests. If one fails in your setup, [open an issue](https://github.com/mokhniuk/typography/issues) with the tool's version.
+The Svelte, Astro, Next and Vite recipes are the package's modes called from each tool's own hooks; they were written from the tools' documentation, and only the package calls in them are run by the package's tests. The Vue directive and the markdown-it plugin are tested against stand-ins and a real markdown-it; the Vue directive has not run in a mounted Vue app. If one fails in your setup, [open an issue](https://github.com/mokhniuk/typography/issues) with the tool's version.
 
 ## One language, any framework
 
@@ -44,7 +44,24 @@ Hanging punctuation in the browser without a framework is the `/dom` entry: `han
 
 ## Vue
 
-Typeset a string in a computed value. Use `typesetText` for a plain string and `typesetHtml` for HTML you already trust enough to render with `v-html`:
+The package has a directive for Vue 3 (`@mokhniuk/typography/vue`):
+
+```ts
+import { createApp } from 'vue';
+import typography from '@mokhniuk/typography/vue';
+import { presets } from '@mokhniuk/typography';
+
+createApp(App).use(typography, { ...presets.web, lang: 'en' });
+```
+
+```vue
+<template>
+  <p v-typography>He said "hi" - and left.</p>
+  <article v-typography="{ lang: 'uk' }">...</article>
+</template>
+```
+
+It typesets the element's text in the browser when it mounts and after each update ([api.md](api.md#vue)). It does not run while Vue renders on a server; where text must be right before scripts load, typeset the string instead, in a computed value:
 
 ```vue
 <script setup lang="ts">
@@ -60,7 +77,7 @@ const typeset = computed(() => typesetText(props.text, { lang: props.lang ?? 'en
 </template>
 ```
 
-Typeset text, not markup, with `{{ }}`: Vue escapes it, so there is nothing to sanitise. For HTML, `v-html="typesetHtml(html, { lang })"` typesets the tags' text and leaves the markup as it was; it does not make untrusted HTML safe.
+Typeset text with `{{ }}`: Vue escapes it, so there is nothing to sanitise. For HTML, `v-html="typesetHtml(html, { lang })"` leaves the markup as it was; it does not make untrusted HTML safe.
 
 ## Svelte
 
@@ -134,21 +151,35 @@ export default { plugins: [typography('en')] };
 
 ## markdown-it, remark, unified
 
-markdown-it renders HTML, so typeset its output:
+markdown-it has a plugin (`@mokhniuk/typography/markdown-it`):
 
 ```ts
 import MarkdownIt from 'markdown-it';
-import { typesetHtml } from '@mokhniuk/typography/html';
+import markdownItTypography from '@mokhniuk/typography/markdown-it';
 
-const md = new MarkdownIt({ typographer: false }); // the engine does the quotes and dashes
-const html = typesetHtml(md.render(source), { lang: 'en' });
+const md = new MarkdownIt().use(markdownItTypography, { lang: 'en' }); // leave `typographer` off
+md.render(source);
 ```
 
-Or typeset the Markdown source first with `typesetMarkdown(source, { lang })`, which leaves code, links and front matter alone. For remark and unified, chain `remark-rehype` and the plugin:
+It typesets each paragraph, heading, cell and list item as a block, so a quotation pairs across a link, and leaves code, fences and raw HTML as they were ([api.md](api.md#markdown-it)). For remark and unified, chain `remark-rehype` and the rehype plugin:
 
 ```ts
 unified().use(remarkParse).use(remarkRehype).use(rehypeTypography, { lang: 'uk' }).use(rehypeStringify);
 ```
+
+Or typeset the Markdown source first with `typesetMarkdown(source, { lang })`.
+
+## Presets
+
+Start from `web` (articles), `book` (running prose, literary register) or `ui` (short labels) and add the language ([api.md](api.md#presets)):
+
+```ts
+import { defineConfig, presets } from '@mokhniuk/typography';
+
+export const site = defineConfig({ ...presets.web, lang: 'uk' });
+```
+
+Any recipe above takes it: `typesetHtml(html, site)`, `.use(markdownItTypography, site)`, `v-typography="site"`.
 
 ## Command line, CI, editors
 
