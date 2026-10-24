@@ -38,7 +38,7 @@ From a CDN that serves npm packages as ES modules (esm.sh, jsDelivr's `+esm`), i
 </script>
 ```
 
-Pin the version in the URL (`@mokhniuk/typography@0.18.0/lite`) so a minor release, which may change output, cannot change your page. Typesetting in the browser means the page shows the straight text until the script runs; where you can, typeset when you build instead (the Vite and Node recipes below).
+Pin the version in the URL (`@mokhniuk/typography@0.19.0/lite`) so a minor release, which may change output, cannot change your page. Typesetting in the browser means the page shows the straight text until the script runs; where you can, typeset when you build instead (the Vite and Node recipes below).
 
 Hanging punctuation in the browser without a framework is the `/dom` entry: `hangPunctuation(el)` ([api.md](api.md)).
 
