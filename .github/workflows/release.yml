@@ -98,9 +98,8 @@ jobs:
       # uses it; without it, trusted publishing (npm takes the workflow's OIDC token, id-token: write;
       # npm 11.5.1 or later, which Node 24 ships). npm tries OIDC first and falls back to the token.
       # setup-node's .npmrc reads NODE_AUTH_TOKEN; it is set only when the secret is non-empty, else
-      # setup-node's placeholder stays, which OIDC replaces. No `--provenance`: npm makes no
-      # provenance for a private repository and the flag would fail the publish; trusted publishing
-      # adds provenance by itself once the repository is public.
+      # setup-node's placeholder stays, which OIDC replaces. No `--provenance`: the repository
+      # is public, and trusted publishing adds provenance by itself.
       - name: Publish to npm
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
