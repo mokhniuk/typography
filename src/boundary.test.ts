@@ -19,6 +19,7 @@ const TEST_ONLY = new Set([
   'rehype-parse',
   'rehype-stringify',
   'react-dom/server',
+  'markdown-it',
 ]);
 /** Node built-ins are for tests and the command line only; the library itself needs none. */
 const NODE_ALLOWED = /^(?:src\/cli\/|.*\.test\.tsx?$)/;
