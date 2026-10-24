@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'bun:test';
-import { posix } from 'node:path';
+import { existsSync, readFileSync } from 'node:fs';
+import { join, posix } from 'node:path';
 import { explain, typographic } from '../../src';
 import { articles, latestDateOnly } from './build/content';
 import { EXAMPLES, exampleResult } from './build/examples';
@@ -50,6 +51,22 @@ describe('website pages', () => {
       '404.html',
     ]) {
       expect(fill(source(name)), name).not.toMatch(/\{\{\w+\}\}/);
+    }
+  });
+
+  test('the "works with" strip: a logo file and a style rule for each name, the same list twice', () => {
+    const landing = source('index.html');
+    const css = readFileSync(join(import.meta.dirname, 'style.css'), 'utf8');
+    const lists = [...landing.matchAll(/<ul aria-(?:label|hidden)="[^"]*">(.*?)<\/ul>/g)].map(
+      (m) => m[1] ?? '',
+    );
+    expect(lists).toHaveLength(2);
+    expect(lists[1]).toBe(lists[0]);
+    const names = [...(lists[0] ?? '').matchAll(/data-logo="([a-z0-9]+)"/g)].map((m) => m[1] ?? '');
+    expect(names.length).toBeGreaterThan(8);
+    for (const name of names) {
+      expect(existsSync(join(import.meta.dirname, 'logos', `${name}.svg`)), name).toBe(true);
+      expect(css, name).toContain(`li[data-logo="${name}"]::before`);
     }
   });
 

@@ -2904,3 +2904,127 @@ main[data-page="comparison"] [data-wide] > header {
     min-width: 168px;
   }
 }
+
+/* A strip of the platforms and frameworks it works with, scrolling by itself; the logos are Simple Icons (CC0, logos/README.md). */
+figure[data-marquee] {
+  margin: var(--space-7) 0 0;
+}
+figure[data-marquee] [data-viewport] {
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+figure[data-marquee] figcaption {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-4);
+  margin-bottom: var(--space-3);
+  font: 600 var(--size-xs) / calc(var(--baseline) * 3) var(--font-ui);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+figure[data-marquee] button {
+  min-height: calc(var(--baseline) * 3);
+  padding: 0 var(--space-3);
+  font: 500 var(--size-xs) var(--font-ui);
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--color-muted);
+  background: transparent;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+figure[data-marquee] [data-track] {
+  display: flex;
+  width: max-content;
+  animation: marquee 56s linear infinite;
+}
+figure[data-marquee]:is(:hover, :focus-within, [data-paused]) [data-track] {
+  animation-play-state: paused;
+}
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+figure[data-marquee] ul {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+figure[data-marquee] li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  height: calc(var(--baseline) * 6);
+  margin-right: var(--space-7);
+  white-space: nowrap;
+  font: 500 var(--size-sm) var(--font-ui);
+  color: var(--color-muted);
+}
+figure[data-marquee] li::before {
+  content: "";
+  width: calc(var(--baseline) * 3);
+  height: calc(var(--baseline) * 3);
+  background: currentColor;
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+}
+figure[data-marquee] li[data-logo="html5"]::before {
+  mask-image: url("./logos/html5.svg");
+}
+figure[data-marquee] li[data-logo="markdown"]::before {
+  mask-image: url("./logos/markdown.svg");
+}
+figure[data-marquee] li[data-logo="nodedotjs"]::before {
+  mask-image: url("./logos/nodedotjs.svg");
+}
+figure[data-marquee] li[data-logo="bun"]::before {
+  mask-image: url("./logos/bun.svg");
+}
+figure[data-marquee] li[data-logo="deno"]::before {
+  mask-image: url("./logos/deno.svg");
+}
+figure[data-marquee] li[data-logo="npm"]::before {
+  mask-image: url("./logos/npm.svg");
+}
+figure[data-marquee] li[data-logo="typescript"]::before {
+  mask-image: url("./logos/typescript.svg");
+}
+figure[data-marquee] li[data-logo="react"]::before {
+  mask-image: url("./logos/react.svg");
+}
+figure[data-marquee] li[data-logo="nextdotjs"]::before {
+  mask-image: url("./logos/nextdotjs.svg");
+}
+figure[data-marquee] li[data-logo="vuedotjs"]::before {
+  mask-image: url("./logos/vuedotjs.svg");
+}
+figure[data-marquee] li[data-logo="svelte"]::before {
+  mask-image: url("./logos/svelte.svg");
+}
+figure[data-marquee] li[data-logo="astro"]::before {
+  mask-image: url("./logos/astro.svg");
+}
+figure[data-marquee] li[data-logo="vite"]::before {
+  mask-image: url("./logos/vite.svg");
+}
+@media (prefers-reduced-motion: reduce) {
+  figure[data-marquee] [data-viewport] {
+    mask-image: none;
+  }
+  figure[data-marquee] [data-track] {
+    width: auto;
+    animation: none;
+  }
+  figure[data-marquee] ul {
+    flex-wrap: wrap;
+  }
+  figure[data-marquee] ul[aria-hidden],
+  figure[data-marquee] button {
+    display: none;
+  }
+}
