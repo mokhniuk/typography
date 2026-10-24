@@ -188,6 +188,19 @@ The tools that beat it on speed (tipograph, smartypants) score far below it on t
 - **Zero dependencies** — nothing in the package imports anything outside it; `react` is an optional peer for the `./react` entry only. Compiled ESM with declarations, so Node and plain tooling work.
 - **Safe by construction** — code, tags, URLs and protected spans are never touched; an unknown rule name throws instead of silently passing.
 
+## When does it run?
+
+The engine is a function; it runs when your code calls it. Nothing runs at install or at commit.
+
+| Where your text is | Call it | When | What the browser gets |
+|---|---|---|---|
+| Static site (Astro, Eleventy, Vite, Next export) | `typesetHtml`, `typesetMarkdown`, the rehype or markdown-it plugin | At build | Finished HTML |
+| Server-rendered React (Next, Remix) | `Typeset` / `TypographyRoot` | On each server render | Finished HTML; hydration matches |
+| Client only (SPA, Vue directive, `typesetElement`) | the same modes in the browser | After JS loads | Plain text first, then typeset |
+| Source files | `typo -w` to rewrite, `typo -c` to check | By hand, a pre-commit hook or CI | The source itself is changed |
+
+Typeset at build or render time and keep the source plain, with one shared config. Recipes per tool: [docs/recipes.md](docs/recipes.md).
+
 ## The playground
 
 Paste text, HTML or Markdown; see the result, every change with the rule that made it, and a preview with hanging punctuation. It runs entirely in the browser. It is a page of the website: `bun run website` serves it along with the docs and articles.

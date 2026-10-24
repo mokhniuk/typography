@@ -2,7 +2,7 @@
 
 How to use the engine from the tools you already have. Every recipe is a few lines over a mode described in [api.md](api.md); none needs a plugin. Pick the mode by where your text lives: a string (`/text`), an HTML string (`/html`), a Markdown string (`/markdown`), a hast tree (`/rehype`), a React tree (`/react`).
 
-The Svelte, Astro, Next and Vite recipes are the package's modes called from each tool's own hooks; they were written from the tools' documentation, and only the package calls in them are run by the package's tests. The Vue directive and the markdown-it plugin are tested against stand-ins and a real markdown-it; the Vue directive has not run in a mounted Vue app. If one fails in your setup, [open an issue](https://github.com/mokhniuk/typography/issues) with the tool's version.
+The recipes are the package's modes called from each tool's own hooks; the package's tests run only the package calls in them. On 2026-10-24 the packed 0.19.0 was also run by hand, once, in a fresh project for each: Vite 8.3 (build), Astro 7.4 (build), Next.js 16.4 (build, a server component and `TypographyRoot`), Svelte 5.57 (compiled and rendered on the server), Vue 3.5 (directive mounted in a fake DOM, `happy-dom`, and server-rendered), unified and markdown-it under Node 24. All produced the output the recipe promises. Not run: a real browser, a Vue or Svelte app built by its own bundler, or hydration. If one fails in your setup, [open an issue](https://github.com/mokhniuk/typography/issues) with the tool's version.
 
 ## One language, any framework
 
@@ -96,7 +96,7 @@ Typeset text with `{{ }}`: Vue escapes it, so there is nothing to sanitise. For 
 
 ## Astro
 
-Astro's Markdown goes through remark and rehype, so the rehype plugin is the whole integration:
+Astro's Markdown goes through remark and rehype, so the rehype plugin is the whole integration. Astro 7 no longer installs the remark/rehype processor by default and stops with an error that asks for it, so add it first: `npm install @astrojs/markdown-remark`.
 
 ```js
 // astro.config.mjs
