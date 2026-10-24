@@ -9,6 +9,7 @@ const hand: [string, string][] = [
   ['', 'index.html'],
   ['playground/', 'playground/index.html'],
   ['font-checker/', 'font-checker/index.html'],
+  ['comparison/', 'comparison/index.html'],
 ].map(([path, file]) => [path as string, fill(source(file as string))]);
 const pages: [string, string][] = [...generated, ...hand];
 const indexable = pages.filter(([, html]) => !html.includes('noindex'));

@@ -81,6 +81,7 @@ export function website(): Plugin {
         'index.html',
         'playground/index.html',
         'font-checker/index.html',
+        'comparison/index.html',
         '404.html',
       ].map((name) => join(SITE_ROOT, name));
       return {

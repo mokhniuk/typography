@@ -118,7 +118,7 @@ bun scripts/stress.ts [srcDir]   # every rule on long runs of one character at 2
 
 ## The benchmark
 
-The benchmark is a separate project in `apps/bench/` with its own `package.json` and dependencies. Its sources, cases, `package.json`, `tsconfig.json` and `RESULTS.md` are tracked; `node_modules` and the lockfile are not (`comparison.html`, the comparison page, is tracked as well). To run it: `cd apps/bench && bun install && bun run bench`. Its own checks: `cd apps/bench && bun run typecheck`.
+The benchmark is a separate project in `apps/bench/` with its own `package.json` and dependencies. Its sources, cases, `package.json`, `tsconfig.json` and `RESULTS.md` are tracked; `node_modules` and the lockfile are not. To run it: `cd apps/bench && bun install && bun run bench`. Its own checks: `cd apps/bench && bun run typecheck`.
 
 ```sh
 cd apps/bench

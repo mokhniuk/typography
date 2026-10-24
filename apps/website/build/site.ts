@@ -63,6 +63,7 @@ export const NAV = [
   { href: 'docs/getting-started/', label: 'Docs', match: 'docs/' },
   { href: 'playground/', label: 'Playground' },
   { href: 'font-checker/', label: 'Fonts' },
+  { href: 'comparison/', label: 'Comparison' },
   { href: 'articles/', label: 'Articles' },
 ] as const;
 

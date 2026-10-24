@@ -35,6 +35,7 @@ const pages = [
     ['', 'index.html'],
     ['playground/', 'playground/index.html'],
     ['font-checker/', 'font-checker/index.html'],
+    ['comparison/', 'comparison/index.html'],
   ].map(([path, file]) => finish(source(file as string), path as string)),
 ];
 

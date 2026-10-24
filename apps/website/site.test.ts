@@ -28,7 +28,7 @@ describe('website pages', () => {
         if (
           page !== './' &&
           !pages.has(page) &&
-          !['playground/', 'font-checker/', ''].includes(page)
+          !['playground/', 'font-checker/', 'comparison/', ''].includes(page)
         )
           missing.push(`${path} -> ${href}`);
       }
@@ -46,6 +46,7 @@ describe('website pages', () => {
       'index.html',
       'playground/index.html',
       'font-checker/index.html',
+      'comparison/index.html',
       '404.html',
     ]) {
       expect(fill(source(name)), name).not.toMatch(/\{\{\w+\}\}/);

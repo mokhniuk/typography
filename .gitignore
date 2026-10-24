@@ -12,7 +12,6 @@ apps/bench/*
 !apps/bench/cases/
 !apps/bench/package.json
 !apps/bench/tsconfig.json
-!apps/bench/comparison.html
 
 # Agent worktrees
 .claude/worktrees/

@@ -12,7 +12,7 @@ Bun project; the package ships compiled ESM with declarations (`bun run build`).
 - `bun run docs:languages`: regenerate `docs/languages/*.md` from the language packs (generated; `src/lang-docs.test.ts` fails if stale).
 - `bun run gen:script`: regenerate `src/dom/script.ts` (generated) after changing `src/dom/hang.ts`.
 - Speed changes must keep output and `explain` records identical: `bun run compare` against a git ref of the previous engine (tag it `speed-baseline`) must report 0 differences, and `src/snapshot.test.ts` must pass without `bun run snapshot` (run that only for an intentional output change); see "Checking a speed change" in `docs/contributing.md`. A rule may carry `when` (a cheap trigger; false means `apply` returns the text unchanged, proved by `src/core/rules.when.test.ts`); prefer a forward regex plus `src/core/scan.ts` to a regex that opens with a lookbehind.
-- Benchmark: a separate project in `apps/bench/`; its sources, cases and `RESULTS.md` are tracked, its `node_modules` and lockfile are not (`comparison.html`, the comparison page source, is tracked too). `cd apps/bench && bun install`, then `bun run bench` (regenerates `RESULTS.md`, including bundle size, dependencies, Bun/Node/Deno engines and hard inputs; commit it if it changes; Node and Deno must be installed for their columns), `size`, `deps`, `engines`, `probes`, `latency`, `profile`, `features`. Not part of `bun test` or the root `typecheck`; `bun run typecheck` inside `apps/bench/` checks it.
+- Benchmark: a separate project in `apps/bench/`; its sources, cases and `RESULTS.md` are tracked, its `node_modules` and lockfile are not. `cd apps/bench && bun install`, then `bun run bench` (regenerates `RESULTS.md`, including bundle size, dependencies, Bun/Node/Deno engines and hard inputs; commit it if it changes; Node and Deno must be installed for their columns), `size`, `deps`, `engines`, `probes`, `latency`, `profile`, `features`. Not part of `bun test` or the root `typecheck`; `bun run typecheck` inside `apps/bench/` checks it.
 
 ## Rules of the codebase
 
@@ -33,7 +33,7 @@ Bun project; the package ships compiled ESM with declarations (`bun run build`).
 
 ## Comparison page
 
-The benchmark findings are published as an artifact: https://claude.ai/artifact/4GjMbDUzengRYRAv97de87. Its source is `apps/bench/comparison.html` (tracked, with the benchmark). After every update that changes what it shows (a fixed bug, a new rule or language, new benchmark numbers, a finished backlog item), edit that file to match and republish it to that URL with the Artifact tool (`url` set, so the link stays), without being asked.
+The benchmark findings are a page of the website, `/comparison/`: `apps/website/comparison/` (`index.html` holds the prose, `data.ts` every score, speed, feature row, language row and backlog item, `page.ts` draws them). After every update that changes what it shows (a fixed bug, a new rule or language, new benchmark numbers, a finished backlog item), edit `data.ts` and `index.html` to match, without being asked; it ships with the site, so there is nothing to republish.
 
 ## Before pushing to main (or opening a PR into it)
 

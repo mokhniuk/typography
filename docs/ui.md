@@ -1,6 +1,6 @@
 # UI conventions
 
-These apply to every page this project ships: the playground (`apps/website/playground/`), the comparison page (`apps/bench/comparison.html`) and the website (`apps/website/`). The website is about typography, so its pages are set with the same care the engine takes over text: the build runs every page through `typesetHtml`.
+These apply to every page this project ships: the playground (`apps/website/playground/`), the comparison page (`apps/website/comparison/`) and the website (`apps/website/`). The website is about typography, so its pages are set with the same care the engine takes over text: the build runs every page through `typesetHtml`.
 
 ## Markup
 
@@ -24,7 +24,7 @@ These apply to every page this project ships: the playground (`apps/website/play
 | Corners | `--radius-sm`, `--radius-md`, `--radius-lg`, `--radius-pill` |
 | Spacing | `--space-1` … `--space-6` (the website adds `--space-7`, `--space-8`) |
 | Type size | `--size-xs`, `--size-sm`, `--size-md`, `--size-lg`, `--size-xl` (the website adds `--size-2xl`, `--size-3xl`, `--size-display`, fluid with `clamp()`) |
-| Fonts | `--font-ui`, `--font-text` (reading text; the same sans as the UI on the website, playground included; a serif on the comparison page), `--font-mono` |
+| Fonts | `--font-ui`, `--font-text` (reading text; the same sans as the UI on the website, playground included), `--font-mono` |
 | Measure | `--measure` (reading line length), `--control-height`, `--container` (page width) |
 | Rhythm | `--baseline` (the website: the 8px vertical grid; `--baseline-line`, `--baseline-half` colour its overlay rows) |
 | Controls | `--select-arrow`: the drawn arrow of a `select` (`appearance: none`), an SVG data URI in `--color-muted`, set again for the dark theme because a data URI cannot read a variable |
@@ -48,13 +48,13 @@ A theme switch then only sets `data-theme` on `<html>`.
 
 No runtime dependencies. A page is HTML, one stylesheet and plain TypeScript, built by the root's `vite`. It imports the engine from `../../src` (the boundary test checks this). Only the benchmark (`apps/bench/`) uses outside packages, to measure them.
 
-The comparison page is published as an Artifact, so it is one self-contained file with its CSS inline and fonts from Google Fonts. It still uses the token names and the markup rules above.
+The comparison page is a page of the website (`apps/website/comparison/`): `index.html` is the prose and the empty tables, `data.ts` the numbers, `page.ts` draws the bars and tables into the page by id, and its CSS is in `style.css` under `[data-page="comparison"]`. `page.test.ts` checks the data against the tools and the markup against the script.
 
 ## The website
 
 `apps/website/` is a multi-page static site built by the root's `vite` (`bun run website`, `bun run website:build` writes `apps/website/dist`). It follows the rules above and uses no classes beyond the three allowed: variants and hooks are `data-*` attributes (`data-layout`, `data-page`, `data-hero`, `data-install`, `data-examples`, `data-pager`, ...), which `style.css` selects.
 
-- Hand-written pages: `index.html`, `playground/index.html`, `font-checker/index.html`, `404.html` (the list is `hand` in `build/plugin.ts`). `<!--header-->`, `<!--footer-->` and `<!--examples-->` and `{{version}}`, `{{rules}}`, `{{langs}}` and the like are filled in at build time from `build/` and the engine, so the numbers cannot go stale.
+- Hand-written pages: `index.html`, `playground/index.html`, `font-checker/index.html`, `comparison/index.html`, `404.html` (the list is `hand` in `build/plugin.ts`). `<!--header-->`, `<!--footer-->` and `<!--examples-->` and `{{version}}`, `{{rules}}`, `{{langs}}` and the like are filled in at build time from `build/` and the engine, so the numbers cannot go stale.
 - Generated pages: the docs are the files listed in `DOC_FILES` in `apps/website/build/content.ts` (`apps/website/content/docs/getting-started.md`, `docs/api.md`, `cli.md`, `rules.md`, `languages.md`, `limits.md`, `recipes.md`, `practices.md`, `contributing.md` and `CHANGELOG.md`, in that order) plus the generated `docs/languages/*.md`; `README.md`, `ui.md`, `backlog.md` and `ideas.md` are not published; articles are `content/articles/YYYY-MM-DD-slug.md` with `title`, `date` and `summary` front matter. Add a file and the page, the index entry and the links appear. A link written `/docs/api/` in content is a link to a page of the site; one to another repository file goes to GitHub. The list and order of docs pages is `DOC_FILES` in `build/content.ts`.
 - The playground page is `playground/index.html` with its script and modules beside it (`playground/*.ts`, tested there); its CSS lives in `style.css` under `[data-page="playground"]`.
 - The font checker (`font-checker/`) is its own page and script: load a font file (read with `FontFace`, never uploaded) or name an installed font, pick languages, and get the glyph coverage of every character the rules can insert plus the letters of each language that fonts often lack, the `avoid` config for what is missing, the examples set in the font at two measures with hanging punctuation, and a text preset measured from the font. The measuring itself is the engine's (`src/dom/glyphs.ts`); the letters it asks about are `font-checker/letters.ts`, and `letters.test.ts` fails if a language pack has no line there. `font-checker/page.test.ts` loads the page's script against a stub browser, so a script that throws on load, or asks for an element the markup does not have, fails the suite. Its CSS is under `[data-page="font-checker"]`.
