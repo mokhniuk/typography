@@ -53,6 +53,21 @@ describe('website pages', () => {
     }
   });
 
+  test('no hand-written page types a curly quote outside code: the house style would reset it', () => {
+    // The build typesets every page with guillemets, so a typed “…” or ‘…’ in prose comes out «…».
+    // An example of such a mark goes in <code> (left alone) or is set by a script.
+    for (const name of [
+      'index.html',
+      'playground/index.html',
+      'font-checker/index.html',
+      'comparison/index.html',
+      '404.html',
+    ]) {
+      const prose = source(name).replace(/<(code|pre|script|style|textarea)\b[\s\S]*?<\/\1>/g, '');
+      expect(prose.match(/.{0,30}[“”‘].{0,30}/g) ?? [], name).toEqual([]);
+    }
+  });
+
   test('the landing page builds its numbers and its articles from the engine and the content', () => {
     const landing = fill(source('index.html'));
     for (const fact of ['langs', 'rules', 'rulesOn', 'rulesOff', 'version'])

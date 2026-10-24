@@ -150,6 +150,14 @@ const count = el<HTMLSpanElement>('count');
 const langSelect = el<HTMLSelectElement>('lang');
 const registerSelect = el<HTMLSelectElement>('register');
 const quoteStyleSelect = el<HTMLSelectElement>('quoteStyle');
+// The marks are set here and not in the page: the build typesets the page with the house quote
+// style, which would turn the typed “…” and ‘…’ of the US label into «…».
+const QUOTE_LABELS: Record<string, string> = {
+  us: 'US: “…” and ‘…’',
+  guillemets: 'Guillemets: «…» and „…“',
+};
+for (const option of quoteStyleSelect.options)
+  option.text = QUOTE_LABELS[option.value] ?? option.text;
 const nbspSelect = el<HTMLSelectElement>('nbsp');
 const nbspField = el<HTMLLabelElement>('nbspField');
 const avoidInput = el<HTMLInputElement>('avoid');
