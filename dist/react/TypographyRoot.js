@@ -1,3 +1,4 @@
+'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore, } from 'react';
 import { insertedGlyphs } from '../core/index.js';

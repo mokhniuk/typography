@@ -1,5 +1,6 @@
 export { diff } from '../core/diff.js';
 export { hangPieces, splitHangs } from '../core/hang.js';
+export { PRESET_NAMES, presets } from '../core/presets.js';
 export { addRule, DEFAULT_RULES, RULE_CATEGORIES, RULE_IDS, RULES, selectRules, without, } from '../core/rules.js';
 export { NBSP } from '../core/types.js';
 export { explain, keepAvoided, typesetBlock, typographic, } from '../core/typography.js';

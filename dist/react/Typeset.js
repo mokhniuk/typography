@@ -1,3 +1,4 @@
+'use client';
 import { jsx as _jsx } from "react/jsx-runtime";
 import { useContext, useMemo } from 'react';
 import { typographic, } from '../core/index.js';

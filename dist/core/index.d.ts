@@ -4,6 +4,7 @@ export { type DiffRun, diff } from './diff.js';
 export { insertedCharacters, insertedGlyphs, ruleGlyphs } from './glyphs.js';
 export { type HangPiece, hangPieces, splitHangs, type TextPart } from './hang.js';
 export { type LangPack, type Level, PACK, PACKS } from './lang/index.js';
+export { PRESET_NAMES, type Preset, type PresetName, presets } from './presets.js';
 export { LANGS, REGISTERS } from './profiles.js';
 export { explain, resolvePack, typesetBlock, typographic } from './resolve.js';
 export { addRule, DEFAULT_RULES, RULE_CATEGORIES, RULE_IDS, RULES, type Rule, type RuleCategory, type RulePosition, selectRules, without, } from './rules.js';

@@ -16,6 +16,7 @@ import type { PackModeOptions } from '../core/typography.js';
 export { type DiffRun, diff } from '../core/diff.js';
 export { type HangPiece, hangPieces, splitHangs, type TextPart } from '../core/hang.js';
 export type { Abbreviations, DialogueDash, LangPack, Level, NumberFormat, } from '../core/lang/pack.js';
+export { PRESET_NAMES, type Preset, type PresetName, presets } from '../core/presets.js';
 export { addRule, DEFAULT_RULES, RULE_CATEGORIES, RULE_IDS, RULES, type Rule, type RuleCategory, type RulePosition, selectRules, without, } from '../core/rules.js';
 export { type Context, NBSP, type QuoteStyle, type Register } from '../core/types.js';
 export { type Change, explain, keepAvoided, type PackModeOptions, type TypographicOptions, typesetBlock, typographic, } from '../core/typography.js';
