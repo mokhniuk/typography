@@ -10,7 +10,7 @@
   "menu": [
     { "name": "Format selection", "command": "format-selection" },
     { "name": "Format page", "command": "format-page" },
-    { "command": "separator" },
+    { "separator": true },
     { "name": "Settings…", "command": "settings" }
   ]
 }
