@@ -174,7 +174,7 @@ The tools that beat it on speed (tipograph, smartypants) score far below it on t
 - **34 rules** — quotes, apostrophes, dashes, ranges, no-break spaces, symbols, numbers, money, phone numbers; 24 on by default, 10 opt-in ([docs/rules.md](docs/rules.md)).
 - **27 languages** — the 24 official EU languages, `uk`, `de-CH` and `fr-CH`, each one pack with its quote marks, dash habits, elisions and abbreviations ([docs/languages.md](docs/languages.md)).
 - **Two registers** — `display` for interface and marketing text, `literary` for book-like text.
-- **Every format** — plain text, HTML, Markdown, hast trees (rehype plugin), React components, the DOM, a CLI.
+- **Every format** — plain text, HTML, Markdown, hast trees (rehype plugin), React components, the DOM, a CLI, and a [Figma plugin](https://www.figma.com/community/plugin/1696608238018920804) for text layers (sources in [`apps/figma`](apps/figma)).
 - **`explain`** — every change comes with the rule that made it and the before/after, so nothing is a mystery.
 - **Hanging punctuation** — opening marks hang in the margin at any width, no line-break measuring, with an inline script so prerendered pages do not jump ([more below](#hanging-punctuation-without-a-jump-on-a-prerendered-page)).
 - **A font without the glyph** — `avoid` names the characters a font cannot draw and the rules keep the text as it was typed instead of inserting them; in a browser `TypographyRoot` measures the page's own font and fills that list in, and the website's font checker writes it for a font file ([docs/api.md](docs/api.md#avoid)).

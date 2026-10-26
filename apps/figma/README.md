@@ -1,7 +1,7 @@
 # Typography for Figma
 
-> **Not yet published** to the Figma Community, and not covered by the package's semver or by the root
-> `bun test`. Behaviour, command names and the settings format may change without a CHANGELOG entry.
+> Published in the [Figma Community](https://www.figma.com/community/plugin/1696608238018920804). Not covered by the package's semver or by the
+> root `bun test`. Command names and the settings format may change.
 
 A Figma plugin that runs the `@mokhniuk/typography` engine over text layers: quotation marks by
 language, dashes, non-breaking spaces and the rest of the [rules](../../docs/rules.md), written back
@@ -79,4 +79,4 @@ Then in the Figma **desktop app**: Plugins, Development, Import plugin from mani
 - One setting set for the whole file: no per-layer or per-page language, and no use of a layer's
   own language tag.
 - No preview before a run; Undo or Cmd+Z after it.
-- Not published to the Figma Community yet (listing text, images and the publish form answers are in `listing/listing.md`).
+- Listing text, images and the publish form answers are in `listing/listing.md`.

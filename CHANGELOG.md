@@ -2,6 +2,12 @@
 
 Versions follow semver: a **minor** release may change the output of the engine or the API (every entry says whether it can change output you already have), a **patch** release fixes a bug without changing output you rely on. If you depend on exact output, pin a version and read this file before you move it.
 
+## Unreleased
+
+### Changes
+
+- **The Typography plugin for Figma is published** ([Figma Community](https://www.figma.com/community/plugin/1696608238018920804); sources in `apps/figma`, its own project, not part of the package). Format selection, Format page and Settings run the engine over text layers, in the language, register, quote style and rule set the user saves; edits go in as inserted and deleted characters, so mixed bold and italic runs keep their style, and every run ends with a toast that counts the fixes and offers Undo. It carries the engine of the version it was built from (0.20.0). Can change existing output: no (the package is unchanged).
+
 ## 0.20.0 (2026-10-24)
 
 ### Changes
