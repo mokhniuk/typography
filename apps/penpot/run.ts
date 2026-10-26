@@ -6,7 +6,7 @@ import type { TextLike } from './styles.ts';
 export type Node = { type: string; hidden?: boolean; blocked?: boolean; children?: readonly Node[] };
 
 /** What of `penpot.history` a run uses: everything between begin and finish is one Cmd+Z. */
-export type History = { undoBlockBegin(): symbol; undoBlockFinish(id: symbol): void };
+export type History = { undoBlockBegin(): Symbol; undoBlockFinish(id: Symbol): void };
 
 export type RunReport = { message: string; changed: boolean };
 

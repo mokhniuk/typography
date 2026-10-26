@@ -1,0 +1,8 @@
+{
+  "name": "Typography",
+  "description": "Curly quotes, dashes and no-break spaces by language, written back into your text layers with their styling kept.",
+  "version": 2,
+  "code": "plugin.js",
+  "icon": "icon.png",
+  "permissions": ["content:read", "content:write", "allow:localstorage"]
+}
