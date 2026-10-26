@@ -8,7 +8,8 @@ export type Node = { type: string; hidden?: boolean; blocked?: boolean; children
 /** What of `penpot.history` a run uses: everything between begin and finish is one Cmd+Z. */
 export type History = { undoBlockBegin(): Symbol; undoBlockFinish(id: Symbol): void };
 
-export type RunReport = { message: string; changed: boolean };
+/** `unrestored` are the layers that may be half changed, so the caller can select them for the user. */
+export type RunReport = { message: string; changed: boolean; unrestored: TextLike[] };
 
 export const NOTHING_SELECTED = 'Select a text layer, or use Format page';
 
@@ -32,7 +33,7 @@ export function runLayers(layers: readonly TextLike[], options: TextOptions, his
   let changed = 0;
   let skippedStyles = 0;
   let skippedText = 0;
-  let unrestored = 0;
+  const unrestored: TextLike[] = [];
   const block = history.undoBlockBegin();
   try {
     for (const layer of layers) {
@@ -48,12 +49,12 @@ export function runLayers(layers: readonly TextLike[], options: TextOptions, his
       } else if (result.kind === 'skipped') {
         if (result.reason === 'styles') skippedStyles++;
         else skippedText++;
-      } else if (result.kind === 'unrestored') unrestored++;
+      } else if (result.kind === 'unrestored') unrestored.push(layer);
     }
   } finally {
     history.undoBlockFinish(block);
   }
-  const left = skippedStyles + skippedText + unrestored;
+  const left = skippedStyles + skippedText + unrestored.length;
   const head =
     spots === 0
       ? `Nothing to fix in ${plural(layers.length - left, 'layer', 'layers')}`
@@ -61,7 +62,9 @@ export function runLayers(layers: readonly TextLike[], options: TextOptions, his
   const tail = [
     skippedStyles ? `Skipped ${skippedStyles}: styles could not be restored` : '',
     skippedText ? `Skipped ${skippedText}: text could not be changed` : '',
-    unrestored ? `Could not restore ${unrestored}: check it` : '',
+    unrestored.length
+      ? `Could not restore ${unrestored.length}: check ${unrestored.map((layer) => JSON.stringify(layer.name ?? 'unnamed layer')).join(', ')}`
+      : '',
   ].filter(Boolean);
-  return { message: [head, ...tail].join('. '), changed: spots > 0 };
+  return { message: [head, ...tail].join('. '), changed: spots > 0, unrestored };
 }

@@ -59,12 +59,12 @@ describe('runLayers', () => {
   test('reports the fixes and the layers that changed', () => {
     const h = history();
     const report = runLayers([layer('Say "hi"'), mixed('Say "hi" now'), layer('plain')], { lang: 'en' }, h);
-    expect(report).toEqual({ message: 'Fixed 4 spots in 2 layers', changed: true });
+    expect(report).toEqual({ message: 'Fixed 4 spots in 2 layers', changed: true, unrestored: [] });
   });
 
   test('uses singular forms', () => {
     expect(runLayers([layer("it's")], { lang: 'en' }, history()).message).toBe('Fixed 1 spot in 1 layer');
-    expect(runLayers([layer('plain')], { lang: 'en' }, history())).toEqual({ message: 'Nothing to fix in 1 layer', changed: false });
+    expect(runLayers([layer('plain')], { lang: 'en' }, history())).toEqual({ message: 'Nothing to fix in 1 layer', changed: false, unrestored: [] });
   });
 
   test('says nothing to fix for layers that are already right', () => {
@@ -84,13 +84,19 @@ describe('runLayers', () => {
     expect(report.changed).toBe(true);
   });
 
-  test('names a layer it could not put back', () => {
-    const colored = new FakeText('Say "hi"', [
-      { start: 0, end: 1, style: fullStyle({ fills: [{ fillColor: '#ff0000', fillOpacity: 1 }] }) },
-      { start: 1, end: 8, style: fullStyle({}) },
-    ]);
+  test('names the layer it could not put back, and hands it over so it can be selected', () => {
+    const colored = new FakeText(
+      'Say "hi"',
+      [
+        { start: 0, end: 1, style: fullStyle({ fills: [{ fillColor: '#ff0000', fillOpacity: 1 }] }) },
+        { start: 1, end: 8, style: fullStyle({}) },
+      ],
+      'Title',
+    );
     colored.failOn('fills', 2);
-    expect(runLayers([colored], { lang: 'en' }, history()).message).toBe('Nothing to fix in 0 layers. Could not restore 1: check it');
+    const report = runLayers([layer('plain'), colored], { lang: 'en' }, history());
+    expect(report.message).toBe('Nothing to fix in 1 layer. Could not restore 1: check "Title"');
+    expect(report.unrestored).toEqual([colored]);
   });
 
   test('the whole run is one undo block, and a layer that throws does not leave it open', () => {

@@ -1,6 +1,6 @@
 # Typography for Penpot
 
-> Not published yet: run the manual test below on real files first. Not covered by the package's semver or by
+> Not announced yet: run the manual test below on real files first (the install page `apps/website/content/docs/penpot-plugin.md` exists but is not listed in `DOC_FILES`, `apps/website/build/content.ts`, until then). Not covered by the package's semver or by
 > the root `bun test`. The settings format may change.
 
 A Penpot plugin that runs the `@mokhniuk/typography` engine over text layers: quotation marks by language,
@@ -20,7 +20,7 @@ Two tabs. **Format** has "Format selection" and "Format page", a line that says 
 3 layers`, `Nothing to fix in 3 layers`, `Select a text layer, or use Format page`, and a tail such as
 `Skipped 1: styles could not be restored`) and the current settings in one line. **Settings** has the language,
 register, quote style and a checkbox per rule (`Rules (N of M on)`); changes are saved as they are made, in
-`penpot.localStorage`. Hidden and locked layers, and everything under a hidden or locked group, are skipped.
+`penpot.localStorage`. Hidden and locked layers, and everything under a hidden or locked group, are skipped (the walk goes down from the selection or the page; it does not check the parents of a layer you selected directly).
 
 One run is one undo step (`penpot.history.undoBlockBegin()` around all layers): Cmd+Z takes the whole run back.
 
@@ -31,7 +31,7 @@ So for a layer with mixed styles the plugin reads the style runs (halving `getRa
 moves them through the engine's word-level edits (`apps/figma/edits.ts`: new characters take the style of the
 last character they replace, or of the one before an insertion), sets the text, and re-applies only the
 properties that differ from the first run. Any error puts the original text and runs back and the layer is
-counted as skipped; if that also fails the layer is named in the result ("Could not restore 1: check it").
+counted as skipped; if that also fails the layer is named in the result (`Could not restore 1: check "Title"`) and selected.
 
 ## Build and load
 
@@ -81,7 +81,8 @@ The tests use a fake `Text`; only a real Penpot checks the real setters. On real
    spacing: alignment and spacing are unchanged after a run.
 7. Settings: change the language, register and quotes, close the plugin, open it again: they are kept; the
    panel follows Penpot's dark and light theme.
-8. A self-hosted Penpot, if you have one: the install from the site address works.
+8. A layer with an emoji before a styled word: the style stays on the same word (checks that `getRange` counts UTF-16 units). Then a run on a file with nothing to fix, and Cmd+Z: it must not undo something earlier.
+9. A self-hosted Penpot, if you have one: the install from the site address works.
 
 ## Known gaps
 

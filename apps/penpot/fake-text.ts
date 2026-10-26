@@ -36,7 +36,7 @@ export class FakeText implements TextLike {
   private failing = new Map<string, number>();
   private failText = 0;
 
-  constructor(text: string, runs: readonly Run[]) {
+  constructor(text: string, runs: readonly Run[], readonly name = '') {
     this.text = text;
     this.units = Array.from({ length: text.length }, () => fullStyle({}));
     for (const { start, end, style } of runs) for (let i = start; i < end; i++) this.units[i] = style;

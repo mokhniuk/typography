@@ -11,7 +11,7 @@ The Typography plugin runs the engine over the text layers of a Penpot file: cur
 https://typography.mokhni.uk/penpot/manifest.json
 ```
 
-3. Run "Typography" from the Plugin Manager. Its panel opens on the right.
+3. Run "Typography" from the Plugin Manager. Its panel opens as a window over the file.
 
 The plugin asks for permission to read and write content, and to keep its settings in the browser's local storage. That is all it asks for. A self-hosted Penpot installs it the same way.
 
@@ -20,7 +20,7 @@ The plugin asks for permission to read and write content, and to keep its settin
 - **Format selection** typesets the text layers you selected, and the text layers inside a selected board or group.
 - **Format page** typesets every text layer on the page.
 
-Hidden and locked layers are left alone, and so is everything inside a hidden or locked group. The line under the buttons says what happened: how many spots changed in how many layers, and which layers were skipped and why.
+Hidden and locked layers are left alone, and so is everything inside a hidden or locked group you select or that sits on the page. The line under the buttons says what happened: how many spots changed in how many layers, and how many layers were skipped and why. A layer the plugin could not put back is named in that line and selected, so you can look at it (or press `Cmd` + `Z` to undo the run).
 
 One run is one undo step: press `Cmd` + `Z` (`Ctrl` + `Z`) once to undo all of it.
 

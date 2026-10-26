@@ -24,7 +24,10 @@ function format(scope: 'selection' | 'page'): void {
     send({ type: 'result', message: NOTHING_SELECTED, changed: false });
     return;
   }
-  send({ type: 'result', ...runLayers(layers, toOptions(savedSettings()), penpot.history) });
+  const { message, changed, unrestored } = runLayers(layers, toOptions(savedSettings()), penpot.history);
+  // A layer that may be half changed is selected, so it is the one the user is looking at.
+  if (unrestored.length) penpot.selection = unrestored as unknown as typeof penpot.selection;
+  send({ type: 'result', message, changed });
 }
 
 penpot.ui.open('Typography', 'index.html', { width: 320, height: 560 });
@@ -33,6 +36,12 @@ penpot.ui.onMessage<unknown>((raw) => {
   if (!message) return;
   if (message.type === 'ready') send({ type: 'init', settings: savedSettings(), theme: penpot.theme });
   else if (message.type === 'save') penpot.localStorage.setItem(KEY, JSON.stringify(readSettings(message.settings)));
-  else format(message.scope);
+  else {
+    try {
+      format(message.scope);
+    } catch (error) {
+      send({ type: 'result', message: `Typography failed: ${String(error)}`, changed: false });
+    }
+  }
 });
 penpot.on('themechange', (theme) => send({ type: 'theme', theme }));

@@ -24,7 +24,7 @@ const FONT = ['fontId', 'fontFamily', 'fontVariantId'] as const;
 export type RangeLike = Record<string, unknown>;
 
 /** What of a Penpot `Text` shape this plugin uses. */
-export type TextLike = { characters: string; getRange(start: number, end: number): RangeLike };
+export type TextLike = { characters: string; name?: string; getRange(start: number, end: number): RangeLike };
 
 const isMixed = (value: unknown): boolean => value === 'mixed';
 const read = (range: RangeLike): Style => Object.fromEntries(PROPS.map((prop) => [prop, range[prop]]));
