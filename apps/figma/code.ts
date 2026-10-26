@@ -34,8 +34,13 @@ function plural(n: number, one: string, many: string): string {
   return `${n} ${n === 1 ? one : many}`;
 }
 
-async function run(layers: readonly TextNode[]): Promise<string> {
+/** What a run reports: the toast text, and whether it changed anything (then the toast offers Undo). */
+type Report = { message: string; changed: boolean };
+
+async function run(layers: readonly TextNode[]): Promise<Report> {
   const options = toOptions(await savedSettings());
+  // Undo goes back to here, so it reverts this run and nothing earlier.
+  figma.commitUndo();
   let spots = 0;
   let changed = 0;
   let skipped = 0;
@@ -49,8 +54,29 @@ async function run(layers: readonly TextNode[]): Promise<string> {
     spots += n;
   }
   const tail = skipped ? `. Skipped ${skipped}: font not available` : '';
-  if (spots === 0) return `Nothing to fix in ${plural(layers.length - skipped, 'layer', 'layers')}${tail}`;
-  return `Fixed ${plural(spots, 'spot', 'spots')} in ${plural(changed, 'layer', 'layers')}${tail}`;
+  if (spots === 0) {
+    return { message: `Nothing to fix in ${plural(layers.length - skipped, 'layer', 'layers')}${tail}`, changed: false };
+  }
+  return { message: `Fixed ${plural(spots, 'spot', 'spots')} in ${plural(changed, 'layer', 'layers')}${tail}`, changed: true };
+}
+
+/** Shows the result. With changes, the toast carries Undo and the plugin stays alive until the toast goes. */
+function report({ message, changed }: Report): void {
+  if (!changed) {
+    figma.notify(message);
+    figma.closePlugin();
+    return;
+  }
+  figma.notify(message, {
+    timeout: 6000,
+    button: {
+      text: 'Undo',
+      action: () => {
+        figma.triggerUndo();
+      },
+    },
+    onDequeue: () => figma.closePlugin(),
+  });
 }
 
 /** The settings window stays open until Done; every change is saved as it is made. */
@@ -67,12 +93,15 @@ async function main(): Promise<void> {
   if (figma.command === 'settings') return openSettings();
   if (figma.command === 'format-page') {
     await figma.currentPage.loadAsync();
-    figma.notify(await run(textLayers(figma.currentPage.children)));
+    report(await run(textLayers(figma.currentPage.children)));
   } else {
     const layers = textLayers(figma.currentPage.selection);
-    figma.notify(layers.length ? await run(layers) : 'Select a text layer, or use Format page');
+    report(
+      layers.length
+        ? await run(layers)
+        : { message: 'Select a text layer, or use Format page', changed: false },
+    );
   }
-  figma.closePlugin();
 }
 
 main().catch((error: unknown) => figma.closePlugin(`Typography failed: ${String(error)}`));

@@ -1,5 +1,13 @@
 import { describe, expect, test } from 'bun:test';
-import { DEFAULT_SETTINGS, readSettings, type Settings, toOptions } from './settings.ts';
+import type { Rule } from '../../src/index.ts';
+import {
+  DEFAULT_SETTINGS,
+  readSettings,
+  ruleLabel,
+  rulesSummary,
+  type Settings,
+  toOptions,
+} from './settings.ts';
 
 describe('readSettings', () => {
   test('nothing saved gives the defaults', () => {
@@ -46,5 +54,21 @@ describe('toOptions', () => {
     const options = toOptions(DEFAULT_SETTINGS);
     expect('disable' in options).toBe(false);
     expect('enable' in options).toBe(false);
+  });
+});
+
+describe('rule list text', () => {
+  const rule = (id: string, defaultOn?: boolean) => ({ id, about: '', defaultOn }) as Rule;
+
+  test('an id reads as a label, opt-in rules say so', () => {
+    expect(ruleLabel(rule('dash.range'))).toBe('Dash range');
+    expect(ruleLabel(rule('space.before-punctuation', false))).toBe('Space before punctuation (opt-in)');
+  });
+
+  test('the summary counts rules that run', () => {
+    const rules = [rule('a'), rule('b'), rule('c', false)];
+    expect(rulesSummary({ disable: [], enable: [] }, rules)).toBe('Rules (2 of 3 on)');
+    expect(rulesSummary({ disable: ['a'], enable: ['c'] }, rules)).toBe('Rules (2 of 3 on)');
+    expect(rulesSummary({ disable: ['a', 'b'], enable: [] }, rules)).toBe('Rules (0 of 3 on)');
   });
 });

@@ -3,10 +3,11 @@ import {
   LANGS,
   type QuoteStyle,
   type Register,
+  type Rule,
   RULES,
   type TextOptions,
 } from '../../src/index.ts';
-import { readSaved, type RuleState } from '../website/playground/rules-state.ts';
+import { isOn, readSaved, type RuleState } from '../website/playground/rules-state.ts';
 
 /** What the plugin keeps between runs (`figma.clientStorage`): the language, two style choices and the rule switches. */
 export type Settings = RuleState & { lang: Lang; register: Register; quoteStyle: QuoteStyle };
@@ -43,4 +44,16 @@ export function toOptions(settings: Settings): TextOptions {
     ...(disable.length ? { disable } : {}),
     ...(enable.length ? { enable } : {}),
   };
+}
+
+/** A rule id as a label: `dash.range` is "Dash range", `space.before-punctuation` "Space before punctuation". */
+export function ruleLabel(rule: Rule): string {
+  const words = rule.id.replace(/[.-]/g, ' ');
+  return words.charAt(0).toUpperCase() + words.slice(1) + (rule.defaultOn === false ? ' (opt-in)' : '');
+}
+
+/** The heading of the rule list: how many rules run with these settings. */
+export function rulesSummary(settings: RuleState, rules: readonly Rule[] = RULES): string {
+  const on = rules.filter((rule) => isOn(settings, rule)).length;
+  return `Rules (${on} of ${rules.length} on)`;
 }

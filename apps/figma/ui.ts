@@ -1,6 +1,6 @@
 import { LANGS, RULES } from '../../src/index.ts';
-import { groupRules, isOn, reset, ruleBadge, setRule } from '../website/playground/rules-state.ts';
-import { readSettings, type Settings } from './settings.ts';
+import { groupRules, isOn, reset, setRule } from '../website/playground/rules-state.ts';
+import { readSettings, ruleLabel, rulesSummary, type Settings } from './settings.ts';
 
 const $ = <T extends HTMLElement>(id: string): T => document.getElementById(id) as T;
 const lang = $<HTMLSelectElement>('lang');
@@ -26,7 +26,7 @@ function render(): void {
   lang.value = settings.lang;
   register.value = settings.register;
   quoteStyle.value = settings.quoteStyle;
-  $('badge').textContent = ruleBadge(settings);
+  $('summary').textContent = rulesSummary(settings);
   $('rules').replaceChildren(
     ...groupRules(RULES).map((group) => {
       const fieldset = document.createElement('fieldset');
@@ -41,10 +41,10 @@ function render(): void {
         box.checked = isOn(settings, rule);
         box.addEventListener('change', () => {
           settings = { ...settings, ...setRule(settings, rule, box.checked) };
-          $('badge').textContent = ruleBadge(settings);
+          $('summary').textContent = rulesSummary(settings);
           save();
         });
-        label.append(box, rule.id);
+        label.append(box, ruleLabel(rule));
         fieldset.append(label);
       }
       return fieldset;
