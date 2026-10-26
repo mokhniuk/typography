@@ -49,6 +49,14 @@ const DOC_FILES: {
       'Install Typography Engine from npm, typeset a string, and pick the mode for your text: plain text, HTML, Markdown, React or the command line.',
   },
   {
+    source: 'apps/website/content/docs/penpot-plugin.md',
+    slug: 'penpot-plugin',
+    group: 'Start',
+    label: 'Penpot plugin',
+    description:
+      'Install the Typography plugin in Penpot from its manifest address: curly quotes, dashes and no-break spaces by language, written back into your text layers with their styling kept.',
+  },
+  {
     source: 'docs/api.md',
     slug: 'api',
     group: 'Reference',

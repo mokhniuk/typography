@@ -16,6 +16,21 @@ export const headerIn = (text: string, name: string): string | undefined =>
 
 const header = (name: string): string | undefined => headerIn(conf, name);
 
+// A header whose value is a variable (`add_header X-Frame-Options $frame_options always;`), or a literal.
+const valueOf = (name: string): string | undefined =>
+  new RegExp(`add_header ${name} (?:"([^"]*)"|(\\$\\w+)) always;`).exec(conf)?.slice(1).find(Boolean);
+
+// What a `map $uri $name { ... }` of the conf gives for an address: the first pattern that matches, else `default`.
+const resolve = (name: string, uri: string): string | undefined => {
+  const body = new RegExp(`map \\$uri \\$${name} \\{([^}]*)\\}`).exec(conf)?.[1] ?? '';
+  const rows = [...body.matchAll(/^\s*(\S+)\s+"([^"]*)";/gm)].map(([, pattern, value]) => [pattern ?? '', value ?? '']);
+  for (const [pattern, value] of rows) {
+    if (pattern === 'default') continue;
+    if (new RegExp((pattern ?? '').replace(/^~\*?/, ''), (pattern ?? '').startsWith('~*') ? 'i' : '').test(uri)) return value;
+  }
+  return rows.find(([pattern]) => pattern === 'default')?.[1];
+};
+
 const policy = (): Map<string, string[]> => {
   const directives = new Map<string, string[]>();
   for (const part of (header('Content-Security-Policy') ?? '').split(';')) {
@@ -109,7 +124,8 @@ describe('security headers', () => {
 
   test('the other security headers are set, always', () => {
     expect(header('X-Content-Type-Options')).toBe('nosniff');
-    expect(header('X-Frame-Options')).toBe('SAMEORIGIN');
+    expect(valueOf('X-Frame-Options')).toBe('$frame_options');
+    expect(resolve('frame_options', '/')).toBe('SAMEORIGIN');
     expect(header('Referrer-Policy')).toBe('strict-origin-when-cross-origin');
     expect(header('Permissions-Policy')).toBe('camera=(), microphone=(), geolocation=()');
   });
@@ -117,5 +133,37 @@ describe('security headers', () => {
   test('no location sets a header, which would drop the server-level ones', () => {
     const locations = conf.match(/location [^{]*\{[^}]*\}/g) ?? [];
     for (const block of locations) expect(block).not.toContain('add_header');
+  });
+});
+
+describe('the Penpot plugin at /penpot/', () => {
+  const plugin = '/penpot/manifest.json';
+
+  test('may be framed by any origin and read from any origin, and is never cached', () => {
+    expect(resolve('frame_ancestors', plugin)).toBe('*');
+    expect(resolve('frame_options', plugin)).toBe('');
+    expect(resolve('cors_origin', plugin)).toBe('*');
+    expect(resolve('cache_control', plugin)).toBe('no-cache');
+    expect(resolve('cache_control', '/penpot/plugin.js')).toBe('no-cache');
+  });
+
+  test('every other address keeps its framing limits and no cross-origin read', () => {
+    for (const uri of ['/', '/docs/api/', '/playground/', '/penpotty/', '/assets/app-1a2b3c.js']) {
+      expect(resolve('frame_ancestors', uri), uri).toBe("'self'");
+      expect(resolve('frame_options', uri), uri).toBe('SAMEORIGIN');
+      expect(resolve('cors_origin', uri), uri).toBe('');
+    }
+  });
+
+  test('the headers read those maps, and the policy names the variable for frame-ancestors', () => {
+    expect(valueOf('Access-Control-Allow-Origin')).toBe('$cors_origin');
+    expect(valueOf('X-Frame-Options')).toBe('$frame_options');
+    expect(policy().get('frame-ancestors')).toEqual(['$frame_ancestors']);
+  });
+
+  test('the rest of the policy is not loosened for it', () => {
+    expect(policy().get('script-src')).toHaveLength(4);
+    expect(policy().get('default-src')).toEqual(["'self'"]);
+    expect(policy().get('connect-src')).toEqual(["'self'", ANALYTICS.origin]);
   });
 });
