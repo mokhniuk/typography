@@ -63,7 +63,7 @@ theme values as CSS variables, no runtime dependency (`docs/ui.md`).
 
 **Result line.** The same sentences as the Figma toast: "Fixed 14 spots in 3 layers", "Nothing to fix in 3
 layers", "Select a text layer, or use Format page", and a tail "Skipped 1: <reason>" for layers left alone
-(reasons: styles could not be restored, text could not be changed). It says Cmd+Z undoes the run (my guess; the spike checks whether one run is one undo step; until it does, the line says "Cmd+Z undoes it" and the README says how many steps it takes).
+(reasons: styles could not be restored, text could not be changed). It says Cmd+Z undoes the run: the whole run goes in one undo block (`penpot.history.undoBlockBegin()` / `undoBlockFinish(id)`), and the spike showed one block is one Cmd+Z.
 
 **Format selection / page.** Text layers under the selection (or under the page root), skipping hidden and
 locked ones and anything a plain walk of `children` does not reach.
@@ -78,7 +78,7 @@ locked ones and anything a plain walk of `children` does not reach.
    run through them: an inserted character takes the style of the run it lands in or follows (the same rule as
    Figma's `BEFORE`), a deleted character leaves its run, a run whose characters are all deleted disappears.
    This mapping is a pure function, tested without Penpot.
-4. Set `characters`, then for each new run apply to `getRange(start, end)` only the style properties that differ
+4. Open one undo block for the whole run (all layers), set `characters`, then for each new run apply to `getRange(start, end)` only the style properties that differ
    from the style the setter left (the first run's), via the range setters.
 5. Any error, or a text that does not read back as expected, restores the original text and original runs the
    same way and counts the layer as skipped. (My call.)
@@ -110,7 +110,7 @@ real files.
 
 ## Order of work
 
-1. **Spike first, on a real Penpot (the author runs it).** A throwaway plugin served from localhost: on a text
+1. **Spike first, on a real Penpot (the author runs it). Done 2026-10-26, see "Spike findings".** A throwaway plugin served from localhost: on a text
    layer with a bold word, a coloured span and two paragraphs, (a) set `characters`, (b) re-apply styles with
    `getRange(...)` setters (all thirteen properties, `fontId`, `fontFamily` and `fontVariantId` alone and
    together), (c) read back, (d) press Cmd+Z and count steps. Its findings fix the behaviour of the fake `Text`
@@ -120,6 +120,29 @@ real files.
 2. The pure parts (run mapping, settings, messages) with tests, then the layer routine against the fake.
 3. The panel, the build, the website wiring and the install page.
 4. The manual test list on real files; only then the announcement (website link, CHANGELOG).
+
+## Spike findings (real Penpot, 2.x, plugin served from localhost, 2026-10-26)
+
+A sample layer held two paragraphs, a bold word, a red span and an italic word (7 runs). Three edits were tried:
+a same-length replace of a quote, an insert of `!!` right after the bold word, and a shrink (" - " to an en
+dash) inside the red run.
+
+- `characters = text` flattens the layer to one run with the first run's style. Confirmed.
+- Re-applying the differing properties with `getRange(a, b)` setters restored every run in all three cases (read
+  back equal to the expected runs, 7 of 7, no setter errors). Font weight and style came back through
+  `fontId`, `fontFamily` and `fontVariantId` set together; `fills` came back through `fills`.
+- Reading runs by halving `getRange` over the 13 properties found exactly the 7 runs; a newline counts as one
+  character and two paragraphs with equal styles share a run.
+- An inserted character took the style of the run it followed (the bold run grew to "only!!"); runs after an
+  edit moved by the length change, a shrink inside a run kept its style.
+- Undo: every setter call is its own undo step (one text set plus one per differing run: 4 steps for 3
+  styled runs). Wrapped in `penpot.history.undoBlockBegin()` / `undoBlockFinish()`, one edit is one Cmd+Z and
+  the original text and styles come back whole.
+- `navigator.clipboard` is blocked in the panel iframe by a permissions policy; the panel must not use it
+  (a copy button would need `document.execCommand('copy')`). Penpot's own CSP on `frame-src` is report-only and
+  did not stop a panel from `http://localhost`.
+- Not tested: a layer with a missing font, locked or hidden layers, more than one layer in one block, the
+  hosted `/penpot/` URL, a self-hosted Penpot.
 
 ## Calls I made (the reviewer's questions that the project or the author could not or need not settle)
 
@@ -141,7 +164,7 @@ real files.
 ## Left to the builder
 
 - The exact way the panel's URL is given to `penpot.ui.open` for a manifest at a hosted address.
-- Whether `fontId`, `fontFamily` and `fontVariantId` must be set together on a range.
+- Whether `fontId`, `fontFamily` and `fontVariantId` can be set alone on a range (the spike set them together and it worked; alone is untested).
 - How to share `apps/figma/edits.ts` and `settings.ts` (import across apps, or move the shared files to one
   place); `docs/contributing.md`'s layout table and `src/boundary.test.ts` (it scans only `src` and the
   playground) bound the choice.
