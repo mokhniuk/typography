@@ -19,3 +19,7 @@ apps/bench/*
 # The Figma plugin: sources are tracked, its build output and dependencies are not.
 apps/figma/out/
 apps/figma/bun.lock
+
+apps/penpot/out/
+apps/penpot/bun.lock
+apps/website/public/penpot/

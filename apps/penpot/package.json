@@ -1,0 +1,16 @@
+{
+  "name": "typography-penpot",
+  "private": true,
+  "type": "module",
+  "description": "Penpot plugin that runs @mokhniuk/typography on text layers. Not part of the package.",
+  "scripts": {
+    "bundle": "bun bundle.ts",
+    "test": "bun test .",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "devDependencies": {
+    "@penpot/plugin-types": "^1.4.2",
+    "bun-types": "^1.3.14",
+    "typescript": "^7.0.2"
+  }
+}
