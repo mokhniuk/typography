@@ -57,12 +57,22 @@ CH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 
 ## Disclosures
 
-- Network access: none (`networkAccess.allowedDomains` is `["none"]`).
-- Data: settings only, in `figma.clientStorage`, on the user's device.
-- Editor: Figma design files (`editorType: ["figma"]`).
+The publish form asks five questions. Answers that match the code:
+
+1. Backend service: **No, I do not host a backend service.**
+2. Network requests to services you do not host: **My plugin does not make any network requests**
+   (`networkAccess.allowedDomains` is `["none"]`; the engine and fonts are bundled, nothing is fetched).
+3. User authentication: **No.**
+4. Stored data read or derived from Figma's plugin API: **No.** The plugin keeps only the user's own
+   choices (language, register, quote style, rule switches) in `figma.clientStorage`; no layer text,
+   name or other file content is stored. If you would rather be cautious, tick "stores data locally
+   (figma.clientStorage)": it is accurate for the settings and does no harm.
+5. Updates: **I am a solo developer** (change this if a second person reviews releases).
+
+Editor: Figma design files (`editorType: ["figma"]`).
 
 ## Before the first publish
 
-1. Publish from Plugins, Manage plugins; Figma assigns the plugin `id`.
-2. Put that id in `manifest.json` (it holds a placeholder) and commit it.
-3. `bun run bundle`, then publish the new version if the build changed.
+1. `manifest.json` holds the plugin `id` Figma assigned (`1696608238018920804`); keep it, or updates
+   publish as a different plugin.
+2. `bun run bundle`, then Plugins, Manage plugins, Publish; later versions go the same way.

@@ -79,4 +79,4 @@ Then in the Figma **desktop app**: Plugins, Development, Import plugin from mani
 - One setting set for the whole file: no per-layer or per-page language, and no use of a layer's
   own language tag.
 - No preview before a run; Undo or Cmd+Z after it.
-- Not published to the Figma Community; the manifest `id` is a placeholder until the first publish (see `listing/listing.md`).
+- Not published to the Figma Community yet (listing text, images and the publish form answers are in `listing/listing.md`).
