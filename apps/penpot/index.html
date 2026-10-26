@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Typography</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<main>
+  <div role="tablist" aria-label="Typography">
+    <button type="button" role="tab" id="tab-format" aria-controls="panel-format" aria-selected="true">Format</button>
+    <button type="button" role="tab" id="tab-settings" aria-controls="panel-settings" aria-selected="false">Settings</button>
+  </div>
+
+  <section role="tabpanel" id="panel-format" aria-labelledby="tab-format">
+    <button type="button" id="selection" class="primary">Format selection</button>
+    <button type="button" id="page">Format page</button>
+    <output id="result" aria-live="polite"></output>
+    <p data-hint id="current"></p>
+  </section>
+
+  <section role="tabpanel" id="panel-settings" aria-labelledby="tab-settings" hidden>
+    <form aria-label="Settings">
+      <label>Language
+        <select id="lang"></select>
+      </label>
+      <label>Register
+        <select id="register">
+          <option value="display">Display (UI and marketing)</option>
+          <option value="literary">Literary (books)</option>
+        </select>
+      </label>
+      <label>Quotes
+        <select id="quoteStyle">
+          <option value="language">Of the language</option>
+          <option value="us">US: “…” and ‘…’</option>
+          <option value="guillemets">Guillemets: «…» and „…“</option>
+        </select>
+      </label>
+      <details>
+        <summary id="summary">Rules</summary>
+        <div id="rules"></div>
+        <button type="button" id="reset">Reset rules</button>
+      </details>
+    </form>
+    <p data-hint>Saved as you change it. It applies to Format selection and Format page.</p>
+  </section>
+</main>
+<script src="ui.js"></script>
+</body>
+</html>
