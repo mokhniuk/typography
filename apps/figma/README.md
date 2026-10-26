@@ -1,6 +1,6 @@
-# Typography for Figma (work in progress)
+# Typography for Figma
 
-> **WIP.** Not published to the Figma Community, not covered by the package's semver or by the root
+> **Not yet published** to the Figma Community, and not covered by the package's semver or by the root
 > `bun test`. Behaviour, command names and the settings format may change without a CHANGELOG entry.
 
 A Figma plugin that runs the `@mokhniuk/typography` engine over text layers: quotation marks by
@@ -68,10 +68,10 @@ Then in the Figma **desktop app**: Plugins, Development, Import plugin from mani
 - `code.ts`: the commands (runs in Figma's sandbox). `edits.ts`: the diff turned into insert and delete
   steps. `settings.ts`: reading, validating and labelling the saved settings.
 - `ui.html`, `ui.ts`, `style.css`: the settings panel.
-- `bundle.ts`: builds `out/`. `out/code.js` and `out/ui.html` are tracked, so the plugin loads without a
-  build; the engine is bundled into both, so a build is as old as the package version it was made from
-  (built from 0.20.0).
-- `bun.lock`: dev dependencies only (`@figma/plugin-typings`, `bun-types`, `typescript`).
+- `bundle.ts`: builds `out/` (not tracked: run `bun run bundle` before loading). The engine is bundled
+  into `out/code.js` and `out/ui.html`, so a build is as old as the package version it was made from;
+  rebuild after the engine changes.
+- `listing/`: the Figma Community listing text, icon and cover image, and the steps for a first publish.
 
 ## Known gaps
 
@@ -79,4 +79,4 @@ Then in the Figma **desktop app**: Plugins, Development, Import plugin from mani
 - One setting set for the whole file: no per-layer or per-page language, and no use of a layer's
   own language tag.
 - No preview before a run; Undo or Cmd+Z after it.
-- Not published to the Figma Community; the manifest `id` is a placeholder.
+- Not published to the Figma Community; the manifest `id` is a placeholder until the first publish (see `listing/listing.md`).

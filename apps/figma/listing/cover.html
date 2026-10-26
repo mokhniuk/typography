@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Typography for Figma, cover</title>
+<style>
+:root {
+  --color-bg: #ececf0;
+  --color-card: #ffffff;
+  --color-text: #1e1e1e;
+  --color-muted: #5f6368;
+  --color-accent: #0b6bcb;
+  --color-ins: #c9efd3;
+  --font-ui: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; width: 1920px; height: 960px; }
+body { background: var(--color-bg); color: var(--color-text); font-family: var(--font-ui); display: flex; align-items: center; gap: 96px; padding: 0 128px; }
+header { flex: 0 0 640px; display: flex; flex-direction: column; gap: 32px; }
+h1 { margin: 0; font-size: 88px; line-height: 96px; }
+header p { margin: 0; font-size: 32px; line-height: 48px; color: var(--color-muted); }
+main { flex: 1 1 0; display: flex; flex-direction: column; gap: 24px; }
+section { background: var(--color-card); border-radius: 16px; padding: 32px 40px; box-shadow: 0 2px 8px rgba(0, 0, 0, .12); display: flex; flex-direction: column; gap: 8px; }
+h2 { margin: 0; font-size: 20px; line-height: 24px; letter-spacing: .08em; text-transform: uppercase; color: var(--color-accent); }
+section p { margin: 0; font-size: 40px; line-height: 56px; }
+.before p { color: var(--color-muted); }
+ins { background: var(--color-ins); color: inherit; text-decoration: none; border-radius: 4px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Typography for Figma</h1>
+  <p>Right quotes, dashes and no-break spaces in 27 languages. One command, bold and italic kept.</p>
+</header>
+<main>
+  <section class="before">
+    <h2>Before</h2>
+    <p>He said "it's only 5 - 10 minutes..." and left.</p>
+  </section>
+  <section>
+    <h2>English</h2>
+    <p>He said <ins>“</ins>it<ins>’</ins>s only 5<ins>–</ins>10 minutes<ins>…”</ins> and left.</p>
+  </section>
+  <section>
+    <h2>Deutsch</h2>
+    <p>Er sagte <ins>»</ins>komm um 5&nbsp;Uhr <ins>–</ins> sofort<ins>«</ins> und ging.</p>
+  </section>
+</main>
+</body>
+</html>
