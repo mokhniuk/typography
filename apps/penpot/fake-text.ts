@@ -2,7 +2,9 @@
  * A stand-in for a Penpot `Text` shape, for tests. Its behaviour is what the real-Penpot spike found
  * (docs/superpowers/specs/2026-10-26-penpot-plugin-design.md, "Spike findings"): the `characters` setter
  * flattens every character to the style of the first one; `getRange` reads `'mixed'` for a property that
- * differs inside the range, and its setters write the whole range.
+ * differs inside the range, and its setters write the whole range. Writing `fontId` or `fontFamily` also puts
+ * the range back on the regular variant (the real plugin lost bold and italic when they were written after the
+ * variant, even with the value they already had), so a font is set first and its variant after.
  */
 import type { Run, Style } from './runs.ts';
 import { PROPS, type RangeLike, type TextLike } from './styles.ts';
@@ -79,7 +81,8 @@ export class FakeText implements TextLike {
             throw new Error(`${prop} setter failed`);
           }
           this.writes.push(`${start}-${end}:${prop}`);
-          for (let i = start; i < end; i++) this.units[i] = { ...this.units[i], [prop]: value };
+          const reset = prop === 'fontId' || prop === 'fontFamily' ? { fontVariantId: 'regular', fontWeight: '400', fontStyle: 'normal' } : {};
+          for (let i = start; i < end; i++) this.units[i] = { ...this.units[i], ...reset, [prop]: value };
         },
       });
     }

@@ -130,7 +130,10 @@ dash) inside the red run.
 - `characters = text` flattens the layer to one run with the first run's style. Confirmed.
 - Re-applying the differing properties with `getRange(a, b)` setters restored every run in all three cases (read
   back equal to the expected runs, 7 of 7, no setter errors). Font weight and style came back through
-  `fontId`, `fontFamily` and `fontVariantId` set together; `fills` came back through `fills`.
+  `fontVariantId`, `fontWeight` and `fontStyle`, written alone and only where they differed; `fills` came back through
+  `fills`. Found later on a real file: also writing `fontId` and `fontFamily` with the value they already had, after
+  the variant, put bold and italic back to regular. An unchanged font is never written, and a changed one is written
+  before its variant.
 - Reading runs by halving `getRange` over the 13 properties found exactly the 7 runs; a newline counts as one
   character and two paragraphs with equal styles share a run.
 - An inserted character took the style of the run it followed (the bold run grew to "only!!"); runs after an
@@ -148,8 +151,8 @@ dash) inside the red run.
 
 - A style is a plain object of the thirteen properties; two runs are equal when their JSON is equal (`fills` is
   an array of plain objects, so deep equality by JSON is enough). A range that reads `'mixed'` is split, never
-  compared. `fontId`, `fontFamily` and `fontVariantId` are set together whenever any of them differs, until the
-  spike shows they need not be.
+  compared. Only properties that differ from the style the setter left are written, in the order
+  of `PROPS`; `fontId` and `fontFamily` are never rewritten when unchanged (see "Spike findings").
 - Paragraph attributes are styles like the rest. A deletion never removes a newline: the engine keeps the line
   count (`typesetText` is line by line), so two paragraphs never merge.
 - If the restore after a failure also fails, the layer is counted apart ("could not restore 1: check it") and
@@ -164,7 +167,6 @@ dash) inside the red run.
 ## Left to the builder
 
 - The exact way the panel's URL is given to `penpot.ui.open` for a manifest at a hosted address.
-- Whether `fontId`, `fontFamily` and `fontVariantId` can be set alone on a range (the spike set them together and it worked; alone is untested).
 - How to share `apps/figma/edits.ts` and `settings.ts` (import across apps, or move the shared files to one
   place); `docs/contributing.md`'s layout table and `src/boundary.test.ts` (it scans only `src` and the
   playground) bound the choice.

@@ -78,11 +78,24 @@ describe('applyRuns after the setter flattened the text', () => {
     expect(text.writes.some((w) => w.startsWith('0-'))).toBe(false);
   });
 
-  test('the three font properties are written together when one of them differs', () => {
+  test('a font property that did not change is not written, because writing the font resets the variant', () => {
     const { text, expected } = change({ start: 8, end: 9, text: '“' });
     applyRuns(text, expected);
-    const bold = text.writes.filter((w) => w.startsWith('14-18:')).sort();
-    expect(bold).toEqual(['14-18:fontFamily', '14-18:fontId', '14-18:fontVariantId', '14-18:fontWeight']);
+    expect(text.writes.filter((w) => w.startsWith('14-18:'))).toEqual(['14-18:fontVariantId', '14-18:fontWeight']);
+    expect(text.writes.filter((w) => w.startsWith('55-64:'))).toEqual(['55-64:fontVariantId', '55-64:fontStyle']);
+  });
+
+  test('a run in another font gets the font first and its variant after', () => {
+    const SERIF = fullStyle({ fontId: 'gfont-lora', fontFamily: 'lora', fontVariantId: 'bold', fontWeight: '700' });
+    const runs: Run[] = [
+      { start: 0, end: 4, style: REGULAR },
+      { start: 4, end: 8, style: SERIF },
+    ];
+    const text = new FakeText('abcdefgh', runs);
+    text.characters = 'abcdefgh';
+    applyRuns(text, runs);
+    expect(readRuns(text)).toEqual(runs);
+    expect(text.writes).toEqual(['4-8:fontId', '4-8:fontFamily', '4-8:fontVariantId', '4-8:fontWeight']);
   });
 
   test('a setter that throws propagates', () => {

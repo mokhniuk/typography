@@ -17,9 +17,6 @@ export const PROPS = [
   'fills',
 ] as const;
 
-/** The three that name one font; a range gets all of them or none. */
-const FONT = ['fontId', 'fontFamily', 'fontVariantId'] as const;
-
 /** A `TextRange`: each property reads `'mixed'` when the range holds several values. */
 export type RangeLike = Record<string, unknown>;
 
@@ -60,7 +57,9 @@ export function readRuns(text: TextLike): Run[] {
 
 /**
  * Puts runs back on a text whose style the characters setter flattened to its first run's: for each run, only
- * the properties that differ from that style are set. Setter errors propagate.
+ * the properties that differ from that style are set, in the order of `PROPS` (a font before its variant:
+ * writing `fontId` or `fontFamily`, even with the value it has, puts the range back on the regular variant, so
+ * an unchanged font is never written). Setter errors propagate.
  */
 export function applyRuns(text: TextLike, runs: readonly Run[]): void {
   if (runs.length === 0) return;
@@ -70,7 +69,6 @@ export function applyRuns(text: TextLike, runs: readonly Run[]): void {
     const props = PROPS.filter((prop) => differs(style, prop));
     if (props.length === 0) continue;
     const range = text.getRange(start, end);
-    const fontChanged = FONT.some((prop) => props.includes(prop));
-    for (const prop of new Set([...props, ...(fontChanged ? FONT : [])])) range[prop] = style[prop];
+    for (const prop of props) range[prop] = style[prop];
   }
 }
