@@ -6,7 +6,8 @@
   "scripts": {
     "bundle": "bun bundle.ts",
     "test": "bun test .",
-    "typecheck": "tsc -p tsconfig.json"
+    "typecheck": "tsc -p tsconfig.json",
+    "serve": "bun serve.ts"
   },
   "devDependencies": {
     "@penpot/plugin-types": "^1.4.2",
