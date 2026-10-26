@@ -1,8 +1,7 @@
 # Typography for Figma (work in progress)
 
-> **WIP.** Not published to the Figma Community, not tested by the maintainers' users, not covered by
-> the package's semver or by `bun test`. Behaviour, command names and the settings format may change
-> without a CHANGELOG entry. The text below describes what the current build in `out/` does.
+> **WIP.** Not published to the Figma Community, not covered by the package's semver or by the root
+> `bun test`. Behaviour, command names and the settings format may change without a CHANGELOG entry.
 
 A Figma plugin that runs the `@mokhniuk/typography` engine over text layers: quotation marks by
 language, dashes, non-breaking spaces and the rest of the [rules](../../docs/rules.md), written back
@@ -10,26 +9,35 @@ into the layer.
 
 ## Commands
 
+The plugin sits in the right-click menu (Plugins, Typography) and in the Plugins menu. After the first
+run, Option+Command+P repeats the last command on a new selection.
+
 | Command | What it does |
 | --- | --- |
 | Format selection | Fixes the text layers in the selection (groups and frames are searched; hidden and locked layers are skipped). With no text layer selected it says "Select a text layer, or use Format page". |
 | Format page | The same for every text layer on the current page. |
-| Settings | Opens the settings panel (below). |
+| Settings… | Opens the settings panel (below). |
 
-Each run ends with a notification: `Fixed 12 spots in 3 layers`, or `Nothing to fix in 5 layers`.
-A layer whose font is missing or cannot be loaded is skipped and counted: `Skipped 1: font not available`.
+Format selection and Format page open no window. Each run ends with a toast:
+
+- `Fixed 12 spots in 3 layers`, with an **Undo** button for six seconds. The plugin stays alive until the
+  toast goes, then closes. One run is one undo step, so Cmd+Z works too.
+- `Nothing to fix in 5 layers`, with no Undo button.
+- A layer whose font is missing or cannot be loaded is skipped and counted:
+  `Fixed 9 spots in 2 layers. Skipped 1: font not available`.
 
 ## Settings
 
 The panel (320 x 520, follows Figma's light and dark theme) saves as you change it, per user, in
-Figma's client storage. It applies to both format commands.
+Figma's client storage, and stays open until Done. It applies to both format commands.
 
 - **Language**: any of the 27 language packs (see [languages](../../docs/languages.md)).
 - **Register**: `display` (UI and marketing) or `literary` (books). See [practices](../../docs/practices.md).
-- **Quotes**: `language` (the pack's own marks), `us` (`“…”` and `‘…’`) or `guillemets` (`«…»` and `„…“`).
-- **Rules**: a checkbox per rule, grouped by category. The defaults are the engine's; ticking an opt-in
-  rule enables it, clearing a default rule disables it. The badge counts the changes (`2 off, 1 on`),
-  and "Reset rules" returns to the defaults.
+- **Quotes**: the language's own marks, `us` (`“…”` and `‘…’`) or `guillemets` (`«…»` and `„…“`).
+- **Rules**: a checkbox per rule, grouped by category and named from its id (`dash.range` is "Dash
+  range"; opt-in rules say so, and the rule's description is the hover title). The heading counts the
+  rules that run (`Rules (24 of 34 on)`). The defaults are the engine's; ticking an opt-in rule enables
+  it, clearing a default rule disables it. "Reset rules" returns to the defaults.
 
 These are the engine's options `lang`, `register`, `quoteStyle`, `disable` and `enable`
 ([API](../../docs/api.md)).
@@ -41,20 +49,34 @@ new text and applies only the inserted and deleted characters, so font, size, co
 applied to ranges of the layer survive. Lines are set one at a time and blank-line-separated
 paragraphs separately, with leading and trailing whitespace kept.
 
+## Build and load
+
+```
+cd apps/figma
+bun install
+bun run bundle      # writes out/code.js and out/ui.html from the sources and the engine in ../../src
+bun test .          # edits and settings
+bun run typecheck
+```
+
+Then in the Figma **desktop app**: Plugins, Development, Import plugin from manifest…, and pick
+`manifest.json`. After a rebuild, run the command again; Figma reads the new `out/`.
+
 ## Files
 
-- `out/code.js`: the plugin code (runs in Figma's sandbox).
-- `out/ui.html`: the settings panel, one file with its CSS and script inlined.
+- `manifest.json`: menu and entry points.
+- `code.ts`: the commands (runs in Figma's sandbox). `edits.ts`: the diff turned into insert and delete
+  steps. `settings.ts`: reading, validating and labelling the saved settings.
+- `ui.html`, `ui.ts`, `style.css`: the settings panel.
+- `bundle.ts`: builds `out/`. `out/code.js` and `out/ui.html` are tracked, so the plugin loads without a
+  build; the engine is bundled into both, so a build is as old as the package version it was made from
+  (built from 0.20.0).
 - `bun.lock`: dev dependencies only (`@figma/plugin-typings`, `bun-types`, `typescript`).
 
 ## Known gaps
 
-- The sources and the `manifest.json` are not in the repository yet; only the build in `out/` is.
-  Until they are, there is no documented way to rebuild the plugin or to load it in Figma
-  (Plugins > Development > Import plugin from manifest).
-- The command list above is read from the build; the menu names in the manifest were not checked.
-- The engine is bundled into `code.js` and `ui.html`, so a plugin build is as old as the package
-  version it was built from; the build in `out/` was not checked against 0.18.0.
+- No check that the font has the new glyphs (curly quotes, `…`); a font without them shows fallback glyphs.
 - One setting set for the whole file: no per-layer or per-page language, and no use of a layer's
   own language tag.
-- No undo grouping or preview: use Figma's undo after a run.
+- No preview before a run; Undo or Cmd+Z after it.
+- Not published to the Figma Community; the manifest `id` is a placeholder.
